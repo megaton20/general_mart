@@ -495,7 +495,7 @@ exports.fetchCart = async (req, res) => {
 
     // Render the cart page
     res.render('./user/cart', { 
-      pageTitle: "Check Out",
+      pageTitle: "Cart items",
       appName: process.env.APP_NAME,
       cartItems: fetchResult.rows,
       totalSubtotal,
@@ -504,7 +504,7 @@ exports.fetchCart = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(`Error fetching cart: ${error.message}`);
+    console.error(`Error fetching cart: ${error}`);
     req.flash('error_msg', 'An error occurred while fetching your cart. Please try again later.');
     return res.redirect('/user');
   }
