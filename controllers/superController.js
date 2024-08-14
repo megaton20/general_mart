@@ -1303,7 +1303,7 @@ exports.getAddpricePage = async (req, res) => {
 
   try {
     // Query to fetch inventory by ID using a parameterized query
-    const results = await query(`SELECT * FROM "Inventory" WHERE id = $1`, [singleId]);
+    const results = await query(`SELECT * FROM "inventory" WHERE id = $1`, [singleId]);
 
     if (results.rows.length <= 0) {
       req.flash('warning_msg', 'Item does not exist in our inventory');
