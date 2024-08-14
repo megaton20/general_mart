@@ -27,9 +27,9 @@ router.get('/fetchCart', ensureAuthenticated,isUser,ensureBasicInformation, user
 
 // this is where payment button will be
 router.get('/checkout/:id', ensureAuthenticated,isUser,ensureAuthenticatedEmail, userController.checkoutScreen);
-router.get('/product-details/:id', ensureAuthenticated,isUser, userController.productDetails);
 // Submit-cart //reference is after payment for payment provider
 router.get('/order/:reference', ensureAuthenticated,isUser, userController.submitCart);
+router.get('/product-details/:id', ensureAuthenticated,isUser, userController.productDetails);
 
 router.get('/orders', ensureAuthenticated,isUser, userController.allUserOrder);
 router.get('/invoice/:id', ensureAuthenticated,isUser, userController.invoice);

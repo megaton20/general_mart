@@ -533,14 +533,15 @@ exports.checkoutScreen = async (req, res) => {
 
     // Calculate the total subtotal
     const totalSubtotal = cartResults.rows.reduce((accumulator, item) => {
-      return accumulator + item.subtotal;
+      return accumulator + parseFloat(item.subtotal);
     }, 0);
 
     // Calculate the shipping fee based on user's LGA (Local Government Area)
-    const shippingFee = calculateShippingFee(userData.lga); // Ensure calculateShippingFee is defined/imported
+    const shippingFee = calculateShippingFee(userData.lga); 
 
     // Calculate total amount to be paid
     const customerToPay = shippingFee + totalSubtotal;
+
     const formattedCustomerToPay = customerToPay.toLocaleString("en-US");
 
     // Render the checkout page
@@ -556,7 +557,7 @@ exports.checkoutScreen = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(`Error during checkout: ${error.message}`);
+    console.error(`Error during checkout: ${error}`);
     req.flash('error_msg', 'An error occurred during checkout. Please try again later.');
     return res.redirect('/user');
   }
@@ -571,11 +572,14 @@ exports.submitCart = async (req, res) => {
   const storeId = req.user.store_id;
   const storeName = req.user.store_name;
 
-  const generateUUID = (length) => {
-      return crypto.randomBytes(length).toString('hex').slice(0, length);
-  };
 
-  const uuidForEachSale = generateUUID(20);
+
+  const generateNumericUUID = (length) => {
+    return Array.from({ length }, () => Math.floor(Math.random() * 10)).join('');
+};
+
+// Example usage:
+const uuidForEachSale = generateNumericUUID(10);
 
   const generateSecurePin = (length) => {
       return crypto.randomInt(0, 10 ** length).toString().padStart(length, '0');
@@ -647,7 +651,7 @@ exports.submitCart = async (req, res) => {
       res.redirect(`/user/invoice/${uuidForEachSale}`);
 
   } catch (error) {
-      console.error(`Error during submitCart: ${error.message}`);
+      console.error(`Error during submitCart: ${error}`);
       req.flash('error_msg', 'An error occurred while processing your order. Please try again.');
       res.redirect('/');
   }
@@ -686,8 +690,8 @@ exports.invoice = async (req, res) => {
     const newSale = saleResults.rows[0];
     
     // Calculate total sum (order total + shipping fee)
-    const totalSum = newOrder.total_amount + newOrder.shipping_fee;
-
+    const unformattedAmount = parseFloat( newOrder.total_amount) +parseFloat( newOrder.shipping_fee);
+    const  totalSum = unformattedAmount.toLocaleString("en-US");
     // Render the invoice page
     return res.render('./user/userInvoice', {
       pageTitle: 'Invoice',

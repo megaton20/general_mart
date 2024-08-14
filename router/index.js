@@ -270,11 +270,11 @@ router.post('/updateCartItem', ensureAuthenticated, async (req, res) => {
     const getItemQuery = `SELECT * FROM "Cart" WHERE "user_id" = $1 AND "user_email" = $2 AND "product_id" = $3`;
     const { rows: results } = await query(getItemQuery, [userId, userEmail, productId]);
 
-    if (results.length === 0) {
+    if (results.rows.length === 0) {
       return res.status(404).json({ success: false, message: 'Cart item not found' });
     }
 
-    const item = results[0];
+    const item = results.rows[0];
     const newQuantity = item.quantity + change;
 
     if (newQuantity <= 0) {
@@ -308,9 +308,7 @@ router.post('/pay', async (req, res) => {
       const response = await axios.post('https://api.paystack.co/transaction/initialize', {
           email,
           amount: amount * 100, // Paystack expects the amount in kobo
-          callback_url: `https://general-mart.onrender.com/verify`,
-          
-
+           callback_url: `${process.env.LIVE_DIRR || `http://localhost:${process.env.PORT}`}/verify`
       }, {
           headers: {
               Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`
@@ -323,6 +321,8 @@ router.post('/pay', async (req, res) => {
       res.status(500).json({ message: error.message });
   }
 });
+
+
 
 router.get('/verify', async (req, res) => {
   const reference = req.query.reference;

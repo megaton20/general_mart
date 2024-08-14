@@ -32,7 +32,7 @@
                             <div class="col-6 text-primary">Applied Discount:</div>
                             <div class="col-6 text-warning">0 %</div>
                             <div class="col-6 text-primary">Shipping Fee:</div>
-                            <div class="col-6 text-warning"> <%= newOrder[0].shipping_fee%></div>
+                            <div class="col-6 text-warning"> <%= newOrder.shipping_fee%></div>
                             <div class="col-6 text-primary">Total Paid:</div>
                             <div class="col-6 text-success">NGN <%= totalSum %> </div>
                           </div>
@@ -51,16 +51,16 @@
                  
   
                     <div class="col-6">My cell:</div>
-                    <div class="col-6"><%= newOrder[0].customer_phone %></div>
+                    <div class="col-6"><%= newOrder.customer_phone %></div>
                     <div class="col-6">Order Type:</div>
-                    <div class="col-6"><%= newOrder[0].Delivery %></div>
+                    <div class="col-6"><%= newOrder.Delivery %></div>
                     <div class="col-6">Address:</div>
-                    <div class="col-6"><%= newOrder[0].customer_address %></div>
+                    <div class="col-6"><%= newOrder.customer_address %></div>
                     
                     <div class="col-6 text-primary" >Secure Pin:</div>
-                    <div class="col-6"><%= newOrder[0].delivery_pin %></div>
+                    <div class="col-6"><%= newOrder.delivery_pin %></div>
                     <div class="col-6 text-primary" >Status</div>
-                    <div class="col-6"><%= newOrder[0].status %></div>
+                    <div class="col-6"><%= newOrder.status %></div>
 
                     <p class="text-warning p-0"></p>
                   </div>
@@ -68,7 +68,7 @@
                 </div>
                 <div class="card-footer">
 
-                  <a  href="/user/edit-user/<%= userData[0].id%>" style="width: 100%; display: block;" class="my-btn-outline">Edit shipping info</a >
+                  <a  href="/user/edit-user/<%= userData.id%>" style="width: 100%; display: block;" class="my-btn-outline">Edit shipping info</a >
                     <a  href="/user/" style="width: 100%; display: block;" class="my-btn-outline mt-2">Continue Shoping</a >
                     </div>
               </div>
@@ -105,8 +105,8 @@
                  </div>
 
                  <div class="col-lg-6">
-                  <% if( newOrder[0].status == "incomplete" ){ %>
-                    <form action="/user/cancel-order/<%= newOrder[0].sale_id %>" method="post">
+                  <% if( newOrder.status == "incomplete" ){ %>
+                    <form action="/user/cancel-order/<%= newOrder.sale_id %>" method="post">
 
                   <input type="hidden" name="_method" value="PUT">
                   <input name="_method" type="submit" value="cancel order" style="width: 100%;" class="btn btn-primary "/>
