@@ -2,8 +2,6 @@ const db = require("../model/databaseTable");
 const { promisify } = require('util');
 const query = promisify(db.query).bind(db);
 
-
-
 const fetchUserQuery = 'SELECT * FROM "Users" WHERE id = $1'; // PostgreSQL parameterized query
 
 module.exports = {
