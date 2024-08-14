@@ -1197,11 +1197,11 @@ exports.createNewBrand = async (req, res) => {
 
   try {
     // Check if the brand already exists
-    const results = await query(`SELECT * FROM "Brands" WHERE name = $1`, [brandName]);
+    const results = await query(`SELECT * FROM "Brands" WHERE "Name" = $1`, [brandName]);
 
     if (results.rows.length === 0) {
       // Insert new brand
-      await query(`INSERT INTO "Brands" (name) VALUES ($1)`, [brandName]);
+      await query(`INSERT INTO "Brands" ("Name") VALUES ($1)`, [brandName]);
 
       req.flash("success_msg", `"${brandName}" added successfully!`);
       return res.redirect("/super");
