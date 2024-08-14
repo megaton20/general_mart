@@ -1555,6 +1555,7 @@ exports.createNewDiscount = async (req, res) => {
 };
 
 
+
 exports.createNewInventory = async (req, res) => {
   let supplierId;
   let filename;
@@ -1611,13 +1612,15 @@ exports.createNewInventory = async (req, res) => {
     }
     const categoryId = categoryResult.rows[0].CategoryID;
 
+
+
     // Insert into inventory
     await query(`INSERT INTO "inventory" (
       "Category_name", "Brand_name", "Product_name", "Purchase_price", "category_id",
       "supplier_id", "brand_id", "Supplier_name", "Payment_method", "Reciever_name",
       "Delivery_method", "QTY_recieved", "total_in_pack", "Manufacture_date", "Expire_date",
       "Cost_of_delivery", "Total_damaged", "created_date", "activate", "image", "details"
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)`, [
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20,$21)`, [
       Category_name, Brand_name, Product_name, Purchase_price, categoryId, supplierId, brandID, 
       Supplier_name, Payment_method, Reciever_name, Delivery_method, QTY_recieved, total_in_pack, 
       Manufacture_date, Expire_date, Cost_of_delivery, Total_damaged, new Date(), "no", filename, details
@@ -1626,10 +1629,15 @@ exports.createNewInventory = async (req, res) => {
     req.flash("success_msg", `"${Product_name}" added successfully!`);
     return res.redirect("/super");
   } catch (error) {
-    req.flash("error_msg", `${error.message}`); // Changed to error.message for better error handling
+    // Debugging: Log the error
+    console.error("SQL Error:", error.message);
+
+    req.flash("error_msg", `Error: ${error.message}`);
     return res.redirect("/super");
   }
 };
+
+
 
 
 

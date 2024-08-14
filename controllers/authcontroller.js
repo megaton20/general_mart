@@ -32,141 +32,136 @@ const appName = `General Mart`
 
 
 
-exports.verifyEmailRequest =  (req, res) => {
+exports.verifyEmailRequest = async (req, res) => {
+  const email = req.body.email;
+  
+  try {
+    // Query to check if the user's email is already verified
+    const results = await query(`SELECT * FROM "Users" WHERE email = $1`, [email]);
+    const user = results.rows[0];
+    
+    if (!user) {
+      req.flash('error_msg', `User with this email does not exist`);
+      return res.redirect('/handler');
+    }
 
-  // get req body
-        const email = req.body.email
-        db.query(`SELECT * FROM Users WHERE email = ?`,[email], (err, results)=>{
-          if (err) {
-            console.log(err);
-            req.flash('error_msg', `error: ${err.sqlMessage}`)
-            return res.redirect('/')
-          }
-          const user  = JSON.parse(JSON.stringify(results[0]))
+    if (user.verify_email) {
+      req.flash('warning_msg', `This user email is already verified`);
+      return res.redirect('/handler');
+    }
 
-          
-          if (user.verify_email == true) {
-            req.flash('warning_msg',  `this user email is already verirfied`)
-            res.redirect('/handler')
-          }
+    // Generate verification token
+    const token = generateResetToken(email);
+    const tokenExpires = new Date(Date.now() + 3600000); // 1 hour from now
 
-          // Generate verification token
-          const token = generateResetToken(email);
-          const tokenExpires  = new Date(Date.now()+3600000) // 1hour from now
+    // Update query to store the token and its expiry time
+    const updateQuery = `UPDATE "Users" SET "tokenExpires" = $1, "token" = $2 WHERE id = $3`;
+    const updateResults = await query(updateQuery, [tokenExpires, token, user.id]);
 
+    if (updateResults.rowCount < 1) {
+      req.flash('error_msg', `Unknown error`);
+      return res.redirect('/handler');
+    }
 
-            // Update query
-          const query = `UPDATE Users SET tokenExpires = ?, token = ? WHERE id = ?`;
+    // Send verification email
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      host: 'smtp.gmail.com',
+      secure: false,
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD
+      }
+    });
 
-          db.query(query, [tokenExpires, token, user.id], (err, results) => {
-            if (err) {
-              console.log(err);
-              req.flash('error_msg', `error: ${err.sqlMessage}`);
-              return res.redirect('/');
-            }
+    const mailOptions = {
+      from: {
+        name: appName,
+        address: process.env.EMAIL,
+      },
+      to: email,
+      subject: 'Email Verification Prompt',
+      html: `
+      <p>Please verify your email by clicking the button below:</p>
+      <a href="${process.env.LIVE_DIRR || 'http://localhost:2000'}/auth/verify-email?token=${token}" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #fefff; background-color: #41afa5; text-decoration: none; border-radius: 5px;">Verify Email</a>
+      <p>If you did not request this, please ignore this email.</p>
+      `
+    };
 
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.log(err);
+        req.flash('error_msg', `Error from our server... try to verify your email again after 30 minutes:`);
+        return res.redirect('back');
+      }
 
-            if (results.affectedRows < 1) {
-              req.flash('error_msg', `unknown error`)
-              res.redirect('/handler')
-              return 
-            }
+      req.flash('success_msg', `Check your mail inbox or spam to activate your account`);
+      return res.redirect('back');
+    });
 
-            try {
-                        // Send verification email
-                  const transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    host:'smtp.gmail.com',
-                    secure:false,
-                    auth: {
-                      user: process.env.EMAIL,
-                      pass: process.env.EMAIL_PASSWORD
-                    }
-                  });
-      
-      
-                const mailOptions = {
-                  from: {
-                    name:appName,
-                    address:process.env.EMAIL,
-                  },
-                  to: email,
-                  subject: 'Email Verification',
-                  html: `
-                    <p>Please verify your email by clicking the button below:</p>
-                    <a href="http://localhost:2000/auth/verify-email?token=${token}" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #fefff; background-color: #41afa5; text-decoration: none; border-radius: 5px;">Verify Email</a>
-                    <p>If you did not request this, please ignore this email.</p>
-                  `
-                };
-      
-                transporter.sendMail(mailOptions, (err, info) => {
-                  if (err){
-                    console.log(err);
-                    req.flash('error_msg', `Error from our server... try to verify your email again after 30 minutes:`);
-                    return res.redirect('back');
-                  }
-      
-                req.flash('success_msg', `check your mail inbox or spam to activate your account`)
-                  return res.redirect('back') // render waitind page
-           
-          });
-            } catch (error) {
-              req.flash('error_msg', `terror error while sending message`)
-              res.redirect('back')
-            }
+  } catch (error) {
+    console.error(error);
+    req.flash('error_msg', `An error occurred while processing your request`);
+    res.redirect('back');
+  }
+};
 
-          }) // update  query
-   })// user  query
-}
 
 
 // callack
-exports.verifyEmailCallBack =  (req, res) => {
+exports.verifyEmailCallBack = (req, res) => {
   const token = req.query.token;
 
   if (!token) {
-    req.flash('error_msg', `error: Verification token is required `)
-    res.redirect('/register')
+    req.flash('error_msg', `Error: Verification token is required`);
+    return res.redirect('/register');
   }
 
-  db.query('SELECT email, tokenExpires FROM Users WHERE token = ?', [token], (err, results) => {
-    if (err){
-      req.flash('error_msg', `error: ${err.sqlMessage} `)
-      return res.redirect('/register')
-    } 
-    if (results.length === 0) {
-      req.flash('error_msg', `error: Invalid or expired token `)
-      return res.redirect('/handler') // user profile instead
+  db.query('SELECT email, "tokenExpires" FROM "Users" WHERE token = $1', [token], (err, results) => {
+    if (err) {
+      req.flash('error_msg', `Error: ${err.message}`);
+      return res.redirect('/register');
     }
 
-    const { email, tokenExpires } = results[0];
+    if (results.rows.length === 0) {
+      req.flash('error_msg', `Error: Invalid or expired token`);
+      return res.redirect('/handler'); // user profile instead
+    }
+
+    const { email, tokenExpires } = results.rows[0];
 
     if (new Date(tokenExpires) < new Date()) {
-      req.flash('error_msg', `error: Token has expired! `)
-      return res.redirect('/handler') // user profile instead
+      req.flash('error_msg', `Error: Token has expired!`);
+      return res.redirect('/handler'); // user profile instead
     }
 
     // Verify the token
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
-        req.flash('error_msg', `error: unmatched or expired token `)
-        return res.redirect('back') // user profile instead
+        req.flash('error_msg', `Error: Unmatched or expired token`);
+        return res.redirect('back'); // user profile instead
       }
 
       // Update user as verified
-      db.query('UPDATE Users SET verify_email = true, token = NULL, tokenExpires = NULL, status = "verified", WHERE email = ?', [email], (err, result) => {
-        if (err){
+      const updateQuery = `
+        UPDATE "Users" 
+        SET "verify_email" = true, "token" = NULL, "tokenExpires" = NULL, "status" = 'verified' 
+        WHERE email = $1
+      `;
+      db.query(updateQuery, [email], (err, result) => {
+        if (err) {
           console.log(err);
-          req.flash('error_msg', `error: ${err}`)
-          return res.redirect('/user/profile') // user profile instead
+          req.flash('error_msg', `Error: ${err.message}`);
+          return res.redirect('/user/profile'); // user profile instead
         }
 
-        req.flash('success_msg', `Email verified successfully `)
-        return res.redirect('/user/profile') // user profile instead
+        req.flash('success_msg', `Email verified successfully`);
+        return res.redirect('/user/profile'); // user profile instead
       });
     });
   });
-}
+};
+
 
 
 
@@ -343,78 +338,72 @@ exports.loginHandler = async (req, res, next) => {
 
 // forgot password
 exports.resetRequest = async (req, res, next) => {
+  const { email } = req.body;
 
-    const { email } = req.body;
-
-    if (!email) {
-      req.flash('error_msg',`error: Enter a valid email address`)
-      return res.redirect('back')
-    }
-// chheck db for email presence
-db.query(`SELECT * FROM "Users" WHERE email = ?`, [email], (err, results)=> {
-  if (err) {
-    req.flash('error_msg',`error  ${err.sqlMessage}`)
-    return res.redirect('back')
+  if (!email) {
+      req.flash('error_msg', `Error: Enter a valid email address`);
+      return res.redirect('back');
   }
 
-  if (results.length <= 0) {
-    req.flash('error_msg',`error: no user found with email`)
-    return res.redirect('back')
-  }
-
-  const  userEmail = results[0].email
-
-  const token = generateResetToken(userEmail);
-  const resetLink = `https://general-mart.onrender.com/reset-password/${token}`;
-
+  // Check the database for the email presence
   try {
-    // Send verification email
+    
+    const results = await query(`SELECT * FROM "Users" WHERE email = $1`, [email])
+
+
+      if (results.rows.length <= 0) {
+          req.flash('error_msg', `Error: No user found with this email`);
+          return res.redirect('back');
+      }
+
+      const userEmail = results.rows[0].email;
+      const token = generateResetToken(userEmail);
+      const resetLink = `${process.env.LIVE_DIRR || 'http://localhost:2000'}/reset-password/${token}`;
+
+          // Send verification email
           const transporter = nodemailer.createTransport({
-          service: 'gmail',
-          host:'smtp.gmail.com',
-          secure:false,
-          auth: {
-            user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASSWORD
-          }
+              service: 'gmail',
+              host: 'smtp.gmail.com',
+              secure: false,
+              auth: {
+                  user: process.env.EMAIL,
+                  pass: process.env.EMAIL_PASSWORD,
+              },
           });
 
-
           const mailOptions = {
-          from: {
-          name:appName,
-          address:process.env.EMAIL,
-          },
-          to: userEmail,
-          subject: 'Password Reset',
-          html: `
-          <p>reset password by clicking the button below:</p>
-          <a href="${resetLink}" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #fefff; background-color: #41afa5; text-decoration: none; border-radius: 5px;">Verify Email</a>
-          <p>If you did not request this, please ignore this email.</p>
-          `
+              from: {
+                  name: appName,
+                  address: process.env.EMAIL,
+              },
+              to: userEmail,
+              subject: 'Password Reset Link',
+              html: `
+                  <p>Reset your password by clicking the button below:</p>
+                  <a href="${resetLink}" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #fff; background-color: #41afa5; text-decoration: none; border-radius: 5px;">Reset Password</a>
+                  <p>If you did not request this, please ignore this email.</p>
+              `,
           };
 
           transporter.sendMail(mailOptions, (err, info) => {
-          if (err){
-          if (err.code == "EDNS") {
-            req.flash('warning_msg', `Check your network connection!`);
-            return res.redirect('back');
-          }
-          req.flash('error_msg', `Error from our server... could not send link`);
-          return res.redirect('back');
-          }
+              if (err) {
+                  if (err.code === "EDNS") {
+                      req.flash('warning_msg', `Check your network connection!`);
+                      return res.redirect('back');
+                  }
+                  req.flash('error_msg', `Error from our server... could not send link`);
+                  return res.redirect('back');
+              }
 
-          req.flash('success_msg', `check your mail ${userEmail} inbox or spam to reset your password`)
-          return res.redirect('back') // render waitind page
-
+              req.flash('success_msg', `Check your inbox or spam in ${userEmail} to reset your password`);
+              return res.redirect('back'); // Redirect to a waiting page
           });
-          } catch (error) {
-          req.flash('error_msg', `terror error! while sending message`)
-          res.redirect('back')
-          }
+      } catch (error) {
+          req.flash('error_msg', `Error while sending message`);
+          res.redirect('back');
+      }
+};
 
-})
-}
 
 
 exports.resetHandler = async (req, res, next) => {
@@ -434,7 +423,7 @@ exports.resetHandler = async (req, res, next) => {
 
 }
 
-exports.newPassword =  (req, res) => {
+exports.newPassword = async(req, res) => {
   const { token } = req.params;
   const { password, confirm } = req.body;
   const decoded = verifyResetToken(token);
@@ -450,61 +439,59 @@ exports.newPassword =  (req, res) => {
   }
 
   const hashedPassword = bcrypt.hashSync(password, 10);
-
-  db.query('UPDATE "Users" SET password = ? WHERE email = ?', [hashedPassword, decoded.email], (err, results) => {
-      if (err) {
-          console.error('Database error:', err);
-          req.flash('error_msg', 'Error updating password');
-          return res.redirect('/');
-      }
-
+try {
+  await query('UPDATE "Users" SET password = $1 WHERE email = $2', [hashedPassword, decoded.email])
       req.flash('success_msg', 'Password changed successfully');
-      res.redirect('/login');
-
-    })
+    return  res.redirect('/login');
+  
+} catch (error) {
+  console.log(error);
+  req.flash('success_msg', `errorr form server: ${error.message}`);
+  return  res.redirect('/login');
 }
+};
+
 
 
 exports.deleteAccount = async (req, res) => {
   const { reason, Comments } = req.body;
 
   if (!reason && !Comments) {
-    req.flash('error_msg', 'Please select an option');
-    return res.redirect('back');
+      req.flash('error_msg', 'Please select an option');
+      return res.redirect('back');
   }
 
   try {
-    const newData = {
-      reason: reason,
-      comment: Comments,
-    };
+      // Insert the deactivation reason and comment into the "deactivated" table
+      await query('INSERT INTO "deactivated" (reason, comment) VALUES ($1, $2)', [reason, Comments]);
 
-    // Insert the deactivation reason and comment into the deactivated table
-    await query('INSERT INTO deactivated SET ?', newData);
-    // Fetch the user
-    const user = await query('SELECT * FROM Users WHERE id = ?', [req.user.id]);
+      // Fetch the user
+      const userResults = await query('SELECT * FROM "Users" WHERE id = $1', [req.user.id]);
+      const user = userResults.rows[0];
 
-    // Log out the user
-    req.logout(async (err) => {
-      if (err) {
-        req.flash('error_msg', `Error logging out: ${err}`);
-        return res.redirect('back');
-      }
+      // Log out the user
+      req.logout(async (err) => {
+          if (err) {
+              req.flash('error_msg', `Error logging out: ${err}`);
+              return res.redirect('back');
+          }
 
-      res.redirect('/')
-      // Delete the user from the Users table
-      await query('DELETE FROM Users WHERE id = ?', [user[0].id]);
+          // Delete the user from the "Users" table
+          await query('DELETE FROM "Users" WHERE id = $1', [user.id]);
 
-      // Destroy the session
-      req.session.destroy((err) => {
-        if (err) {
-          req.flash('error_msg', `Error destroying session: ${err}`);
-          return res.redirect('back');
-        }
+          // Destroy the session
+          req.session.destroy((err) => {
+              if (err) {
+                  req.flash('error_msg', `Error destroying session: ${err}`);
+                  return res.redirect('back');
+              }
+
+              res.redirect('/');
+          });
       });
-    });
   } catch (error) {
-    req.flash('error_msg', `Error from server: ${error}`);
-    return res.redirect('back');
+    console.log(error);
+      req.flash('error_msg', `Error from server: ${error}`);
+      return res.redirect('back');
   }
 };
