@@ -1,0 +1,191 @@
+
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include ('../partials/superSidebar') %>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include ('../partials/topbar') %>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- DataTales Example -->
+                    <div class=" mb-4">
+                           <!-- DataTales Example -->
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <div class="form mt-4 mb-4">
+                            <form action="/super/create-inventory"  method="post" enctype="multipart/form-data" >
+                               <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">Category Name</label>
+                                        <select name="Category_name" id="" class="form-control">
+                                            <option value="">Select Category</option>
+                                            <% categoryData.forEach(function(data) {%>
+                                            <option value="<%= data['Category_name'] %>"> <%= data['Category_name'] %></option>
+                                            <% }) %>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">Brand Name</label>
+                                        <input type="text" name="Brand_name" class="form-control" >
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">Product Name</label>
+                                        <input type="text" name="Product_name" class="form-control" >
+                                    </div>
+                                </div>
+
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">Purchase Price</label>
+                                        <input type="number" name="Purchase_price" class="form-control" >
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">Supplier Name</label>
+                                        <select name="Supplier_name" id="" class="form-control">
+                                            <option value="">Select Supplier</option>
+                                            <% supplierData.forEach(function(data) {%>
+                                            <option value="<%= data['Business_name'] %> "> <%= data['Business_name'] %> </option>
+                                            <% }) %>
+                                            <option value="Unregistered"> Unregistered</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">Payment Method</label>
+                                        <select name="Payment_method" id="" class="form-control">
+                                            <option value="">Select Payment Method</option>
+                                            <option value="Cash"> Cash</option>
+                                            <option value="Transfer"> Transfer</option>
+                                            <option value="Split Payment"> Split Payment</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">Reciever Name</label>
+                                        <select name="Reciever_name" id="" class="form-control">
+                                            <option value="">Select Reciever (only superAdminss)</option>
+                                            <% superAdmin.forEach(function(data) {%>
+                                            <option value="<%= data['First_name'] %> <%= data['Last_name'] %> "> <%= data['First_name'] %> <%= data['Last_name'] %> </option>
+                                            <% }) %>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">Delivery Method</label>
+                                        <select name="Delivery_method" id="" class="form-control">
+                                            <option value="">Select Delivery Method</option>
+                                            <option value="by comapany"> by comapany</option>
+                                            <option value="by Supplier"> by Supplier</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">QTY Recieved</label>
+                                        <input type="number" name="QTY_recieved" class="form-control" >
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">Total Product in Pack</label>
+                                        <input type="number" name="total_in_pack" class="form-control" >
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">Manufacture Date</label>
+                                        <input type="date" name="Manufacture_date" class="form-control" >
+                                    </div>
+                                </div>
+
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">Expire Date</label>
+                                        <input type="date" name="Expire_date" class="form-control" >
+                                    </div>
+                                </div>
+                             
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">Cost Of Delivery</label>
+                                        <input type="number" name="Cost_of_delivery" class="form-control" >
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">No. Of Damaged Items</label>
+                                        <input type="number" name="Total_damaged" class="form-control" >
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="file" name="image">
+                                </div>
+
+                            </div>
+                            <div class="mt-4">
+                                <input type="submit" class="btn btn-success" style="width: 100%;" value="Submit">
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include ('../partials/footer') %>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>

@@ -1,0 +1,131 @@
+
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include ('../partials/superSidebar') %>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include ('../partials/topbar') %>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <%- include ('../partials/messages') %>
+
+                    <!-- DataTales Example -->
+                    <div class=" mb-4">
+                        <% if(allOrders.length <= 0){ %>
+
+                                <h1>No Order Record Found! (NORF)</h1>  
+                            <% } else{ %> 
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                  <th>Id</th>
+                                                  <th>customer email</th>
+                                                  <th>Pick up Store</th>
+                                                  <th>Sale Id</th>
+                                                  <th>Delivery</th>
+                                                  <th>Payment Type</th>
+                                                  <th>Total</th>
+                                                  <th>Status</th>
+                                                  <th>Date</th>
+                                                  <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                          
+                                            <tbody>
+                                          
+        
+        
+                                                <% allOrders.forEach(function(data) {%>
+                                                    <tr>
+                                                        <td><%= data['id'] %></td>
+                                                        <td><%= data['customer_email'] %> </td>
+                                                        <td><%= data['pick_up_store_name'] %> </td>
+                                                        <td><%= data['sale_id'] %> </td>
+                                                        <td><%= data['Delivery'] %> </td>
+                                                        <td><%= data['payment_type'] %> </td>
+                                                        <td><%= data['total_amount'] %> </td>
+
+                                                            <% if(  data['status']  == "incomplete"){ %>
+
+                                                                        <td class="text-danger ">
+                                                                            <%= data['status'] %> 
+                                                                        </td>
+                                                                        
+                                                                    <% } else if ( data['status']  == "shipped") { %>  
+                                                                        <td class="text-warning">
+                                                                            <%= data['status'] %> 
+                                                                        </td>   
+                                                                        
+                                                                        <%} else {%>
+
+                                                                        <td class="text-success">
+                                                                            <%= data['status'] %> 
+                                                                        </td>   
+                                                             <% } %>
+
+
+                                                           
+
+                                                        <td><%= data['created_date'] %> </td>
+
+
+                                                            <td>
+                                                                
+                                                                <a href="/super/view-order/<%= data['id'] %>"  class="btn btn-primary">View</a>
+                                                            </td>
+                                                            
+                                                            
+
+        
+                                                  
+                                                   </tr> 
+                                                   
+                                                       <% }) %>
+                                         
+                                                   
+                                            
+        
+                                                </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <% } %>
+                       
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include ('../partials/footer') %>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>

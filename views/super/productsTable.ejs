@@ -1,0 +1,201 @@
+
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include ('../partials/superSidebar') %>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include ('../partials/topbar') %>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Store Shelf  </h1>
+                    <%- include ('../partials/messages') %>
+
+                    <!-- DataTales Example -->
+                    <div class=" mb-4">
+                        <% if(allProducts.length <= 0){ %>
+                            <div class="card-body">
+                                <h1>No Products Record Found !</h1>  
+                            </div> 
+                            <% } else{ %> 
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                  <th>Id</th>
+                                                  <th>Picture</th>
+                                                  <th>Product name</th>
+                                                  <th>Brand Name</th>
+                                                  <th>Category</th>
+                                                  <th>Unit Price</th>
+                                                  <th>Stock QTY</th>
+                                                  <th>Shelf Item</th>
+                                                  <th>Activated ?</th>
+                                                  <th>Actions</th>
+                                                  <th>on showcase</th>
+                                                  <th>showcase</th>
+                                                </tr>
+                                            </thead>
+                                          
+                                            <tbody>
+                                          
+        
+        
+                                                <% allProducts.forEach(function(data) {%>
+                                                    <tr>
+                                                        <td><a href="/super/inventory/<%= data['inventory_id'] %>"><%= data['id'] %></a></td>
+                                                        <td><img class="img-thumbnail" style="max-width: 40px;" src="/uploads/<%= data['image'] %>" alt="image"></td>
+                                                        <td><%= data['ProductName'] %> </td>
+                                                        <td><%= data['Brand_name'] %> </td>
+                                                        <td><%= data['category'] %> </td>
+                                                        <td><%= data['UnitPrice'] %> </td>
+                                                        <td><%= data['StockQuantity'] %> </td>
+                                                        <td>
+
+                                                            <% if (  data.total_on_shelf  >= 10) { %>
+
+                                                                <div class="text-success btn btn-success shadow card">
+                                                                    <%= data['total_on_shelf'] %> 
+                                                                </div>
+                                                                <% } else { %>
+                                    
+                                                              <div class="text-danger btn btn-danger shadow card">
+                                                                <%= data['total_on_shelf'] %> 
+                                                              </div>
+                                    
+                                                              <% } %>
+
+                                                            
+                                                        </td>
+                                                        <td><%= data['activate'] %> </td>
+        
+                                                        <td>
+                                                            <div class="" style="display: flex;">
+                                                                <div class="col-3">
+                                                                    <form
+                                                                    action="/super/unflag-product/<%= data['inventory_id'] %>"
+                                                                    method="POST"
+                                                                  >
+                                                                    <input type="hidden" name="_method" value="PUT" />
+                                                                    <button  class="btn btn-success"><i class="fas fw fa-plus"></i></button>
+                                                                  </form>
+                                                                </div>
+                                                                  <div class="col-3">
+                                                                    <form
+                                                                    action="/super/flag-product/<%= data['inventory_id'] %>"
+                                                                    method="POST"
+                                                                  >
+                                                                    <input type="hidden" name="_method" value="PUT" />
+                                                                    <button  class="btn btn-warning"><i class="fas fw fa-times"></i> </button>
+                                                                  </form>
+                                                                  </div>
+
+
+                                                                 
+                                                                  <div class="col-3">
+                                                                    <a href="/super/update-price/<%= data['inventory_id'] %>" class="btn btn-primary" >new price </a>
+                                                                  </div>
+
+                                                                
+                                                            </div>
+                                                        </td>
+                                                  
+                                                        <td><%= data['showcase'] %> </td>
+                                                        <td>
+
+                                                          <% if (  data.showcase == "yes") { %>
+
+                                                            <form
+                                                            action="/super/showcase-off/<%= data['id'] %>"
+                                                            method="POST"
+                                                          >
+                                                            <input type="hidden" name="_method" value="PUT" />
+                                                            <button  class="btn btn-success">off</button>
+                                                          </form>
+
+                                                            <% } else { %>
+                                
+                                                              <form
+                                                              action="/super/showcase-on/<%= data['id'] %>"
+                                                              method="POST"
+                                                            >
+                                                              <input type="hidden" name="_method" value="PUT" />
+                                                              <button  class="btn btn-success">on</button>
+                                                            </form>
+                                
+                                                          <% } %>
+                                                          
+
+                                                        </td>
+
+
+                                                   </tr> 
+                                                   
+                                                       <% }) %>
+                                         
+                                           
+                                            
+        
+                                                </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <% } %>
+                       
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include ('../partials/footer') %>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+
+
+    <script>
+        // Select all buttons with the class "priceModal"
+        let addPriceButtons = document.querySelectorAll(".click-to-add-price");
+        let linkToAdd = document.getElementById("newLink");
+      
+        // Add event listener to each button
+        addPriceButtons.forEach(button => {
+
+          button.addEventListener("click", function() {
+            // Get the value of the data-value attribute
+      
+            const btnValue = this.getAttribute('data-value');
+      
+            // Set the form action dynamically
+            linkToAdd.action = `/super/update-price/${btnValue}`;
+          });
+        });
+      </script>

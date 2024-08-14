@@ -1,0 +1,41 @@
+
+<%- include('./partials/navbar') %>
+
+<main class="main">
+      <!-- Page adverts -->
+      <div class="container">
+        <%- include('./partials/ads') %>
+      </div>
+
+  <br>
+  <div class="container">
+    <div class=" text-center">
+      <div class="container"><%- include('../partials/messages') %></div>
+      <div class="d-flex flex-column justify-content-center align-items-center">
+        <div class="mt-4" >
+          <img style="max-width: 100px;" src="/images/man-with-laptop-light.png" alt="">
+        </div>
+        <p data-aos="fade-up" data-aos-delay="100">Quickily find items by Searching our store<br></p>
+        <form action="/user/search" method="post" data-aos="fade-up"  >
+            <input class="form-control" style="width: 100%;" type="text" name="search" placeholder="search here">
+            <input class="my-btn mt-4" type="submit" value="Search">
+        </form>
+      </div>
+    </div>
+
+    <%- include('./partials/info') %>
+
+  </div>
+</main>
+
+<br>
+<br>
+<%- include('./partials/footer') %>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+
+
+
+

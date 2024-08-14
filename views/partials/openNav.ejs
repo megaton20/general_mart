@@ -1,0 +1,30 @@
+<header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+  
+      <a href="/" class="logo d-flex align-items-center me-auto">
+        <img src="/images/logo.png" alt="logo image">
+      </a>
+  
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="/#hero" class="">Home</a></li>
+          <li><a  href="/#featured-services"> Services</a></li>
+          <li><a  href="/#about">About</a></li>
+          <li><a  href="/#clients">Partners</a></li>
+          <li><a  href="/#faqs">FAQs</a></li>
+          <li><a  href="/#contact">Contacts</a></li>
+          
+  
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+  
+      <% if(userActive == false){ %>
+        <a class="my-btn ml-4" href="/login">Log in</a>
+        <% } else{ %> 
+          <a class="my-btn ml-4" href="/handler">Continue</a>
+
+          <% } %>
+  
+    </div>
+  </header>

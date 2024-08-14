@@ -1,0 +1,320 @@
+<!-- Page Wrapper -->
+<div id="wrapper">
+  <!-- Sidebar -->
+
+  <!-- End of Sidebar -->
+  <!-- Content Wrapper -->
+  <div class="container-fluid">
+    <%- include ('../partials/superCounterTopbar') %>
+
+
+      <%- include ('../partials/messages') %>
+      <div class="row">
+        <!-- cat Card-->
+        <div class="col-3">
+          <div class="card border-1 rounded-4 mb-2">
+            <div class="card-header text-dark">Categories</div>
+            <div class="card-body">
+              <% allCategory.forEach(data=> { %>
+              <button
+                data-category="<%= data.Category_name %>"
+                class="categoryButton tile card  border-1 bg-light text-dark p-2 m-2"
+                style="width: 100%"
+              >
+                <%= data.Category_name %>
+              </button>
+              <% }); %>
+            </div>
+          </div>
+        </div>
+        <!-- items Card-->
+        <div class="col-5">
+
+            <div class="card border-2 rounded-4 mb-3">
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-md-6" id="itemHeading">Items</div>
+                  <div class="search-bar col-md-6">
+                    <input
+                      id="searchInput"
+                      style="padding: 2px; padding-left: 5px"
+                      type="text"
+                      placeholder="search items"
+                      class="form-control bg-transparent text-dark"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="card-body" style="height: 700px; overflow-y: scroll">
+                <div class="mb-2 row" id="itemsContainer"></div>
+              </div>
+            </div>
+
+        </div>
+
+        <!-- cart Card-->
+        <div class="col-4">
+          <div class="card text-dark border-2 rounded-4 mb-4">
+            <div class="card-header">
+              Total: <span id="Total" class="text-success"> 0 </span> To be paid
+            </div>
+            <div class="card-body p-4">
+              <div class="mb-2">
+                <!-- to display cart items -->
+                <div id="carte">
+                  <table class="table table" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th> Name</th>
+                        <th> QTY</th>
+                        <th> SUB-TOTAL</th>
+                        <th> Action</th>
+                      </tr>
+                    </thead>
+
+                                             
+                    <tbody id="cart">
+
+
+
+                        <!-- Display the expiry date directly -->
+
+
+  
+  
+                
+                  </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <br />
+              <!-- <p>Added Discount: <span id="">- 0</span>Naira</p> -->
+
+              <form id="cart-form" action="/super/submitCart" method="post">
+                <!-- Form for submitting the cart -->
+
+                <select id="payment-method" class="form-control text-dark">
+                  <option value="Cash">Cash</option>
+                  <option value="Debit Card">Debit Card</option>
+                  <option value="Split Payment">Split Payment</option>
+                </select>
+
+                <button class="btn btn-success mt-3"type="submit"id="submit-cart"style="width: 100%">submit</button>
+              </form>
+
+              <div class="img mt-3 mb-4">
+                <img style="width: 100%" src="/assets/payments.png" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="my-footer" style="position: fixed; bottom: 0; width: 100%">
+      <%- include('../partials/footer') %>
+    </div>
+  </div>
+  <!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+
+
+<script>
+  // Array to store items in the cart
+  let cart = [];
+  let submitPrice;
+  // Get the total price div
+  const totalDiv = document.getElementById('Total');
+
+  // Calculating the price in the current array
+  function populateCurrentPrice() {
+    const totalPrice = cart.reduce((total, item) => total + (parseFloat(item.price) * item.quantity), 0);
+    totalDiv.innerHTML = totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'NGN' });
+    submitPrice = totalPrice;
+  }
+
+  // Function to add item to cart
+  function addToCart(item) {
+    const existingItem = cart.find(cartItem => cartItem.id === item.id);
+
+    if (existingItem) {
+      if (existingItem.quantity < item.max) {
+        existingItem.quantity++;
+      } else {
+        alert(`You can only add up to ${item.max} of this item.`);
+        return;
+      }
+    } else {
+      item.quantity = 1;
+      cart.push(item);
+    }
+
+    displayCart();
+    populateCurrentPrice();
+  }
+
+  // Function to remove item from cart
+  function removeFromCart(item) {
+    const existingItem = cart.find(cartItem => cartItem.id === item.id);
+
+    if (existingItem) {
+      existingItem.quantity--;
+      if (existingItem.quantity <= 0) {
+        cart = cart.filter(cartItem => cartItem.id !== item.id);
+      }
+    }
+
+    displayCart();
+    populateCurrentPrice();
+  }
+
+  // Handle button click for adding items to cart
+  function handleButtonClick(event) {
+    const id = event.getAttribute("data-id");
+    const name = event.getAttribute("data-name");
+    const image = event.getAttribute("data-image");
+    const price = event.getAttribute("data-price");
+    const max = parseInt(event.getAttribute("data-max"), 10);
+
+    const item = { id, name, price, max, image };
+    var uuid = Date.now()+Math.floor(Math.random()*1000)
+
+    item.uuid  = uuid
+    addToCart(item);
+  }
+
+  function displayCart() {
+    const cartTableBody = document.getElementById('cart');
+    cartTableBody.innerHTML = '';
+
+    cart.forEach(item => {
+      const itemRow = document.createElement('tr');
+
+      const itemNameCell = document.createElement('td');
+      itemNameCell.textContent = item.name;
+
+      const itemQuantityCell = document.createElement('td');
+      itemQuantityCell.textContent = item.quantity;
+
+      const itemPriceCell = document.createElement('td');
+      itemPriceCell.textContent = `${(parseFloat(item.price) * item.quantity).toFixed(2)}`;
+
+      const removeButtonCell = document.createElement('td');
+      const removeButton = document.createElement('button');
+      removeButton.classList.add('btn', 'btn-outline-danger');
+      removeButton.innerHTML = '<i class="fa fa-fw fa-trash"></i>';
+      removeButton.addEventListener('click', () => {
+        removeFromCart(item);
+      });
+
+      removeButtonCell.appendChild(removeButton);
+      itemRow.appendChild(itemNameCell);
+      itemRow.appendChild(itemQuantityCell);
+      itemRow.appendChild(itemPriceCell);
+      itemRow.appendChild(removeButtonCell);
+      cartTableBody.appendChild(itemRow);
+    });
+  }
+
+  // Submit cart data
+  function submitCart(e) {
+    const paymentInput = document.getElementById('payment-method').value;
+
+
+    const customerData = {
+      sumTotal: submitPrice,
+      paymentType: paymentInput,
+    };
+
+    const metaDataInput = document.createElement('input');
+    metaDataInput.setAttribute('type', 'hidden');
+    metaDataInput.setAttribute('name', 'meta');
+    metaDataInput.setAttribute('value', JSON.stringify(customerData));
+
+    const cartInput = document.createElement('input');
+    cartInput.setAttribute('type', 'hidden');
+    cartInput.setAttribute('name', 'cart');
+    cartInput.setAttribute('value', JSON.stringify(cart));
+
+    const form = document.getElementById('cart-form');
+    form.appendChild(cartInput);
+    form.appendChild(metaDataInput);
+  }
+
+  document.getElementById('submit-cart').addEventListener('click', submitCart);
+
+  // Category and search input event listeners
+  const itemHeading = document.getElementById('itemHeading');
+  const searchInput = document.getElementById('searchInput');
+  const categoryButtons = document.querySelectorAll('.categoryButton');
+
+  categoryButtons.forEach(button => {
+    button.addEventListener('click', function () {
+      categoryButtons.forEach(btn => btn.classList.remove('active'));
+      this.classList.add('active');
+      const category = this.getAttribute('data-category');
+      fetchItems(category, '');
+    });
+  });
+
+  searchInput.addEventListener('input', function () {
+    const searchTerm = this.value;
+    const activeCategoryButton = document.querySelector('.categoryButton.active');
+    const category = activeCategoryButton ? activeCategoryButton.getAttribute('data-category') : '';
+
+    fetchItems(category, searchTerm);
+  });
+
+  // Fetch items from the server
+  function fetchItems(category, searchTerm) {
+    fetch(`/super/getItems/${category} ?search=${searchTerm}`)
+      .then(response => response.json())
+      .then(items => {
+        populateItems(items);
+      })
+      .catch(error => {
+        console.error('Error fetching items:', error);
+      });
+  }
+
+  // Populate items in the UI
+  function populateItems(items) {
+    const itemsContainer = document.getElementById('itemsContainer');
+    itemsContainer.innerHTML = '';
+
+    if (items.length === 0) {
+      itemsContainer.innerHTML = '<p class="p-4 text-dark">No items found for this category at the moment (-:)</p>';
+      itemHeading.classList.remove("text-dark");
+      itemHeading.classList.add("text-danger");
+      itemHeading.innerHTML = `Shelf is empty`;
+    } else {
+      itemHeading.classList.remove("text-danger");
+      itemHeading.classList.add("text-warning");
+      itemHeading.innerHTML = `All items on our shelf`;
+
+      items.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.classList.add('col-3')
+        itemElement.innerHTML = `
+          <button class="add-to-cart tile card shadow border-0 text-dark text-center mb-4 mr-2" data-id="${item.id}" data-name="${item.ProductName}" data-price="${item.UnitPrice}" data-max="${item.total_on_shelf}" data-image="${item.image}" onclick="handleButtonClick(this)">
+            <a>
+              <img style="max-width: 120px; max-height: 120px;" src="/uploads/${item.image}" class="card-img-top rounded-4" alt="...">
+              <div class="text-center">
+                <p class="card-text">${item.ProductName}</p>
+                <p class="card-text"><small>$${item.UnitPrice}</small></p>
+              </div>
+            </a>
+          </button>
+        `;
+        itemsContainer.appendChild(itemElement);
+      });
+    }
+  }
+</script>
+

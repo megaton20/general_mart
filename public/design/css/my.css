@@ -1,0 +1,661 @@
+
+:root {
+  --default-font: "Roboto", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --heading-font: "Nunito", sans-serif;
+  --nav-font: "Inter", sans-serif;
+}
+
+/* Global Colors */
+:root {
+  /* Background Color - This color is applied to the background of the entire website as well as individual sections. */
+  --background-color: #feffff;
+
+  /* Default Color - This is the default color used for the majority of the text content. */
+  --default-color: #48473d;
+
+  /* Heading Color - This color is used for titles, headings and secondary elements. */
+  --heading-color: #3e5055;
+
+  /* Accent Color - This is the main accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out. */
+  --accent-color: #41afa5;
+
+  /* Contrast Color - This is a color used for text when the background color is one of the heading, accent, or default colors. Its purpose is to ensure proper contrast and readability when placed over these more dominant colors. */
+  --contrast-color: #feffff;
+}
+
+:root {
+  /* Nav Color - This is the default color of the main navmenu links. */
+  --nav-color: #313336;
+
+  /* Nav Hover Color - This color is applied to main navmenu links when they are hovered over. */
+  --nav-hover-color: #77b6ca;
+
+  /* Nav Dropdown Background Color - This color is used as the background for dropdown boxes that appear when hovering over primary navigation items. */
+  --nav-dropdown-background-color: #feffff;
+
+  /* Nav Dropdown Color - This color is used for navigation links of the dropdown items in the navigation menu. */
+  --nav-dropdown-color: #313336;
+
+  /* Nav Dropdown Hover Color - Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
+  --nav-dropdown-hover-color: #77b6ca;
+}
+
+/* Smooth scroll */
+:root {
+  scroll-behavior: smooth;
+}
+
+/*--------------------------------------------------------------
+# General
+--------------------------------------------------------------*/
+body {
+  color: var(--default-color);
+  background-color: var(--background-color);
+  font-family: var(--default-font);
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+a:hover {
+  color: color-mix(in srgb, var(--accent-color), transparent 25%);
+  text-decoration: none !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--heading-color);
+  font-family: var(--heading-font);
+}
+
+
+
+
+
+
+/*--------------------------------------------------------------
+# Global Header
+--------------------------------------------------------------*/
+
+.footer-details {
+  display: flex;
+  justify-content: space-between;
+}
+@media (max-width: 480px) {
+  .footer-details  {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header .logo h1 {
+    font-size: 24px;
+  }
+}
+
+
+.header {
+  color: var(--default-color);
+  background-color: var(--background-color);
+  padding: 20px 0;
+  transition: all 0.5s;
+  z-index: 997;
+}
+
+.header .logo {
+  line-height: 1;
+}
+
+.header .logo img {
+  max-height: 36px;
+  margin-right: 8px;
+}
+
+.header .logo h1 {
+  font-size: 30px;
+  margin: 0;
+  font-weight: 600;
+  color: var(--heading-color);
+}
+
+@media (max-width: 480px) {
+  .header .logo img {
+    max-height: 24px;
+  }
+
+  .header .logo h1 {
+    font-size: 24px;
+  }
+}
+
+ .my-btn, .my-btn:focus {
+  color: var(--contrast-color);
+  background: var(--accent-color);
+  border: none;
+  font-size: 14px;
+  padding: 8px 25px;
+  border-radius: 5px;
+  transition: 0.3s;
+  margin: 0;
+
+}
+.my-btn-outline {
+  color: var(--heading-color);
+  border: 1px solid var(--accent-color);
+  background: none;
+  text-align: center;
+  font-size: 14px;
+  padding: 8px 25px;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+.my-btn-outline:hover {
+  color: var(--contrast-color);
+  background: var(--accent-color);
+  font-size: 14px;
+  padding: 8px 25px;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+ .my-btn:hover,
+ .my-btn:focus:hover {
+  color: var(--contrast-color);
+  background: color-mix(in srgb, var(--accent-color), transparent 15%);
+}
+
+@media (max-width: 1200px) {
+  .header .logo {
+    order: 1;
+  }
+
+  .header .my-btn {
+    order: 2;
+    margin: 0 15px 0 0;
+    padding: 6px 15px;
+  }
+
+  .header .navmenu {
+    order: 3;
+  }
+}
+
+.scrolled .header {
+  box-shadow: 0px 0 18px color-mix(in srgb, var(--default-color), transparent 85%);
+}
+
+
+.wrapper {
+    
+    display: flex;
+    justify-content: center;
+    margin-top: 200px;
+    padding: 10px;
+    
+}
+
+
+.myform {
+    width: 300px;
+}
+.wrapper input {
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: none;
+    width: 280px;
+}
+
+
+input:active{
+    border: none;
+}
+
+.wrapper button {
+    background-color: #50a169;
+    color: #ffff;
+    padding: 10px;
+    margin-top: 30px;
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+    
+}
+
+
+.top-nav {
+    background-color: #76ecbd;
+    position: fixed;
+    top: 0;
+    left: 0;
+    text-align: center;
+    width: 100%;
+    height: 40px;
+    z-index: 10000;
+}
+
+.top-nav,.footer-nav{
+    padding-bottom: 8px;
+    color: #ffff;
+}
+
+.footer-nav {
+    background-color: #76ecbd;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    width: 100%;
+    height: 40px;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+.tile  {
+  text-transform: capitalize;
+
+}
+
+.tile:active {
+    transform: scale(.98);
+    transition: .09s ease-in;
+}
+
+
+
+.tile .card-text{
+    font-size: 13px;
+    padding: 0px;
+    margin: 0px;
+}
+
+
+
+
+  
+
+  .item-image-container {
+    height: 100px; 
+    overflow: hidden; 
+  }
+  
+  .item-image-container img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    transition: transform 0.3s ease-in-out;
+    overflow: hidden;
+  }
+  
+  .item-image-container img:hover {
+    overflow: hidden;
+    transform: scale(1.1); /* Scale up the image on hover */
+  }
+  .item-text{
+  padding: 0;
+  margin: 0;
+  
+}
+.item-text p{
+  padding: 0;
+  margin: 0;
+
+}
+  .custom-button {
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Align items vertically in the center */
+    width: 200px; /* Adjust the width as needed */
+    height: 50px; /* Adjust the height as needed */
+    border: none; /* Remove the default border */
+    cursor: pointer; /* Change cursor on hover */
+    border-radius: 8px; /* Rounded corners */
+    overflow: hidden; /* Hide overflow */
+    background-color: #f0f0f0; /* Background color */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+  }
+  
+  .custom-button:hover {
+    background-color: #e0e0e0; /* Background color on hover */
+  }
+
+  .button-image {
+    width: 50px; /* Set the width for the image part */
+    height: 100%; /* Full height */
+    background-image: url('/images/fast-food.png'); /* Path to your background image */
+    background-size: cover; /* Ensure the image covers the container */
+    background-position: center; /* Center the image */
+  }
+  
+  .button-text {
+    flex: 1; /* Take up remaining space */
+    text-align: center; /* Center the text */
+    color: #333; /* Text color */
+    font-size: 16px; /* Font size */
+  }
+
+
+
+  .item-background-image {
+    width: 100%; /* Set the width for the image part */
+    height: 100%; /* Full height */
+    background-image: url('/images/fast-food.png'); /* Path to your background image */
+    background-size: 200px; 
+    margin-bottom: 40px;
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat;
+  }
+
+ 
+
+  .no-items {
+    width: 100%; /* Set the width for the image part */
+    height: 100%; /* Full height */
+    background-image: url('/images/no data.jpeg'); /* Path to your background image */
+    background-size: 200px; 
+    margin-bottom: 40px;
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat;
+  }
+  .profile-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px; /* Adjust height as needed */
+}
+
+.my-profile-image {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%; 
+  overflow: hidden;
+    position: relative;
+    display: inline-block;
+    margin-right: 20px; /* Adjust spacing between image and button */
+}
+
+.profile-img {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%; 
+    object-fit: cover; /* Maintain aspect ratio */
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0; /* Hide the overlay initially */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease; /* Smooth transition for opacity */
+}
+
+.my-profile-image:hover .overlay {
+    opacity: 1; /* Show the overlay on hover */
+}
+
+.user {
+    text-align: center;
+}
+
+.upload-label {
+    cursor: pointer;
+    color: white;
+    font-size: 16px;
+    background-color: rgba(0, 0, 0, 0.7); /* Transparent background for label */
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.file-input {
+    display: none; /* Hide the file input */
+}
+
+.btn-user {
+    margin-top: 10px;
+}
+
+  .cart-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  } 
+  .cart-item img {
+    max-width: 40px;
+    max-height: 40px;
+    margin-right: 20px;
+  }
+  .cart-item-details {
+    flex: 1;
+  }
+
+  .cart-item-details h5{
+    font-size: 15px;
+  }
+  .item-text {
+    font-size: 13px;
+  }
+
+  .item-price {
+    font-size: 14px;
+  }
+  .cart-item-actions {
+    display: flex;
+    align-items: center;
+  }
+  .cart-item-actions button {
+    margin: 0 5px;
+  }
+
+  #fullScreenLoader {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+
+ .help-box {
+  background-color: var(--accent-color);
+  color: var(--contrast-color);
+  margin-top: 30px;
+  padding: 30px 15px;
+}
+
+ .help-box .help-icon {
+  font-size: 48px;
+}
+
+ .help-box h4,
+ .help-box a {
+  color: var(--contrast-color);
+}
+
+
+.banner-section{
+  display: flex;
+  justify-content: space-between;
+  overflow-x: scroll;
+}
+.ads-banner {
+  /* margin-right: 1px; */
+}
+.ads-banner img{
+  height: 100%;
+  width: 300px;
+}
+
+.progress-container {
+  width: 100%;
+  background-color: #e0e0df;
+  border-radius: 25px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 3px 3px -5px, 0 2px 5px #0000000f;
+  position: relative;
+}
+
+.progress-bar {
+  height: 20px;
+  width: 0;
+  background-color: #76c7c0 !important;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 25px 0 0 25px;
+  transition: width 0.7s ease-in-out;
+}
+
+.progress-percent {
+  color: white !important;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 0px; /* Adjust this value as needed to position below the bar */
+  font-size: 13px;
+}
+
+.fixed-col{
+  /* position: fixed !important; */
+  overflow: auto;
+  }
+  .scrolling-col{
+    margin: 0;
+  /* overflow-y:scroll ; */
+  /* height: 900px; */
+  padding-bottom: 40px;
+  }
+
+
+.truncate-container {
+  width: 100%; /* Set a fixed width for demonstration */
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+
+.carousel-image {
+  height: 75vh; /* Adjust the height as needed */
+  object-fit: cover; /* Ensures the image covers the container without stretching */
+}
+
+.carousel-caption {
+  top: 50%;
+  transform: translateY(-50%);
+  bottom: initial;
+  text-align: center;
+}
+
+.my-btn {
+  margin: 0.5em;
+}
+
+@media (max-width: 768px) {
+  .carousel-caption {
+    font-size: 0.8em;
+  }
+}
+
+.profile-nav-items{
+  display: block;
+text-decoration: none; 
+
+background-color: rgba(0, 0, 0, 0.1);
+color: #41afa5;
+padding: 5px;
+margin-bottom: 2px;
+}
+
+
+.form-title {
+  font-size: 17px;
+  color: var(--default-color);
+  margin-top: 10px;
+
+}
+
+.my-label {
+  font-size: 13px;
+  color: var(--accent-color);
+  margin-bottom: 10px;
+}
+.contact-info {
+  margin: 20px 0;
+}
+.contact-info a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+.contact-info a:hover {
+  text-decoration: underline;
+}
+.social-links {
+  margin: 20px 0;
+}
+.social-links a {
+  display: inline-block;
+  margin-top: 10px;
+  margin-right: 10px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+}
+.whatsapp-link {
+  border:1px solid #25D366;
+  color: #25D366 !important;
+}
+.whatsapp-link:hover {
+  background-color: #1EBEA5;
+  color: #e1f1e7 !important;
+}
+.instagram-link {
+  background-color: #C13584;
+}
+.instagram-link:hover {
+  background-color: #E1306C;
+}
+.social-links i {
+  margin-right: 8px;
+}
+
+.emoji {
+  font-size: 24px;
+}
+.invoice-footer {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #666;
+}
+.invoice-footer a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+.invoice-footer a:hover {
+  text-decoration: underline;
+}
+
+.card-header{
+  color: #41afa5;
+  font-size: 13px;
+}

@@ -1,0 +1,115 @@
+
+<%- include('./partials/navbar') %>
+
+<main class="main">
+  <div class="container"><%- include('../partials/messages') %></div>
+
+      <!-- Page adverts -->
+      <div class="container">
+        <%- include('./partials/ads') %>
+      </div>
+  <!-- Service Details Section -->
+  <section id="service-details" class="service-details section">
+    
+    <div class="container">
+
+      <div class="row gy-5">
+
+      
+      <div class="col-lg-8 ps-lg-5 card "  id="">
+          
+        <% cartItems.forEach(item => { %>
+          <div class="cart-item row">
+            <div class="col-2 mr-1">
+              <img src="/uploads/<%= item.image %>" class="img-fluid rounded" alt="<%= item.product_name %>">
+            </div>
+            <div class="cart-item-details col-6 ml-4">
+              <h5 class="m-0"><%= item.product_name %></h5>
+              <p class="m-0" >Subtotal: ₦<span class="item-price"><%= item.subtotal.toFixed(2) %> </span></p>
+            </div>
+            <div class="cart-item-action col-3 ml-0">
+              <button class="btn btn-danger" onclick="updateQuantity(<%= item.product_id %>, -1, <%= item.quantity %>, <%= item.max %>)">-</button>
+              <span class="mx-2"><%= item.quantity %></span>
+              <button class="btn btn-success" onclick="updateQuantity(<%= item.product_id %>, 1, <%= item.quantity %>, <%= item.max %>)">+</button>
+            </div>
+          </div>
+        <% }); %>
+        </div>
+
+      <div class="col-lg-4" >
+        <div class="service-box">
+          <h4>Cart value </h4>
+
+            <div class="row">
+              <div class="col-6 m-0">Subtotal</div>
+              <div class="col-6 m-0">NGN <span class="item-price"><%= totalSubtotal%></span></div>
+            </div>
+
+            <br>
+            <br>
+              <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user/checkout/<%= userData.id %>"> Checkout</a>
+              <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user"> Back To store</a>
+      </div>
+
+    
+      <%- include('./partials/info') %>
+
+    </div>
+
+  </div>
+</div>
+</section><!-- /Service Details Section -->
+
+</main>
+
+
+<%- include ('../partials/openFooter')%>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<!-- Preloader -->
+<div id="preloader"></div>
+
+
+
+
+<script>
+
+let formattedPrices = document.querySelectorAll('.item-price');
+function formatPrice() {
+    formattedPrices.forEach(priceElement => {
+      let price = parseFloat(priceElement.textContent.replace(/[^0-9.-]+/g, "")); // Remove any non-numeric characters
+      priceElement.textContent = price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    });
+  }
+  formatPrice()
+  function updateQuantity(productId, change, currentQuantity, maxQuantity) {
+    if (currentQuantity + change > maxQuantity) {
+      alert('Cannot exceed maximum quantity of ' + maxQuantity);
+      return;
+    }
+
+
+    fetch('/updateCartItem', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ productId, change })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        location.reload();
+      } else {
+        alert('Failed to update cart item');
+      }
+    })
+    .catch(error => {
+      console.error('Error updating cart item:', error);
+      alert('Error updating cart item');
+    });
+  }
+
+</script>
+

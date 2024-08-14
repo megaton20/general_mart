@@ -1,0 +1,272 @@
+<!-- Page Wrapper -->
+
+  <!-- Content Wrapper -->
+
+    <!-- Main Content -->
+      <!-- Topbar -->
+      <%- include('./partials/navbar') %>
+      <!-- End of Topbar -->
+
+      <!-- Begin Page Content -->
+
+        
+      <div class="container">
+        <%- include ('../partials/messages') %>
+
+        <div class="row">
+          <div class="col-lg-4 container mb-4">
+            <div class="profile-section card">
+              <% if (userData.image == null) { %>
+                  <!-- Display form for uploading image -->
+                  <div class="my-profile-image">
+                      <img class="profile-img" src="/images/profile.jpg" alt="Default Profile Image">
+                      <div class="overlay">
+                          <form class="user" action="/user/add-profile-image/<%= userData.id %>" method="post" enctype="multipart/form-data">
+                              <label for="image-upload" class="upload-label">
+                                  Upload Image
+                              </label>
+                              <input id="image-upload" type="file" name="image" class="file-input" style="display:none;" onchange="handleFileInputChange()">
+                              <input id="submit-button" type="submit" value="Submit" class="btn btn-warning btn-user btn-block" style="display: none;">
+                          </form>
+                      </div>
+                  </div>
+              <% } else { %>
+                  <!-- Display user's profile image -->
+                  <div class="my-profile-image">
+                      <img class="profile-img" src="/uploads/<%= userData.image %>" alt="User Profile Image">
+                      <div class="overlay">
+                          <form class="user" action="/user/change-profile-image/<%= userData.id %>" method="post" enctype="multipart/form-data">
+                              <label for="image-upload" class="upload-label">
+                                  Change Image
+                              </label>
+                              <input id="image-upload" type="file" name="image" class="file-input" style="display:none;" onchange="handleFileInputChange()">
+                              <button id="submit-button" style="display: none;" class="my-btn" type="submit"><i class="fas fa-exclamation-triangle"></i>Submit</button>
+
+                          </form>
+                      </div>
+                  </div>
+              <% } %>
+          </div>
+
+   
+             <!-- actions nav -->
+              <div class="profile-nav mt-3 ">
+                <a class="profile-nav-items" href="/user/orders">My Orders </a>
+
+                <a class="profile-nav-items" href="/user/edit-user/<%=userData.id %>">Edit profile detail</a>
+                <a class="profile-nav-items" href="/user/edit-user/<%=userData.id %>">Change password</a>
+                <a class="text-danger profile-nav-items" href="/logout">log out</a>
+
+              </div>
+          </div>
+
+          <!-- main timeline -->
+          <div class="col-lg-8" style="font-size: 12px;">
+
+                  <div class=" card">
+                  <div class="card-header">Billing details</div>
+                  <div class="card-body">
+                    <div class="row mb-4">
+                  
+                 
+                      <div class="col-4">First name:</div>
+                      <div class="col-8"><%= userData.First_name %></div>
+                      <div class="col-4">Last name:</div>
+                      <div class="col-8"><%= userData.Last_name %></div>
+                      <div class="col-4">Email:</div>
+                      <div class="col-8 ">
+                        <div class="row">
+                          <div class="col-9"><%= userData.email %> </div>
+                                
+                          <div class="col-3">
+                              <!-- switch colors -->
+                              <% if ( userData.verify_email  == false) { %>
+    
+                               <!-- 1 -->
+                               <form action="/auth/verify-request" method="post">
+                                <input type="hidden" value="<%=userData.email%>" name="email" >
+                                <button type="submit" class="btn btn-warning btn-circle btn-sm">   <i class="fas fa-exclamation-triangle"></i></button>
+                                
+                              </form>
+                                <% } else { %>
+    
+                            <button disabled class="btn btn-success btn-circle btn-sm" >  <i class="fas fa-check"></i></button>
+    
+                              <% } %>
+                         
+                          </div>
+                        </div>
+                   
+                      </div>
+    
+                      <div class="col-4">Phone Number:</div>
+                      <div class="col-8">
+                        <div class="row">
+    
+                          <div class="col-9">
+                            <%= userData.Phone %> 
+                          </div>
+                                
+                          <div class="col-3">
+                              <!-- switch colors -->
+                              <% if ( userData.verify_phone  == false) { %>
+    
+                               <!-- 1 -->
+                               <form action="/auth/send-code" method="post">
+                                <input type="hidden" value="<%=userData.Phone%>" name="phoneNumber" >
+                                <button type="submit" class="btn btn-warning btn-circle btn-sm">   <i class="fas fa-exclamation-triangle"></i></button>
+                                
+                              </form>
+                                <% } else { %>
+    
+                            <button disabled class="btn btn-success btn-circle btn-sm" >  <i class="fas fa-check"></i></button>
+    
+                              <% } %>
+                         
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-4">Address:</div>
+                      <div class="col-8"><%= userData.Address %></div>
+    
+    
+    
+                      <div class="col-4">State:</div>
+                      <div class="col-6"><%= userData.state %></div>
+                      <div class="col-4">LGA:</div>
+                      <div class="col-6"><%= userData.lga %></div>
+                      <div class="col-4">Gender:</div>
+                      <div class="col-6"><%= userData.gender %> </div>
+                      <div class="col-4">Land mark:</div>
+                      <div class="col-6"><%= userData.land_mark %></div>
+    
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card mt-3">
+                  <div class="card-body">
+                    
+                    <div class=" mb-3 text-success" ><%= userData.rank %></div>
+                    <div class="progress-container">
+                      <div id="progress-bar" class="progress-bar"></div>
+                      <div id="progress-percent" class="progress-percent"></div>
+                     </div>
+                     <div class="mt-3"> 
+                       <p class="format-number"></p>
+                       <hr>
+                      <div class="row">
+                       <div class="col-auto"> Cash back:</div>
+                       <div class="col-auto text-success"> ₦ <%=cashBack%> (not available)</div>
+                      </div>
+                       
+                     </div>
+                   </div>
+   
+                </div>
+
+                <div class="mt-5 card" >
+                  <div class="card-header">Actions</div>
+                  <div class="card-body">
+                    <div class="container mt-5">
+                      <h2>We're sorry to see you go</h2>
+                      <p>Please let us know why you're deactivating your account:</p>
+                      <form action="/auth/delete-account" method="post">
+                        <div class="form-group">
+                          <label for="deactivationReason">Reason for Deactivation</label>
+                          <select name="reason" class="form-control" id="deactivationReason" required>
+                            <option value="" disabled selected>Select a reason</option>
+                            <option value="I found the site difficult to use">I found the site difficult to use</option>
+                            <option value="I didn't find what I was looking for">I didn't find what I was looking for</option>
+                            <option value="I had a poor customer service experience">I had a poor customer service experience</option>
+                            <option value="I have privacy or security concerns">I have privacy or security concerns</option>
+                            <option value="I receive too many emails/notifications">I receive too many emails/notifications</option>
+                            <option value="I prefer a competitor's service">I prefer a competitor's service</option>
+                            <option value="Other (please specify below)">Other (please specify below)</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="additionalComments">Additional Comments</label>
+                          <textarea name="Comments" class="form-control" id="additionalComments" rows="3" placeholder="Please provide any additional feedback here..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-danger">Deactivate Account</button>
+                      </form>
+                    </div>
+                  </div>
+    
+                </div>
+    
+
+
+        </div>
+        </div>
+
+
+
+<br>
+<br>
+
+
+<%- include('./partials/footer') %>
+
+
+
+<script>
+  
+  document.addEventListener('DOMContentLoaded', () => {
+  
+    
+    const spending = <%= spending %>;
+const ranks = <%- JSON.stringify(ranks) %>;
+
+let formatedDivs = document.querySelectorAll('.format-number');
+let formattedAmount = spending.toLocaleString("en-US");
+
+formatedDivs.forEach(div => {
+  div.textContent = `Spent ₦${formattedAmount}`;
+});
+
+    // Determine current rank and next threshold
+    let currentThreshold = 0;
+    let nextThreshold = ranks[0].threshold;
+
+    for (let i = 0; i < ranks.length; i++) {
+      if (spending >= ranks[i].threshold) {
+        currentThreshold = ranks[i].threshold;
+        nextThreshold = ranks[i + 1] ? ranks[i + 1].threshold : ranks[i].threshold;
+      } else {
+        break;
+      }
+    }
+
+    // If spending exceeds the last rank threshold, set progress to 100%
+    let progress;
+    if (spending >= nextThreshold) {
+      progress = 100;
+    } else {
+      // Calculate progress towards the next rank
+      progress = ((spending - currentThreshold) / (nextThreshold - currentThreshold)) * 100;
+    }
+
+    const progressBar = document.getElementById('progress-bar');
+    const progressPercent = document.getElementById('progress-percent');
+    progressBar.style.width = `${progress}%`;
+    progressPercent.textContent = `${progress.toFixed(2)}%`;
+  });
+</script>
+
+
+<script>
+  function handleFileInputChange() {
+      const fileInput = document.getElementById('image-upload');
+      const submitButton = document.getElementById('submit-button');
+      const overlay = document.querySelectorAll('.overlay')
+
+      if (fileInput.files.length > 0) {
+          submitButton.style.display = 'block'; // Show submit button
+          // overlay.style.display = 'block'
+      } else {
+          submitButton.style.display = 'none'; // Hide submit button
+      }
+  }
+</script>

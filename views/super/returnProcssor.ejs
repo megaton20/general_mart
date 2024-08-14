@@ -1,0 +1,165 @@
+<!-- Page Wrapper -->
+<div id="wrapper">
+  <!-- Sidebar -->
+  <%- include ('../partials/superSidebar') %>
+  <!-- End of Sidebar -->
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+    <!-- Main Content -->
+    <div id="content">
+      <!-- Topbar -->
+      <%- include ('../partials/topbar') %>
+      <!-- End of Topbar -->
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+        <!-- Page Heading -->
+
+        <%- include ('../partials/messages') %>
+        <!-- DataTales Example -->
+        <div class="row">
+          
+
+          <div class="col-12">
+            <div class=" mb-4">
+              <div class="card-body">
+                <div class="form mt-4 mb-4">
+                  <div class="card-body">
+                    <% if(salesData.length <= 0){ %>
+                    <h1>No  sales Data Record Found !</h1>  
+                  </div> 
+                  <%} else { %>
+                    <%  if (productsData.length <= 0 ){ %>
+                      <div class="card-body">
+                          <h1>Sales found but No products to be returned!</h1>  
+
+                          <div class="card-body">
+                      
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+
+                                          <th>Id</th>
+                                          <th>Item Name</th>
+                                          <th>Product id</th>
+                                          <th>Store id</th>
+                                          <th>Sales id</th>
+                                          <th>price per Item</th>
+                                          <th>QTY</th>
+                                          <th>S total</th>
+                                          <th>
+                                            action
+                                          </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                  
+
+
+                                        <% productsData.forEach(function(data) {%>
+                                            <tr>
+                                                <td><%= data['id'] %></td>
+                                                <td><%= data['name'] %></td>
+                                                <td><%= data['product_id'] %></td>
+                                                <td><%= data['store_id'] %> </td>
+                                                <td><%= data['sale_id'] %> </td>
+                                                <td><%= data['price_per_item'] %> </td>
+                                                <td><%= data['quantity'] %> </td>
+                                                <td><%= data['subTotal'] %> </td>
+                                                <td>
+                                                  
+                                                </td>
+
+                                                
+                                           </tr> 
+                                           
+                                               <% }) %>
+                                 
+                                   
+                                    
+
+                                        </tbody>
+                                </table>
+                            </div>
+                        </div> 
+                      </div> 
+                      <% } else{ %>  
+  
+                          <div class="card-body">
+                      
+                              <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                  <thead>
+                                      <tr>
+
+                                        <th>Id</th>
+                                        <th>Item Name</th>
+                                        <th>Product id</th>
+                                        <th>Cart id</th>
+                                        <th>Store id</th>
+                                        <th>price per Item</th>
+                                        <th>QTY</th>
+                                        <th>S total</th>
+                                        <th>
+                                          action
+                                        </th>
+                                      </tr>
+                                  </thead>
+
+                                  <tbody>
+                                
+
+
+                                      <% productsData.forEach(function(data) {%>
+                                          <tr>
+                                              <td><%= data['id'] %></td>
+                                              <td><%= data['name'] %></td>
+                                              <td><%= data['product_id'] %></td>
+                                              <td><%= data['cart_id'] %></td>
+                                              <td><%= data['sale_id'] %> </td>
+                                              <td><%= data['price_per_item'] %> </td>
+                                              <td><%= data['quantity'] %> </td>
+                                              <td><%= data['subTotal'] %> </td>
+                                              <td>
+                                                <a class="btn btn-secondary" href="/super/return/<%= data['id'] %>"> Return one</a>
+
+                                           
+                                              </td>
+
+                                              
+                                         </tr> 
+                                         
+                                             <% }) %>
+                               
+                                 
+                                  
+
+                                      </tbody>
+                              </table>
+                              </div>
+                          </div> 
+                          <% } %>
+                  <%  } %>
+                 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.container-fluid -->
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <!-- End of Footer -->
+  </div>
+  <%- include ('../partials/footer') %>
+  <!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
+
+

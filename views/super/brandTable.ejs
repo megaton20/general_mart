@@ -1,0 +1,95 @@
+
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include ('../partials/superSidebar') %>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include ('../partials/topbar') %>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Brand Tables </h1>
+                    <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-brand">Add Brands</a>
+
+                    <!-- DataTales Example -->
+                    <div class=" mb-4">
+                        <% if(brandResult.length <= 0){ %>
+                            <div class="card-body">
+                                <h1>No Brand Record Found !</h1>  
+                            </div> 
+                            <% } else{ %> 
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                  <th>Id</th>
+                                                  <th>Name</th>
+                                                  <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                        
+                                            <tbody>
+                                          
+                                                <% brandResult.forEach(function(data) {%>
+                                                    <tr>
+                                                        <td><%= data['id'] %></td>
+                                                        <td><%=data['Name'] %> </td>
+                                                        <td><a href="/super/edit-brand/<%= data['id']%>" class="btn btn-outline-primary">Edit</a>
+                                                            <form
+                                                            action="/super/delete-brand/<%= data['id'] %>"
+                                                            method="POST"
+                                                            style="display: inline"
+                                                          >
+                                                            <input type="hidden" name="_method" value="DELETE" />
+                                                            <button class="btn btn-outline-danger">Delete</button>
+                                                          </form>
+                                                        </td>
+        
+                                                  
+                                                   </tr> 
+                                                   
+                                                       <% }) %>
+                                                </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <% } %>
+                                
+                                
+                      
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include ('../partials/footer') %>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>

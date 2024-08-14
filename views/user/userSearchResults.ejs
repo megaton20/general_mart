@@ -1,0 +1,248 @@
+
+<%- include('./partials/navbar') %>
+
+<main class="main">
+      <!-- Page adverts -->
+      <div class="container">
+        <%- include('./partials/ads') %>
+      </div>
+  <br>
+  <div class="container">
+
+    <div class=" text-center">
+      <div class="container"><%- include('../partials/messages') %></div>
+        
+        
+        <% if (products.length > 0) { %>
+          <div class="row">
+            <div class="col-lg-12 ml-0 scrolling-col" id="product-section">
+              <div class="card">
+                <div class="card-header">Results </div>
+                <div class="card-body">
+                  <div class="row">
+  
+                    <% products.forEach(item => { %>
+                      <div class="col-6 mt-4' col-md-4 col-lg-3">
+                        <div class="card mt-4 border-1">
+                          <a href="/user/product-details/<%=item.id%>"> 
+                          <div class="card-body">
+                              <div class="item-image-container">
+                              <img src="/uploads/<%=item.image%>" class="card-img-top rounded-4" alt="<%=item.ProductName%>">
+                            </div>
+                            <div class="item-text  text-dark truncate-container">
+                              <p class="text-truncate"> <%=item.ProductName %></p>
+                            </div>
+                            </div>
+                      
+                            </a> 
+                            <div class="card-footer p-1">
+                              <button style="width:100%" class="my-btn add-to-cart p-1 m-0" data-id="<%=item.id%>"  data-name="<%=item.ProductName %>" data-price="<%=item.UnitPrice %>" data-max="<%=item.total_on_shelf %>" data-image="<%=item.image%>" onclick="handleButtonClick(this)">Buy   ₦<small class="item-price"><%=item.UnitPrice%>.00</small></button>
+                            </div>
+                          </div>
+                      </div>
+                      
+                  <% }) %>
+                  </div>
+                </div>
+          </div>
+  
+         
+        </div>
+        </div>
+      <% } else { %>
+        <p data-aos="fade-up" data-aos-delay="100">0 items found!</p>
+
+      <% } %>
+       
+    
+    <%- include('./partials/info') %>
+    
+</main>
+
+<%- include('./partials/footer') %>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+
+
+
+
+<script>
+
+  let formattedPrices = document.querySelectorAll('.item-price');
+      formattedPrices.forEach(priceElement => {
+        let price = parseFloat(priceElement.textContent.replace(/[^0-9.-]+/g, "")); // Remove any non-numeric characters
+        priceElement.textContent = price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      });
+  
+  
+    let cart = [];
+  
+    const presentCart = <%- JSON.stringify(presentCart) %>;
+    let offset = 10;
+      const limit = 0; // Number of items to fetch each time
+      let moreItemsAvailable = true;
+    
+    // initailize cart on log in
+    function initializeCart(presentCart) {
+      presentCart.forEach(item => {
+        cart.push({
+          id: item.product_id,
+          name: item.product_name,
+          price: item.price_per_item,
+          max: item.max,
+          image: item.image,
+          quantity: item.quantity
+        });
+        updateItemButton(item.product_id, item.product_name, item.total_on_shelf, item.unit_price, item.image);
+      });
+      updateCartBadge();
+    }
+  
+      // Initialize cart with data from the server-side template
+    initializeCart(presentCart);
+  
+  
+    function updateCartBadge() {
+      const cartBadges = document.querySelectorAll('#cart-badge');
+      cartBadges.forEach(cartBadge => {
+        cartBadge.textContent = cart.length;
+      });
+    }
+    
+  
+    function updateItemQuantityNumber(item) {
+      const itemButtonGroup = document.querySelector(`.btn-group[data-id='${item.id}']`);
+      if (itemButtonGroup) {
+        const quantityButton = itemButtonGroup.querySelector('.btn-secondary');
+        if (quantityButton) {
+          quantityButton.textContent = item.quantity;
+        }
+      }
+    }
+    
+  
+    function updateItemButton(itemId, itemName, itemMax, itemPrice, itemImage) {
+      const itemButton = document.querySelector(`.add-to-cart[data-id='${itemId}']`);
+      const cartItem = cart.find(cartItem => cartItem.id === itemId);
+    
+      if (cartItem) {
+        if (itemButton) {
+          itemButton.outerHTML = `
+            <div style="width:100%; height:30px "  class="m-0 btn-group p-0" role="group" data-id="${itemId}">
+              <button class="btn btn-danger p-1" onclick="removeFromCart(${itemId})">-</button>
+              <button class="btn btn-secondary p-1" disabled>${cartItem.quantity}</button>
+              <button class="btn btn-success p-1" onclick="increaseQuantity(${itemId})">+</button>
+            </div>
+          `;
+        }
+      } else {
+        const parentDiv = document.querySelector(`.btn-group[data-id='${itemId}']`);
+        if (parentDiv) {
+          parentDiv.outerHTML = `
+            <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="${itemId}" data-name="${itemName}" data-price="${itemPrice}" data-max="${itemMax}" data-image="${itemImage}" onclick="handleButtonClick(this)">Buy   ₦<small class="item-price">${itemPrice}.00</small></button>
+          `;
+        }
+      }
+    }
+    
+    function addToCart(item) {
+      let existingItem = cart.find(cartItem => cartItem.id === item.id);
+    
+      if (existingItem) {
+        if (existingItem.quantity < item.max) {
+          existingItem.quantity++;
+        } else {
+          alert(`You can only add up to ${item.max} of this item.`);
+          return;
+        }
+      } else {
+        item.quantity = 1;
+        cart.push(item);
+      }
+    
+      updateItemQuantityNumber(item);
+      updateCartBadge();
+      updateItemButton(item.id, item.name, item.max, item.price, item.image);
+    
+      // Send POST request to server to update cart in database
+      $.ajax({
+        type: 'POST',
+        url: '/addCartItems',
+        data: JSON.stringify({ cart: cart }),
+        contentType: 'application/json',
+        success: function(response) {
+        },
+        error: function(error) {
+          console.error('Error updating cart:', error);
+        }
+      });
+    }
+    
+    function increaseQuantity(itemId) {
+      let item = cart.find(cartItem => cartItem.id === itemId);
+      if (item && item.quantity < item.max) {
+        console.log(item);
+        item.quantity++;
+        updateItemQuantityNumber(item);
+        updateCartBadge();
+        updateItemButton(item.id, item.name, item.max, item.price, item.image);
+    
+        // Update cart in the database
+        $.ajax({
+          type: 'POST',
+          url: '/addCartItems',
+          data: JSON.stringify({ cart: cart }),
+          contentType: 'application/json',
+          success: function(response) {
+          },
+          error: function(error) {
+            console.error('Error updating cart:', error);
+          }
+        });
+      } else if (item) {
+        alert(`You can only add up to ${item.max} of this item.`);
+      }
+    }
+  
+    function removeFromCart(itemId) {
+      let item = cart.find(cartItem => cartItem.id === itemId);
+      if (item) {
+        item.quantity--;
+        if (item.quantity === 0) {
+          cart = cart.filter(cartItem => cartItem.id !== itemId);
+        }
+        updateItemQuantityNumber(item);
+        updateCartBadge();
+        updateItemButton(item.id, item.name, item.max, item.price, item.image);
+    
+        // Update cart in the database
+        $.ajax({
+          type: 'POST',
+          url: '/addCartItems',
+          data: JSON.stringify({ cart: cart }),
+          contentType: 'application/json',
+          success: function(response) {
+          },
+          error: function(error) {
+            console.log(error);
+            console.error('Error updating cart:', error);
+          }
+        });
+      }
+    }
+    
+    function handleButtonClick(event) {
+      const id = parseInt(event.getAttribute("data-id"), 10);
+      const name = event.getAttribute("data-name");
+      const image = event.getAttribute("data-image");
+      const price = parseFloat(event.getAttribute("data-price"));
+      const max = parseInt(event.getAttribute("data-max"), 10);
+    
+      const item = { id, name, price, max, image };
+      addToCart(item);
+    }
+  
+    </script> 
+    

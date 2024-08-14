@@ -1,0 +1,303 @@
+<!-- Page Wrapper -->
+<div id="wrapper">
+  <!-- Sidebar -->
+  <%- include ('../partials/vendorSidebar') %>
+  <!-- End of Sidebar -->
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+    <!-- Main Content -->
+    <div id="content">
+      <!-- Topbar -->
+      <%- include ('../partials/vendorTopbar') %>
+      <!-- End of Topbar -->
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+        <%- include ('../partials/messages') %>
+
+        <!--  top Content Row -->
+        <div class="row mt-4">
+          <div class="col-xl-2 col-md-6 mb-3">
+            <div class="card border-left-primary h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div
+                      class="text-xs font-weight-bold text-primary text-uppercase mb-1"
+                    >
+                      Total Sales
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      <%= totalNumberOfSales%>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-2 col-md-6 mb-3">
+            <div class="card border-left-secondary h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div
+                      class="text-xs font-weight-bold text-primary text-uppercase mb-1"
+                    >
+                      Total Users
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      <%= totalVerifiedUsers%>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-user fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-2 col-md-6 mb-3">
+            <div class="card border-left-secondary h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div
+                      class="text-xs font-weight-bold text-primary text-uppercase mb-1"
+                    >
+                      Home Sales
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      <%= counterSaleData.length %>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-home fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Earnings (Monthly) Card Example -->
+          <div class="col-xl-2 col-md-6 mb-3">
+            <div class="card border-left-success h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div
+                      class="text-xs font-weight-bold text-success text-uppercase mb-1"
+                    >
+                      Total Earnings
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      <%= formatedProfit%>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+                  <!-- Earnings (Monthly) Card Example -->
+                  <div class="col-xl-2 col-md-6 mb-3">
+                    <div class="card border-left-success h-100 py-2">
+                      <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                          <div class="col mr-2">
+                            <div
+                              class="text-xs font-weight-bold text-success text-uppercase mb-1"
+                            >
+                              Shipping Earnings
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                              <%= formatedProfitForShipping%>
+                            </div>
+                          </div>
+                          <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+          
+          <!-- Earnings (Monthly) Card Example -->
+          <div class="col-xl-2 col-md-6 mb-3">
+            <div class="card border-left-danger h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div
+                      class="text-xs font-weight-bold text-danger text-uppercase mb-1"
+                    >
+                      unconfirmed Orders
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      <%= pendingOrders%>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-table fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Earnings (Monthly) Card Example -->
+          <div class="col-xl-2 col-md-6 mb-3">
+            <div class="card border-left-warning h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div
+                      class="text-xs font-weight-bold text-warning text-uppercase mb-1"
+                    >
+                      on route
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      <%= shippedData.length %>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-truck fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pending Requests Card Example -->
+          <div class="col-xl-2 col-md-6 mb-3">
+            <div class="card border-left-success h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div
+                      class="text-xs font-weight-bold text-success text-uppercase mb-1"
+                    >
+                      Orders completed
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      <%= completedOrders %>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-fw fa-truck fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-2 col-md-6 mb-3">
+            <div class="card border-left-danger h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div
+                      class="text-xs font-weight-bold text-danger text-uppercase mb-1"
+                    >
+                       Canceled order
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      <%= totalCanceledOrder.length %>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-times fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          
+        </div>
+
+        <div class="row">
+          <!-- Area Chart -->
+          <div class="col-xl-8 col-lg-7">
+            <div class="mb-4">
+              <!-- Card Header - Dropdown -->
+
+              <!-- Card Body -->
+              <div class="card-body">
+                <div
+                  class="no-items"
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin: auto;
+                    margin-top: 0px;
+                  "
+                >
+                  <img
+                    style="max-width: 50%; max-height: 50%"
+                    src="/images/recruitment.png"
+                    class="card-img-top rounded-4"
+                    alt="images"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pie Chart -->
+          <div class="col-xl-4 col-lg-5">
+            <div class="mb-4">
+              <!-- Card Body -->
+              <div class="card-body">
+                <a href="/super/create-logistics" class="btn btn-outline-primary mr-2 mb-1"aria-controls="collapseTwo">Add Logistics Company</a>
+                <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-store">Add Store</a>
+                <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-category">Add Category</a>
+                <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-discount">Add Discount</a>
+                <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-inventory">Add Inventory</a>
+                <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-position">Add Position</a>
+                <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-supplier">Add Supplier</a>
+              </div>
+
+              <div class="card-body">
+                <a class="btn btn-outline-primary mb-1 mr-2" href="/super/all-orders">Orders</a>
+                <a class="btn btn-outline-secondary mb-1 mr-2"href="/super/all-sales">Resolve Sales</a>
+                <a class="btn btn-outline-secondary mb-1 mr-2"href="/super/all-logistic-company">Logistics Companies</a>
+                <a class="btn btn-outline-secondary mb-1 mr-2"href="super/all-products">Shelf items</a>
+                <a class="btn btn-outline-success mb-1 mr-2"href="/super/create-sales">Shopping</a>
+                <a class="btn btn-outline-success mb-1 mr-2"href="/super/all-supplier">Suppliers</a>
+                <a class="btn btn-outline-primary mb-1 mr-2"href="/super/all-canceled-order">canceled table</a>
+                <a class="btn btn-outline-primary mb-1 mr-2"href="/super/all-categories">View Categories</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.container-fluid -->
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <%- include ('../partials/footer') %>
+    <!-- End of Footer -->
+  </div>
+  <!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+
+
+
+
+<!-- create new store -->

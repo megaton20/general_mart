@@ -1,0 +1,185 @@
+
+
+<% if(userActive == false){ %>
+    <%- include('../partials/openNav') %>
+    <% } else{ %> 
+      <%- include('../user/partials/navbar') %>
+      <% } %>
+
+
+      <div class="container"><%- include ('../partials/messages') %></div>
+      <div class="container mt-4">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <h2>Register Your Logistics Company</h2>
+
+        <div class="container">
+            <form action="/drivers/register" method="post">
+                <!-- Company Information -->
+                <h4 class="form-title">Company Information</h4>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="companyName" name="companyName" placeholder="Enter company name" value="<%= typeof companyName !== 'undefined' ? companyName : '' %>">
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <input type="email" class="form-control" id="email" name="companyEmail" placeholder="Enter Company email address" value="<%= typeof companyEmail !== 'undefined' ? companyEmail : '' %>">
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="phone" name="companyPhone" placeholder="Enter Company phone number" value="<%= typeof companyPhone !== 'undefined' ? companyPhone : '' %>">
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="address" name="companyAddress" placeholder="Enter Company address" value="<%= typeof companyAddress !== 'undefined' ? companyAddress : '' %>">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <select name="HQ_state" id="store-state" class="form-control" onchange="storeLGAs()">
+                                <option value="">Select State</option>
+                                <% stateData.forEach(state => { %>
+                                    <option value="<%= state.state %>" > <%= state.state %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <select name="HQ_lga" id="store-lga" class="form-control">
+                                <option value="">Select State</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="postalCode" name="postalCode" placeholder="Enter postal code" value="<%= typeof postalCode !== 'undefined' ? postalCode : '' %>">
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Payment Information -->
+                <h4 class="form-title">Payment Information</h4>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="bankAccount" placeholder="Enter bank account number" value="<%= typeof bankAccount !== 'undefined' ? bankAccount : '' %>">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="accountName" placeholder="Enter account name" value="<%= typeof accountName !== 'undefined' ? accountName : '' %>">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <select name="Bank_name" id="store-bank" class="form-control">
+                                <option value="">Select Bank</option>
+                                <% stateData.forEach(bank => { %>
+                                    <option value="test bank" <%= typeof Bank_name !== 'undefined' && Bank_name === bank.name ? 'selected' : '' %>><%= bank.name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Operational Details -->
+                <h4 class="form-title">Operational Details</h4>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label class="my-label">Types of Services</label> <br>
+                            <label><input type="checkbox" value="Courier" name="service" <%= typeof service !== 'undefined' && service.includes('Courier') ? 'checked' : '' %>> Courier</label>
+                            <label><input type="checkbox" value="Freight" name="service" <%= typeof service !== 'undefined' && service.includes('Freight') ? 'checked' : '' %>> Freight</label>
+                            <label><input type="checkbox" value="Warehousing" name="service" <%= typeof service !== 'undefined' && service.includes('Warehousing') ? 'checked' : '' %>> Warehousing</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label class="my-label">Goods Handled</label> <br>
+                            <label><input type="checkbox" value="Perishable Goods" name="goodsHandled" <%= typeof goodsHandled !== 'undefined' && goodsHandled.includes('Perishable Goods') ? 'checked' : '' %>> Perishable Goods</label>
+                            <label><input type="checkbox" value="Non-perishable" name="goodsHandled" <%= typeof goodsHandled !== 'undefined' && goodsHandled.includes('Non-perishable') ? 'checked' : '' %>> Non-perishable</label>
+                            <label><input type="checkbox" value="Clothing and Apparel" name="goodsHandled" <%= typeof goodsHandled !== 'undefined' && goodsHandled.includes('Clothing and Apparel') ? 'checked' : '' %>> Clothing and Apparel</label>
+                            <label><input type="checkbox" value="Pharmaceuticals" name="goodsHandled" <%= typeof goodsHandled !== 'undefined' && goodsHandled.includes('Pharmaceuticals') ? 'checked' : '' %>> Pharmaceuticals</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label class="my-label">Days of Operation</label> <br>
+                            <label><input type="checkbox" value="Monday" name="days" <%= typeof days !== 'undefined' && days.includes('Monday') ? 'checked' : '' %>> Monday</label>
+                            <label><input type="checkbox" value="Tuesday" name="days" <%= typeof days !== 'undefined' && days.includes('Tuesday') ? 'checked' : '' %>> Tuesday</label>
+                            <label><input type="checkbox" value="Wednesday" name="days" <%= typeof days !== 'undefined' && days.includes('Wednesday') ? 'checked' : '' %>> Wednesday</label>
+                            <label><input type="checkbox" value="Thursday" name="days" <%= typeof days !== 'undefined' && days.includes('Thursday') ? 'checked' : '' %>> Thursday</label>
+                            <label><input type="checkbox" value="Friday" name="days" <%= typeof days !== 'undefined' && days.includes('Friday') ? 'checked' : '' %>> Friday</label>
+                            <label><input type="checkbox" value="Saturday" name="days" <%= typeof days !== 'undefined' && days.includes('Saturday') ? 'checked' : '' %>> Saturday</label>
+                            <label><input type="checkbox" value="Sunday" name="days" <%= typeof days !== 'undefined' && days.includes('Sunday') ? 'checked' : '' %>> Sunday</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label class="my-label">Hours of Operation</label> <br>
+                            <label><input type="checkbox" value="8:00am - 6:00pm" name="hours" <%= typeof hours !== 'undefined' && hours.includes('8:00am - 6:00pm') ? 'checked' : '' %>> 8:00am - 6:00pm</label>
+                            <label><input type="checkbox" value="8:00am - 8:00pm" name="hours" <%= typeof hours !== 'undefined' && hours.includes('8:00am - 8:00pm') ? 'checked' : '' %>> 8:00am - 8:00pm</label>
+                            <label><input type="checkbox" value="24 hours" name="hours" <%= typeof hours !== 'undefined' && hours.includes('24 hours') ? 'checked' : '' %>> 24 hours</label>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-secondary w-100">Submit</button>
+            </form>
+            
+            
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+
+<%- include ('../partials/openFooter')%>
+
+
+<script>
+    function storeLGAs() {
+        const stateSelect = document.getElementById("store-state");
+        const lgaSelect = document.getElementById("store-lga");
+        const selectedState = stateSelect.value;
+      
+        console.log("Selected State: ", selectedState); // Check the selected state
+      
+        // Clear the existing options in the LGA select element
+        while (lgaSelect.options.length > 0) {
+          lgaSelect.remove(0);
+        }
+      
+        if (selectedState) {
+          fetch(`/getlgas/${selectedState}`) // Make an AJAX request to the /getlgas route
+            .then(response => response.json())
+            .then(data => {
+              data.forEach(lga => {
+                const option = document.createElement("option");
+                option.text = lga;
+                option.value = lga;
+                lgaSelect.add(option);
+              });
+            })
+            .catch(error => {
+              console.error('Error fetching LGAs:', error);
+            });
+        }
+      
+      }
+    
+    
+</script>

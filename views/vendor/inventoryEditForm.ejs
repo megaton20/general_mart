@@ -1,0 +1,188 @@
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include ('../partials/superSidebar') %>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include ('../partials/topbar') %>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                 <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Edit Inventory for " <%= inventoryData[0].Product_name%>"</h1>
+                    <p class="mb-4">Fill the form below to create new Inventory, this can only edited later by authorised personel. </p>
+
+                    <!-- DataTales Example -->
+                    <div class=" mb-4">
+                        <%- include ('../partials/messages') %>
+                        <div class="card-body">
+                            <div class="form mt-4 mb-4">
+                                <form action="/super/edit-inventory/<%= inventoryData[0].id%>"  method="post" class="form">
+                                   <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">Category Name</label>
+                                            <select name="Category_name" id="" class="form-control">
+                                                <option value="<%= inventoryData[0].Category_name%>"><%= inventoryData[0].Category_name%></option>
+                                                <% categoryData.forEach(function(data) {%>
+                                                <option value="<%= data['Category_name'] %>"> <%= data['Category_name'] %></option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">Brand Name</label>
+                                            <input type="text" name="Brand_name" class="form-control" value="<%= inventoryData[0].Brand_name%>" >
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">Product Name</label>
+                                            <input type="text" name="Product_name" class="form-control" value="<%= inventoryData[0].Product_name%>" >
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">Purchase Price</label>
+                                            <input type="number" name="Purchase_price" class="form-control" value="<%= inventoryData[0].Purchase_price%>" >
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">Supplier Name</label>
+                                            <select name="Supplier_name" id="" class="form-control">
+                                                <option value="<%= inventoryData[0].Supplier_name%>" > <%= inventoryData[0].Supplier_name %> </option>
+                                                <% supplierData.forEach(function(data) {%>
+                                                <option value="<%= data['Business_name'] %> "> <%= data['Business_name'] %> </option>
+                                                <% }) %>
+                                                <option value="Unregistered"> Unregistered</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">Payment Method</label>
+                                            <select name="Payment_method" id="" class="form-control">
+                                                <option value="<%= inventoryData[0].Payment_method %>"><%= inventoryData[0].Payment_method %></option>
+                                                <option value="Cash"> Cash</option>
+                                                <option value="Transfer"> Transfer</option>
+                                                <option value="Split Payment"> Split Payment</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">Reciever Name</label>
+                                            <select name="Reciever_name" id="" class="form-control" >
+                                                <option value="<%= inventoryData[0].Reciever_name %>"><%= inventoryData[0].Reciever_name %></option>
+                                                <% allUsers.forEach(function(data) {%>
+                                                <option value="<%= data['First_name'] %> <%= data['Last_name'] %> "> <%= data['First_name'] %> <%= data['Last_name'] %> </option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">Delivery Method</label>
+                                            <select name="Delivery_method" id="" class="form-control">
+                                                <option value="<%= inventoryData[0].Delivery_method %>"><%= inventoryData[0].Delivery_method %></option>
+                                                <option value="by comapany"> by comapany</option>
+                                                <option value="by Supplier"> by Supplier</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">QTY Recieved</label>
+                                            <input type="number" name="QTY_recieved" class="form-control" value="<%= inventoryData[0].QTY_recieved %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">Total Product in Pack</label>
+                                            <input type="number" name="total_in_pack" class="form-control" value="<%= inventoryData[0].total_in_pack %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">Manufacture Date</label>
+                                            <input type="date" name="Manufacture_date" class="form-control" value="<%= inventoryData[0].Manufacture_date %>" >
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">Expire Date</label>
+                                            <input type="date" name="Expire_date" class="form-control" value="<%= inventoryData[0].Expire_date %>">
+                                        </div>
+                                    </div>
+                                 
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">Cost Of Delivery</label>
+                                            <input type="number" name="Cost_of_delivery" class="form-control" value="<%= inventoryData[0].Cost_of_delivery %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">No. Of Damaged Items</label>
+                                            <input type="number" name="Total_damaged" class="form-control"   value="<%= inventoryData[0].Total_damaged %>">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="mt-4">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <input name="_method" type="submit" value="Update" class="btn btn-primary "/>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include ('../partials/footer') %>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>

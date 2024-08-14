@@ -1,0 +1,106 @@
+
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include ('../partials/superSidebar') %>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include ('../partials/topbar') %>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-category">Add Category</a>
+
+                    <div class=" mb-4">
+                        <%- include ('../partials/messages') %>
+                        <div class="card-body">
+
+                            <% if(allCategory.length <= 0){ %>
+
+                                    <h1>No Category Record Found !</h1>  
+                                <% } else{ %>  
+                                    <div class="card-body">
+                                
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+
+                                                      <th>Category Name</th>
+                                                      <th>Discription</th>
+                                                      <th>
+                                                        action
+                                                      </th>
+                                                    </tr>
+                                                </thead>
+                                                
+                                                <tbody>
+                                              
+            
+            
+                                                    <% allCategory.forEach(function(data) {%>
+                                                        <tr>
+                                                            <td><%= data['Category_name'] %></td>
+                                                            <td><%= data['details'] %> </td>
+                                                            <td>
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <a class="btn btn-primary" href="/super/edit-category/<%= data['CategoryID'] %>"> edit</a>
+                                                                    </div>
+
+                                                                    <div class="col-6">
+                                                                        <form action="/super/delete-category/<%= data['CategoryID'] %>" method="POST" style="display: inline;">
+                                                                            <input type="hidden" name="_method" value="DELETE" />
+                                                                            <button  class="btn btn-danger">Delete</button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+
+                                                            
+                                                       </tr> 
+                                                       
+                                                           <% }) %>
+                                             
+                                               
+                                                
+            
+                                                    </tbody>
+                                            </table>
+                                        </div>
+                                    </div> 
+                                    <% } %>
+                           
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include ('../partials/footer') %>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>

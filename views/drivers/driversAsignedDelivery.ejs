@@ -1,0 +1,111 @@
+
+
+  <div class="container">
+          <%- include ('./driversTopbar') %>
+        <hr>
+
+        <!-- Page Heading -->
+        <%- include ('../partials/messages') %>
+
+            <div class=" mb-4">
+              
+              <% if(availableDeliveries.length <= 0){ %>
+                
+                <div class="card-body">
+                      <div style="margin-top: 200px;">
+                        <div class="d-flex flex-column justify-content-center align-items-center" >
+                          <img style="max-width: 100px; max-height: 100px" src="/images/shipped.png" class=" rounded-4"alt="images"/>
+                          <p>Relax No new order</p>
+                        </div>
+                        
+                      </div> 
+                    </div>
+
+                        <% } else{ %>  
+    
+                          <% availableDeliveries.forEach(function(data) {%> 
+                          <div class=" mb-3">
+                              <div class="card">
+                                <div class="card-body">
+                                <div class="row align-items-center">
+                                  <div class="col-lg-8">
+                                    <div class="row no-gutters align-items-center">
+                                      <div class="col mr-5 mb-4">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                          Pick up
+                                        </div>
+                                        <div class="text-gray-500">
+                                          Store A
+                                        </div>
+                                      </div>
+
+                                      <div class="col-auto mr-5 mb-4">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            Destination
+                                          </div>
+                                          <div class="text-gray-500">
+                                            <%= data.customer_address%>. <%= data.customer_state%>, <%= data.customer_lga%>
+                                          </div>
+                                      </div>
+            
+                                      <div class="col-auto mr-5 mb-4">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                          Reciever Email
+                                        </div>
+                                        <div class="text-gray-500">
+                                          <%= data.customer_email%>, 
+                                        </div>
+                                      </div>
+
+                                      <div class="col-auto mr-5 mb-4">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            Tracking ID
+                                          </div>
+                                          <div class="text-gray-500">
+                                            <%= data.sale_id %> 
+                                          </div>
+                                      </div>
+            
+                             
+            
+                                
+            
+                                
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-4">
+
+                                  <div class="ml-5">
+                                      <a class="m-btn my-btn-outline" style="width: 100%;" href="/drivers/deliveries/<%= data['id'] %>"> See Details</a>
+                                  </div>
+
+                                  </div>
+                                </div>
+                                </div>
+
+                                
+                              </div>
+                            </div>
+                            <% }) %>
+                            <div class="card-body">
+                              <div >
+                                <div class="d-flex flex-column justify-content-center align-items-center" >
+                                  <img style="max-width: 100px; max-height: 100px" src="/images/delivery-truck.png" class=" rounded-4"alt="images"/>
+                                </div>
+                                
+                              </div> 
+                            </div>
+         
+                            <% } %>
+                   
+                </div>
+            </div>
+
+
+            <br>
+            <br>
+            <br>
+            <%- include ('../partials/clients')%>
+  </div>
+
+  <%- include ('../partials/openFooter')%>

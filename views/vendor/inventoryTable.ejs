@@ -1,0 +1,232 @@
+<!-- Page Wrapper -->
+<div id="wrapper">
+  <!-- Sidebar -->
+  <%- include ('../partials/superSidebar') %>
+  <!-- End of Sidebar -->
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+    <!-- Main Content -->
+    <div id="content">
+      <!-- Topbar -->
+      <%- include ('../partials/topbar') %>
+      <!-- End of Topbar -->
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Inventory</h1>
+        <!-- DataTales Example -->
+        <div class=" mb-4">
+          <%- include ('../partials/messages') %>
+           <% if(allInventory.length <= 0){ %>
+          <div class="card-body">
+            <h1>No Products Record Found !</h1>
+          </div>
+          <% } else{ %>
+
+          <div class="card-body">
+            <div class="table-responsive">
+              <table
+                class="table table-bordered"
+                id="dataTable"
+                width="100%"
+                cellspacing="0"
+              >
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Picture</th>
+                    <th>Product Name</th>
+                    <th>Brand Name</th>
+                    <th>Purchse Price</th>
+                    <th>Supplier</th>
+                    <th>Reciever</th>
+                    <th>Status</th>
+                    <th>Activated ?</th>
+                    <th>Days Left</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <% allInventory.forEach(function(data) { %>
+                    <tr>
+                      <td><%= data['id'] %></td>
+                      <td><img class="img-thumbnail" style="max-width: 40px;" src="/uploads/<%= data['image'] %>" alt="image"></td>
+                      <td><%= data['Product_name'] %></td>
+                      <td><%= data['Brand_name'] %></td>
+                      <td>$ <%= data['Purchase_price'] %></td>
+                      <td><%= data['Supplier_name'] %></td>
+                      <td><%= data['Reciever_name'] %></td>
+                      <td><%= data['activate'] %></td>
+                      <td><%= data['status'] %></td>
+                      <!-- Display the expiry date directly -->
+                      <td>
+                        <% if (data.watchData) { %>
+                          
+                          <!-- switch colors -->
+                          <% if (  data.watchData.days_left  >= 10) { %>
+
+                            <div class="text-success ">
+                              <%= data.watchData.days_left %> days
+                            </div>
+                            <% } else { %>
+
+                          <div class="text-danger ">
+                            <%= data.watchData.days_left %> days
+                          </div>
+
+                          <% } %>
+                              <!-- swtich ends -->
+
+                        <% } else { %>
+                          N/A
+                        <% } %>
+
+                  
+
+                    <!-- check if button needed -->
+                    <% if( data['activate'] == "yes" ){ %>
+
+                    <td style="display: flex; margin-right: 2px">
+                      <a
+                        class="btn btn-success"
+                        href="/super/inventory/<%= data['id'] %>"
+                      >
+                        View</a
+                      >
+                      <a
+                        class="btn btn-secondary"
+                        href="/super/edit-Inventory/<%= data['id'] %>"
+                      >
+                        edit</a
+                      >
+                      <form
+                        action="/super/delete-inventory/<%= data['id'] %>"
+                        method="POST"
+                        style="display: inline"
+                      >
+                        <input type="hidden" name="_method" value="DELETE" />
+                        <button class="btn btn-danger">Delete</button>
+                      </form>
+                    </td>
+
+                    <% } else{ %>
+
+                    <!-- check if price is null -->
+                    <% if( data['status'] == "unverified" ){ %>
+                    <td>
+                      <form
+                        action="/super/product-status/<%= data['status'] %>/<%= data['id'] %>"
+                        method="POST"
+                      >
+                        <input type="hidden" name="_method" value="PUT" />
+                        <button class="btn btn-primary">Switch Status</button>
+                      </form>
+
+                      <form
+                      action="/super/delete-inventory/<%= data['id'] %>"
+                      method="POST"
+                      style="display: inline"
+                    >
+                      <input type="hidden" name="_method" value="DELETE" />
+                      <button class="btn btn-danger">Delete</button>
+                    </form>
+
+                    <a
+                    class="btn btn-success"
+                    href="/super/inventory/<%= data['id'] %>"
+                  >
+                    View</a
+                  >
+                  <a
+                    class="btn btn-secondary"
+                    href="/super/edit-Inventory/<%= data['id'] %>"
+                  >
+                    edit</a
+                  >
+                    </td>
+                    <% } else{ %>
+
+                    <td>
+                
+                      <a href="/super/add-price/<%= data['id']%>" class="btn btn-primary">Add to Shelf</a>
+
+                      <form
+                      action="/super/delete-inventory/<%= data['id'] %>"
+                      method="POST"
+                      style="display: inline"
+                    >
+                      <input type="hidden" name="_method" value="DELETE" />
+                      <button class="btn btn-danger">Delete</button>
+                    </form>
+
+                    <a
+                    class="btn btn-success"
+                    href="/super/inventory/<%= data['id'] %>"
+                  >
+                    View</a
+                  >
+                  <a
+                    class="btn btn-secondary"
+                    href="/super/edit-Inventory/<%= data['id'] %>"
+                  >
+                    edit</a
+                  >
+                    </td>
+                    <% } %> %>
+
+                    <!-- end -->
+                    <% } %> %>
+                  </tr>
+
+                  <!-- end the foreach -->
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- end the else statement -->
+          <% } %>
+        </div>
+      </div>
+      <!-- /.container-fluid -->
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <%- include ('../partials/footer') %>
+    <!-- End of Footer -->
+  </div>
+  <!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+
+
+<script>
+  // Select all buttons with the class "priceModal"
+  let addPriceButtons = document.querySelectorAll(".click-to-add-price");
+  let linkToAdd = document.getElementById("newLink");
+
+  // Add event listener to each button
+  addPriceButtons.forEach(button => {
+
+    button.addEventListener("click", function() {
+      // Get the value of the data-value attribute
+
+      const btnValue = this.getAttribute('data-value');
+
+      // Set the form action dynamically
+      linkToAdd.action = `/super/create-sales/${btnValue}`;
+    });
+  });
+</script>
+
+
+

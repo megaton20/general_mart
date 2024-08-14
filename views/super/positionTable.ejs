@@ -1,0 +1,109 @@
+
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include ('../partials/superSidebar') %>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include ('../partials/topbar') %>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-position">Add Position</a>
+
+                    <!-- DataTales Example -->
+                    <div class=" mb-4">
+                        <%- include ('../partials/messages') %>
+                        <div class="card-body">
+
+                            <% if(allPosition.length <= 0){ %>
+                                <div class="card-body">
+                                    <h1>No Category Record Found !</h1>  
+                                </div> 
+                                <% } else{ %>  
+
+                                    <div class="card-body">
+                                
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+
+                                                      <th>Id</th>
+                                                      <th>Position name</th>
+                                                      <th>Salary</th>
+                                                      <th>Discription</th>
+                                                      <th>
+                                                        action
+                                                      </th>
+                                                    </tr>
+                                                </thead>
+                                                
+                                                <tbody>
+                                              
+            
+            
+                                                    <% allPosition.forEach(function(data) {%>
+                                                        <tr>
+                                                            <td><%= data['id'] %></td>
+                                                            <td><%= data['Position_name'] %></td>
+                                                            <td><%= data['Salary'] %> </td>
+                                                            <td><%= data['Job_description'] %> </td>
+                                                            <td>
+                                                                <a class="btn btn-primary" href="/super/edit-position/<%= data['id'] %>"> edit</a>
+
+                                                            <form action="/super/delete-position/<%= data['id'] %>" method="POST" style="display: inline;">
+                                                                <input type="hidden" name="_method" value="DELETE" />
+                                                                <button  class="btn btn-danger">Delete</button>
+                                                            </form>
+                                                            </td>
+
+                                                            
+                                                       </tr> 
+                                                       
+                                                           <% }) %>
+                                             
+                                               
+                                                
+            
+                                                    </tbody>
+                                            </table>
+                                        </div>
+                                    </div> 
+                                    <% } %>
+                           
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include ('../partials/footer') %>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+

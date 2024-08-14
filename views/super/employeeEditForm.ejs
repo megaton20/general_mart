@@ -1,0 +1,166 @@
+
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include ('../partials/superSidebar') %>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include ('../partials/topbar') %>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Edit Employee: <%= employeeData[0].First_name %> <%= employeeData[0].Last_name %></h1>
+                    <p class="mb-4">Fill the form below to create new Employee, this can only edited later by authorised personel. </p>
+
+                    <!-- DataTales Example -->
+                    <div class=" mb-4">
+                        <%- include ('../partials/messages') %>
+                        <div class="card-body">
+                            <div class="form mt-4 mb-4">
+                                <form action="/super/edit-employee/<%= employeeData[0].id %>" method="post" class="form">
+                                   <div class="row">
+                                 
+
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="">First Name</label>
+                                            <input type="text" name="First_name" class="form-control" value="<%= employeeData[0].First_name %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="">Last Name</label>
+                                            <input type="text" name="Last_name" class="form-control" value="<%= employeeData[0].Last_name %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="">Contact Email </label>
+                                            <input type="email" name="email" class="form-control" value="<%= employeeData[0].email %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="">Contact Phone</label>
+                                            <input type="number" name="Contact_phone" class="form-control" value="<%= employeeData[0].Contact_phone %>">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="">change Role Clearance</label>
+                                            <select name="role" id="" class="form-control">
+                                                <option value="<%= employeeData[0].userRole %>"><%= employeeData[0].userRole %></option>
+                                                <option value="user"> user</option>
+                                                <option value="admin"> admin</option>
+                                                <option value="super"> super</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="">Gender</label>
+                                            <select name="Gender" id="" class="form-control">
+                                                <option value="<%= employeeData[0].Gender %>"><%= employeeData[0].Gender %></option>
+                                                <option value="Male"> Male</option>
+                                                <option value="Female"> Female</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="">State</label>
+                                            <select name="State"  class="form-control" id="state" onchange="populateLGAs()">
+                                                <option value="<%= employeeData[0].State %> "> <%= employeeData[0].State %></option>
+                                                <% stateData.forEach(state => { %>
+                                                <option value="<%= state.state %>"><%= state.state %></option>
+                                                <% }); %>
+                                                
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="">Local Government</label>
+                                            <select name="lga" id="lga" class="form-control">
+                                                
+                                                <option value="<%= employeeData[0].lga %>"> <%= employeeData[0].lga %></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="">Select Position</label>
+                                            <select name="Position" id="" class="form-control">
+                                                <option value="<%= employeeData[0].Position %>"> <%= employeeData[0].Position %> </option>
+                                                <% allPositions.forEach(data => { %>
+                                                    <option value="<%= data.Position_name %>"><%= data.Position_name %></option>
+                                                    <% }); %>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="">Select Store</label>
+                                            <select name="Store" id="" class="form-control">
+                                                <option value="<%= employeeData[0].Store %>"> <%= employeeData[0].Store %> </option>
+                                                <% allStores.forEach(data => { %>
+                                                    <option value="<%= data.store_name %>"><%= data.store_name %></option>
+                                                    <% }); %>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="mt-4">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <input name="_method" type="submit" value="Update" class="btn btn-primary "/>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include ('../partials/footer') %>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+
+    

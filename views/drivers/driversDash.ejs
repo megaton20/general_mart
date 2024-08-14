@@ -1,0 +1,123 @@
+
+
+      <!-- Begin Page Content -->
+      <%- include ('./driversTopbar') %>
+      <!-- <div class="container mt-4">
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <div class="card p-3">
+              <h4>Naira: 0.00</h4>
+            </div>
+        </div>
+    </div> -->
+      <div class="container">
+          <%- include ('../partials/messages') %>
+            <div class=" mb-4">
+              <div class="row mt-4">
+            
+
+                <div class="col-xl-3 col-md-6 mb-3">
+
+                  <div class="card  h-100 py-2">
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div
+                            class="text-xs font-weight-bold text-warning text-uppercase mb-1"
+                          >
+                            Available pickups
+                          </div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            <%=availableDeliveries%>
+                          </div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-truck fa-2x text-gray-300"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+               <a href="/drivers/my-deliveries" class="col-xl-3 col-md-6 mb-3">
+
+                <div class="card  h-100 py-2">
+                  <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                        <div
+                          class="text-xs font-weight-bold text-warning text-uppercase mb-1"
+                        >
+                          My Active Rides
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                          <%=activeRides%>
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <i class="fas fa-truck fa-2x text-gray-300"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+             </a>
+      
+             <div class="col-xl-3 col-md-6 mb-3">
+
+              <div class="card  h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div
+                        class="text-xs font-weight-bold text-success text-uppercase mb-1"
+                      >
+                      RIDES COMPLETED
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <%=completedRides%>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+                <div  class="col-xl-3 col-md-6 mb-3">
+
+                  <div class="card  h-100 py-2">
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div
+                            class="text-xs font-weight-bold text-danger text-uppercase mb-1"
+                          >
+                            Canceled Rides
+                          </div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            <%=canceledRides%>
+                          </div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-times fa-2x text-gray-300"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+               
+                
+              </div>
+            </div>
+
+            <%- include ('../partials/clients')%>
+        </div>
+    <%- include ('../partials/openFooter')%>
+
+

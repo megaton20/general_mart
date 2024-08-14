@@ -1,0 +1,137 @@
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include ('../partials/superSidebar') %>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include ('../partials/topbar') %>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Editing "<%= storeData[0].store_name %>" </h1>
+                    <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-store">Add Store</a>
+                    
+                    <%- include ('../partials/messages') %>
+                    <!-- DataTales Example -->
+                    <div class=" mb-4">
+
+                        <div class="card-body">
+                            <div class="form mt-4 mb-4">
+                                <form action="/super/edit-store/<%= storeData[0].id %>" method="post" class="form">
+                                   <div class="row">
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <label for="">Branch Name</label>
+                                            <input type="text" name="Branch_Name" class="form-control" value="<%= storeData[0].store_name %>">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <label for="">Branch State</label>
+                                            <select name="Branch_state" id="edit-store-state" class="form-control" onchange="editStoreLGAs()">
+                                                <option value="<%= storeData[0].state %>"><%= storeData[0].state %></option>
+                                                <% stateData.forEach(state => { %>
+                                                    <option value="<%= state.state %>"><%= state.state %></option>
+                                                    <% }); %>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                   
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <label for="">Local Government</label>
+                                            <select name="Branch_lga" id="edit-store-lga" class="form-control">
+                                                <option value="<%= storeData[0].lga %>">Select State to choose</option>
+    
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <label for="">Branch Address</label>
+                                            <input type="text" name="Branch_address" class="form-control" value="<%= storeData[0].store_address %>">
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                                <div class="mt-4">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <input name="_method" type="submit" value="Update" class="btn btn-primary "/>
+
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+
+
+
+
+  <script>
+    function editStoreLGAs() {
+        const stateSelect = document.getElementById("edit-store-state");
+        const lgaSelect = document.getElementById("edit-store-lga");
+        const selectedState = stateSelect.value;
+      
+        console.log("Selected State: ", selectedState); // Check the selected state
+      
+        // Clear the existing options in the LGA select element
+        while (lgaSelect.options.length > 0) {
+          lgaSelect.remove(0);
+        }
+      
+        if (selectedState) {
+          fetch(`/getlgas/${selectedState}`) // Make an AJAX request to the /getlgas route
+            .then(response => response.json())
+            .then(data => {
+              data.forEach(lga => {
+                const option = document.createElement("option");
+                option.text = lga;
+                option.value = lga;
+                lgaSelect.add(option);
+              });
+            })
+            .catch(error => {
+              console.error('Error fetching LGAs:', error);
+            });
+        }
+      
+      }
+    
+    
+</script>

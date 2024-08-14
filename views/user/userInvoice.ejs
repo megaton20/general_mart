@@ -1,0 +1,133 @@
+
+      <!-- Topbar -->
+      <%- include('./partials/navbar') %>
+
+        <div class="container mt-4">
+          <%- include ('../partials/messages') %>
+          <div class="row">
+            <!-- ordered products table -->
+            <div class="col-lg-8  mb-3">
+              <div class="card">
+                <div class="card-header">ordered item</div>
+                    <div class="card-body">
+
+                      <% newOrderProducts.forEach(item => { %>
+                        <div class="cart-item row">
+                          
+                          <div class="col-2 mr-1">
+                            <img src="/uploads/<%= item.image %>" class="img-fluid rounded" alt="<%= item.product_name %>">
+                          </div>
+                          
+                          <div class="cart-item-details col-8 ">
+                            <h5 class="m-0"><%= item.name %></h5>
+                            <p class="m-0"><%= item.quantity %> (x)</p>
+                          </div>
+                        </div>
+                        <% }); %>
+                        
+                      </div>
+                        <div class="card-footer">
+                          
+                          <div class="row" style="font-size: 12px;">
+                            <div class="col-6 text-primary">Applied Discount:</div>
+                            <div class="col-6 text-warning">0 %</div>
+                            <div class="col-6 text-primary">Shipping Fee:</div>
+                            <div class="col-6 text-warning"> <%= newOrder[0].shipping_fee%></div>
+                            <div class="col-6 text-primary">Total Paid:</div>
+                            <div class="col-6 text-success">NGN <%= totalSum %> </div>
+                          </div>
+                          
+                        </div>
+              </div>
+            </div>
+            
+            <!-- shping details -->
+            <div class="col-lg-4" style="font-size: 12px;">
+              <div class="card">
+                <div class="card-header">Shipping details</div>
+                <div class="card-body">
+
+                  <div class="row mb-4">
+                 
+  
+                    <div class="col-6">My cell:</div>
+                    <div class="col-6"><%= newOrder[0].customer_phone %></div>
+                    <div class="col-6">Order Type:</div>
+                    <div class="col-6"><%= newOrder[0].Delivery %></div>
+                    <div class="col-6">Address:</div>
+                    <div class="col-6"><%= newOrder[0].customer_address %></div>
+                    
+                    <div class="col-6 text-primary" >Secure Pin:</div>
+                    <div class="col-6"><%= newOrder[0].delivery_pin %></div>
+                    <div class="col-6 text-primary" >Status</div>
+                    <div class="col-6"><%= newOrder[0].status %></div>
+
+                    <p class="text-warning p-0"></p>
+                  </div>
+
+                </div>
+                <div class="card-footer">
+
+                  <a  href="/user/edit-user/<%= userData[0].id%>" style="width: 100%; display: block;" class="my-btn-outline">Edit shipping info</a >
+                    <a  href="/user/" style="width: 100%; display: block;" class="my-btn-outline mt-2">Continue Shoping</a >
+                    </div>
+              </div>
+            </div>
+          </div>
+
+         
+         
+          <div class="card mt-4" style="font-size: 14px;">
+            <div class="container p-4">
+              <p>Thank you so much for shopping with us at G.Mart! <span class="emoji">🎉</span></p>
+              <p>Your order has been successfully placed, and we’re absolutely thrilled to have you as a customer.</p>
+              <p>We hope you’re as excited about your new items as we are to get them to you! <span class="emoji">🚀</span> Your choice means a lot to us, and we can’t wait to see you back in our store for more amazing finds.</p>
+              <p>If you have any questions or need assistance, don’t hesitate to reach out. Until then, enjoy your goodies, and we hope to see you again soon!</p>
+              <p class="invoice-footer">Stay awesome and happy shopping! <span class="emoji">🌟</span></p>
+              <p class="invoice-footer">Best wishes,<br><strong>The G.Mart Team</strong></p>
+
+              <br>
+
+              <hr>
+
+              <div class="row no-gutters align-items-center">
+
+                <div class="col-lg-6">
+                  <div class="card-body">
+                    <h5>Notice</h5>
+                        <ul>
+                          <li>Ensure your phone lines are active</li>
+                          <li>Do not pay fee to the delivery agent</li>
+                          <li>Provide your order 6-digit pin to the delivery agent for confirmation</li>
+                        </ul>
+                  </div>
+                 
+                 </div>
+
+                 <div class="col-lg-6">
+                  <% if( newOrder[0].status == "incomplete" ){ %>
+                    <form action="/user/cancel-order/<%= newOrder[0].sale_id %>" method="post">
+
+                  <input type="hidden" name="_method" value="PUT">
+                  <input name="_method" type="submit" value="cancel order" style="width: 100%;" class="btn btn-primary "/>
+                  </form>
+      
+                  <% } else{ %>
+      
+                  <button type="submit" class="btn btn-secondary mt-4" style="width: 100%" disabled >no action avaliable</button>
+      
+                  <% } %>
+                 </div>
+
+              </div>
+          </div>
+          </div>
+
+
+
+           <%- include('./partials/info') %>
+        </div>
+
+<br>
+
+<%- include('./partials/footer') %>

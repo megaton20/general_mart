@@ -1,0 +1,99 @@
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include ('../partials/superSidebar') %>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include ('../partials/topbar') %>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Registered Users </h1>
+
+                    <%- include ('../partials/messages') %>
+                    <!-- DataTales Example -->
+                    <div class=" mb-4">
+                        <% if(allUsers.length <= 0){ %>
+                                <h1>No Employee Record Found !</h1>  
+
+                          <% } else{ %>  
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>id</th>
+                                                <th>Name</th>
+                                                <th>email</th>
+                                                <th>phone</th>
+
+                                                <th>Last login</th>
+
+                                                <th>actions</th>
+    
+                                            </tr>
+                                        </thead>
+                                       
+                                        <tbody>
+    
+                                            <% allUsers.forEach(function(data) {%>
+                                             <tr>
+                                                 <td><%= data['id'] %></td>
+                                                 <td><%= data['First_name'] %> <%= data['Last_name'] %></td>
+                                                 <td><%= data['email'] %></td>
+                                                 <td><%= data['Phone'] %></td>
+
+                                                 <td><%= data['previous_visit'] %></td>
+                                                 <td style="display: flex; justify-content: space-between;">
+                                                    <a class="btn btn-secondary" href="/super/upgrade-users/<%= data['id'] %>"> Upgrade</a>
+
+                                                </td>
+                                           
+                                            </tr> 
+                                            
+                                                <% }) %>
+                                      
+    
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                          <% } %>
+                        
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include ('../partials/footer') %>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+

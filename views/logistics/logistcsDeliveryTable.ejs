@@ -1,0 +1,119 @@
+
+
+  <div class="container-fluid">
+          <%- include ('./logisticsTopbar') %>
+        <hr>
+
+        <!-- Page Heading -->
+        <%- include ('../partials/messages') %>
+
+        <!-- DataTales Example -->
+        <div class="container">
+            <div class=" mb-4">
+                <div class="card-body">
+    
+                    <% if(pendingDelivery.length <= 0){ %>
+    
+                        <div
+                        class=""
+                        style="
+                          display: flex;
+                          justify-content: center;
+                          align-items: center;
+                          margin: auto;
+                          margin-top: 200px;
+                        "
+                      >
+                        <img
+                          style="max-width: 100px; max-height: 100px"
+                          src="/images/shipped.png"
+                          class=" rounded-4"
+                          alt="images"
+                        />
+                      </div> 
+                        <% } else{ %>  
+    
+                            <div class="card-body">
+                        
+                                <div class="table-responsive">
+                                    <table class="table table-bordered"  width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+    
+                                              <th>Id</th>
+                                              <th>Customer Email</th>
+                                              <th>Customer phone</th>
+                                              <th>Pick up location</th>
+                                              <th>Status</th>
+                                              <th>
+                                                action
+                                              </th>
+                                            </tr>
+                                        </thead>
+                                        
+                                        <tbody>
+                                      
+                                     
+    
+    
+    
+                                            <% pendingDelivery.forEach(function(data) {%>
+                                                <tr>
+                                                    <td><%= data['id'] %></td>
+                                                    <td><%= data['customer_email'] %></td>
+                                                    <td><%= data['customer_phone'] %> </td>
+                                                    <td><%= data['customer_address'] %> </td>
+                                                    
+    
+                                                    <% if(  data['status']  == "incomplete"){ %>
+    
+                                                        <td class="text-danger ">
+                                                            <%= data['status'] %> 
+                                                        </td>
+                                                        
+                                                    <% } else if ( data['status']  == "shipped") { %>  
+                                                        <td class="text-danger">
+                                                            <%= data['status'] %> 
+                                                        </td>   
+                                                        
+                                                        <%} else {%>
+    
+                                                        <td class="text-success">
+                                                            <%= data['status'] %> 
+                                                        </td>   
+                                             <% } %>
+    
+    
+    
+                                                    <td>
+                                                        <a class="btn btn-primary" href="/logistics/all-deliveries/<%= data['id'] %>"> view</a>
+                                                    </td>
+    
+                                                    
+                                               </tr> 
+                                               
+                                                   <% }) %>
+                                     
+                                       
+                                        
+    
+                                            </tbody>
+                                    </table>
+                                </div>
+                            </div> 
+                            <% } %>
+                   
+                </div>
+            </div>
+        </div>
+
+    </div>
+      <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+  </a>

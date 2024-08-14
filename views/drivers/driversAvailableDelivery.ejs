@@ -1,0 +1,72 @@
+
+
+  <div class="container">
+          <%- include ('./driversTopbar') %>
+        <hr>
+
+        <!-- Page Heading -->
+        <%- include ('../partials/messages') %>
+
+            <div class=" mb-4">
+                <div class="card-body">
+    
+                    <% if(availableDeliveries.length <= 0){ %>
+
+                      <div style="margin-top: 200px;">
+                        <div class="d-flex flex-column justify-content-center align-items-center" >
+                          <img style="max-width: 100px; max-height: 100px" src="/images/shipped.png" class=" rounded-4"alt="images"/>
+                          <p>Relax No new order</p>
+                        </div>
+                        
+                      </div> 
+                    </div>
+
+                        <% } else{ %>  
+    
+                          <% availableDeliveries.forEach(function(data) {%> 
+                          <div class=" mb-3">
+                              <div class="card">
+                                <div class="card-body">
+                                <div class="row align-items-center">
+                                  <div class="col-lg-12">
+                                    <div class="row no-gutters align-items-center">
+                                      <div class="col mr-5 mb-4">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                          Pick up
+                                        </div>
+                                        <div class="text-gray-500">
+                                          Store A
+                                        </div>
+                                      </div>
+
+                                      <div class="col-auto mr-5 mb-4">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            Destination
+                                          </div>
+                                          <div class="text-gray-500">
+                                            <%= data.customer_address%>. <%= data.customer_state%>, <%= data.customer_lga%>
+                                          </div>
+                                      </div>
+                                            
+                                    </div>
+                                  </div>
+
+                                </div>
+                                </div>
+                              </div>
+                          </div>
+                          <% }) %>
+         
+                            <% } %>
+                   
+                </div>
+            </div>
+
+
+            <br>
+            <br>
+            <br>
+            <%- include ('../partials/clients')%>
+  </div>
+
+  <%- include ('../partials/openFooter')%>
