@@ -955,7 +955,7 @@ exports.addDriverToCompany = async (req, res) => {
 
     // Update the user with the selected logistics company
     await query(`UPDATE "Users" SET logistic_id = $1, logistics_company_name = $2 WHERE id = $3`, 
-      [company, logisticsResults[0].name, editId]
+      [company, logisticsResults.rows[0].name, editId]
     );
 
     req.flash("success_msg", `Successfully updated`);
@@ -1966,7 +1966,7 @@ exports.storeEdit = async (req, res) => {
       return res.redirect("/super");
     }
 
-    const storeData = results[0];
+    const storeData = results.rows[0];
     // If you need to fetch stateData, do so here and include it in the render options
 
     return res.render("./super/storesEditForm", {
@@ -2003,7 +2003,7 @@ exports.editDiscount = async (req, res) => {
       return res.redirect("/super");
     }
 
-    const discountData = results[0]; // Extract the first result if it's an array
+    const discountData = results.rows[0]; // Extract the first result if it's an array
 
     return res.render("./super/discountEditForm", {
       pageTitle: "Edit Discount",
@@ -2088,7 +2088,7 @@ exports.editSupplier = async (req, res) => {
       return res.redirect("/super");
     }
 
-    const supplierData = results[0]; // Extract the supplier data
+    const supplierData = results.rows[0]; // Extract the supplier data
 
     return res.render("./super/supplierEditForm", {
       pageTitle: "Edit Supplier",
@@ -2125,7 +2125,7 @@ exports.editCategory = async (req, res) => {
       return res.redirect("/super");
     }
 
-    const categoryData = results[0]; // Extract the first result
+    const categoryData = results.rows[0]; // Extract the first result
 
     return res.render("./super/categoryEditForm", {
       pageTitle: "Edit Category",
@@ -2317,7 +2317,7 @@ exports.updateEmployee = async (req, res) => {
       return res.redirect('/super');
     }
     
-    const positionId = positionResults[0].id;
+    const positionId = positionResults.rows[0].id;
 
     // Get the ID for the store
     const storeResults = await query(
@@ -2330,7 +2330,7 @@ exports.updateEmployee = async (req, res) => {
       return res.redirect('/super');
     }
 
-    const storeId = storeResults[0].id;
+    const storeId = storeResults.rows[0].id;
 
     // Update the employee record
     await query(
@@ -2405,18 +2405,18 @@ exports.editNewDiscount = async (req, res) => {
   try {
     // Check if the discount exists
     const discountResult = await query(
-      `SELECT * FROM Discount WHERE id = $1`,
+      `SELECT * FROM "Discount" WHERE id = $1`,
       [updateID]
     );
 
-    if (discountResult.length === 0) {
+    if (discountResult.rows.length === 0) {
       req.flash("error_msg", `Discount not found`);
       return res.redirect("/super/all-discounts");
     }
 
     // Update discount details
     await query(
-      `UPDATE Discount SET Discount_name = $1, Discount_Provider = $2, Discount_percentage = $3, Start_Date = $4, End_Date = $5 WHERE id = $6`,
+      `UPDATE "Discount" SET "Discount_name" = $1, "Discount_Provider" = $2, "Discount_percentage" = $3, "Start_Date" = $4, "End_Date" = $5 WHERE id = $6`,
       [Discount_name, Discount_Provider, Discount_Percentage, Start_Date, End_Date, updateID]
     );
 
@@ -2431,41 +2431,39 @@ exports.editNewDiscount = async (req, res) => {
 exports.editNewSupplier = async (req, res) => {
   const editID = req.params.id;
   const { First_name, Last_name, email, Phone, Address } = req.body;
-
+  
   if (!(First_name && Last_name && email && Phone && Address)) {
     req.flash("error_msg", `Enter all fields before submitting`);
     return res.redirect(`/super/edit-supplier/${editID}`);
   }
-
+  
   try {
     // Check if the supplier exists
     const results = await query(
-      `SELECT * FROM Suppliers WHERE id = $1`,
+      `SELECT * FROM "Suppliers" WHERE id = $1`,
       [editID]
-    );
+      );
+      
 
-    if (results.length === 0) {
-      req.flash("error_msg", `Supplier not found!`);
-      return res.redirect("/super/all-suppliers");
-    }
-
-    const updateData = {
-      First_name,
-      Last_name,
-      email,
-      Phone,
-      Address,
-    };
-
+      if (results.rows.length === 0) {
+        req.flash("error_msg", `Supplier not found!`);
+        return res.redirect("/super/all-supplier");
+      }
+    
     // Update supplier details
-    await query(
-      `UPDATE Suppliers SET First_name = $1, Last_name = $2, email = $3, Phone = $4, Address = $5 WHERE id = $6`,
+   const updateResult =  await query(
+      `UPDATE "Suppliers" SET "First_name" = $1, "Last_name" = $2, "email" = $3, "Phone" = $4, "Address" = $5 WHERE id = $6`,
       [First_name, Last_name, email, Phone, Address, editID]
     );
 
+    if (updateResult.rowCount === 0) {
+      console.log('No rows updated. Check if the id exists.');
+    } 
+
     req.flash("success_msg", `Supplier updated successfully!`);
-    return res.redirect("/super/all-suppliers");
+    return res.redirect("/super/all-supplier");
   } catch (error) {
+    console.log(error);
     req.flash("error_msg", `An error occurred: ${error.message}`);
     return res.redirect(`/super/edit-supplier/${editID}`);
   }
@@ -2483,11 +2481,11 @@ exports.editNewCategory = async (req, res) => {
   try {
     // Check if the category exists
     const results = await query(
-      `SELECT * FROM Category WHERE CategoryID = $1`,
+      `SELECT * FROM "Category" WHERE "CategoryID" = $1`,
       [editID]
     );
 
-    if (results.length === 0) {
+    if (results.rows.length === 0) {
       req.flash("error_msg", `No category found`);
       return res.redirect(`/super/all-categories`);
     }
@@ -2499,31 +2497,31 @@ exports.editNewCategory = async (req, res) => {
 
     // Update category
     await query(
-      `UPDATE Category SET Category_name = $1, details = $2 WHERE CategoryID = $3`,
+      `UPDATE "Category" SET "Category_name" = $1, "details" = $2 WHERE "CategoryID" = $3`,
       [Category_name, Desc, editID]
     );
 
     // Update inventory if category is in use
     const selectedInventory = await query(
-      `SELECT * FROM inventory WHERE category_id = $1`,
+      `SELECT * FROM "inventory" WHERE "category_id" = $1`,
       [editID]
     );
 
     if (selectedInventory.length > 0) {
       await query(
-        `UPDATE inventory SET Category_name = $1 WHERE category_id = $2`,
+        `UPDATE "inventory" SET "Category_name" = $1 WHERE "category_id" = $2`,
         [Category_name, editID]
       );
 
       // Update products if category is in use
       const allProductsResults = await query(
-        `SELECT * FROM Products WHERE category_id = $1`,
+        `SELECT * FROM "Products" WHERE "category_id" = $1`,
         [editID]
       );
 
       if (allProductsResults.length > 0) {
         await query(
-          `UPDATE Products SET category = $1 WHERE category_id = $2`,
+          `UPDATE "Products" SET "category" = $1 WHERE "category_id" = $2`,
           [Category_name, editID]
         );
         req.flash("success_msg", `Updated category, inventory, and shelf successfully!`);
@@ -2608,14 +2606,14 @@ exports.editNewInventory = async (req, res) => {
 
   try {
     const productResults = await query(
-      `SELECT * FROM Products WHERE inventory_id = $1`,
+      `SELECT * FROM "Products" WHERE "inventory_id" = $1`,
       [editID]
     );
 
     // If the item is not in the Products table, update only the inventory
-    if (productResults.length === 0) {
+    if (productResults.rows.length === 0) {
       await query(
-        `UPDATE inventory SET Category_name = $1, Brand_name = $2, Product_name = $3, Purchase_price = $4, Supplier_name = $5, Payment_method = $6, Reciever_name = $7, Delivery_method = $8, QTY_recieved = $9, total_in_pack = $10, Manufacture_date = $11, Expire_date = $12, Cost_of_delivery = $13, Total_damaged = $14, details = $15 WHERE id = $16`,
+        `UPDATE "inventory" SET "Category_name" = $1, "Brand_name" = $2, "Product_name" = $3, "Purchase_price" = $4, "Supplier_name" = $5, "Payment_method" = $6, "Reciever_name" = $7, "Delivery_method" = $8, "QTY_recieved" = $9, "total_in_pack" = $10, "Manufacture_date" = $11, "Expire_date" = $12, "Cost_of_delivery" = $13, "Total_damaged" = $14, "details" = $15 WHERE id = $16`,
         [
           Category_name,
           Brand_name,
@@ -2642,7 +2640,7 @@ exports.editNewInventory = async (req, res) => {
 
     // If the item is in the Products table, update both Products and inventory
     await query(
-      `UPDATE Products SET category = $1, Brand_name = $2, ProductName = $3, details = $4, StockQuantity = $5, total_in_pack = $6 WHERE inventory_id = $7`,
+      `UPDATE "Products" SET "category" = $1, "Brand_name" = $2, "ProductName" = $3, "details" = $4, "StockQuantity" = $5, "total_in_pack" = $6 WHERE "inventory_id" = $7`,
       [
         Category_name,
         Brand_name,
@@ -2655,7 +2653,7 @@ exports.editNewInventory = async (req, res) => {
     );
 
     await query(
-      `UPDATE inventory SET Category_name = $1, Brand_name = $2, Product_name = $3, Purchase_price = $4, Supplier_name = $5, Payment_method = $6, Reciever_name = $7, Delivery_method = $8, QTY_recieved = $9, total_in_pack = $10, Manufacture_date = $11, Expire_date = $12, Cost_of_delivery = $13, Total_damaged = $14, details = $15 WHERE id = $16`,
+      `UPDATE "inventory" SET "Category_name" = $1, "Brand_name" = $2, "Product_name" = $3, "Purchase_price" = $4, "Supplier_name" = $5, "Payment_method" = $6, "Reciever_name" = $7, "Delivery_method" = $8, "QTY_recieved" = $9, "total_in_pack" = $10, "Manufacture_date" = $11, "Expire_date" = $12, "Cost_of_delivery" = $13, "Total_damaged" = $14, "details" = $15 WHERE id = $16`,
       [
         Category_name,
         Brand_name,
@@ -2704,7 +2702,7 @@ exports.editNewPosition = async (req, res) => {
   try {
     // Update the position data
     await query(
-      `UPDATE Positions SET Position_name = $1, Salary = $2, Job_description = $3 WHERE id = $4`,
+      `UPDATE "Positions" SET "Position_name" = $1, "Salary" = $2, "Job_description" = $3 WHERE id = $4`,
       [Position_name, Salary, Job_description, editID]
     );
 
@@ -2722,16 +2720,16 @@ exports.resolveSale = async (req, res) => {
 
   try {
     // Fetch the sale details
-    const salesResults = await query(`SELECT * FROM Sales WHERE id = $1`, [editID]);
+    const salesResults = await query(`SELECT * FROM "Sales" WHERE id = $1`, [editID]);
     if (salesResults.length === 0) {
       req.flash("error_msg", "Sale not found");
       return res.redirect("/super/all-sales");
     }
     
-    const salesData = salesResults[0];
+    const salesData = salesResults.rows[0];
     
     // Fetch products related to this sale
-    const orderResults = await query(`SELECT * FROM Order_Products WHERE sale_id = $1`, [salesData.sale_id]);
+    const orderResults = await query(`SELECT * FROM "Order_Products" WHERE "sale_id" = $1`, [salesData.sale_id]);
     
     // Aggregate product quantities
     const productQuantities = {};
@@ -2741,13 +2739,13 @@ exports.resolveSale = async (req, res) => {
 
     // Update stock quantities and handle errors
     const promises = Object.entries(productQuantities).map(async ([product_id, quantity]) => {
-      const shelfResults = await query(`SELECT total_on_shelf FROM Products WHERE id = $1`, [product_id]);
+      const shelfResults = await query(`SELECT "total_on_shelf" FROM "Products" WHERE id = $1`, [product_id]);
       if (shelfResults.length === 0) {
         req.flash("error_msg", `Product with id ${product_id} not found`);
         throw new Error(`Product with id ${product_id} not found`);
       }
 
-      const currentShelfQuantity = shelfResults[0].total_on_shelf;
+      const currentShelfQuantity = shelfResults.rows[0].total_on_shelf;
       const newQty = currentShelfQuantity - quantity;
 
       if (newQty < 0) {
@@ -2755,13 +2753,13 @@ exports.resolveSale = async (req, res) => {
         throw new Error(`Not enough stock for product id ${product_id}`);
       }
 
-      await query(`UPDATE Products SET total_on_shelf = $1 WHERE id = $2`, [newQty, product_id]);
+      await query(`UPDATE "Products" SET "total_on_shelf" = $1 WHERE id = $2`, [newQty, product_id]);
     });
 
     await Promise.all(promises);
 
     // Update sale status
-    await query(`UPDATE Sales SET status = $1 WHERE id = $2`, ['resolved', editID]);
+    await query(`UPDATE "Sales" SET "status" = $1 WHERE id = $2`, ['resolved', editID]);
 
     req.flash("success_msg", "Sale has been resolved");
     return res.redirect("/super/sales");
@@ -2780,10 +2778,10 @@ exports.flagProduct = async (req, res) => {
 
   try {
     // Update the inventory status to deactivate
-    await query(`UPDATE inventory SET activate = $1 WHERE id = $2`, [deactivate.activate, editID]);
+    await query(`UPDATE "inventory" SET "activate" = $1 WHERE id = $2`, [deactivate.activate, editID]);
 
     // Update the products status to deactivate
-    await query(`UPDATE Products SET activate = $1 WHERE inventory_id = $2`, [deactivate.activate, editID]);
+    await query(`UPDATE "Products" SET "activate" = $1 WHERE "inventory_id" = $2`, [deactivate.activate, editID]);
 
     req.flash("warning_msg", `Product deactivated successfully!`);
     return res.redirect("/super/all-products");
@@ -2800,10 +2798,10 @@ exports.unflagProduct = async (req, res) => {
 
   try {
     // Update the inventory status to activate
-    await query(`UPDATE inventory SET activate = $1 WHERE id = $2`, [activate, editID]);
+    await query(`UPDATE "inventory" SET "activate" = $1 WHERE id = $2`, [activate, editID]);
 
     // Update the products status to activate
-    await query(`UPDATE Products SET activate = $1 WHERE inventory_id = $2`, [activate, editID]);
+    await query(`UPDATE "Products" SET "activate" = $1 WHERE "inventory_id" = $2`, [activate, editID]);
 
     req.flash("success_msg", "Product activated successfully!");
     return res.redirect("back");
@@ -2823,14 +2821,14 @@ exports.addToShowcase = async (req, res) => {
 
   try {
     // Fetch product details
-    const results = await query(`SELECT * FROM Products WHERE id = $1`, [editID]);
+    const results = await query(`SELECT * FROM "Products" WHERE id = $1`, [editID]);
 
-    if (results.length === 0) {
+    if (results.rows.length === 0) {
       req.flash("error_msg", "Product not found.");
       return res.redirect("/super/all-products");
     }
 
-    const product = results[0];
+    const product = results.rows[0];
 
     // Check if product is expired or has insufficient stock
     if (product.total_on_shelf <= 0 || product.status === "expired") {
@@ -2847,7 +2845,7 @@ exports.addToShowcase = async (req, res) => {
     // Check if the product is activated
     if (product.activate === "yes") {
       // Update product to add to showcase
-      await query(`UPDATE Products SET showcase = $1 WHERE id = $2`, ["yes", editID]);
+      await query(`UPDATE "Products" SET "showcase" = $1 WHERE id = $2`, ["yes", editID]);
       req.flash("success_msg", "Product added to showcase successfully!");
       return res.redirect("/super/all-products");
     } else {
@@ -2866,14 +2864,14 @@ exports.removeFromShowcase = async (req, res) => {
 
   try {
     // Fetch product details
-    const results = await query(`SELECT * FROM Products WHERE id = $1`, [editID]);
+    const results = await query(`SELECT * FROM "Products" WHERE id = $1`, [editID]);
 
-    if (results.length === 0) {
+    if (results.rows.length === 0) {
       req.flash("error_msg", "Product not found.");
       return res.redirect("back");
     }
 
-    const product = results[0];
+    const product = results.rows[0];
 
     // Check if the product is not on showcase
     if (product.showcase === "no") {
@@ -2882,7 +2880,7 @@ exports.removeFromShowcase = async (req, res) => {
     }
 
     // Update product to remove from showcase
-    await query(`UPDATE Products SET showcase = $1 WHERE id = $2`, ["no", editID]);
+    await query(`UPDATE "Products" SET "showcase" = $1 WHERE id = $2`, ["no", editID]);
     req.flash("success_msg", "Product removed from showcase successfully!");
     return res.redirect("back");
 
@@ -2898,7 +2896,7 @@ exports.deleteStore = async (req, res) => {
 
   try {
     // Delete the store with the given ID
-    const result = await query(`DELETE FROM Stores WHERE id = $1`, [editID]);
+    const result = await query(`DELETE FROM "Stores" WHERE id = $1`, [editID]);
 
     // Check if any rows were affected
     if (result.rowCount === 0) {
@@ -2920,7 +2918,7 @@ exports.deleteDiscount = async (req, res) => {
 
   try {
     // Delete the discount with the given ID
-    const result = await query(`DELETE FROM Discount WHERE id = $1`, [editID]);
+    const result = await query(`DELETE FROM "Discount" WHERE id = $1`, [editID]);
 
     // Check if any rows were affected
     if (result.rowCount === 0) {
@@ -2943,12 +2941,12 @@ exports.deleteEmployee = async (req, res) => {
   try {
     // Check if the employee exists and their role
     const results = await query(`SELECT * FROM "Users" WHERE id = $1`, [editID]);
-    if (results.length === 0) {
+    if (results.rows.length === 0) {
       req.flash("error_msg", "Employee not found.");
       return res.redirect("back");
     }
 
-    const user = results[0];
+    const user = results.rows[0];
 
     if (user.userRole === "super") {
       req.flash("warning_msg", "Cannot delete this account!");
@@ -3153,7 +3151,7 @@ exports.confirmOrder = async (req, res) => {
       return res.redirect("/super");
     }
 
-    const thatOrder = results[0];
+    const thatOrder = results.rows[0];
 
     if (thatOrder.status === "canceled") {
       req.flash("error_msg", "Order status is 'canceled'");
@@ -3175,7 +3173,7 @@ exports.confirmOrder = async (req, res) => {
         throw new Error(`Product with id ${productBought.product_id} not found`);
       }
 
-      const currentShelfQuantity = shelfResults[0].total_on_shelf;
+      const currentShelfQuantity = shelfResults.rows[0].total_on_shelf;
       if (currentShelfQuantity <= 0) {
         throw new Error(`Product "${productBought.product_name}" is out of stock`);
       }
@@ -3218,7 +3216,7 @@ exports.confirmOrder = async (req, res) => {
         return res.redirect("/super");
       }
 
-      const buyingUser = userResults[0];
+      const buyingUser = userResults.rows[0];
       const newUserSpending = buyingUser.spending + totalSpentOnThisOrder;
       const newCashBack = buyingUser.cashback + cashBack;
 
@@ -3254,7 +3252,7 @@ exports.completeOrder = async (req, res) => {
       return res.redirect(`/super/view-order/${editID}`);
     }
 
-    const dispatch = results[0];
+    const dispatch = results.rows[0];
     const dispatchEmail = dispatch.email;
     const dispatchCompanyName = dispatch.name;
     const dispatchPhone = dispatch.phone;
@@ -3267,7 +3265,7 @@ exports.completeOrder = async (req, res) => {
       return res.redirect("/super");
     }
 
-    const thatOrder = orderResults[0];
+    const thatOrder = orderResults.rows[0];
     const saleID = thatOrder.sale_id;
 
     // Update sales, order products, and orders tables
@@ -3307,7 +3305,7 @@ exports.shipWithRider = async (req, res) => {
       return res.redirect(`/super/view-order/${orderID}`);
     }
 
-    const dispatch = results[0];
+    const dispatch = results.rows[0];
     const dispatchEmail = dispatch.companyEmail;
     const dispatchCompanyName = dispatch.companyName;
     const dispatchPhone = dispatch.companyPhone;
@@ -3320,7 +3318,7 @@ exports.shipWithRider = async (req, res) => {
       return res.redirect("/super");
     }
 
-    const thatOrder = orderResults[0];
+    const thatOrder = orderResults.rows[0];
     const saleID = thatOrder.sale_id;
 
     // Update Sales
@@ -3439,7 +3437,7 @@ exports.superSale = async (req, res) => {
       if (productResults.length === 0) {
         throw new Error(`Product with id ${id} not found`);
       }
-      const currentShelfQuantity = productResults[0].total_on_shelf;
+      const currentShelfQuantity = productResults.rows[0].total_on_shelf;
       if (currentShelfQuantity < quantity) {
         throw new Error(`Not enough stock for product id ${id}`);
       }
