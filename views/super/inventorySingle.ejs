@@ -40,43 +40,43 @@
 
                                                 <div class="row">
                                                     <div class="col-6">Product Name: </div>
-                                                    <div class="col-6"><%= allInventory[0].Product_name %></div>
+                                                    <div class="col-6"><%= allInventory.Product_name %></div>
                                                     <div class="col-6">Brand  Name: </div>
-                                                    <div class="col-6"> <%= allInventory[0].Brand_name %></div>
+                                                    <div class="col-6"> <%= allInventory.Brand_name %></div>
                                                     <div class="col-6">Category: </div>
-                                                    <div class="col-6"> <%= allInventory[0].Category_name %></div>
+                                                    <div class="col-6"> <%= allInventory.Category_name %></div>
                                                     <div class="col-6">Purchase: </div>
-                                                    <div class="col-6"> <%= allInventory[0].Purchase_price %></div>
+                                                    <div class="col-6"> <%= allInventory.Purchase_price %></div>
                                                     <div class="col-6">QTY: </div>
-                                                    <div class="col-6"> <%= allInventory[0].QTY_recieved %></div>
+                                                    <div class="col-6"> <%= allInventory.QTY_recieved %></div>
                                                     <div class="col-6">Total in Pack: </div>
-                                                    <div class="col-6"> <%= allInventory[0].total_in_pack %></div>
+                                                    <div class="col-6"> <%= allInventory.total_in_pack %></div>
 
 
                                                     <div class="col-6">Reciever Name: </div>
-                                                    <div class="col-6"> <%= allInventory[0].Reciever_name %></div>
+                                                    <div class="col-6"> <%= allInventory.Reciever_name %></div>
                                                     <div class="col-6">Supplier Name: </div>
-                                                    <div class="col-6"> <%= allInventory[0].Supplier_name %></div>
+                                                    <div class="col-6"> <%= allInventory.Supplier_name %></div>
                                                     <div class="col-6">Date Recieved: </div>
-                                                    <div class="col-6"> <%= allInventory[0].created_date %></div>
+                                                    <div class="col-6"> <%= allInventory.created_date %></div>
                                                     <div class="col-6">Delivery Method: </div>
-                                                    <div class="col-6"> <%= allInventory[0].Delivery_method %></div>
+                                                    <div class="col-6"> <%= allInventory.Delivery_method %></div>
                                                     <div class="col-6">Cost of Delivery: </div>
-                                                    <div class="col-6"> <%= allInventory[0].Cost_of_delivery %></div>
+                                                    <div class="col-6"> <%= allInventory.Cost_of_delivery %></div>
                                                     <div class="col-6">Barcode information: </div>
-                                                    <div class="col-6"> <%= allInventory[0].barcode %></div>
+                                                    <div class="col-6"> <%= allInventory.barcode %></div>
 
                                                     <div class="col-6">Manufacture Date: </div>
-                                                    <div class="col-6"> <%= allInventory[0].Manufacture_date %></div>
+                                                    <div class="col-6"> <%= allInventory.Manufacture_date %></div>
                                                     <div class="col-6">EXP Date: </div>
-                                                    <div class="col-6"> <%= allInventory[0].Expire_date %></div>
+                                                    <div class="col-6"> <%= allInventory.Expire_date %></div>
                                                 </div>
 
                                                 <div class="row mt-4">
                                                     <div class="col-6">Total Damage from deleivery: </div>
-                                                    <div class="col-6"><%= allInventory[0].Total_damaged %></div>
+                                                    <div class="col-6"><%= allInventory.Total_damaged %></div>
                                                     <div class="col-6">Store Presence: </div>
-                                                    <div class="col-6"><%= allInventory[0].activate %></div>
+                                                    <div class="col-6"><%= allInventory.activate %></div>
                                                 </div>
 
 
@@ -96,11 +96,11 @@
                                                     <div class="card-body">
                                                         
 
-                                    <img class="img-thumbnail" src="/uploads/<%= allInventory[0].image %>" alt="image">
+                                    <img class="img-thumbnail" src="/uploads/<%= allInventory.image %>" alt="image">
 
 
-                                    <% if ( allInventory[0].image == null ) { %>
-                                        <form class="user" action="/super/add-image/<%= allInventory[0].id %>" method="post" enctype="multipart/form-data">
+                                    <% if ( allInventory.image == null ) { %>
+                                        <form class="user" action="/super/add-image/<%= allInventory.id %>" method="post" enctype="multipart/form-data">
 
                                             <div class="form-group">
                                                 <input type="file" name="image">
@@ -112,7 +112,7 @@
                                     
                                         </form>
                                       <% } else { %>
-                                        <form class="user" action="/super/add-image/<%= allInventory[0].id %>" method="post" enctype="multipart/form-data">
+                                        <form class="user" action="/super/add-image/<%= allInventory.id %>" method="post" enctype="multipart/form-data">
 
                                             <div class="form-group">
                                                 <input type="file" name="image">

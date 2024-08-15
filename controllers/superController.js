@@ -1288,7 +1288,7 @@ exports.getInventoryById = async (req, res) => {
       day: dayName,
       date: presentDay,
       year: presentYear,
-      allInventory,
+      allInventory:allInventory[0],
     });
 
   } catch (error) {
@@ -2161,10 +2161,10 @@ exports.editInventory = async (req, res) => {
     ]);
 
     // Convert results to JSON if needed
-    const allSuppliers = JSON.parse(JSON.stringify(supplierData));
-    const allUsers = JSON.parse(JSON.stringify(allUsersData));
-    const categoryData = JSON.parse(JSON.stringify(categoryDataResult));
-    const inventoryData = JSON.parse(JSON.stringify(inventoryDataResults));
+    const allSuppliers = JSON.parse(JSON.stringify(supplierData.rows));
+    const allUsers = JSON.parse(JSON.stringify(allUsersData.rows));
+    const categoryData = JSON.parse(JSON.stringify(categoryDataResult.rows));
+    const inventoryData = JSON.parse(JSON.stringify(inventoryDataResults.rows));
 
     // Ensure inventory data is not empty and extract the first item
     const inventoryItem = inventoryData.length > 0 ? inventoryData[0] : null;
@@ -3384,6 +3384,7 @@ exports.shipWithRider = async (req, res) => {
 
 
 exports.updateImage = async (req, res) => {
+
   const uploadId = req.params.id;
   let filename = req.file ? req.file.filename : "default.jpg";
   

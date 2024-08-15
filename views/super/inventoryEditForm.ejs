@@ -20,7 +20,7 @@
                 <div class="container-fluid">
 
                  <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Edit Inventory for " <%= inventoryData[0].Product_name%>"</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Edit Inventory for " <%= inventoryData.product_name%>"</h1>
                     <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-inventory">Add Inventory</a>
 
                     <!-- DataTales Example -->
@@ -28,13 +28,13 @@
                         <%- include ('../partials/messages') %>
                         <div class="card-body">
                             <div class="form mt-4 mb-4">
-                                <form action="/super/edit-inventory/<%= inventoryData[0].id%>"  method="post" class="form">
+                                <form action="/super/edit-inventory/<%= inventoryData.id%>"  method="post" class="form">
                                    <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Category Name</label>
                                             <select name="Category_name" id="" class="form-control">
-                                                <option value="<%= inventoryData[0].Category_name%>"><%= inventoryData[0].Category_name%></option>
+                                                <option value="<%= inventoryData.Category_name%>"><%= inventoryData.Category_name%></option>
                                                 <% categoryData.forEach(function(data) {%>
                                                 <option value="<%= data['Category_name'] %>"> <%= data['Category_name'] %></option>
                                                 <% }) %>
@@ -45,14 +45,14 @@
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Brand Name</label>
-                                            <input type="text" name="Brand_name" class="form-control" value="<%= inventoryData[0].Brand_name%>" >
+                                            <input type="text" name="Brand_name" class="form-control" value="<%= inventoryData.Brand_name%>" >
                                         </div>
                                     </div>
 
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Product Name</label>
-                                            <input type="text" name="Product_name" class="form-control" value="<%= inventoryData[0].Product_name%>" >
+                                            <input type="text" name="Product_name" class="form-control" value="<%= inventoryData.Product_name%>" >
                                         </div>
                                     </div>
 
@@ -60,7 +60,7 @@
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Purchase Price</label>
-                                            <input type="number" name="Purchase_price" class="form-control" value="<%= inventoryData[0].Purchase_price%>" >
+                                            <input type="number" name="Purchase_price" class="form-control" value="<%= inventoryData.Purchase_price%>" >
                                         </div>
                                     </div>
 
@@ -68,7 +68,7 @@
                                         <div class="form-group">
                                             <label for="">Supplier Name</label>
                                             <select name="Supplier_name" id="" class="form-control">
-                                                <option value="<%= inventoryData[0].Supplier_name%>" > <%= inventoryData[0].Supplier_name %> </option>
+                                                <option value="<%= inventoryData.Supplier_name%>" > <%= inventoryData.Supplier_name %> </option>
                                                 <% supplierData.forEach(function(data) {%>
                                                 <option value="<%= data['Business_name'] %> "> <%= data['Business_name'] %> </option>
                                                 <% }) %>
@@ -81,7 +81,7 @@
                                         <div class="form-group">
                                             <label for="">Payment Method</label>
                                             <select name="Payment_method" id="" class="form-control">
-                                                <option value="<%= inventoryData[0].Payment_method %>"><%= inventoryData[0].Payment_method %></option>
+                                                <option value="<%= inventoryData.Payment_method %>"><%= inventoryData.Payment_method %></option>
                                                 <option value="Cash"> Cash</option>
                                                 <option value="Transfer"> Transfer</option>
                                                 <option value="Split Payment"> Split Payment</option>
@@ -93,7 +93,7 @@
                                         <div class="form-group">
                                             <label for="">Reciever Name</label>
                                             <select name="Reciever_name" id="" class="form-control" >
-                                                <option value="<%= inventoryData[0].Reciever_name %>"><%= inventoryData[0].Reciever_name %></option>
+                                                <option value="<%= inventoryData.Reciever_name %>"><%= inventoryData.Reciever_name %></option>
                                                 <% allUsers.forEach(function(data) {%>
                                                 <option value="<%= data['First_name'] %> <%= data['Last_name'] %> "> <%= data['First_name'] %> <%= data['Last_name'] %> </option>
                                                 <% }) %>
@@ -105,7 +105,7 @@
                                         <div class="form-group">
                                             <label for="">Delivery Method</label>
                                             <select name="Delivery_method" id="" class="form-control">
-                                                <option value="<%= inventoryData[0].Delivery_method %>"><%= inventoryData[0].Delivery_method %></option>
+                                                <option value="<%= inventoryData.Delivery_method %>"><%= inventoryData.Delivery_method %></option>
                                                 <option value="by comapany"> by comapany</option>
                                                 <option value="by Supplier"> by Supplier</option>
                                             </select>
@@ -115,21 +115,21 @@
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">QTY Recieved</label>
-                                            <input type="number" name="QTY_recieved" class="form-control" value="<%= inventoryData[0].QTY_recieved %>">
+                                            <input type="number" name="QTY_recieved" class="form-control" value="<%= inventoryData.QTY_recieved %>">
                                         </div>
                                     </div>
 
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Total Product in Pack</label>
-                                            <input type="number" name="total_in_pack" class="form-control" value="<%= inventoryData[0].total_in_pack %>">
+                                            <input type="number" name="total_in_pack" class="form-control" value="<%= inventoryData.total_in_pack %>">
                                         </div>
                                     </div>
 
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Manufacture Date</label>
-                                            <input type="date" name="Manufacture_date" class="form-control" value="<%= inventoryData[0].Manufacture_date %>" >
+                                            <input type="date" name="Manufacture_date" class="form-control" value="<%= inventoryData.Manufacture_date %>" >
                                         </div>
                                     </div>
 
@@ -137,7 +137,7 @@
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Expire Date</label>
-                                            <input type="date" name="Expire_date" class="form-control" value="<%= inventoryData[0].Expire_date %>">
+                                            <input type="date" name="Expire_date" class="form-control" value="<%= inventoryData.Expire_date %>">
                                         </div>
                                     </div>
                                  
@@ -145,14 +145,14 @@
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Cost Of Delivery</label>
-                                            <input type="number" name="Cost_of_delivery" class="form-control" value="<%= inventoryData[0].Cost_of_delivery %>">
+                                            <input type="number" name="Cost_of_delivery" class="form-control" value="<%= inventoryData.Cost_of_delivery %>">
                                         </div>
                                     </div>
 
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">No. Of Damaged Items</label>
-                                            <input type="number" name="Total_damaged" class="form-control"   value="<%= inventoryData[0].Total_damaged %>">
+                                            <input type="number" name="Total_damaged" class="form-control"   value="<%= inventoryData.Total_damaged %>">
                                         </div>
                                     </div>
 

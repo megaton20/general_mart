@@ -484,10 +484,12 @@ exports.fetchCart = async (req, res) => {
       req.flash('warning_msg', 'No items in the cart. Please select items to buy.');
       return res.redirect('/user');
     }
-
+    
+    
     // Calculate the total subtotal
     const totalSubtotal = fetchResult.rows.reduce((accumulator, item) => {
-      return accumulator + item.subtotal;
+      return accumulator + parseFloat(item.subtotal);
+
     }, 0);
 
     // Format the total amount to be paid
@@ -526,7 +528,7 @@ exports.checkoutScreen = async (req, res) => {
     const cartResults = await query(fetchCartQuery, [userId, userEmail]);
 
     // Check if the cart is empty
-    if (cartResults.rows.length === 0) {
+    if (cartResults.rows.length <= 0) {
       req.flash('warning_msg', 'No items in the cart. Please select items to buy.');
       return res.redirect('/user');
     }

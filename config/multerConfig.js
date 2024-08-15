@@ -20,17 +20,23 @@ const storage = multer.diskStorage({
 });
 
 // File type validation function
-const fileFilter = (req,res, file, cb) => {
+// File type validation function
+const fileFilter = (req, file, cb) => {
+  // Check if the file and its mimetype are defined
+  if (!file || !file.mimetype) {
+    return cb(new Error('File is not provided or has no mimetype.'));
+  }
+
   const allowedTypes = /jpeg|jpg|png|avif|webp|svg/;
   const isValidType = allowedTypes.test(file.mimetype.toLowerCase());
+
   if (isValidType) {
-    cb(null, true);
+    cb(null, true); // Accept the file
   } else {
-    cb(new Error('Only image files (jpg, jpeg, png, avif, webp, svg) are allowed.'));
-    req.flash('error_msg', `invalid file format`)
-    return res.redirect('back')
+    cb(new Error('Only image files (jpg, jpeg, png, avif, webp, svg) are allowed.')); // Reject the file with an error
   }
 };
+
 
 // Multer configuration
 const upload = multer({
