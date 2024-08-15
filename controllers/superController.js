@@ -3276,12 +3276,13 @@ exports.shipWithCompanyDriver = async (req, res) => {
     req.flash("warning_msg", "Please select a driver");
     return res.redirect(`/super/view-order/${editID}`);
   }
+  console.log(driver.trim());
 
   try {
     // Fetch driver details
-    const {rows:results} = await query(`SELECT * FROM "Logistics" WHERE "name" = $1`, [driver]);
-    if (results.length === 0) {
-      req.flash("error_msg", "Driver not found");
+    const {rows:results} = await query(`SELECT * FROM "Logistics" WHERE "name" = $1`, [driver.trim()]);
+    if (results.length <= 0) {
+      req.flash("warning_msg", "Driver not found");
       return res.redirect(`/super/view-order/${editID}`);
     }
 
