@@ -553,7 +553,7 @@ a {
 
 
 .carousel-image {
-  height: 75vh; /* Adjust the height as needed */
+  height:65vh; /* Adjust the height as needed */
   object-fit: cover; /* Ensures the image covers the container without stretching */
 }
 
@@ -562,6 +562,23 @@ a {
   transform: translateY(-50%);
   bottom: initial;
   text-align: center;
+}
+
+.carousel-item {
+  position: relative;
+}
+
+
+
+.carousel-caption::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Adjust the opacity to lighten or darken */
+  z-index: -1;
 }
 
 .my-btn {
