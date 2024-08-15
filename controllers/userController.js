@@ -608,7 +608,7 @@ const uuidForEachSale = generateNumericUUID(10);
       const cartItems = cartItemsResults.rows;
 
       // Calculate the total subtotal
-      const totalSubtotal = cartItems.reduce((accumulator, item) => accumulator + item.subtotal, 0);
+      const totalSubtotal = cartItems.reduce((accumulator, item) => accumulator + parseFloat(item.subtotal), 0);
 
       const shippingFee = calculateShippingFee(userData.lga); // Assuming calculateShippingFee is defined
       const cashbackEarned = calculateCashback(totalSubtotal); // Assuming calculateCashback is defined
