@@ -83,9 +83,10 @@
                         <div class="form-group">
                             <select name="Bank_name" id="store-bank" class="form-control">
                                 <option value="">Select Bank</option>
-                                <% stateData.forEach(bank => { %>
-                                    <option value="test bank" <%= typeof Bank_name !== 'undefined' && Bank_name === bank.name ? 'selected' : '' %>><%= bank.name %></option>
-                                <% }); %>
+
+                                    <option value="Bank A" >Bank A</option>
+                                    <option value="Bank B" >Bank B</option>
+
                             </select>
                         </div>
                     </div>

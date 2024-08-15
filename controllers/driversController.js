@@ -34,52 +34,55 @@ const appName = `General Mart`
 
 
 exports.getAdminWelcomePage = async (req, res) => {
-
-  const  userFirstName = req.user.First_name;
-  const  userLastName = req.user.Last_name;
-
+  const userFirstName = req.user.First_name;
+  const userLastName = req.user.Last_name;
 
   try {
+    // Fetch the driver with the given user ID
+    const {rows:driverWithIDResult} = await query(`SELECT * FROM "drivers" WHERE "user_id" = $1`, [req.user.id]);
 
- const driverWithID = await query(`SELECT * FROM drivers WHERE user_id = ? `,[req.user.id])
+    if (driverWithIDResult.length <= 0) {
+      req.flash("error_msg", "Not recognized as a driver");
+      return res.redirect('/');
+    }
 
-      if (driverWithID.length <= 0) {
-        req.flash("error_msg", `not recognized as a driver`)
-        return res.redirect('/')
-      }
+    const selectedRider = driverWithIDResult[0].id;
 
- const selectedRider = JSON.parse(JSON.stringify(driverWithID[0].id));
+    // Fetch active rides
+    const {rows:activeRidesResults} = await query(`SELECT * FROM "Orders" WHERE "rider_id" = $1 AND "status" = 'shipped'`, [selectedRider]);
+    const activeRides = activeRidesResults.length;
 
-  const activeRidesResults = await query(`SELECT * FROM Orders WHERE rider_id = "${selectedRider}" AND status = "shipped"`)
-  const activeRides = activeRidesResults.length
-  const waitinRidesResults  =await query(`SELECT * FROM Orders WHERE status = "waiting" AND pickup = "open" `)
-  const availableDeliveries = waitinRidesResults.length
-  const completeRideResults = await query(`SELECT * FROM Orders WHERE rider_id = "${selectedRider}" AND status = "complete"`)
-  const completedRides = completeRideResults.length;
-  const riderResults =   await query(`SELECT * FROM Orders WHERE rider_id = "${selectedRider}" AND status = "canceled"`)
-  const canceledRides = riderResults.length;
+    // Fetch available deliveries
+    const {rows:waitingRidesResults} = await query(`SELECT * FROM "Orders" WHERE "status" = 'waiting' AND "pickup" = 'open'`);
+    const availableDeliveries = waitingRidesResults.length;
 
-             return res.render("./drivers/driversDash", {
-               pageTitle: "driver",
-               name: `${userFirstName} ${userLastName}`,
-               month: monthName,
-               day: dayName,
-               date: presentDay,
-               year: presentYear,
-               availableDeliveries,
-               activeRides,
-               completedRides,
-               canceledRides
-             }); // for admin only
-    
+    // Fetch completed rides
+    const {rows:completeRideResults} = await query(`SELECT * FROM "Orders" WHERE "rider_id" = $1 AND "status" = 'complete'`, [selectedRider]);
+    const completedRides = completeRideResults.length;
+
+    // Fetch canceled rides
+    const {rows:riderResults} = await query(`SELECT * FROM "Orders" WHERE "rider_id" = $1 AND "status" = 'canceled'`, [selectedRider]);
+    const canceledRides = riderResults.length;
+
+    // Render the driver's dashboard
+    return res.render("./drivers/driversDash", {
+      pageTitle: "driver",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      availableDeliveries,
+      activeRides,
+      completedRides,
+      canceledRides
+    });
+
   } catch (error) {
-    console.log(error);
-    req.flash('error_msg', `error from server: ${error}`)
-    return res.redirect('/')
+    console.error(error);
+    req.flash('error_msg', `Server error: ${error.message}`);
+    return res.redirect('/');
   }
-
-
-
 };
 
 exports.newRider = (req, res) => {
@@ -134,33 +137,43 @@ exports.createNewDrivers = async (req, res) => {
   }
 
   try {
-    const selectQuery = 'SELECT * FROM drivers WHERE bankAccount = ? AND accountName = ?';
+    const selectQuery = `SELECT * FROM "drivers" WHERE "bankAccount" = $1 AND "accountName" = $2`;
     const results = await query(selectQuery, [bankAccount, accountName]);
     
-    if (results.length > 0) {
+    if (results.rows.length > 0) {
       req.flash('error_msg', 'Account details are being repeated');
       return res.redirect('/drivers');
     }
     
-    const insertData = {
-      companyName: companyName,
-      companyEmail: companyEmail,
-      companyPhone: companyPhone,
-      companyAddress: companyAddress,
-      HQ_state: HQ_state,
-      HQ_lga: HQ_lga,
-      bankAccount: bankAccount,
-      accountName: accountName,
-      Bank_name: Bank_name,
-      goodsHandled: Array.isArray(goodsHandled) ? goodsHandled.join(', ') : goodsHandled,
-      hours: Array.isArray(hours) ? hours.join(', ') : hours,
-      days: Array.isArray(days) ? days.join(', ') : days,
-      service: Array.isArray(service) ? service.join(', ') : service,
-      user_id: req.user.id
-    };
+    const insertQuery = `
+    INSERT INTO "drivers" 
+    ("companyName", "companyEmail", "companyPhone", "companyAddress", "HQ_state", "HQ_lga", "bankAccount", "accountName", "Bank_name", "goodsHandled", "hours", "days", "service", "user_id") 
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+  `;
+  
+  const insertValues = [
+    companyName,
+    companyEmail,
+    companyPhone,
+    companyAddress,
+    HQ_state,
+    HQ_lga,
+    bankAccount,
+    accountName,
+    Bank_name,
+    Array.isArray(goodsHandled) ? goodsHandled.join(', ') : goodsHandled,
+    Array.isArray(hours) ? hours.join(', ') : hours,
+    Array.isArray(days) ? days.join(', ') : days,
+    Array.isArray(service) ? service.join(', ') : service,
+    req.user.id
+  ];
+  
+  console.log(insertQuery, insertValues); // Debugging the SQL query and values
+  
+  await query(insertQuery, insertValues);
 
-    await query('INSERT INTO drivers SET ?', insertData);
-    await query('UPDATE Users SET ? WHERE id = ?', [{ userRole: 'driver' }, req.user.id]);
+    const updateQuery = `UPDATE "Users" SET "userRole" = $1 WHERE "id" = $2`;
+    await query(updateQuery, ['driver', req.user.id]);
 
     req.flash('success_msg', "You're now a driver with us");
     res.redirect('/drivers');
@@ -174,98 +187,106 @@ exports.createNewDrivers = async (req, res) => {
 
 
 // delivery
-exports.allPendingDelivery = async (req, res)=>{
-
-    const userFirstName = req.user.First_name;
+exports.allPendingDelivery = async (req, res) => {
+  const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
 
   try {
+    // Fetch available deliveries where the status is 'waiting' and pickup is 'open'
+    const { rows: availableDeliveries } = await query(
+      `SELECT * FROM "Orders" WHERE "status" = 'waiting' AND "pickup" = 'open'`
+    );
 
-    const results =  await query(`SELECT * FROM Orders WHERE status = "waiting" AND pickup = "open" `)
-
-    const availableDeliveries = JSON.parse(JSON.stringify(results));
-
-     return res.render("./drivers/driversAvailableDelivery", {
-        pageTitle: "Open",
-        name: `${userFirstName} ${userLastName}`,
-        month: monthName,
-        day: dayName,
-        date: presentDay,
-        year: presentYear,
-        availableDeliveries,
-      });
+    // Render the available deliveries page
+    return res.render("./drivers/driversAvailableDelivery", {
+      pageTitle: "Open Deliveries",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      availableDeliveries,
+    });
     
   } catch (error) {
-    req.flash("error_msg", ` ${error}`);
+    req.flash("error_msg", `${error.message}`);
     return res.redirect("/");
   }
+};
 
-}
 
 
-exports.myRides = async (req, res)=>{
-
+exports.myRides = async (req, res) => {
   const userFirstName = req.user.First_name;
-const userLastName = req.user.Last_name;
-const userId = req.user.id;
+  const userLastName = req.user.Last_name;
+  const userId = req.user.id;
 
-try {
-  
-  const results =  await query(`SELECT * FROM drivers WHERE user_id = ? `,[userId])
-  const selectedRider = JSON.parse(JSON.stringify(results[0].id));
-  const availableDeliveriesResults =   await query(`SELECT * FROM Orders WHERE rider_id = "${selectedRider}" AND status = "shipped"`)
-  const  availableDeliveries = JSON.parse(JSON.stringify(availableDeliveriesResults));
-  
-         return res.render("./drivers/driversAsignedDelivery", {
-            pageTitle: "delivery to maked",
-            name: `${userFirstName} ${userLastName}`,
-            month: monthName,
-            day: dayName,
-            date: presentDay,
-            year: presentYear,
-            availableDeliveries,
-          }); // for logistics alone only
-} catch (error) {
-  req.flash("error_msg", ` ${error}`);
-  return res.redirect("back");
-}
+  try {
+    // Fetch the driver's information based on user ID
+    const { rows: results } = await query(`SELECT * FROM "drivers" WHERE "user_id" = $1`, [userId]);
 
-          
-}
+    if (results.length === 0) {
+      req.flash("error_msg", "Driver not found.");
+      return res.redirect("back");
+    }
+
+    const selectedRider = results[0].id;
+
+    // Fetch available deliveries for the selected rider where the status is 'shipped'
+    const { rows: availableDeliveriesResults } = await query(
+      `SELECT * FROM "Orders" WHERE "rider_id" = $1 AND "status" = 'shipped'`,
+      [selectedRider]
+    );
+
+    // Render the assigned delivery page
+    return res.render("./drivers/driversAsignedDelivery", {
+      pageTitle: "Assigned Deliveries",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      availableDeliveries: availableDeliveriesResults, // Directly use the query result
+    });
+  } catch (error) {
+    req.flash("error_msg", `${error.message}`);
+    return res.redirect("back");
+  }
+};
+
 
 exports.oneDelivery = async (req, res) => {
-  let editId = req.params.id;
+  const editId = req.params.id;
   const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
 
   try {
     // Fetch order details
-    const results = await query(`SELECT * FROM Orders WHERE id = ?`, [editId]);
-    if (results.length <= 0) {
+    const { rows: orderResults } = await query(`SELECT * FROM "Orders" WHERE "id" = $1`, [editId]);
+    if (orderResults.length <= 0) {
       req.flash("error_msg", "Order not found");
       return res.redirect("back");
     }
 
-    const orderToComplete = results;
-    const itemId = orderToComplete[0].sale_id;
-    const itemShippingFee = orderToComplete[0].shipping_fee;
-    const totalAmountToPayOnDelivery = itemShippingFee + orderToComplete[0].total_amount;
+    const orderToComplete = orderResults[0];
+    const itemId = orderToComplete.sale_id;
+    const itemShippingFee = orderToComplete.shipping_fee;
+    const totalAmountToPayOnDelivery = itemShippingFee + orderToComplete.total_amount;
 
     // Fetch ordered products
-    const orderedProductsResult = await query(`SELECT * FROM Order_Products WHERE sale_id = ?`, [itemId]);
-    const orderedProducts = orderedProductsResult;
+    const { rows: orderedProductsResults } = await query(`SELECT * FROM "Order_Products" WHERE "sale_id" = $1`, [itemId]);
+    const orderedProducts = orderedProductsResults;
 
     // Fetch customer data
-    const customerDataResult = await query(`SELECT * FROM Users WHERE id = ?`, [orderToComplete[0].customer_id]);
-    if (customerDataResult.length <= 0) {
+    const { rows: customerDataResults } = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [orderToComplete.customer_id]);
+    if (customerDataResults.length <= 0) {
       req.flash("error_msg", "Customer not found");
       return res.redirect("back");
     }
 
-    const customerData = customerDataResult;
+    const customerData = customerDataResults[0];
 
- 
-
+    // Render the delivery details page
     return res.render("./drivers/driversDeliveryDetails", {
       pageTitle: "Delivery to Make",
       name: `${userFirstName} ${userLastName}`,
@@ -287,7 +308,7 @@ exports.oneDelivery = async (req, res) => {
 
 
 exports.finishDelivery = async (req, res) => {
-  let orderProductID = req.params.id;
+  const orderProductID = req.params.id;
   const { pin } = req.body;
 
   if (!pin) {
@@ -296,33 +317,40 @@ exports.finishDelivery = async (req, res) => {
   }
 
   try {
-    const results = await query(`SELECT * FROM Order_Products WHERE id = ?`, [orderProductID]);
+    // Fetch the ordered product
+    const { rows: results } = await query(`SELECT * FROM "Order_Products" WHERE "id" = $1`, [orderProductID]);
 
     if (results.length <= 0) {
       req.flash("error_msg", "Order not found");
       return res.redirect('/driver/new-rider');
     }
 
-    const orderedProducts = results[0];
-    const itemId = orderedProducts.sale_id;
+    const orderedProduct = results[0];
+    const itemId = orderedProduct.sale_id;
 
-    const thatOrderResult = await query(`SELECT * FROM Orders WHERE sale_id = ?`, [itemId]);
-    
-    if (thatOrderResult.length <= 0) {
+    // Fetch the corresponding order
+    const { rows: orderResult } = await query(`SELECT * FROM "Orders" WHERE "sale_id" = $1`, [itemId]);
+
+    if (orderResult.length <= 0) {
       req.flash("error_msg", "Order not found");
       return res.redirect('/driver/new-rider');
     }
 
-    const thatOrder = thatOrderResult[0];
-    const savedPin = thatOrder.delivery_pin;
+    const order = orderResult[0];
+    const savedPin = +order.delivery_pin;
 
+
+    // Verify the pin
     if (savedPin !== parseInt(pin, 10)) {
       req.flash("error_msg", "The pin you entered is incorrect or does not exist! Let the receiver provide the correct pin.");
       return res.redirect("back");
     }
 
-    await query(`UPDATE Orders SET status = ? WHERE sale_id = ?`, ['complete', itemId]);
-    await query(`UPDATE Order_Products SET status = ? WHERE sale_id = ?`, ['sold', itemId]);
+    // Update the order status to complete
+    await query(`UPDATE "Orders" SET "status" = $1 WHERE "sale_id" = $2`, ['complete', itemId]);
+
+    // Update the order products status to sold
+    await query(`UPDATE "Order_Products" SET "status" = $1 WHERE "sale_id" = $2`, ['sold', itemId]);
 
     req.flash("success_msg", "Order has been marked as completed");
     return res.redirect('/drivers');

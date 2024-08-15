@@ -3314,8 +3314,7 @@ exports.shipWithCompanyDriver = async (req, res) => {
     return res.redirect(`/super/view-order/${editID}`);
   }
   const trimedDrivervalue = driver.trim()
-  console.log(driver);
-  console.log(trimedDrivervalue);
+
 
   try {
     // Fetch driver details
@@ -3363,16 +3362,16 @@ exports.shipWithCompanyDriver = async (req, res) => {
 
 exports.shipWithRider = async (req, res) => {
   const orderID = req.params.id;
-  const driver = req.body.rider;
+  const rider = req.body.rider;
 
-  if (!driver) {
-    req.flash("warning_msg", "Please select a driver");
+  if (!rider) {
+    req.flash("warning_msg", "Please select a rider");
     return res.redirect(`/super/view-order/${orderID}`);
   }
 
   try {
-    // Fetch driver details
-    const {rows:results} = await query(`SELECT * FROM "drivers" WHERE "companyName" = $1`, [driver]);
+    // Fetch rider details
+    const {rows:results} = await query(`SELECT * FROM "drivers" WHERE "companyName" = $1`, [rider]);
     if (results.length === 0) {
       req.flash("error_msg", "Driver not found");
       return res.redirect(`/super/view-order/${orderID}`);

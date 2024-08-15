@@ -309,7 +309,7 @@ exports.loginHandler = async (req, res, next) => {
         `UPDATE "Users" SET "previous_visit" = $1 WHERE id = $2`,
         [new Date(), user.id]
         );
-        
+        console.log(result.rowCount);
       req.login(user, err => {
         if (err) {
           next(err);
