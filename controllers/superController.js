@@ -23,7 +23,7 @@ let presentMonth = monthModel(systemCalander, "/");
 
 const getDay = require("../model/getDay");
 const { stringify } = require("querystring");
-const { error } = require("console");
+const { error, log } = require("console");
 let presentDay = getDay(systemCalander, "/");
 
 let sqlDate = presentYear + "-" + presentMonth + "-" + presentDay;
@@ -882,8 +882,8 @@ exports.allLogisticDrivers = async (req, res) => {
 
   try {
     // Query to fetch all users with the position 'Logistics' from the "Users" table
-    const results = await query(`SELECT * FROM "Users" WHERE "Position" = $1`, ['Logistics']);
-    const logisticsResults = results.rows; // Get the rows from the result
+    const {rows:logisticsResults} = await query(`SELECT * FROM "Users" WHERE "position" = $1`, ['Logistics']);
+
 
     return res.render("./super/logisticUsersTable", {
       pageTitle: `Edit Logistics Driver`,
@@ -1541,7 +1541,7 @@ exports.createNewDiscount = async (req, res) => {
 
     if (checkResult.rows.length <= 0) {
       // Insert new discount
-      await query(`INSERT INTO "Discount" ("Discount_name", "Discount_Provider", "Discount_Percentage", "Start_Date", "End_Date") VALUES ($1, $2, $3, $4, $5)`, 
+      await query(`INSERT INTO "Discount" ("Discount_name", "Discount_provider", "Discount_percentage", "Start_date", "End_date") VALUES ($1, $2, $3, $4, $5)`, 
       [Discount_name, Discount_Provider, Discount_Percentage, Start_Date, End_Date]);
 
       req.flash("success_msg", `"${Discount_name}" added successfully!`);
@@ -1759,6 +1759,42 @@ exports.createNewLogistics = async (req, res) => {
 };
 
 
+exports.editLogisticsComp = async (req, res) => {
+  const editID = req.params.id;
+  const { name, phone, email, address } = req.body;
+
+  // Check if all required fields are provided
+  if (!(name && phone && email && address)) {
+    req.flash("error_msg", "Enter all fields before submitting");
+    return res.redirect("/super");
+  }
+
+  try {
+    // Update the logistics provider's information
+    const updateResult = await query(
+      `UPDATE "Logistics" 
+       SET "name" = $1, "phone" = $2, "email" = $3, "address" = $4 
+       WHERE "id" = $5`,
+      [name, phone, email, address, editID]
+    );
+
+    // Check if the update was successful
+    if (updateResult.rowCount === 0) {
+      req.flash("error_msg", "No logistics provider found with the given ID.");
+      return res.redirect("/super");
+    }
+
+    req.flash("success_msg", "Logistics provider updated successfully.");
+    return res.redirect("/super");
+  } catch (error) {
+    req.flash("error_msg", `Error updating logistics provider: ${error.message}`);
+    return res.redirect("/super");
+  }
+};
+
+
+
+
 exports.returnProcessor = async (req, res) => {
   const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
@@ -1963,7 +1999,7 @@ exports.storeEdit = async (req, res) => {
       [editID]
     );
 
-    if (results.length <= 0) {
+    if (results.rows.length <= 0) {
       req.flash("warning_msg", `No store found with ID ${editID}`);
       return res.redirect("/super");
     }
@@ -2000,7 +2036,7 @@ exports.editDiscount = async (req, res) => {
       [editID]
     );
 
-    if (results.length <= 0) {
+    if (results.rows.length <= 0) {
       req.flash("error_msg", `No discount found with ID ${editID}`);
       return res.redirect("/super");
     }
@@ -2418,7 +2454,7 @@ exports.editNewDiscount = async (req, res) => {
 
     // Update discount details
     await query(
-      `UPDATE "Discount" SET "Discount_name" = $1, "Discount_Provider" = $2, "Discount_percentage" = $3, "Start_Date" = $4, "End_Date" = $5 WHERE id = $6`,
+      `UPDATE "Discount" SET "Discount_name" = $1, "Discount_provider" = $2, "Discount_percentage" = $3, "Start_date" = $4, "End_date" = $5 WHERE id = $6`,
       [Discount_name, Discount_Provider, Discount_Percentage, Start_Date, End_Date, updateID]
     );
 
@@ -3272,15 +3308,18 @@ exports.shipWithCompanyDriver = async (req, res) => {
   const editID = req.params.id;
   const driver = req.body.logistics;
 
+  
   if (!driver) {
     req.flash("warning_msg", "Please select a driver");
     return res.redirect(`/super/view-order/${editID}`);
   }
-  console.log(driver.trim());
+  const trimedDrivervalue = driver.trim()
+  console.log(driver);
+  console.log(trimedDrivervalue);
 
   try {
     // Fetch driver details
-    const {rows:results} = await query(`SELECT * FROM "Logistics" WHERE "name" = $1`, [driver.trim()]);
+    const {rows:results} = await query(`SELECT * FROM "Logistics" WHERE "name" = $1`, [`${trimedDrivervalue}`]);
     if (results.length <= 0) {
       req.flash("warning_msg", "Driver not found");
       return res.redirect(`/super/view-order/${editID}`);

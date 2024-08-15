@@ -21,34 +21,34 @@
 
                     <!-- Page Heading -->
                     <%- include ('../partials/messages') %>
-                    <h1 class="h3 mb-2 text-gray-800">Editing "<%= discountData[0].Discount_name %>" Discount</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Editing "<%= discountData.Discount_name %>" Discount</h1>
                     <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-discount">Add new Discount</a>
                     <!-- DataTales Example -->
                     <div class=" mb-4">
                         <div class="card-body">
                             <div class="form mt-4 mb-4">
-                                <form action="/super/edit-discount/<%= discountData[0].id %>" method="post" class="form">
+                                <form action="/super/edit-discount/<%= discountData.id %>" method="post" class="form">
                                    <div class="row">
                                  
 
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Discount Name</label>
-                                            <input type="text" name="Discount_name" class="form-control" value="<%= discountData[0].Discount_name %>">
+                                            <input type="text" name="Discount_name" class="form-control" value="<%= discountData.Discount_name %>">
                                         </div>
                                     </div>
 
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Discount Provider</label>
-                                            <input type="text" name="Discount_Provider" class="form-control" value="<%= discountData[0].Discount_provider %>">
+                                            <input type="text" name="Discount_Provider" class="form-control" value="<%= discountData.Discount_provider %>">
                                         </div>
                                     </div>
 
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label for="">Discount Perrcentage</label>
-                                            <input type="number" name="Discount_Percentage" class="form-control" placeholder="Not above 100%" value="<%= discountData[0].Discount_percentage %>">
+                                            <input type="number" name="Discount_Percentage" class="form-control" placeholder="Not above 100%" value="<%= discountData.Discount_percentage %>">
                                         </div>
                                     </div>
 

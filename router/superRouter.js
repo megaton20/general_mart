@@ -115,6 +115,7 @@ router.get("/edit-employee/:id", ensureAuthenticated,isSuper, superController.ed
 
 
 
+router.put("/edit-logistics-company/:id", ensureAuthenticated,isSuper, superController.editLogisticsComp);
 
 router.put("/edit-employee/:id", ensureAuthenticated,isSuper, superController.updateEmployee);
 router.put("/edit-store/:id", ensureAuthenticated,isSuper, superController.editNewStore);

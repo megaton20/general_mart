@@ -20,7 +20,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Editing "<%= logisticsResults.name %>" Discount</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Editing "<%= logisticsResults.name %>" </h1>
                     <a href="/super/create-logistics" class="btn btn-outline-primary mr-2 mb-1"aria-controls="collapseTwo">Add Logistics Company</a>
                     <%- include ('../partials/messages') %>
 
@@ -28,35 +28,35 @@
                     <div class=" mb-4">
                         <div class="card-body">
                             <div class="form mt-4 mb-4">
-                                <form action="/super/edit-discount/<%= logisticsResults.id %>" method="post" class="form">
+                                <form action="/super/edit-logistics-company/<%= logisticsResults.id %>" method="post" class="form">
                                    <div class="row">
                                  
 
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">company Name</label>
-                                            <input type="text" name="Discount_name" class="form-control" value="<%= logisticsResults.name %>">
+                                            <input type="text" name="name" class="form-control" value="<%= logisticsResults.name %>">
                                         </div>
                                     </div>
 
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for=""> email</label>
-                                            <input type="email" name="Discount_Provider" class="form-control" value="<%= logisticsResults.email %>">
+                                            <input type="email" name="email" class="form-control" value="<%= logisticsResults.email %>">
                                         </div>
                                     </div>
 
-                                    <div class="col-4">
+                                    <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Phone</label>
-                                            <input type="number" name="Discount_Percentage" class="form-control" placeholder="Not above 100%" value="<%= logisticsResults.address %>">
+                                            <input type="text" name="phone" class="form-control" value="<%= logisticsResults.phone %>">
                                         </div>
                                     </div>
 
-                                    <div class="col-4">
+                                    <div class="col-6">
                                         <div class="form-group">
-                                            <label for="">Phone</label>
-                                            <input type="number" name="Discount_Percentage" class="form-control" placeholder="Not above 100%" value="<%= logisticsResults.phone %>">
+                                            <label for="">address</label>
+                                            <input type="text" name="address" class="form-control" placeholder="Not above 100%" value="<%= logisticsResults.address %>">
                                         </div>
                                     </div>
 
