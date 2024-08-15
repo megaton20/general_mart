@@ -270,11 +270,11 @@ router.post('/updateCartItem', ensureAuthenticated, async (req, res) => {
     const getItemQuery = `SELECT * FROM "Cart" WHERE "user_id" = $1 AND "user_email" = $2 AND "product_id" = $3`;
     const { rows: results } = await query(getItemQuery, [userId, userEmail, productId]);
 
-    if (results.rows.length === 0) {
+    if (results.length === 0) {
       return res.status(404).json({ success: false, message: 'Cart item not found' });
     }
 
-    const item = results.rows[0];
+    const item = results[0];
     const newQuantity = item.quantity + change;
 
     if (newQuantity <= 0) {
@@ -285,11 +285,13 @@ router.post('/updateCartItem', ensureAuthenticated, async (req, res) => {
     } else {
       // Update the cart item
       const updateItemQuery = `
-        UPDATE "Cart" 
-        SET "quantity" = $1, "subtotal" = "price_per_item" * $1 
-        WHERE "id" = $2
-      `;
-      await query(updateItemQuery, [newQuantity, item.id]);
+      UPDATE "Cart" 
+      SET "quantity" = $1::INTEGER, "subtotal" = "price_per_item" * $1::NUMERIC 
+      WHERE "id" = $2
+    `;
+    await query(updateItemQuery, [newQuantity, item.id]);
+    
+      await query(updateItemQuery, [newQuantity, item.id]);  // Removed console.log
       return res.json({ success: true });
     }
   } catch (err) {

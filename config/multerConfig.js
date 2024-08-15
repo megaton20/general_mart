@@ -20,13 +20,15 @@ const storage = multer.diskStorage({
 });
 
 // File type validation function
-const fileFilter = (req, file, cb) => {
+const fileFilter = (req,res, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|avif|webp|svg/;
   const isValidType = allowedTypes.test(file.mimetype.toLowerCase());
   if (isValidType) {
     cb(null, true);
   } else {
     cb(new Error('Only image files (jpg, jpeg, png, avif, webp, svg) are allowed.'));
+    req.flash('error_msg', `invalid file format`)
+    return res.redirect('back')
   }
 };
 

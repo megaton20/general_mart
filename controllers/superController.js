@@ -22,6 +22,8 @@ const monthModel = require("../model/getMonth");
 let presentMonth = monthModel(systemCalander, "/");
 
 const getDay = require("../model/getDay");
+const { stringify } = require("querystring");
+const { error } = require("console");
 let presentDay = getDay(systemCalander, "/");
 
 let sqlDate = presentYear + "-" + presentMonth + "-" + presentDay;
@@ -55,7 +57,7 @@ exports.getAdminWelcomePage = async (req, res) => {
     );
     const shippingFee = shippingFeeResult.rows;
     const shippingProfitMade = shippingFee.reduce(
-      (acc, sale) => acc + sale.shipping_fee,
+      (acc, sale) => acc + parseFloat(sale.shipping_fee),
       0
     );
     const formatedProfitForShipping = shippingProfitMade.toLocaleString("en-US");
@@ -76,7 +78,7 @@ exports.getAdminWelcomePage = async (req, res) => {
     );
     const allSalesAmount = allSalesAmountResult.rows;
     const salesMade = allSalesAmount.reduce(
-      (acc, item) => acc + item.total_amount,
+      (acc, item) => acc + parseFloat(item.total_amount),
       0
     );
     const totalAmount = salesMade - returnedSum;
@@ -2721,7 +2723,7 @@ exports.resolveSale = async (req, res) => {
   try {
     // Fetch the sale details
     const salesResults = await query(`SELECT * FROM "Sales" WHERE id = $1`, [editID]);
-    if (salesResults.length === 0) {
+    if (salesResults.rows.length === 0) {
       req.flash("error_msg", "Sale not found");
       return res.redirect("/super/all-sales");
     }
@@ -2729,7 +2731,7 @@ exports.resolveSale = async (req, res) => {
     const salesData = salesResults.rows[0];
     
     // Fetch products related to this sale
-    const orderResults = await query(`SELECT * FROM "Order_Products" WHERE "sale_id" = $1`, [salesData.sale_id]);
+    const {rows:orderResults} = await query(`SELECT * FROM "Order_Products" WHERE "sale_id" = $1`, [salesData.sale_id]);
     
     // Aggregate product quantities
     const productQuantities = {};
@@ -2739,13 +2741,13 @@ exports.resolveSale = async (req, res) => {
 
     // Update stock quantities and handle errors
     const promises = Object.entries(productQuantities).map(async ([product_id, quantity]) => {
-      const shelfResults = await query(`SELECT "total_on_shelf" FROM "Products" WHERE id = $1`, [product_id]);
+      const {rows:shelfResults} = await query(`SELECT "total_on_shelf" FROM "Products" WHERE id = $1`, [product_id]);
       if (shelfResults.length === 0) {
         req.flash("error_msg", `Product with id ${product_id} not found`);
         throw new Error(`Product with id ${product_id} not found`);
       }
 
-      const currentShelfQuantity = shelfResults.rows[0].total_on_shelf;
+      const currentShelfQuantity = shelfResults[0].total_on_shelf;
       const newQty = currentShelfQuantity - quantity;
 
       if (newQty < 0) {
@@ -3093,10 +3095,10 @@ exports.getSingleOrder = async (req, res) => {
   const editID = req.params.id;
   const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
-
+  let errors = []
   try {
     // Fetch the order data
-    const orderData = await query(`SELECT * FROM "Orders" WHERE "id" = $1`, [editID]);
+    const {rows:orderData} = await query(`SELECT * FROM "Orders" WHERE "id" = $1`, [editID]);
 
     if (orderData.length === 0) {
       req.flash("error_msg", "No item found with this ID");
@@ -3111,18 +3113,16 @@ exports.getSingleOrder = async (req, res) => {
     const saleID = orderData[0].sale_id;
 
     // Fetch products associated with the sale
-    const productBought = await query(`SELECT * FROM "Order_Products" WHERE "sale_id" = $1`, [saleID]);
+    const {rows:productBought} = await query(`SELECT * FROM "Order_Products" WHERE "sale_id" = $1`, [saleID]);
 
     // Fetch logistics and riders data
-    const ridersData = await query(`SELECT * FROM "drivers"`);
-    const logisticsDrivers = await query(`SELECT * FROM "Logistics"`);
+    const {rows:ridersData} = await query(`SELECT * FROM "drivers"`);
+    const {rows:logisticsDrivers} = await query(`SELECT * FROM "Logistics"`);
 
-    if (logisticsDrivers.length === 0) {
-      req.flash("error_msg", "Cannot ship when logistics workers are empty");
-      return res.redirect("/super");
-    }
+
 
     return res.render("./super/orderSingle", {
+      msg:errors,
       pageTitle: "Order Details",
       name: `${userFirstName} ${userLastName}`,
       month: monthName, // Ensure these variables are defined in your scope
@@ -3136,44 +3136,48 @@ exports.getSingleOrder = async (req, res) => {
     });
 
   } catch (error) {
+    console.log(error);
     req.flash('error_msg', `Error from server: ${error.message}`);
     return res.redirect("/super");
   }
 };
+
 exports.confirmOrder = async (req, res) => {
   const editID = req.params.id;
 
   try {
     // Fetch order details
-    const results = await query(`SELECT * FROM "Orders" WHERE "id" = $1`, [editID]);
-    if (results.length === 0) {
+    const {rows:thatOrder} = await query(`SELECT * FROM "Orders" WHERE "id" = $1`, [editID]);
+    if (thatOrder.length === 0) {
       req.flash("error_msg", "No record found for that order");
       return res.redirect("/super");
     }
 
-    const thatOrder = results.rows[0];
 
-    if (thatOrder.status === "canceled") {
+
+    if (thatOrder[0].status === "canceled") {
       req.flash("error_msg", "Order status is 'canceled'");
       return res.redirect("/super/all-orders");
     }
 
-    const saleID = thatOrder.sale_id;
-    const customerId = thatOrder.customer_id;
-    const totalSpentOnThisOrder = thatOrder.total_amount + thatOrder.shipping_fee;
-    const cashBack = calculateCashback(thatOrder.total_amount); // Assuming this is a function you have defined
+    const saleID = thatOrder[0].sale_id;
+    const customerId = thatOrder[0].customer_id;
+    const totalSpentOnThisOrder = parseFloat(thatOrder[0].total_amount) + parseFloat(thatOrder[0].shipping_fee);
+    const cashBack = calculateCashback(parseFloat(thatOrder[0].total_amount)); // Assuming this is a function you have defined
 
     // Fetch order products
-    const orderResults = await query(`SELECT * FROM "Order_Products" WHERE "sale_id" = $1`, [saleID]);
+    const {rows:orderResults} = await query(`SELECT * FROM "Order_Products" WHERE "sale_id" = $1`, [saleID]);
+
 
     // Check availability of each product
     const availabilityPromises = orderResults.map(async (productBought) => {
-      const shelfResults = await query(`SELECT "total_on_shelf" FROM "Products" WHERE "id" = $1`, [productBought.product_id]);
-      if (shelfResults.length === 0) {
+      const {rows:shelfResults} = await query(`SELECT "total_on_shelf" FROM "Products" WHERE "id" = $1`, [productBought.product_id]);
+      
+      if (shelfResults[0].length === 0) {
         throw new Error(`Product with id ${productBought.product_id} not found`);
       }
 
-      const currentShelfQuantity = shelfResults.rows[0].total_on_shelf;
+      const currentShelfQuantity = shelfResults[0].total_on_shelf;
       if (currentShelfQuantity <= 0) {
         throw new Error(`Product "${productBought.product_name}" is out of stock`);
       }
@@ -3182,43 +3186,72 @@ exports.confirmOrder = async (req, res) => {
     await Promise.all(availabilityPromises);
 
     // Proceed with confirmation if all products are available
-    if (thatOrder.status === "incomplete") {
-      const thatSale = await query(`SELECT * FROM "Sales" WHERE "sale_id" = $1`, [saleID]);
+    if (thatOrder[0].status === "incomplete") {
+      const {rows:thatSale} = await query(`SELECT * FROM "Sales" WHERE "sale_id" = $1`, [saleID]);
 
       if (thatSale.length > 0) {
         req.flash("warning_msg", "This order has already been confirmed");
-        return res.redirect("/super/all-orders");
+        return res.redirect("/super/new-orders");
       }
 
       // Insert into Sales table
-      await query(`INSERT INTO "Sales" ("store_name", "store_id", "sale_type", "sale_id", "created_date", "Discount_applied", "attendant_id", "total_amount", "Payment_type", "shipping_fee", "status") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`, [
-        null, 
-        null, 
-        "order", 
-        saleID, 
-        new Date(), // Replace with your preferred date format
-        0, 
-        0, 
-        thatOrder.total_amount, 
-        thatOrder.payment_type, 
-        thatOrder.shipping_fee, 
-        "waiting"
-      ]);
+      await query(`
+      INSERT INTO "Sales" (
+        "store_name", 
+        "store_id", 
+        "sale_type", 
+        "sale_id", 
+        "created_date", 
+        "Discount_applied", 
+        "attendant_id", 
+        "total_amount", 
+        "Payment_type", 
+        "shipping_fee", 
+        "status"
+      ) VALUES (
+        $1, 
+        $2, 
+        $3, 
+        $4, 
+        $5, 
+        $6, 
+        $7, 
+        $8, 
+        $9, 
+        $10, 
+        $11
+      )
+    `, [
+      null, 
+      null, 
+      "order", 
+      saleID, 
+      new Date(), // Replace with your preferred date format if needed
+      0, 
+      0, 
+      parseFloat(thatOrder[0].total_amount),
+      thatOrder[0].Payment_type, 
+      parseFloat(thatOrder[0].shipping_fee), 
+      "waiting"
+    ]);
+    
 
       // Update Order_Products and Orders tables
       await query(`UPDATE "Order_Products" SET "status" = 'waiting' WHERE "sale_id" = $1 AND "status" = 'pending'`, [saleID]);
       await query(`UPDATE "Orders" SET "status" = 'waiting' WHERE "id" = $1`, [editID]);
 
       // Update user spending and cashback
-      const userResults = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [customerId]);
+      const {rows:userResults} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [customerId]);
       if (userResults.length === 0) {
         req.flash("error_msg", "User not found");
         return res.redirect("/super");
       }
 
-      const buyingUser = userResults.rows[0];
-      const newUserSpending = buyingUser.spending + totalSpentOnThisOrder;
-      const newCashBack = buyingUser.cashback + cashBack;
+      const buyingUser = userResults[0];
+      const newUserSpending = parseFloat(buyingUser.spending) + totalSpentOnThisOrder;
+
+      const newCashBack = parseFloat(buyingUser.cashback) + cashBack;
+
 
       await query(`UPDATE "Users" SET "spending" = $1, "cashback" = $2 WHERE "id" = $3`, [newUserSpending, newCashBack, customerId]);
 
@@ -3235,7 +3268,7 @@ exports.confirmOrder = async (req, res) => {
 };
 
 
-exports.completeOrder = async (req, res) => {
+exports.shipWithCompanyDriver = async (req, res) => {
   const editID = req.params.id;
   const driver = req.body.logistics;
 
@@ -3246,26 +3279,26 @@ exports.completeOrder = async (req, res) => {
 
   try {
     // Fetch driver details
-    const results = await query(`SELECT * FROM "Logistics" WHERE "name" = $1`, [driver]);
+    const {rows:results} = await query(`SELECT * FROM "Logistics" WHERE "name" = $1`, [driver]);
     if (results.length === 0) {
       req.flash("error_msg", "Driver not found");
       return res.redirect(`/super/view-order/${editID}`);
     }
 
-    const dispatch = results.rows[0];
+    const dispatch = results[0];
     const dispatchEmail = dispatch.email;
     const dispatchCompanyName = dispatch.name;
     const dispatchPhone = dispatch.phone;
     const dispatchId = dispatch.id;
 
     // Fetch order details
-    const orderResults = await query(`SELECT * FROM "Orders" WHERE "id" = $1`, [editID]);
+    const {rows:orderResults} = await query(`SELECT * FROM "Orders" WHERE "id" = $1`, [editID]);
     if (orderResults.length === 0) {
       req.flash("error_msg", "No record found for that order");
       return res.redirect("/super");
     }
 
-    const thatOrder = orderResults.rows[0];
+    const thatOrder = orderResults[0];
     const saleID = thatOrder.sale_id;
 
     // Update sales, order products, and orders tables
@@ -3299,26 +3332,26 @@ exports.shipWithRider = async (req, res) => {
 
   try {
     // Fetch driver details
-    const results = await query(`SELECT * FROM "drivers" WHERE "companyName" = $1`, [driver]);
+    const {rows:results} = await query(`SELECT * FROM "drivers" WHERE "companyName" = $1`, [driver]);
     if (results.length === 0) {
       req.flash("error_msg", "Driver not found");
       return res.redirect(`/super/view-order/${orderID}`);
     }
 
-    const dispatch = results.rows[0];
+    const dispatch = results[0];
     const dispatchEmail = dispatch.companyEmail;
     const dispatchCompanyName = dispatch.companyName;
     const dispatchPhone = dispatch.companyPhone;
     const dispatchId = dispatch.id;
 
     // Fetch order details
-    const orderResults = await query(`SELECT * FROM "Orders" WHERE "id" = $1`, [orderID]);
+    const {rows:orderResults} = await query(`SELECT * FROM "Orders" WHERE "id" = $1`, [orderID]);
     if (orderResults.length === 0) {
       req.flash("error_msg", "No record found for that order");
       return res.redirect("/super");
     }
 
-    const thatOrder = orderResults.rows[0];
+    const thatOrder = orderResults[0];
     const saleID = thatOrder.sale_id;
 
     // Update Sales
@@ -3354,11 +3387,10 @@ exports.updateImage = async (req, res) => {
   const uploadId = req.params.id;
   let filename = req.file ? req.file.filename : "default.jpg";
   
-  const postData = { image: filename };
 
   try {
     // Fetch products with the given inventory_id
-    const productResults = await query(`SELECT * FROM "Products" WHERE "inventory_id" = $1`, [uploadId]);
+    const {rows:productResults} = await query(`SELECT * FROM "Products" WHERE "inventory_id" = $1`, [uploadId]);
 
     if (productResults.length > 0) {
       // Update the product image
@@ -3378,6 +3410,8 @@ exports.updateImage = async (req, res) => {
     return res.redirect('/');
   }
 };
+
+
 
 exports.superSale = async (req, res) => {
   const userId = req.user.id;
@@ -3407,7 +3441,7 @@ exports.superSale = async (req, res) => {
 
   try {
     // Insert sale data
-    await query(`INSERT INTO "Sales" ("sale_id", "sale_type", "store_id", "store_name", "created_date", "attendant_id", "payment_type", "total_amount", "shipping_fee") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+    await query(`INSERT INTO "Sales" ("sale_id", "sale_type", "store_id", "store_name", "created_date", "attendant_id", "Payment_type", "total_amount", "shipping_fee") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
       [insertData.sale_id, insertData.sale_type, insertData.store_id, insertData.store_name, insertData.created_date, insertData.attendant_id, insertData.payment_type, insertData.total_amount, insertData.shipping_fee]
     );
     
@@ -3428,13 +3462,13 @@ exports.superSale = async (req, res) => {
       };
 
       // Insert product data
-      await query(`INSERT INTO "Order_Products" ("sale_id", "product_id", "price_per_item", "sub_total", "store_id", "cart_id", "name", "quantity", "image") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      await query(`INSERT INTO "Order_Products" ("sale_id", "product_id", "price_per_item", "subTotal", "store_id", "cart_id", "name", "quantity", "image") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
         [productItem.sale_id, productItem.product_id, productItem.price_per_item, productItem.sub_total, productItem.store_id, productItem.cart_id, productItem.name, productItem.quantity, productItem.image]
       );
 
       // Update stock quantity
       const productResults = await query(`SELECT "total_on_shelf" FROM "Products" WHERE "id" = $1`, [id]);
-      if (productResults.length === 0) {
+      if (productResults.rows.length === 0) {
         throw new Error(`Product with id ${id} not found`);
       }
       const currentShelfQuantity = productResults.rows[0].total_on_shelf;
@@ -3464,17 +3498,18 @@ exports.superStore = async (req, res) => {
   const { id } = req.params;
   const { search } = req.query;
 
+
   try {
-    let queryStr = `SELECT * FROM "Products" WHERE activate = $1 AND total_on_shelf > $2 AND status = $3`;
+    let queryStr = `SELECT * FROM "Products" WHERE "activate" = $1 AND "total_on_shelf" > $2 AND "status" = $3`;
     let queryParams = ['yes', 0, 'not-expired'];
 
-    // Add category condition
+    // Add category condition if it's not 'all'
     if (id !== 'all') {
-      queryStr += ` AND category = $4`;
-      queryParams.push(id);
+      queryStr += ` AND "category" = $4`;
+      queryParams.push(id.trim()); // Push the entire id string including spaces but trim the end
     }
 
-    // Add search condition
+    // Add search condition if present
     if (search) {
       queryStr += ` AND "ProductName" ILIKE $5`;
       queryParams.push(`%${search}%`);
@@ -3486,15 +3521,19 @@ exports.superStore = async (req, res) => {
     // Execute the query
     const results = await query(queryStr, queryParams);
 
-    if (results.length === 0) {
+    console.log("Query Results:", results.rows.length);
+
+    if (results.rows.length === 0) {
       return res.json([]);
     }
 
-    return res.json(results);
+    return res.json(results.rows);
   } catch (err) {
-    console.error(err.message); // Log the error to the console for debugging
+    console.error("Error executing query:", err.message);
     req.flash("error_msg", `An error occurred: ${err.message}`);
     return res.redirect('/user');
   }
 };
+
+
 
