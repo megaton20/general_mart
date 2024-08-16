@@ -25,15 +25,22 @@
                 <div class="item-text text-dark">
                   <p style="font-size: 25px;" class="mb-4" ><%= itemData[0].ProductName%></p>
                 </div> 
-                <p class="text-warning m-0" style="font-size: 12px; margin-top: 5px ; border: 1px solid ; padding: 5px;">
+                <p class="text-warning m-0 rounded" style="font-size: 12px; margin-top: 5px ; border: 1px solid ; padding: 5px;">
                   <%=itemData[0].total_on_shelf%> items left 
                 </p>
               </div>
                 <div class="card-footer p-1">
                     <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= itemData[0].id %>" data-name="<%= itemData[0].ProductName %>" data-price="<%= itemData[0].UnitPrice %>" data-max="<%= itemData[0].total_on_shelf %>" data-image="<%= itemData[0].image %>" onclick="handleButtonClick(this)">Buy   ₦<small class="item-price"><%= itemData[0].UnitPrice %>.00</small></button> 
                 </div>
+              </div>
 
-            
+
+              <br>
+              <br>
+
+              <div>
+                <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user/fetchCart/"> Checkout</a>
+              <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user"> Back To store</a>
               </div>
     </div>
 

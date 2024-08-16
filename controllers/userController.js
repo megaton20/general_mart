@@ -623,7 +623,7 @@ const uuidForEachSale = generateNumericUUID(10);
           ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
       `;
       const orderValues = [
-          email, userId, userData.phone, userData.address,
+          email, userId, userData.Phone, userData.Address,
           userData.state, userData.lga, privatePin, storeId,
           storeName, uuidForEachSale, transactionData.id, 'Delivery',
           'incomplete', 'cash', new Date(), totalSubtotal, shippingFee
@@ -649,12 +649,12 @@ const uuidForEachSale = generateNumericUUID(10);
       // Clear the cart after the order is placed
       await query(`DELETE FROM "Cart" WHERE "user_id" = $1`, [userId]);
 
-      req.flash('success_msg', `NGN ${cashbackEarned} earned! Your order PIN number is: ${privatePin}`);
+      req.flash('success_msg', `NGN ${cashbackEarned} earned!... Your order PIN number is: ${privatePin}`);
       res.redirect(`/user/invoice/${uuidForEachSale}`);
 
   } catch (error) {
       console.error(`Error during submitCart: ${error}`);
-      req.flash('error_msg', 'An error occurred while processing your order. Please try again.');
+      req.flash('error_msg', 'Please wait for for 60s and try again, NOTE: You were not charged from your account.');
       res.redirect('/');
   }
 };
@@ -679,7 +679,7 @@ exports.invoice = async (req, res) => {
     const newOrder = orderResults.rows[0];
     
     if (!newOrder) {
-      req.flash('error_msg', 'Order not found');
+      req.flash('error_msg', 'Order not found in records');
       return res.redirect('/');
     }
     

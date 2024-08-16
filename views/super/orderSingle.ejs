@@ -77,15 +77,12 @@
           
           </div>
 
+
+          <!-- items table -->
           <div class="col-xl-6 col-lg-6">
             <p class="text-uppercase text-primary">Item Ordered List</p>
 
-            <table
-              class="table table-bordered"
-              id="dataTable"
-              width="100%"
-              cellspacing="0"
-            >
+            <table class="table table-bordered">
               <thead>
                 <tr>
                   <th>ID</th>
@@ -134,23 +131,47 @@
         </div>
 
         <div class="row mt-4">
-          <div class="col-6">
-            <p class="text-uppercase text-primary">Dispatch details</p>
-            <div class="row">
-              <div class="col-6">Dispatch Rider</div>
-              <div class="col-6"><%= orderData[0].driver %></div>
-            </div>
-            <div class="row">
-              <div class="col-6">Dispatch Rider Email:</div>
-              <div class="col-6"><%= orderData[0].driver_email %></div>
-            </div>
-            <div class="row">
-              <div class="col-6">Dispatch Rider phone:</div>
-              <div class="col-6"><%= orderData[0].driver_phone %></div>
-            </div>
-          </div>
 
-          <div class="col-6 mt-4">
+
+          <!-- dispatch information -->
+          
+
+          <% if (orderData[0].driver != null) { %>
+            <div class="col-lg-6">
+              <p class="text-uppercase text-primary">Company Dispatch</p>
+              <div class="row">
+                <div class="col-lg-3"> Driver Name</div>
+                <div class="col-auto"><%= orderData[0].driver %></div>
+              </div>
+              <div class="row">
+                <div class="col-lg-3"> Driver Email:</div>
+                <div class="col-auto"><%= orderData[0].driver_email %></div>
+              </div>
+              <div class="row">
+                <div class="col-lg-3"> Driver phone:</div>
+                <div class="col-auto"><%= orderData[0].driver_phone %></div>
+              </div>
+            </div>
+          <% } else { %>
+            <div class="col-lg-6">
+              <p class="text-uppercase text-primary">Rider </p>
+              <div class="row">
+                <div class="col-3"> Rider Name</div>
+                <div class="col-auto"><%= orderData[0].driver %></div>
+              </div>
+              <div class="row">
+                <div class="col-lg-3">Rider Email:</div>
+                <div class="col-auto"><%= orderData[0].driver_email %></div>
+              </div>
+              <div class="row">
+                <div class="col-lg-3"> Rider phone:</div>
+                <div class="col-auto"><%= orderData[0].driver_phone %></div>
+              </div>
+            </div>
+          <% } %>
+        
+
+          <div class="col-lg-6 mt-4">
             <% if( orderData[0].status == "incomplete" ){ %>
             <a href="/super/confirm-order/<%= orderData[0].id %>">
               <button
