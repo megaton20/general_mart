@@ -12,9 +12,17 @@
         <li><a href="/user" class="">Shop Items</a></li>
         <li><a href="/user/profile"> Profile</a></li>
         <li><a  href="/user/search"> Search</a></li>
+        <li><a  href="/user/orders"> My Orders</a></li>
 
         <li>|</li>
-        <li class=""><a  href="/drivers/new-rider" class="" > Riders</a></li>
+
+        <% if (1 != 1) { %>
+     
+          <li class=""><a  href="/drivers/new-rider" class="" > Riders</a></li>
+        <% } else { %>
+      
+        <% } %>
+        <li ><a  href="/logout" class="text-danger"> Logout</a></li>
         <li class=""><a  href="/" class="" > Advertise</a></li>
       </ul>
       <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
