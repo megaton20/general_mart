@@ -14,7 +14,8 @@ const { ensureAuthenticated,forwardAuthenticated } = require("../config/auth");
 router.post('/verify-request',ensureAuthenticated,isUser,authController.verifyEmailRequest);
 router.get('/verify-email',ensureAuthenticated,isUser,authController.verifyEmailCallBack);
 
-
+router.get('/google',authController.authRequest);
+// router.get('/google/callback',authController.googleAuth);
 
 // Route to request verification code
 router.post('/send-code',ensureAuthenticated, isUser,authController.requestVerificationCode);

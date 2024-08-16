@@ -320,9 +320,7 @@ exports.userCategoryQuery = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const offset = (page - 1) * limit;
 
-  let productQuery = `
-    SELECT * FROM "Products" 
-    WHERE "activate" = $1 AND "total_on_shelf" > $2 AND "status" = $3`;
+  let productQuery = `SELECT * FROM "Products"  WHERE "activate" = $1 AND "total_on_shelf" > $2 AND "status" = $3`;
   let queryParams = ['yes', 0, 'not-expired'];
 
   // Add category condition if it's not 'all'
@@ -373,7 +371,7 @@ exports.userCategoryQuery = async (req, res) => {
       activeCategory: categoryId
     });
   } catch (error) {
-    console.error(`Server error: ${error.message}`);
+    console.error(`Server error: ${error}`);
     req.flash('error_msg', 'An error occurred while loading the products. Please try again later.');
     return res.redirect('/user');
   }
@@ -732,12 +730,7 @@ exports.allUserOrder = async (req, res) => {
 
   try {
     // Fetch the last 5 orders for the logged-in user
-    const ordersQuery = `
-      SELECT * FROM "Orders" 
-      WHERE "customer_email" = $1 
-      ORDER BY "id" DESC 
-      LIMIT 5
-    `;
+    const ordersQuery = `SELECT * FROM "Orders" WHERE "customer_email" = $1 ORDER BY "id" DESC LIMIT 5`;
     const ordersResult = await query(ordersQuery, [sessionEmail]);
     const newOrder = ordersResult.rows;
 

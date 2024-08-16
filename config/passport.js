@@ -79,7 +79,8 @@ passport.use(new GoogleStrategy({
 }, async (accessToken, refreshToken, profile, done) => {
   try {
     // Check if the user already exists
-    const results = await query('SELECT * FROM "Users" WHERE googleId = $1', [profile.id]);
+    const {rows:results} = await query('SELECT * FROM "Users" WHERE "googleId" = $1', [profile.id]);
+
 
     if (results.length > 0) {
       return done(null, results[0]); // User exists, return the user
@@ -98,7 +99,7 @@ passport.use(new GoogleStrategy({
       };
 
       // Insert the new user into the database
-      const insertResult = await query(`INSERT INTO "Users" (googleId, First_name, Last_name, email, created_date, previous_visit, spending, verify_email, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`, 
+      const {rows:insertResult} = await query(`INSERT INTO "Users" ("googleId", "First_name", "Last_name", "email", "created_date", "previous_visit", "spending", "verify_email", "status") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`, 
         [newUser.googleId, newUser.First_name, newUser.Last_name, newUser.email, newUser.created_date, newUser.previous_visit, newUser.spending, newUser.verify_email, newUser.status]
       );
 
