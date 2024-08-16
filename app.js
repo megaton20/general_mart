@@ -8,6 +8,8 @@ const passport = require('./config/passport');
 const methodOverride = require('method-override');
 const ejsLayouts = require('express-ejs-layouts');
 const updateWatch = require('./config/updateAction');
+const cors = require('cors');
+
 
 require('dotenv').config();
 
@@ -24,6 +26,9 @@ const driversRouter = require('./router/driversRouter');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+
+app.use(cors());
 
 app.set('view engine', 'ejs');
 app.use(ejsLayouts);
