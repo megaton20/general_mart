@@ -19,6 +19,8 @@ router.post('/search', ensureAuthenticated,isUser, userController.searchPost);
 
 
 router.get('/profile', ensureAuthenticated,isUser, userController.profilePage);
+router.get('/reset', ensureAuthenticated,isUser, userController.changePasswordPage);
+router.post('/reset-password', ensureAuthenticated,isUser, userController.newPassword);
 router.get('/edit-user/:id', ensureAuthenticated,isUser, userController.editProfilePage);
 router.post('/add-profile-image/:id', ensureAuthenticated,isUser, upload.single('image'), userController.updateImage);
 router.put('/update-user-info/:id', ensureAuthenticated,isUser, userController.updateUserInfo);

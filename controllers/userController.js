@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 const db = require("../model/databaseTable");
 const { promisify } = require('util');
 const query = promisify(db.query).bind(db);
@@ -67,7 +68,6 @@ exports.profilePage = async (req, res) => {
     const spending = userData.spending;
     const cashBack = userData.cashback;
 
-    console.log(cashBack);
     // Render the profile page
     return res.render('./user/userSingleView', {
       pageTitle: 'User Profile',
@@ -83,6 +83,69 @@ exports.profilePage = async (req, res) => {
     return res.redirect('/user');
   }
 };
+
+exports.changePasswordPage = async (req, res) => {
+    // Render the profile page
+    return res.render('./user/change-password', {
+      pageTitle: 'Change Password',
+      appName: appName,
+    });
+    
+
+};
+
+exports.newPassword = async(req, res) => {
+
+  const userId =  req.user.id
+
+  const { oldPassword, newPasswordA,newPasswordB } = req.body;
+
+  if (!(oldPassword && newPasswordA && newPasswordB)) {
+    req.flash('error_msg', 'Enter all Fields');
+    return res.redirect(`back`);
+  }
+
+      if (newPasswordA !== newPasswordB) {
+        req.flash('error_msg', 'Passwords do not match');
+        return res.redirect(`back`);
+    }
+
+  try {
+          // Fetch user data
+          const userDataQuery = `SELECT * FROM "Users" WHERE "id" = $1`;
+          const {rows: userDataResult} = await query(userDataQuery, [userId]);
+          const userData = userDataResult[0];
+      
+          const isMatch = await bcrypt.compare(oldPassword, userData.Password);
+      
+      
+          if (!isMatch) {
+            req.flash('error_msg', 'Old Password is not correct');
+            return res.redirect('back')
+          }
+  } catch (error) {
+    console.log(error);
+    req.flash('success_msg', `errorr form server`);
+    return  res.redirect('/');
+  }
+
+  const hashedPassword = bcrypt.hashSync(newPasswordA, 10);
+
+
+
+        try {
+
+          await query('UPDATE "Users" SET "Password" = $1 WHERE email = $2', [hashedPassword, req.user.email])
+              req.flash('success_msg', 'Password changed successfully');
+            return  res.redirect('/user/profile');
+          
+        } catch (error) {
+          console.log(error);
+          req.flash('success_msg', `errorr form server: ${error.message}`);
+          return  res.redirect('/login');
+        }
+};
+
 
 
 exports.editProfilePage = async (req, res) => {

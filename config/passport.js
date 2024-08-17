@@ -20,13 +20,13 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(async (id, done) => {
   try {
     // Use $1 for parameterized query
-    const results = await query('SELECT * FROM "Users" WHERE id = $1', [id]);
+    const {rows:results} = await query('SELECT * FROM "Users" WHERE id = $1', [id]);
 
-    if (results.rows.length <= 0) {
+    if (results.length <= 0) {
       return done(null, false); // User not found, return false
     }
 
-    done(null, results.rows[0]); // User found, return the user object
+    done(null, results[0]); // User found, return the user object
   } catch (err) {
     done(err, null); // Pass the error to the done callback
   }
@@ -39,15 +39,15 @@ passport.deserializeUser(async (id, done) => {
 passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
   try {
     // Query the database for a user with the provided email
-    const results = await query('SELECT * FROM "Users" WHERE email = $1', [email]);
+    const {rows:results} = await query('SELECT * FROM "Users" WHERE email = $1', [email]);
 
     // Check if any user was found
-    if (results.rows.length <= 0) {
+    if (results.length <= 0) {
       return done(null, false, { message: 'User does not exist' });
     }
 
     // Extract the user from the query results
-    const user = results.rows[0];
+    const user = results[0];
 
     // Check if the user has a password set (indicating they did not sign up via Google)
     if (!user.Password) {

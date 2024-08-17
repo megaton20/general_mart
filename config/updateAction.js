@@ -127,7 +127,7 @@ const clearCartAtTheEndOfTheDay = async () => {
 
 const shelfAvailableChecker = async () => {
   try {
-    const results = await query(`SELECT id FROM "Products" WHERE total_on_shelf <= 0`);
+    const results = await query(`SELECT id FROM "Products" WHERE "total_on_shelf" <= 0`);
 
  
     let shelfData = results.rows; // Accessing rows directly since `query` returns the data as an array of objects
@@ -137,7 +137,7 @@ const shelfAvailableChecker = async () => {
 
       if (productIds.length > 0) {
         // Generate the query for deleting items from the Cart table
-        let deleteQuery = `DELETE FROM "Cart" WHERE product_id = ANY($1::int[])`;
+        let deleteQuery = `DELETE FROM "Cart" WHERE "product_id" = ANY($1::int[])`;
 
         const deleteResult = await query(deleteQuery, [productIds]);
         

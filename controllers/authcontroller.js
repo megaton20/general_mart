@@ -381,7 +381,7 @@ exports.resetRequest = async (req, res, next) => {
 
       const userEmail = results.rows[0].email;
       const token = generateResetToken(userEmail);
-      const resetLink = `${process.env.LIVE_DIRR || 'http://localhost:2000'}/reset-password/${token}`;
+      const resetLink = `${process.env.LIVE_DIRR || 'http://localhost:2000'}/auth/reset-password/${token}`;
 
           // Send verification email
           const transporter = nodemailer.createTransport({
@@ -463,7 +463,7 @@ exports.newPassword = async(req, res) => {
 
   const hashedPassword = bcrypt.hashSync(password, 10);
 try {
-  await query('UPDATE "Users" SET password = $1 WHERE email = $2', [hashedPassword, decoded.email])
+  await query('UPDATE "Users" SET "Password" = $1 WHERE email = $2', [hashedPassword, decoded.email])
       req.flash('success_msg', 'Password changed successfully');
     return  res.redirect('/login');
   
