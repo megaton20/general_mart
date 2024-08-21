@@ -1,0 +1,30 @@
+
+    <style>
+        .success-page {
+            margin-top: 200px;
+            text-align: center;
+            padding: 50px;
+        }
+        .success-icon {
+            font-size: 60px;
+            color: #28a745;
+        }
+
+
+        .order-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+
+    <div class="container success-page ">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i> <!-- You can also use an image -->
+        </div>
+        <p class="success-message m-0" style="color: var(--accent-color);">Your payment was successful!</p>
+        <p class="success-message m-0" style="color: var(--accent-color);"><%=cashback%> NGN earned!</p>
+
+        <p>your pin is <%=PIN%></p>
+        <a class="my-btn my-btn-outline" href="/user/invoice/<%=saleId%>" >View Invoice</a>
+    </div>
+

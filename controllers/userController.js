@@ -711,12 +711,35 @@ const uuidForEachSale = generateNumericUUID(10);
       await query(`DELETE FROM "Cart" WHERE "user_id" = $1`, [userId]);
 
       req.flash('success_msg', `NGN ${cashbackEarned} earned!... Your order PIN number is: ${privatePin}`);
-      res.redirect(`/user/invoice/${uuidForEachSale}`);
+      // res.redirect(`/user/invoice/${uuidForEachSale}`);
+
+          // Render the invoice page
+    return res.render('./user/oder-success', {
+      pageTitle: 'successful',
+      appName: appName,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      saleId:uuidForEachSale,
+      cashback:cashbackEarned,
+      PIN:privatePin
+    });
+
+
 
   } catch (error) {
       console.error(`Error during submitCart: ${error}`);
-      req.flash('error_msg', 'Please wait for for 60s and try again, NOTE: You were not charged from your account.');
-      res.redirect('/');
+      req.flash('error_msg', 'NOTE: You were not charged from your account.');
+      // res.redirect('/');
+      return res.render('./user/oder-failed', {
+        pageTitle: 'successful',
+        appName: appName,
+        month: monthName,
+        day: dayName,
+        date: presentDay,
+        year: presentYear,
+      });
   }
 };
 
