@@ -98,19 +98,24 @@ exports.verifyEmailRequest = async (req, res) => {
       }
     });
 
-    const mailOptions = {
-      from: {
-        name: appName,
-        address: process.env.EMAIL,
-      },
-      to: email,
-      subject: 'Email Verification Prompt',
-      html: `
-      <p>Please verify your email by clicking the button below:</p>
-      <a href="${process.env.LIVE_DIRR || 'http://localhost:2000'}/auth/verify-email?token=${token}" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #fefff; background-color: #41afa5; text-decoration: none; border-radius: 5px;">Verify Email</a>
-      <p>If you did not request this, please ignore this email.</p>
-      `
-    };
+  
+const mailOptions = {
+  from: {
+    name: appName,
+    address: process.env.EMAIL,
+  },
+  to: email,
+  subject: 'Confirm Your Email Address',
+  html: `
+    <p>Dear Customer,</p>
+    <p>Thank you for joining <strong>${appName}</strong>, your one-stop shop for all your grocery and food item needs. We are excited to have you as part of our community!</p>
+    <p>To ensure the security of your account, please verify your email address by clicking the button below:</p>
+    <a href="${process.env.LIVE_DIRR || 'http://localhost:2000'}/auth/verify-email?token=${token}" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #ffffff; background-color: #41afa5; text-decoration: none; border-radius: 5px;">Verify Email</a>
+    <p>If you did not create an account with us, please disregard this email.</p>
+    <p>Thank you for choosing <strong>${appName}</strong>.</p>
+    <p>Best regards,<br>The ${appName} Team</p>
+  `
+};
 
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
@@ -332,7 +337,7 @@ exports.loginHandler = async (req, res, next) => {
         `UPDATE "Users" SET "previous_visit" = $1 WHERE id = $2`,
         [new Date(), user.id]
         );
-        console.log(result.rowCount);
+
       req.login(user, err => {
         if (err) {
           next(err);
@@ -518,3 +523,5 @@ exports.deleteAccount = async (req, res) => {
       return res.redirect('back');
   }
 };
+
+

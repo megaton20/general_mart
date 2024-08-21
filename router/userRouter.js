@@ -5,8 +5,10 @@ const { isUser } = require('../config/isUser');
 const { ensureAuthenticated } = require('../config/auth');
 const { ensureAuthenticatedEmail, ensureAuthenticatedPhone,ensureBasicInformation } = require('../config/userAccessCheck');
 const userController = require('../controllers/userController');
-const upload = require('../config/multerConfig'); // Import the Multer config
+const upload = require('../config/multerConfig'); 
 
+// the journey
+router.post('/send-message', userController.contactForm);
 
 // Users cart
 router.get('/', ensureAuthenticated,isUser, userController.userShop);
@@ -14,9 +16,6 @@ router.get('/pagination', ensureAuthenticated,isUser, userController.userShopQue
 router.get('/category/:category', ensureAuthenticated,isUser, userController.userCategoryQuery);
 router.get('/search', ensureAuthenticated,isUser, userController.searchPage);
 router.post('/search', ensureAuthenticated,isUser, userController.searchPost);
-
-// router.get('/pagination', userController.pagination);
-
 
 router.get('/profile', ensureAuthenticated,isUser, userController.profilePage);
 router.get('/reset', ensureAuthenticated,isUser, userController.changePasswordPage);

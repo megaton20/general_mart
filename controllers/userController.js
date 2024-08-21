@@ -890,4 +890,25 @@ exports.cancelOrder = async (req, res) => {
 };
 
 
+exports.contactForm = async (req, res) => {
+
+  const { senderEmail, message,title } = req.body;
+
+  if (!(senderEmail && message && title)) {
+      req.flash('error_msg', `Error: Enter all fields `);
+      return res.redirect('back');
+  }
+  try {
+    // Insert new email
+    const insertQuery = `INSERT INTO "contact_messages" ("email", "created_at", "message", "title") VALUES ($1, $2, $3, $4)`;
+    await query(insertQuery, [senderEmail, new Date(), message, title]);
+
+    req.flash('success_msg', `message sent`);
+    return res.redirect('back');
+  } catch (error) {
+    console.log(error);
+    req.flash('error_msg', 'Error from database');
+    return res.redirect('back');
+  }
+};
 

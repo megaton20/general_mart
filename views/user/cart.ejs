@@ -19,27 +19,32 @@
       <div class="col-lg-8 ps-lg-5 card "  id="">
           
         <% cartItems.forEach(item => { %>
-          <div class="cart-item row">
-            <div class="col-2 mr-1">
-              <img src="/uploads/<%= item.image %>" class="img-fluid rounded" alt="<%= item.product_name %>">
+          <a href="/user/product-details/<%= item.product_id %>" class="cart-item row">
+            <div class="col-auto item-image-container d-flex justify-content-center align-items-center">
+              <img src="/uploads/default.jpg" class="img-fluid rounded" alt="<%= item.product_name %>">
             </div>
-            <div class="cart-item-details col-6 ml-4">
-              <h5 class="m-0"><%= item.product_name %></h5>
-              <p class="m-0" >Subtotal: ₦<span class="item-price"><%= item.subtotal %> </span></p>
+
+            <div class="cart-item-details col-6 row d-flex justify-content-center align-items-center">
+              <p class="text-truncate"><%= item.product_name %></p>
+              <p class="m-0" >Sub-total: ₦<span class="item-price"><%= item.subtotal %> </span></p>
             </div>
-            <div class="cart-item-action col-3 ml-0">
+            
+            <div class="cart-item-action col-3 ml-0  d-flex justify-content-center align-items-center">
               <button class="btn btn-danger" onclick="updateQuantity(<%= item.product_id %>, -1, <%= item.quantity %>, <%= item.max %>)">-</button>
               <span class="mx-2"><%= item.quantity %></span>
               <button class="btn btn-success" onclick="updateQuantity(<%= item.product_id %>, 1, <%= item.quantity %>, <%= item.max %>)">+</button>
             </div>
-          </div>
+          </a>
+
         <% }); %>
+
         </div>
 
       <div class="col-lg-4" >
-        <div class="service-box">
-          <h4>Cart value </h4>
+        <div class="card">
+          <div class="card-header"><h4>Cart value </h4></div>
 
+           <div class="card-body">
             <div class="row">
               <div class="col-6 m-0">Subtotal</div>
               <div class="col-6 m-0">NGN <span class="item-price"><%= totalSubtotal%></span></div>
@@ -49,7 +54,9 @@
             <br>
               <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user/checkout/<%= userData.id %>"> Checkout</a>
               <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user"> Back To store</a>
-      </div>
+     
+           </div>
+            </div>
 
     
       <%- include('./partials/info') %>

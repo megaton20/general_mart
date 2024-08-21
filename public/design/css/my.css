@@ -286,6 +286,7 @@ a {
   .item-image-container {
     height: 100px; 
     overflow: hidden; 
+    box-shadow: 0 3px 3px -5px, 0 2px 5px #0000000f;
   }
   
   .item-image-container img {
@@ -434,16 +435,17 @@ a {
     border-bottom: 1px solid #ddd;
   } 
   .cart-item img {
-    max-width: 40px;
-    max-height: 40px;
+    max-width: 60px;
+    max-height: 60px;
     margin-right: 20px;
   }
   .cart-item-details {
-    flex: 1;
+    color: var(--accent-color);
   }
 
   .cart-item-details h5{
     font-size: 15px;
+    margin: 0;
   }
   .item-text {
     font-size: 13px;

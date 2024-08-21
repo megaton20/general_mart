@@ -82,7 +82,49 @@
       <span class="visually-hidden">Next</span>
     </button>
   </div>
+
+  <div class="products container mt-5 mb-5">
+    <div class="card">
+      <div class="card-header">Our showcase items</div>
+      <div class="card-body ">
+        <div class="row">
+  
+          <% showcaseItem.forEach(data => { %>
+
+          <div class="col-md-4 col-lg-3 col-6">
+            <div class="mt-4 card border-1">
+              <a href="/user/product-details/<%= data.id%>" class="card-body">
+                <div class="item-image-container d-flex justify-content-center align-items-center">
+                  <img src="/uploads/<%= data.image %>" class="card-img-top rounded-4" alt="<%= data.image %>" style="max-width: 100%; height: auto;">
+                </div>
+                <div class="item-text text-dark truncate-container d-flex justify-content-center align-items-center">
+                  <p class="text-truncate"><%= data.ProductName%></p>
+                </div>
+              </a>
+              <div class="card-footer p-1 d-flex justify-content-center align-items-center">
+                
+                <% if (userActive) { %>
+                  <a href="/user/product-details/<%= data.id%>" style="" class="my-btn my-btn-outline w-100 m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>">Add to Cart ₦<small class="item-price"><%= data.UnitPrice %>.00</small></a> 
+                <% } else { %>
+                  <a href="/user/product-details/<%= data.id%>" style="" class="my-btn my-btn-outline w-100 m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>">Log In To Buy  @ ₦<small class="item-price"><%= data.UnitPrice %>.00</small></a> 
+                <% } %>
+              </div>
+            </div>
+          </div>
+
+          <% }); %>
+
+            
+        </div>
+  
+      </div>
+  
+    </div>
+  </div>
 </div>
+
+
+
 
 
 <!-- Hero Section ends -->
@@ -181,41 +223,11 @@
         </div>
       </section><!-- /Featured Services Section -->
   
-         <!-- Features Details Section -->
-         <section id="about" class="features-details section mt-5 mb-4">
-  
-          <div class="container">
-            <h3>About Us</h3>
-  
-            <div class="row gy-4 justify-content-between features-item">
-              <div class="col-lg-4 order-1 order-lg-2" data-aos="fade-up" data-aos-delay="200">
-                <img src="design/img//hero-img.svg" class="img-fluid" alt="">
-              </div>
-              <div class="col-lg-8 d-flex align-items-center order-2 order-lg-1" data-aos="fade-up" data-aos-delay="100">
-                <div class="content">
-                  <p>
-                    Welcome to G.Mart, your premier online destination for all your grocery and food item needs in Nigeria. At G.Mart,
-                    we are committed to providing you with the freshest and highest-quality products, conveniently delivered to your doorstep.
-                     Serving the bustling cities of Abuja, Calabar, Lagos, and Uyo, we aim to redefine your shopping experience with our seamless online platform.
-                  </p>
 
-                  <a href="/abouts" class="my-btn my-btn-outline" style="width: 100%;">Read more</a>
-                </div>
-              </div>
-    
-            </div><!-- Features Item -->
-    
-          </div>
-    
-        </section><!-- /Features Details Section -->
-    
               <!-- Call to action -->
               <section  class="featured-services section">
                 <div class="container">
                   <div class="row gy-4">
-      
-          
-
                       <div class="service-item">
                         <div class="d-flex flex-column justify-content-center align-items-center">
                           <h3>Logistics Services</h3>
@@ -225,12 +237,9 @@
                           <a class="my-btn " href="/drivers/new-rider">Register Your Logistics Company</a>
                         </div>
                       </div><!-- End Service Item -->
-          
                   </div>
                 </div>
               </section><!--  call to action -->
-    
-            
               <%- include ('./partials/clients')%>
 
               <section id="faqs">
@@ -313,20 +322,20 @@
                           <!-- Left Column (Contact Form) -->
                           <div class="col-md-8 mb-4">
                               <h2>Contact Us</h2>
-                              <form>
+                              <form action="/user/send-message" method="post">
                                   <div class="mb-3">
                                       <label for="email" class="form-label">Email Address</label>
-                                      <input type="email" class="form-control" id="email" placeholder="Your email">
+                                      <input type="email" name="senderEmail" class="form-control" id="email" placeholder="Your email">
                                   </div>
                                   <div class="mb-3">
                                       <label for="title" class="form-label">Title</label>
-                                      <input type="text" class="form-control" id="title" placeholder="Message title">
+                                      <input type="text" name="title" class="form-control" id="title" placeholder="Message title">
                                   </div>
                                   <div class="mb-3">
                                       <label for="message" class="form-label">Message</label>
-                                      <textarea class="form-control" id="message" rows="6" placeholder="Your message"></textarea>
+                                      <textarea class="form-control" name="message" id="message" rows="6" placeholder="Your message"></textarea>
                                   </div>
-                                  <button type="submit" class="my-btn my-btn-outline w-100">Send Message</button>
+                                  <button type="submit" class="my-btn my-btn-outline m-0">Send Message</button>
                               </form>
                           </div>
 
@@ -338,8 +347,8 @@
                                   Parliamentary Extension, behind Udiking,<br>
                                   Calabar, Nigeria.<br>
                                   <br>
-                                  <strong>Phone:</strong> +123 456 7890<br>
-                                  <strong>Email:</strong> info@gmart.com
+                                  <strong>Phone:</strong> +234 916 020 9475<br>
+                                  <strong>Email:</strong> generalmartinfo@gmail.com
                               </address>
                           </div>
                       </div>

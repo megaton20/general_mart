@@ -48,16 +48,38 @@ router.get('/auth/google/callback',
 );
 
 // Welcome Page
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   let userActive= false
   if (req.user) {
     userActive = true
   }
-  res.render('landing',{
-    pageTitle:`Welcome to ${appName}`,
-    appName,
-    userActive
-  });
+
+  const limit = 16;
+  const page = parseInt(req.query.page) || 1;
+  const offset = (page - 1) * limit;
+  
+
+  const showcaseQuery = `SELECT * FROM "Products" 
+  WHERE "showcase" = $1 AND "total_on_shelf" > $2 AND "status" = $3 LIMIT $4 OFFSET $5`;
+  const queryParams = ['yes', 0, 'not-expired', limit, offset];
+  try {
+    
+      const {rows:showcaseItem} = await query(showcaseQuery, queryParams);
+      res.render('landing',{
+        pageTitle:`Welcome to ${appName}`,
+        appName,
+        userActive,
+        showcaseItem
+      });
+
+
+  } catch (error) {
+    console.error(`Error fetching user shop data: ${error}`);
+    req.flash('error_msg', 'An error occurred while loading the shop items');
+    return res.redirect('/');
+  }
+
+
 }
 )
 
