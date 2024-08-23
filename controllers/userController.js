@@ -711,10 +711,8 @@ const uuidForEachSale = generateNumericUUID(10);
       await query(`DELETE FROM "Cart" WHERE "user_id" = $1`, [userId]);
 
       req.flash('success_msg', `NGN ${cashbackEarned} earned!... Your order PIN number is: ${privatePin}`);
-      // res.redirect(`/user/invoice/${uuidForEachSale}`);
 
-          // Render the invoice page
-    return res.render('./user/oder-success', {
+    return res.render('./user/order-success', {
       pageTitle: 'successful',
       appName: appName,
       month: monthName,
@@ -732,7 +730,7 @@ const uuidForEachSale = generateNumericUUID(10);
       console.error(`Error during submitCart: ${error}`);
       req.flash('error_msg', 'NOTE: You were not charged from your account.');
       // res.redirect('/');
-      return res.render('./user/oder-failed', {
+      return res.render('./user/order-failed', {
         pageTitle: 'successful',
         appName: appName,
         month: monthName,

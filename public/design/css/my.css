@@ -143,7 +143,6 @@ h6 {
   border-radius: 5px;
   transition: 0.3s;
   margin: 0;
-
 }
 .my-btn-outline {
   color: var(--heading-color);
@@ -154,6 +153,7 @@ h6 {
   padding: 8px 25px;
   border-radius: 5px;
   transition: 0.3s;
+  box-shadow: 0 3px 3px -5px, 0 2px 5px #0000000f;
 }
 .my-btn-outline:hover {
   color: var(--contrast-color);
@@ -279,7 +279,9 @@ a {
 }
 
 
-
+.my-box-shadow{
+  box-shadow: 0 3px 3px -5px, 0 2px 5px #0000000f;
+}
 
   
 
@@ -430,9 +432,7 @@ a {
 }
 
   .cart-item {
-    margin-bottom: 20px;
     padding: 10px;
-    border-bottom: 1px solid #ddd;
   } 
   .cart-item img {
     max-width: 60px;
@@ -443,7 +443,7 @@ a {
     color: var(--accent-color);
   }
 
-  .cart-item-details h5{
+  .cart-item-details p{
     font-size: 15px;
     margin: 0;
   }
@@ -584,9 +584,7 @@ a {
   z-index: -1;
 }
 
-.my-btn {
-  margin: 0.5em;
-}
+
 
 @media (max-width: 768px) {
   .carousel-caption {

@@ -3,6 +3,7 @@
         .failed-page {
             text-align: center;
             padding: 50px;
+            box-shadow: 0 3px 3px -5px, 0 2px 5px #0000000f;
         }
         .failed-icon {
             font-size: 60px;
@@ -11,12 +12,12 @@
         .failed-message {
             font-size: 24px;
             margin-top: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 4px;
             color: #333;
         }
         .retry-button,
         .order-button {
-            padding: 10px 20px;
+            padding: 10px 50px;
             font-size: 18px;
             border: none;
             border-radius: 5px;
@@ -40,15 +41,21 @@
         }
     </style>
 
+<%- include('./partials/navbar') %>
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
     <div class="container failed-page">
         <div class="failed-icon">
             <i class="fas fa-times-circle"></i> <!-- You can also use an image -->
         </div>
-        <div class="failed-message">
-            Oops! Your payment could not be processed.
-        </div>
-        <a href="/user/fetchCart" class="retry-button">Try Again</a>
+        <p class="failed-message">Oops! Your payment could not be processed at the moment.</p>
+        <p class="failed-info">Note: You were not debitted from your bank account, it will be reversed if otherwise</p>
+        <a href="/user/fetchCart" class=" my-btn my-btn-outline text-danger">Try Again</a>
     </div>
 
 

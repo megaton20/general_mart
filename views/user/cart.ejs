@@ -19,22 +19,25 @@
       <div class="col-lg-8 ps-lg-5 card "  id="">
           
         <% cartItems.forEach(item => { %>
-          <a href="/user/product-details/<%= item.product_id %>" class="cart-item row">
-            <div class="col-auto item-image-container d-flex justify-content-center align-items-center">
+          <div class="row d-flex  align-items-center" >
+            
+            <div class="col-3 item-image-container d-flex justify-content-center align-items-center">
               <img src="/uploads/default.jpg" class="img-fluid rounded" alt="<%= item.product_name %>">
             </div>
-
-            <div class="cart-item-details col-6 row d-flex justify-content-center align-items-center">
-              <p class="text-truncate"><%= item.product_name %></p>
-              <p class="m-0" >Sub-total: ₦<span class="item-price"><%= item.subtotal %> </span></p>
-            </div>
             
-            <div class="cart-item-action col-3 ml-0  d-flex justify-content-center align-items-center">
-              <button class="btn btn-danger" onclick="updateQuantity(<%= item.product_id %>, -1, <%= item.quantity %>, <%= item.max %>)">-</button>
-              <span class="mx-2"><%= item.quantity %></span>
-              <button class="btn btn-success" onclick="updateQuantity(<%= item.product_id %>, 1, <%= item.quantity %>, <%= item.max %>)">+</button>
+            <a href="/user/product-details/<%= item.product_id %>" class="cart-item col-6 row cart-item-details">
+                <p class="text-truncate m-0"><%= item.product_name %></p>
+                <p class="m-0" style="font-size: 11px;">Sub-total: ₦<span class="item-price"><%= item.subtotal %> </span></p>
+            </a>
+              
+              <div class="cart-item-action col-3 ml-0  d-flex justify-content-center align-items-center">
+                <button class="btn btn-danger" onclick="updateQuantity(<%= item.product_id %>, -1, <%= item.quantity %>, <%= item.max %>)">-</button>
+                <span class="mx-2"><%= item.quantity %></span>
+                <button class="btn btn-success" onclick="updateQuantity(<%= item.product_id %>, 1, <%= item.quantity %>, <%= item.max %>)">+</button>
+              </div>
             </div>
-          </a>
+
+            <hr>
 
         <% }); %>
 
