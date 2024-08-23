@@ -230,11 +230,12 @@ exports.updateUserInfo = async (req, res) => {
       errors.push({ msg: "User does not exist" });
     }
 
+
     if (errors.length > 0) {
       return res.render('./user/userEditPage', {
         pageTitle: 'Edit Profile',
         appName: appName,
-        userData: { ...req.body }, // Pass current user data for the form
+        userData: { ...req.body,id: req.user.id  }, // Pass current user data for the form
         stateData, // Ensure `stateData` is defined or fetched properly
         errors,
       });
@@ -244,8 +245,7 @@ exports.updateUserInfo = async (req, res) => {
     const updateQuery = `
       UPDATE "Users"
       SET "First_name" = $1, "Last_name" = $2, "gender" = $3, "Address" = $4, "land_mark" = $5, "state" = $6, "lga" = $7
-      WHERE "id" = $8
-    `;
+      WHERE "id" = $8`;
 
     await query(updateQuery, [
       First_name,
