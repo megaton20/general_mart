@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 const db = require("../model/databaseTable");
 const { promisify } = require('util');
 const query = promisify(db.query).bind(db);
@@ -636,6 +637,76 @@ exports.submitCart = async (req, res) => {
   const storeName = req.user.store_name;
 
 
+        // Generate Invoice Email Function
+      const generateInvoiceEmail = (userData, transactionData, itemsList, privatePin, totalSubtotal, shippingFee, cashbackEarned) => {
+        const totalAmount = totalSubtotal + shippingFee;
+
+        return `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd;">
+            <!-- Invoice Heading -->
+            <div style="text-align: center; margin-bottom: 20px;  ">
+              <h1 style="color: #333;">Invoice</h1>
+              <p style="color: #333;">Thank you for your purchase!</p>
+            </div>
+
+            <!-- User Information -->
+            <div style="margin-bottom: 20px;">
+              <p style="margin:0px"><strong>Customer Name:</strong> ${userData.First_name} ${userData.Last_name}</p>
+              <p style="margin:0px"><strong>Customer Email:</strong> ${userData.email}</p>
+              <p style="margin:0px"><strong>Customer Address:</strong> ${userData.Address}</p>
+              <p style="margin:0px"><strong>Customer State:</strong> ${userData.state}</p>
+              <p style="margin:0px"><strong>Customer LGA:</strong> ${userData.lga}</p>
+              <p style="margin:0px"><strong>Customer Phone:</strong> ${userData.Phone}</p>
+            </div>
+
+            <!-- Transaction Details -->
+            <hr>
+            <div style="margin-bottom: 20px;">
+              <p><strong>Transaction ID:</strong> ${transactionPaymentReference}</p>
+              <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+            </div>
+
+            <!-- Items Purchased -->
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+              <thead>
+                <tr style="background-color: #f7f7f7; text-align: left;">
+                  <th style="padding: 10px; border: 1px solid #ddd;">Item</th>
+                  <th style="padding: 10px; border: 1px solid #ddd;">Quantity</th>
+                  <th style="padding: 10px; border: 1px solid #ddd;">Price</th>
+                  <th style="padding: 10px; border: 1px solid #ddd;">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${itemsList}
+              </tbody>
+            </table>
+
+            <!-- Total and Shipping -->
+            <div style="text-align: right; margin-bottom: 20px;">
+              <p><strong>Subtotal:</strong> NGN ${totalSubtotal.toFixed(2)}</p>
+              <p><strong>Shipping Fee:</strong> NGN ${shippingFee.toFixed(2)}</p>
+              <p><strong>Total Amount:</strong> NGN ${totalAmount.toFixed(2)}</p>
+            </div>
+
+            <!-- Cashback Earned -->
+            <div style="text-align: right; margin-bottom: 20px;">
+              <p><strong>Cashback Earned:</strong> NGN ${cashbackEarned.toFixed(2)}</p>
+            </div>
+
+            <!-- Delivery PIN -->
+            <div style="text-align: center; margin-bottom: 20px;">
+              <p style="color:red "><strong>Your Delivery PIN:</strong> ${privatePin}</p>
+              <p style="color:#41afa5">Please provide this PIN to the delivery personnel to confirm your order.</p>
+            </div>
+
+            <!-- Footer -->
+            <div style="text-align: center; color: #fffff; font-size: 12px;">
+              <p>&copy; ${new Date().getFullYear()} ${appName}. All rights reserved.</p>
+              <p> Cross River State, Calabar | Phone: +234 916 020 9475 | Email: noreply@gmail.com</p>
+            </div>
+          </div>
+        `;
+      };
 
   const generateNumericUUID = (length) => {
     return Array.from({ length }, () => Math.floor(Math.random() * 10)).join('');
@@ -705,12 +776,60 @@ const uuidForEachSale = generateNumericUUID(10);
               storeId, uuid, 'pending', product_name, quantity, image
           ]);
       });
+
+
+      
       await Promise.all(orderProductPromises);
+      
+      
+      
+      // creating the invoice to send
+      const itemsList = cartItems.map(item => `
+      <tr>
+        <td style="padding: 10px; border: 1px solid #ddd;">${item.product_name}</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">${item.quantity}</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">NGN ${item.price_per_item}</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">NGN ${item.subtotal}</td>
+      </tr>
+      `).join('');
+
+
+      const emailBody = generateInvoiceEmail(userData, transactionData, itemsList, privatePin, totalSubtotal, shippingFee, cashbackEarned);
+
+      // Configure Nodemailer
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        secure: false,
+        auth: {
+          user: process.env.EMAIL,
+          pass: process.env.EMAIL_PASSWORD
+        }
+      });
+
+    const mailOptions = {
+      from: {
+        name: appName,
+        address: "noreply@gmail.com",
+      },
+    to: userData.email,
+    subject: `Your Purchase Invoice - Order #${transactionPaymentReference}`,
+    html: emailBody
+    };
+
+    // Send the invoice email
+     transporter.sendMail(mailOptions,(err,info)=>{
+      if (err) {
+        console.log(err);
+        req.flash('error_msg', `Error sending invoice:`);
+      }
+    });
+
 
       // Clear the cart after the order is placed
       await query(`DELETE FROM "Cart" WHERE "user_id" = $1`, [userId]);
 
-      req.flash('success_msg', `NGN ${cashbackEarned} earned!... Your order PIN number is: ${privatePin}`);
+      req.flash('success_msg', `NGN ${cashbackEarned} earned!`);
 
     return res.render('./user/order-success', {
       pageTitle: 'successful',
@@ -728,16 +847,8 @@ const uuidForEachSale = generateNumericUUID(10);
 
   } catch (error) {
       console.error(`Error during submitCart: ${error}`);
-      req.flash('error_msg', 'NOTE: You were not charged from your account.');
-      // res.redirect('/');
-      return res.render('./user/order-failed', {
-        pageTitle: 'successful',
-        appName: appName,
-        month: monthName,
-        day: dayName,
-        date: presentDay,
-        year: presentYear,
-      });
+      req.flash('error_msg', 'We are on it!.');
+      return res.redirect('/user');
   }
 };
 
