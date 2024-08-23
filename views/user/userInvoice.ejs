@@ -1,4 +1,35 @@
 <style>
+  .complete-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #e6ffe6; /* Light green background */
+    color: #28a745; /* Green text */
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+
+  .complete-icon {
+    font-size: 50px;
+    margin-bottom: 10px;
+  }
+
+  .complete-message {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .complete-subtext {
+    font-size: 16px;
+    color: #555; /* Subtext color */
+  }
+  
   .track-order-container {
       padding: 30px;
       max-width: 600px;
@@ -25,7 +56,7 @@
   .line {
       flex: 1;
       height: 2px;
-      background-color: #ddd;
+      background-color: #e9d012;
       margin-left: 10px;
       margin-right: 10px;
   }
@@ -187,63 +218,73 @@
 
 <script>
   // This status should come from your database
-const orderStatus = "<%= newOrder.status %>"; // Example statuses: "incomplete", "confirmed", "complete", "canceled"
+  const orderStatus = "<%= newOrder.status %>"; 
 
-const orderStages = [
-    { status: "confirmed", text: "Order Confirmed" },
-    { status: "complete", text: "Order Delivered" }
-];
+  const orderStages = [
+      { status: "incomplete", text: "Order Placed" },
+      { status: "waiting", text: "Order Confirmed" },
+      { status: "shipped", text: "Order Shipped" },
+  ];
 
-function renderOrderStatus() {
-    const statusContainer = document.getElementById('order-status');
-    statusContainer.innerHTML = ''; // Clear the container
-    
-    if (orderStatus === "canceled") {
-        // If order is canceled, show the canceled message and return
-        statusContainer.innerHTML = `<div class="cancelled">Order Canceled</div>`;
-        return;
-    }
+  function renderOrderStatus() {
+      const statusContainer = document.getElementById('order-status');
+      statusContainer.innerHTML = ''; // Clear the container
+      
+      if (orderStatus === "canceled") {
+          // If order is canceled, show the canceled message and return
+          statusContainer.innerHTML = `<div class="cancelled">Order Canceled</div>`;
+          return;
+      }
 
-    // Determine if the order is incomplete
-    const isIncomplete = orderStatus === "incomplete";
+      if (orderStatus === "complete") {
+          // If order is canceled, show the canceled message and return
+          statusContainer.innerHTML = `
+          <div class="complete-container">
+              <div class="complete-icon">🎉</div>
+              <div class="complete-message">Order Complete!</div>
+              <div class="complete-subtext">Thank you for shopping with us. Your order has been successfully delivered.</div>
+            </div>
+          `;
+          return;
+      }
+      // Find the index of the current order status in the orderStages array
+      const currentStatusIndex = orderStages.findIndex(stage => stage.status === orderStatus);
 
-    // Loop through the stages and create the status elements
-    orderStages.forEach((stage, index) => {
-        const stageDiv = document.createElement('div');
-        stageDiv.className = 'stage';
+      orderStages.forEach((stage, index) => {
+          const stageDiv = document.createElement('div');
+          stageDiv.className = 'stage';
 
-        // Determine if this stage is active
-        const isActive = (orderStatus === stage.status) || (orderStatus !== "incomplete" && index <= orderStages.findIndex(s => s.status === orderStatus));
+          // Determine if this stage is active
+          const isActive = index <= currentStatusIndex;
 
-        // Create the circle element
-        const circleDiv = document.createElement('div');
-        circleDiv.className = `circle ${isActive ? 'checked' : ''}`;
-        circleDiv.innerHTML = isActive ? '✔' : '';
+          // Create the circle element
+          const circleDiv = document.createElement('div');
+          circleDiv.className = `circle ${isActive ? 'checked' : ''}`;
+          circleDiv.innerHTML = isActive ? '✔' : '';
 
-        // Create the line element (but only add it between stages)
-        const lineDiv = document.createElement('div');
-        lineDiv.className = `line ${isActive && index < orderStages.length - 1 ? 'active' : ''}`;
+          // Create the line element (but only add it between stages)
+          const lineDiv = document.createElement('div');
+          lineDiv.className = `line ${isActive && index < orderStages.length - 1 ? 'active' : ''}`;
 
-        // Create the status text element
-        const textDiv = document.createElement('div');
-        textDiv.className = 'status-text';
-        textDiv.textContent = isIncomplete && index === 0 ? "Order Placed" : stage.text;
+          // Create the status text element
+          const textDiv = document.createElement('div');
+          textDiv.className = 'status-text';
+          textDiv.textContent = stage.text;
 
-        // Append elements to the stage div
-        stageDiv.appendChild(circleDiv);
-        if (index < orderStages.length - 1) {
-            stageDiv.appendChild(lineDiv);
-        }
-        stageDiv.appendChild(textDiv);
+          // Append elements to the stage div
+          stageDiv.appendChild(circleDiv);
+          if (index < orderStages.length - 1) {
+              stageDiv.appendChild(lineDiv);
+          }
+          stageDiv.appendChild(textDiv);
 
-        // Append the stage div to the container
-        statusContainer.appendChild(stageDiv);
-    });
-}
+          // Append the stage div to the container
+          statusContainer.appendChild(stageDiv);
+      });
+  }
 
-// Initialize the status
-renderOrderStatus();
-
+  // Initialize the status
+  renderOrderStatus();
 </script>
 
 

@@ -104,9 +104,9 @@
               <div class="card-footer p-1 d-flex justify-content-center align-items-center">
                 
                 <% if (userActive) { %>
-                  <a href="/user/product-details/<%= data.id%>" style="" class="my-btn my-btn-outline w-100 m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>">Add to Cart ₦<small class="item-price"><%= data.UnitPrice %>.00</small></a> 
+                  <a href="/user/product-details/<%= data.id%>" style="" class="my-btn my-btn-outline w-100 m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>">Add to Cart ₦<small class="item-price"><%= data.UnitPrice %></small></a> 
                 <% } else { %>
-                  <a href="/user/product-details/<%= data.id%>" style="" class="my-btn my-btn-outline w-100 m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>">Log In To Buy  @ ₦<small class="item-price"><%= data.UnitPrice %>.00</small></a> 
+                  <a href="/user/product-details/<%= data.id%>" style="" class="my-btn my-btn-outline w-100 m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>">Log In To Buy  @ ₦<small class="item-price"><%= data.UnitPrice %></small></a> 
                 <% } %>
               </div>
             </div>

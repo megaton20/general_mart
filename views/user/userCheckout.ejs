@@ -25,13 +25,13 @@
             <% cartItems.forEach(item => { %>
               <div class="cart-item row">
                 
-                <div class="col-2 mr-1">
+                <div class="col-auto mr-1">
                   <img src="/uploads/<%= item.image %>" class="img-fluid rounded" alt="<%= item.product_name %>">
                 </div>
                 
-                <div class="cart-item-details col-8 ">
-                  <h5 class="m-0"><%= item.product_name %></h5>
-                  <h5 class="m-0"><%= item.quantity %> (x)</h5>
+                <div class="cart-item-details col-auto " >
+                  <p class="m-0" style="font-size: 14px;"><%= item.product_name %></p>
+                  <p class="m-0" style="font-size: 12px;"><%= item.quantity %> (x)</p>
                 </div>
               </div>
               <% }); %>

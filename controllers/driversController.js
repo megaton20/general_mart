@@ -230,6 +230,11 @@ exports.myRides = async (req, res) => {
       return res.redirect("back");
     }
 
+    if (results.user_id === req.user.id) {
+      req.flash("error_msg", "Can not access your own order here.");
+      return res.redirect("back");
+    }
+
     const selectedRider = results[0].id;
 
     // Fetch available deliveries for the selected rider where the status is 'shipped'
