@@ -3,14 +3,6 @@ const { promisify } = require('util');
 const query = promisify(db.query).bind(db);
 const cron = require('node-cron');
 
-const formatDate = (dateStr) => {
-  const date = new Date(dateStr);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-};
 
 const expiryChecker = async () => {
   try {
@@ -154,16 +146,18 @@ const shelfAvailableChecker = async () => {
 
 
 // Function to remove unverified users
-const removeUnverifiedUsers = () => {
-  const query = 'DELETE FROM "Users" WHERE status = \'unverified\' AND "userRole" = \'user\'';
+const removeUnverifiedUsers = async() => {
+  try{
+  const deleteQuery = 'DELETE FROM "Users" WHERE status = \'unverified\' AND "userRole" = \'user\'';
 
-  db.query(query, (err, result) => {
-    if (err) {
-      console.error('Error removing unverified users:', err.message);
-      return;
-    }
-    console.log(`Removed ${result.rowCount} unverified users.`);
-  });
+   const results = await query(deleteQuery)
+
+    console.log(`Removed ${results.rowCount} unverified users.`);
+  
+  
+}catch (err) {
+    console.error('Error removing unverified users:', err);
+  }
 };
 
 
