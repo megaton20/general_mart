@@ -1032,6 +1032,10 @@ exports.invoice = async (req, res) => {
     const  totalSum = unformattedAmount.toLocaleString("en-US");
 
     
+      // Fetch user data
+      const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+    
+      let totalUnreadNotification = parseInt(result.totalunread, 10);
 
     // Render the invoice page
     return res.render('./user/userInvoice', {
