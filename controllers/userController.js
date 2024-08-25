@@ -128,27 +128,33 @@ exports.newPhone = async(req, res) => {
       
       
           if (!isMatch) {
-            req.flash('error_msg', 'Old phone is not correct');
+            req.flash('error_msg','Old phone is not correct');
             return res.redirect('back')
           }
+
           if ((userData.Phone == newPhone)) {
             req.flash('error_msg', 'New Phone Number should be different from the Old one');
             return res.redirect('back')
           }
-
+          
           const userWithPhoneQuery = `SELECT * FROM "Users" WHERE "Phone" = $1`;
           const {rows: results} = await query(userWithPhoneQuery, [newPhone]);
-         
-          if (!(results.Phone == newPhone)) {
-            req.flash('error_msg', 'Phone number belongs to another user');
-            return res.redirect('back')
+          
+          if (results.length != 0) {
+            
+            if (!(results[0].Phone == newPhone)) {
+              req.flash('error_msg', 'Phone number belongs to another user');
+              return res.redirect('back')
+            }
           }
 
         } catch (error) {
           console.log(error);
-          req.flash('success_msg', `errorr form server while comaparing phone`);
+          req.flash('errror_msg', `errorr form server while comaparing phone`);
           return  res.redirect('/');
         }
+
+        await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[req.user.id, `Your Phone number was changed to ${newPhone}.`, 'info', false]);
 
           await query('UPDATE "Users" SET "Phone" = $1, "verify_phone" = $2 WHERE email = $3', [newPhone,false, req.user.email])
               req.flash('success_msg', 'Phone number changed successfully');
@@ -156,7 +162,7 @@ exports.newPhone = async(req, res) => {
           
         } catch (error) {
           console.log(error);
-          req.flash('success_msg', `errorr form server: ${error.message}`);
+          req.flash('errror_msg', `errorr form server: ${error.message}`);
           return  res.redirect('/login');
         }
 };
@@ -221,6 +227,7 @@ exports.newPassword = async(req, res) => {
 
 
         try {
+          await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[req.user.id, `Your Password was changed.`, 'security', false]);
 
           await query('UPDATE "Users" SET "Password" = $1 WHERE email = $2', [hashedPassword, req.user.email])
               req.flash('success_msg', 'Password changed successfully');
@@ -345,7 +352,7 @@ exports.updateUserInfo = async (req, res) => {
       lga,
       userId
     ]);
-
+    await query('INSERT INTO "notifications" ("user_id", "message", "security", "is_read") VALUES ($1, $2, $3, $4)',[req.user.id, `Your Info was changed was changed.`, 'info', false]);
     req.flash("success_msg", "User updated successfully!");
     return res.redirect(`/user/profile/`);
 
@@ -963,6 +970,7 @@ const uuidForEachSale = generateNumericUUID(10);
 
       // Clear the cart after the order is placed
       await query(`DELETE FROM "Cart" WHERE "user_id" = $1`, [userId]);
+      await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[req.user.id, `Your Order was placed.`, 'success', false]);
 
       req.flash('success_msg', `NGN ${cashbackEarned} earned!`);
 
@@ -1156,6 +1164,7 @@ exports.cancelOrder = async (req, res) => {
     await query(updateOrderProductsQuery, [updateData.status, saleId]);
 
     // Success message
+    await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[req.user.id, `Your Order was canceled.`, 'success', false]);
     req.flash('warning_msg', 'Order canceled successfully');
     res.redirect('/user');
 
@@ -1197,7 +1206,7 @@ exports.notificationScreen = async (req, res) => {
 
   try {
 
-    const {rows:userNotifications} = await query('SELECT * FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2' , [userId, false]);
+    const {rows:userNotifications} = await query('SELECT * FROM "notifications" WHERE "user_id" = $1  ORDER BY "id" DESC' , [userId]);
     // Fetch user data
     const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     

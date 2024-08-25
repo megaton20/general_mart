@@ -10,15 +10,6 @@
     <nav id="navmenu" class="navmenu mr-4">
       <ul>
         <li><a href="/user" class="">Shop Items</a></li>
-        <% if (totalUnreadNotification > 0) { %>
-          <li class="text-danger">
-              <a href="/user/notifications" class="text-warning"> Notifications</a>
-          </li>
-      <% } else { %>
-          <li>
-              <a href="/user/notifications"> Notifications</a>
-          </li>
-      <% } %>
         <li><a href="/user/profile"> Profile</a></li>
         <li><a  href="/user/search"> Search</a></li>
         <li><a  href="/user/orders"> My Orders</a></li>
@@ -26,27 +17,28 @@
         <li>|</li>
 
         <% if (1 != 1) { %>
-     
           <li class=""><a  href="/drivers/new-rider" class="" > Riders</a></li>
           <% } else { %>
-            <li class=""><a  href="/drivers/new-rider" class="" > Be A Rider</a></li>
+            <!-- <li class=""><a  href="/drivers/new-rider" class="" > Be A Rider</a></li> -->
+          <% } %>
       
-        <% } %>
-        <li class=""><a  href="/" class="" > Advertise</a></li>
-        <li ><a  href="/logout" class="text-danger"> Logout</a></li>
+        <!-- <li class=""><a  href="/" class="" > Advertise</a></li> -->
       </ul>
       <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
     </nav>
-    <a class="my-btn my-btn-outline position-relative"  href="/user/fetchCart">
+
+      <a class="my-btn position-relative mr-4"  href="/user/notifications">
+      <i class="fas fa-bell "></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning"><%=totalUnreadNotification %></span>
+      </a>
+
+    <a class="my-btn position-relative"  href="/user/fetchCart">
       <i class="fas fa-shopping-cart "></i>
       <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning"></span>
       
     </a>
-    <a class=" ml-1 my-btn position-relative" id=""  href="/user">
-      <i class="fas fa-plus "></i>
-      Sell
-      
-    </a>
+
+    <!-- <a class=" ml-1 my-btn position-relative" id=""  href="/user"><i class="fas fa-plus "></i>Sell</a> -->
   </div>
 </header>
 

@@ -3290,6 +3290,7 @@ exports.confirmOrder = async (req, res) => {
 
 
       await query(`UPDATE "Users" SET "spending" = $1, "cashback" = $2 WHERE "id" = $3`, [newUserSpending, newCashBack, customerId]);
+      await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[customerId, `Your Order Has been confirmed.`, 'success', false]);
 
       req.flash("success_msg", "Order has been confirmed! Status is set to 'waiting' (to be shipped)");
       res.redirect(`/super/view-order/${editID}`);
@@ -3351,6 +3352,7 @@ exports.shipWithCompanyDriver = async (req, res) => {
       editID
     ]);
 
+    await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[thatOrder.customer_id, `Your Order Has been Shhipped!.`, 'success', false]);
     req.flash("success_msg", "Order has been shipped! Status is set to shipped (resolved)");
     return res.redirect("/super/sales");
 
@@ -3408,6 +3410,7 @@ exports.shipWithRider = async (req, res) => {
       orderID
     ]);
 
+    await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[thatOrder.customer_id, `Your Order Has been Shhipped.`, 'success', false]);
     req.flash("success_msg", "Order has been shipped! Status is set to shipped (to be received then resolved)");
     return res.redirect(`/super/sales`);
 

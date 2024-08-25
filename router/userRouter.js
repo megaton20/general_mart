@@ -20,12 +20,12 @@ router.post('/search', ensureAuthenticated,isUser, userController.searchPost);
 router.get('/profile', ensureAuthenticated,isUser, userController.profilePage);
 
 // chnge phone number
-router.get('/change-phone', ensureAuthenticated,isUser, userController.changePhonePage);
-router.post('/reset-phone', ensureAuthenticated,isUser, userController.newPhone);
+router.get('/change-phone', ensureAuthenticated,isUser, userController.changePhonePage); 
+router.post('/reset-phone', ensureAuthenticated,isUser, userController.newPhone); //
 
 // change password
 router.get('/reset', ensureAuthenticated,isUser, userController.changePasswordPage);
-router.post('/reset-password', ensureAuthenticated,isUser, userController.newPassword);
+router.post('/reset-password', ensureAuthenticated,isUser, userController.newPassword); //
 router.get('/edit-user/:id', ensureAuthenticated,isUser, userController.editProfilePage);
 router.post('/add-profile-image/:id', ensureAuthenticated,isUser, upload.single('image'), userController.updateImage);
 router.put('/update-user-info/:id', ensureAuthenticated,isUser, userController.updateUserInfo);
@@ -35,12 +35,12 @@ router.get('/fetchCart', ensureAuthenticated,isUser,ensureBasicInformation, user
 // this is where payment button will be
 router.get('/checkout/:id', ensureAuthenticated,isUser,ensureAuthenticatedEmail, userController.checkoutScreen);
 // Submit-cart //reference is after payment for payment provider
-router.get('/order/:reference', ensureAuthenticated,isUser, userController.submitCart);
+router.get('/order/:reference', ensureAuthenticated,isUser, userController.submitCart); //
 router.get('/product-details/:id', ensureAuthenticated,isUser, userController.productDetails);
 
 router.get('/orders', ensureAuthenticated,isUser, userController.allUserOrder);
 router.get('/invoice/:id', ensureAuthenticated,isUser, userController.invoice);
-router.put('/cancel-order/:id', ensureAuthenticated,isUser, userController.cancelOrder);
+router.put('/cancel-order/:id', ensureAuthenticated,isUser, userController.cancelOrder); //
 
 
 // notifications

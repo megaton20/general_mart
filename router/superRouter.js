@@ -35,7 +35,7 @@ router.get("/all-logistic-company", ensureAuthenticated,isSuper, superController
 router.get("/edit-logistic-company/:id", ensureAuthenticated,isSuper, superController.getOneLogisticCompany);
 router.get("/all-logistics-drivers/", ensureAuthenticated,isSuper, superController.allLogisticDrivers);
 router.get("/asign-driver-to-company/:id", ensureAuthenticated,isSuper, superController.asigneToCompany);
-router.put("/add-driver-to-company/:id", ensureAuthenticated,isSuper, superController.addDriverToCompany);
+router.put("/add-driver-to-company/:id", ensureAuthenticated,isSuper, superController.addDriverToCompany); //
 
 
 
@@ -60,9 +60,9 @@ router.get("/invoice/:id", ensureAuthenticated,isSuper, superController.invoice)
 
 
 router.get("/view-order/:id", ensureAuthenticated,isSuper, superController.getSingleOrder);
-router.get("/confirm-order/:id", ensureAuthenticated,isSuper, superController.confirmOrder);
-router.post("/ship-order/:id", ensureAuthenticated,isSuper, superController.shipWithCompanyDriver);
-router.post("/ship-order-with-rider/:id", ensureAuthenticated,isSuper, superController.shipWithRider);
+router.get("/confirm-order/:id", ensureAuthenticated,isSuper, superController.confirmOrder); //
+router.post("/ship-order/:id", ensureAuthenticated,isSuper, superController.shipWithCompanyDriver); //
+router.post("/ship-order-with-rider/:id", ensureAuthenticated,isSuper, superController.shipWithRider); //
 
 // form area
 
