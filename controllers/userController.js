@@ -1076,6 +1076,7 @@ exports.allUserOrder = async (req, res) => {
     const ordersResult = await query(ordersQuery, [sessionEmail]);
     const newOrder = ordersResult.rows;
 
+    // Fetch user data
     const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
     let totalUnreadNotification = parseInt(result.totalunread, 10);
