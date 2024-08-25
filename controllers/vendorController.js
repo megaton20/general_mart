@@ -19,7 +19,6 @@ const monthModel = require("../model/getMonth");
 let presentMonth = monthModel(systemCalander, "/");
 
 const getDay = require("../model/getDay");
-const { log } = require("console");
 let presentDay = getDay(systemCalander, "/");
 
 let sqlDate = presentYear + "-" + presentMonth + "-" + presentDay;

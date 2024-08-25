@@ -18,6 +18,12 @@ router.get('/search', ensureAuthenticated,isUser, userController.searchPage);
 router.post('/search', ensureAuthenticated,isUser, userController.searchPost);
 
 router.get('/profile', ensureAuthenticated,isUser, userController.profilePage);
+
+// chnge phone number
+router.get('/change-phone', ensureAuthenticated,isUser, userController.changePhonePage);
+router.post('/reset-phone', ensureAuthenticated,isUser, userController.newPhone);
+
+// change password
 router.get('/reset', ensureAuthenticated,isUser, userController.changePasswordPage);
 router.post('/reset-password', ensureAuthenticated,isUser, userController.newPassword);
 router.get('/edit-user/:id', ensureAuthenticated,isUser, userController.editProfilePage);
@@ -37,6 +43,9 @@ router.get('/invoice/:id', ensureAuthenticated,isUser, userController.invoice);
 router.put('/cancel-order/:id', ensureAuthenticated,isUser, userController.cancelOrder);
 
 
+// notifications
+router.get('/notifications', ensureAuthenticated,isUser, userController.notificationScreen);
+router.get('/notifications/:id', ensureAuthenticated,isUser, userController.readNotification);
 
 
 
