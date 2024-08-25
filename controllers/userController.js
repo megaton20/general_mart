@@ -974,6 +974,11 @@ const uuidForEachSale = generateNumericUUID(10);
 
       req.flash('success_msg', `NGN ${cashbackEarned} earned!`);
 
+            // Fetch user data
+            const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+    
+            let totalUnreadNotification = parseInt(result.totalunread, 10);
+
     return res.render('./user/order-success', {
       pageTitle: 'successful',
       appName: appName,
@@ -983,7 +988,8 @@ const uuidForEachSale = generateNumericUUID(10);
       year: presentYear,
       saleId:uuidForEachSale,
       cashback:cashbackEarned,
-      PIN:privatePin
+      PIN:privatePin,
+      totalUnreadNotification
     });
 
 
