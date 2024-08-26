@@ -22,7 +22,7 @@
                             <h2 class="mb-4">Notifications</h2>
                           
                             <% userNotifications.forEach(function(data) { %>
-                              <div class="card mb-3 my-box-shadow">
+                              <div class="card mb-3 p-2 my-box-shadow">
                                 <div class="card-body">
                                   <div class="row align-items-center">
                                     <div class="col-10">
@@ -42,6 +42,8 @@
                                       <% } else { %>
                                         <span class="badge bg-secondary">Read</span>
                                       <% } %>
+
+                                      <a href="/user/notifications/<%=data.id%>">  <i class="fas fa-trash"></i> </a>
                                     </div>
                                   </div>
                                 </div>

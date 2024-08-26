@@ -174,6 +174,137 @@ exports.getAdminWelcomePage = async (req, res) => {
 };
 
 
+exports.gettAllPriceRegions = async (req, res) => {
+  const userFirstName = req.user.First_name;
+  const userLastName = req.user.Last_name;
+
+  try {
+    // Query to fetch all logistic companies from the "Logistics" table
+    const {rows:results} = await query(`SELECT * FROM "shipping_regions"`);
+
+
+    // Render the view with the fetched data
+    return res.render("./super/price-region-table", {
+      pageTitle: "All price and region",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      results,
+    });
+
+  } catch (error) {
+    req.flash("error_msg", `Error retrieving logistic companies: ${error.message}`);
+    return res.redirect("/super");
+  }
+};
+
+exports.getAddRegions = async (req, res) => {
+  const userFirstName = req.user.First_name;
+  const userLastName = req.user.Last_name;
+
+  try {
+    // Query to fetch all logistic companies from the "Logistics" table
+
+    // Render the view with the fetched data
+    return res.render("./super/price-region-form", {
+      pageTitle: "create price and region",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      stateData,
+
+    });
+
+  } catch (error) {
+    req.flash("error_msg", `Error retrieving logistic companies: ${error.message}`);
+    return res.redirect("/super");
+  }
+};
+
+exports.createNewRegion = async (req, res) => {
+  const { state, lga, fee } = req.body;
+
+  // Check for missing fields
+  if (!(state && lga && fee)) {
+    req.flash("error_msg", "Enter all fields before submitting");
+    return res.redirect("/super");
+  }
+
+  try {
+    // Check if discount with the same name already exists
+    const checkResult = await query(`SELECT * FROM "shipping_regions" WHERE "state" = $1 AND "lga" = $2`, [state, lga]);
+
+    if (checkResult.rows.length <= 0) {
+      // Insert new discount
+      await query(`INSERT INTO "shipping_regions" ("state", "lga", "fee") VALUES ($1, $2, $3)`, 
+      [state, lga, fee]);
+
+      req.flash("success_msg", `Added successfully!`);
+      return res.redirect("/super/all-regions");
+    }
+
+    req.flash("error_msg", `"${state}/${lga}" already exists!`);
+    return res.redirect("back");
+  } catch (error) {
+    req.flash("error_msg", `${error.message}`); // Changed to error.message for better error handling
+    return res.redirect("/super");
+  }
+};
+
+
+exports.getOneRegions = async (req, res) => {
+
+  const userFirstName = req.user.First_name;
+  const userLastName = req.user.Last_name;
+
+  try {
+
+    const {rows:results} = await query(`SELECT * FROM "shipping_regions" WHERE "id" = $1`, [req.params.id]);
+    // Render the view with the fetched data
+    return res.render("./super/price-region-edit", {
+      pageTitle: "create price and region",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      stateData,
+      results
+    });
+
+  } catch (error) {
+    req.flash("error_msg", `Error retrieving logistic companies: ${error.message}`);
+    return res.redirect("/super");
+  }
+};
+
+exports.updateRegion = async (req, res) => {
+  const {  fee } = req.body;
+
+  // Check for missing fields
+  if (!(fee)) {
+    req.flash("error_msg", "Enter all fields before submitting");
+    return res.redirect("/super");
+  }
+
+  try {
+
+      await query(`UPDATE "shipping_regions" SET  "fee" = $1 WHERE "id" = $2`, [ fee, req.params.id]);
+      
+      req.flash("success_msg", `Added successfully!`);
+      return res.redirect("/super/all-regions");
+
+
+  } catch (error) {
+    req.flash("error_msg", `${error.message}`); // Changed to error.message for better error handling
+    return res.redirect("/super");
+  }
+};
+
 // All employees table
 exports.getAllEmployees = async (req, res) => {
   const userFirstName = req.user.First_name;

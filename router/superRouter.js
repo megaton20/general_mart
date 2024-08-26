@@ -30,6 +30,12 @@ router.get("/new-orders", ensureAuthenticated,isSuper, superController.getAllOrd
 router.get("/all-canceled-order", ensureAuthenticated,isSuper, superController.getAllCanceledOrders);
 router.get("/view-canceled/:id", ensureAuthenticated,isSuper, superController.getOneCanceledOrder);
 
+// region and price delivery
+router.get("/all-regions/", ensureAuthenticated,isSuper, superController.gettAllPriceRegions);
+router.get("/create-region", ensureAuthenticated,isSuper, superController.getAddRegions);
+router.post("/create-region", ensureAuthenticated,isSuper, superController.createNewRegion);
+router.get("/edit-region/:id", ensureAuthenticated,isSuper, superController.getOneRegions);
+router.put("/edit-region/:id", ensureAuthenticated,isSuper, superController.updateRegion);
 
 router.get("/all-logistic-company", ensureAuthenticated,isSuper, superController.getAllLogisticCompany);
 router.get("/edit-logistic-company/:id", ensureAuthenticated,isSuper, superController.getOneLogisticCompany);

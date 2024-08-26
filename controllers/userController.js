@@ -255,7 +255,10 @@ exports.editProfilePage = async (req, res) => {
     const userResult = await query(userQuery, [updateId]);
     const userData = userResult.rows[0];
 
-   const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+   
+  const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+    
+  let totalUnreadNotification = parseInt(result.totalunread, 10);
     // Render the edit profile page
     return res.render('./user/userEditPage', {
       pageTitle: 'Edit Profile',
@@ -352,7 +355,7 @@ exports.updateUserInfo = async (req, res) => {
       lga,
       userId
     ]);
-    await query('INSERT INTO "notifications" ("user_id", "message", "security", "is_read") VALUES ($1, $2, $3, $4)',[req.user.id, `Your Info was changed was changed.`, 'info', false]);
+    await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[req.user.id, `Your Info was changed was changed.`, 'security', false]);
     req.flash("success_msg", "User updated successfully!");
     return res.redirect(`/user/profile/`);
 
@@ -735,10 +738,11 @@ exports.checkoutScreen = async (req, res) => {
     }, 0);
 
     // Calculate the shipping fee based on user's LGA (Local Government Area)
-    const shippingFee = calculateShippingFee(userData.lga); 
+    const shippingFee = await calculateShippingFee(userData.lga); 
+
 
     // Calculate total amount to be paid
-    const customerToPay = shippingFee + totalSubtotal;
+    const customerToPay = parseFloat(shippingFee) + totalSubtotal;
 
     const formattedCustomerToPay = customerToPay.toLocaleString("en-US");
 
@@ -781,7 +785,7 @@ exports.submitCart = async (req, res) => {
 
         // Generate Invoice Email Function
       const generateInvoiceEmail = (userData, transactionData, itemsList, privatePin, totalSubtotal, shippingFee, cashbackEarned) => {
-        const totalAmount = totalSubtotal + shippingFee;
+        const totalAmount = parseFloat(totalSubtotal) + parseFloat(shippingFee);
 
         return `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd;">
@@ -793,12 +797,12 @@ exports.submitCart = async (req, res) => {
 
             <!-- User Information -->
             <div style="margin-bottom: 20px;">
-              <p style="margin:0px"><strong>Customer Name:</strong> ${userData.First_name} ${userData.Last_name}</p>
-              <p style="margin:0px"><strong>Customer Email:</strong> ${userData.email}</p>
-              <p style="margin:0px"><strong>Customer Address:</strong> ${userData.Address}</p>
-              <p style="margin:0px"><strong>Customer State:</strong> ${userData.state}</p>
-              <p style="margin:0px"><strong>Customer LGA:</strong> ${userData.lga}</p>
-              <p style="margin:0px"><strong>Customer Phone:</strong> ${userData.Phone}</p>
+              <p><strong>Customer Name:</strong> ${userData.First_name} ${userData.Last_name}</p>
+              <p><strong>Customer Email:</strong> ${userData.email}</p>
+              <p><strong>Customer Address:</strong> ${userData.Address}</p>
+              <p><strong>Customer State:</strong> ${userData.state}</p>
+              <p><strong>Customer LGA:</strong> ${userData.lga}</p>
+              <p><strong>Customer Phone:</strong> ${userData.Phone}</p>
             </div>
 
             <!-- Transaction Details -->
@@ -826,8 +830,8 @@ exports.submitCart = async (req, res) => {
             <!-- Total and Shipping -->
             <div style="text-align: right; margin-bottom: 20px;">
               <p><strong>Subtotal:</strong> NGN ${totalSubtotal.toFixed(2)}</p>
-              <p><strong>Shipping Fee:</strong> NGN ${shippingFee.toFixed(2)}</p>
-              <p><strong>Total Amount:</strong> NGN ${totalAmount.toFixed(2)}</p>
+              <p><strong>Shipping Fee:</strong> NGN ${shippingFee}</p>
+              <p><strong>Total Amount:</strong> NGN ${totalAmount}</p>
             </div>
 
             <!-- Cashback Earned -->
@@ -837,7 +841,7 @@ exports.submitCart = async (req, res) => {
 
             <!-- Delivery PIN -->
             <div style="text-align: center; margin-bottom: 20px;">
-              <p style="color:red "><strong>Your Delivery PIN:</strong> ${privatePin}</p>
+              <p style="color:red "><strong>Your Confirmation PIN:</strong> ${privatePin}</p>
               <p style="color:#41afa5">Please provide this PIN to the delivery personnel to confirm your order.</p>
             </div>
 
@@ -852,14 +856,14 @@ exports.submitCart = async (req, res) => {
 
   const generateNumericUUID = (length) => {
     return Array.from({ length }, () => Math.floor(Math.random() * 10)).join('');
-};
+  };
 
 // Example usage:
-const uuidForEachSale = generateNumericUUID(10);
+    const uuidForEachSale = generateNumericUUID(10);
 
-  const generateSecurePin = (length) => {
-      return crypto.randomInt(0, 10 ** length).toString().padStart(length, '0');
-  };
+    const generateSecurePin = (length) => {
+        return crypto.randomInt(0, 10 ** length).toString().padStart(length, '0');
+    };
 
   const privatePin = generateSecurePin(6); // Generates a 6-digit PIN
 
@@ -884,9 +888,9 @@ const uuidForEachSale = generateNumericUUID(10);
       // Calculate the total subtotal
       const totalSubtotal = cartItems.reduce((accumulator, item) => accumulator + parseFloat(item.subtotal), 0);
 
-      const shippingFee = calculateShippingFee(userData.lga); // Assuming calculateShippingFee is defined
+      const shippingFee = await calculateShippingFee(userData.lga); // Assuming calculateShippingFee is defined
       const cashbackEarned = calculateCashback(totalSubtotal); // Assuming calculateCashback is defined
-
+      
       // Insert data into Orders table
       const insertOrderQuery = `
           INSERT INTO "Orders" (
@@ -1265,5 +1269,20 @@ exports.readNotification = async (req, res) => {
     console.error(`Error during checkout: ${error}`);
     req.flash('error_msg', 'An error occurred ');
     return res.redirect('/user');
+  }
+};
+
+
+exports.deleteNotification = async (req, res) => {
+  const editID = req.params.id;
+
+  try {
+    // Use a parameterized query with $1 for PostgreSQL
+    await query(`DELETE FROM "notifications" WHERE "id" = $1`, [editID]);
+    return res.redirect("back");
+
+  } catch (error) {
+    req.flash('error_msg', `Error from server: ${error.message}`);
+    return res.redirect("/user");
   }
 };

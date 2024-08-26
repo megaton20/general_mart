@@ -46,6 +46,7 @@ router.put('/cancel-order/:id', ensureAuthenticated,isUser, userController.cance
 // notifications
 router.get('/notifications', ensureAuthenticated,isUser, userController.notificationScreen);
 router.get('/notifications/:id', ensureAuthenticated,isUser, userController.readNotification);
+router.delete('/notifications/:id', ensureAuthenticated,isUser, userController.deleteNotification);
 
 
 

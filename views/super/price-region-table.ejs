@@ -1,0 +1,89 @@
+
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include ('../partials/superSidebar') %>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include ('../partials/topbar') %>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <%- include ('../partials/messages') %>
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Shipping Regions </h1>
+                    <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-region">Add Regions</a>
+
+                    <!-- DataTales Example -->
+                    <div class=" mb-4">
+                        <% if(results.length <= 0){ %>
+                            <div class="card-body">
+                                <h1>No Record Found !</h1>  
+                            </div> 
+                            <% } else{ %> 
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                  <th>Id</th>
+                                                  <th>State</th>
+                                                  <th>LGA</th>
+                                                  <th>Fee</th>
+                                                  <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                        
+                                            <tbody>
+                                          
+                                                <% results.forEach(function(data) {%>
+                                                    <tr>
+                                                        <td><%= data['id'] %></td>
+                                                        <td><%=data['state'] %> </td>                                                  
+                                                        <td><%=data['lga'] %> </td>                                                  
+                                                        <td><%=data['fee'] %> </td>  
+                                                        <td><a href="/super/edit-region/<%=data['id']%>" class="my-btn-outline">edit</a></td>                                                
+                                                   </tr> 
+                                                   
+                                                       <% }) %>
+                                                </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <% } %>
+                                
+                                
+                      
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include ('../partials/footer') %>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+

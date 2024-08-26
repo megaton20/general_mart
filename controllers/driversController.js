@@ -85,18 +85,23 @@ exports.getAdminWelcomePage = async (req, res) => {
   }
 };
 
-exports.newRider = (req, res) => {
+exports.newRider = async (req, res) => {
     
   let userActive= false
   if (req.user) {
     userActive = true
   }
 
+  const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+    
+  let totalUnreadNotification = parseInt(result.totalunread, 10);
+
   res.render('./drivers/riderRegisterForm',{
   pageTitle:`Rregister your company to  ${appName} `,
   stateData,
   appName,
   userActive,
+  totalUnreadNotification,
   })
 }
 
