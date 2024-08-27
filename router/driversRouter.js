@@ -19,7 +19,7 @@ router.post("/register",ensureAuthenticated,ensureBasicInformation,ensureAuthent
 
 
 // all-deliveries
-// router.get("/available-deliveries", ensureAuthenticated,isDriver,ensureBasicInformation,ensureAuthenticatedEmail, driversController.allPendingDelivery);
+router.get("/available-deliveries", ensureAuthenticated,isDriver,ensureBasicInformation,ensureAuthenticatedEmail, driversController.allPendingDelivery);
 router.get("/my-deliveries", ensureAuthenticated,isDriver,ensureBasicInformation,ensureAuthenticatedEmail, driversController.myRides);
 router.get("/deliveries/:id", ensureAuthenticated,isDriver,ensureBasicInformation,ensureAuthenticatedEmail, driversController.oneDelivery);
 
