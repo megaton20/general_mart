@@ -1,0 +1,57 @@
+
+<style>
+  #map {
+    height: 500px;
+    width: 100%;
+  }
+
+</style>
+
+<%- include('./partials/navbar') %>
+  <div class="container">
+
+    
+    
+    <div id="map" style="height: 400px; width: 100%;"></div>
+    
+  </div>
+  
+  <%- include ('../partials/openFooter')%>
+
+
+  
+  <script>
+    let map, marker;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 8,
+      });
+
+      // Allow the user to click on the map to pin their location
+      google.maps.event.addListener(map, 'click', function(event) {
+        placeMarker(event.latLng);
+      });
+    }
+
+    function placeMarker(location) {
+      if (marker) {
+        marker.setPosition(location);
+      } else {
+        marker = new google.maps.Marker({
+          position: location,
+          map: map
+        });
+      }
+
+      // Send the coordinates to your server
+      fetch('/save-location', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id: 1, lat: location.lat(), lng: location.lng() }), // Replace `1` with the actual user ID
+      });
+    }
+  </script>

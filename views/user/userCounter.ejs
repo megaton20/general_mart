@@ -19,13 +19,10 @@
       
       
       <div class="container">
-
         <div class="row">
-
           <div class="col-lg-4 fixed-col" data-aos="fade-right" data-aos-delay="100" >
 
             <div class="service-box mb-4">
-              <h4>Category List</h4>
               <div class="services-list">
                 <% allCategory.forEach(data => { %>
                 <a href="/user/category/<%= data.Category_name %>#product-section" class=" categoryButton" data-category="<%= data.Category_name %>">
@@ -34,7 +31,8 @@
                
                 <% }); %>
               </div>
-            </div><!-- End Services List -->
+            </div>
+            
 
           </div>
 

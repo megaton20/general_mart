@@ -27,6 +27,7 @@ const calculateShippingFee = require('../model/shippingFee');
 
 
 const calculateCashback = require('../model/cashback');
+const { route } = require('../router/userRouter');
 
 
 const appName = `General Mart`  
@@ -1284,5 +1285,48 @@ exports.deleteNotification = async (req, res) => {
   } catch (error) {
     req.flash('error_msg', `Error from server: ${error.message}`);
     return res.redirect("/user");
+  }
+};
+
+
+
+// Route to render user map page (where user can pin their location)
+exports.getMap = async (req, res) => {
+
+  const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+    
+  let totalUnreadNotification = parseInt(result.totalunread, 10);
+
+  // Render the checkout page
+  res.render('./user/user-map', {
+    pageTitle: "map",
+    appName: process.env.APP_NAME,
+    totalUnreadNotification,
+  });
+};
+
+
+
+
+// Route to save user location
+exports.saveLocation = async (req, res) => {
+
+  const { lat, lng } = req.body;
+
+  if (!(lat && lng)) {
+      req.flash('error_msg', `Error: Missing data `);
+      return res.redirect('back');
+  }
+  try {
+    // Insert new email
+    const insertQuery = 'INSERT INTO user_locations (user_id, latitude, longitude) VALUES ($1, $2, $3) ON CONFLICT (user_id) DO UPDATE SET latitude = $2, longitude = $3';
+    await query(insertQuery, [req.user.id, lat, lng]);
+
+    req.flash('success_msg', `Location saved`);
+    return res.redirect('back');
+  } catch (error) {
+    console.log(error);
+    req.flash('error_msg', 'Error from database');
+    return res.redirect('back');
   }
 };

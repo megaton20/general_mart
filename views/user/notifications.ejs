@@ -22,32 +22,40 @@
                             <h2 class="mb-4">Notifications</h2>
                           
                             <% userNotifications.forEach(function(data) { %>
-                              <div class="card mb-3 p-2 my-box-shadow">
+                              <div class="card mb-3 p-3 my-box-shadow border-0">
                                 <div class="card-body">
                                   <div class="row align-items-center">
                                     <div class="col-10">
                                       <a href="/user/notifications/<%=data.id %>" class="text-decoration-none text-dark">
                                         <p class="mb-1">
-                                          <i class="fas fa-bell"></i> <%= data.message %>
+                                          <i class="fas fa-bell me-2"></i> <%= data.message %>
                                         </p>
                                         <small class="text-muted">
                                           <%= new Date(data.created_at).toLocaleString() %>
                                         </small>
                                       </a>
                                     </div>
-                                    <div class="col-2 text-right">
-                                      <!-- Status -->
+                                    <div class="col-2 text-end">
+                                      <!-- Status Badge -->
                                       <% if (data.is_read == false) { %>
                                         <span class="badge bg-warning text-dark">Unread</span>
                                       <% } else { %>
                                         <span class="badge bg-secondary">Read</span>
-                                      <% } %>
-
-                                      <a href="/user/notifications/<%=data.id%>">  <i class="fas fa-trash"></i> </a>
+                                        
+                                        <!-- Delete Form -->
+                                        <form action="/user/notifications/<%=data.id%>" method="POST" class="d-inline mt-2">
+                                          <input type="hidden" name="_method" value="DELETE">
+                                          <button type="submit" class="btn btn-link p-0 text-danger" title="Delete Notification">
+                                            <i class="fas fa-trash"></i>
+                                          </button>
+                                        </form>
+                                        <% } %>
                                     </div>
                                   </div>
                                 </div>
                               </div>
+                              
+                              
                             <% }) %>
                           </div>
 

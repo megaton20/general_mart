@@ -49,5 +49,8 @@ router.get('/notifications/:id', ensureAuthenticated,isUser, userController.read
 router.delete('/notifications/:id', ensureAuthenticated,isUser, userController.deleteNotification);
 
 
+// gps and map servers
+router.get('/location/', ensureAuthenticated,isUser, userController.getMap);
+router.post('/save-location/', ensureAuthenticated,isUser, userController.saveLocation);
 
 module.exports = router;

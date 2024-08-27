@@ -293,8 +293,16 @@ exports.oneDelivery = async (req, res) => {
       req.flash("error_msg", "Customer not found");
       return res.redirect("back");
     }
-
+    
     const customerData = customerDataResults[0];
+    const { rows: gpsData } = await query(`SELECT * FROM "user_locations" WHERE "user_id" = $1`, [orderToComplete.customer_id]);
+
+    if (gpsData.length === 0) {
+      req.flash("error_msg", "Customer location not found");
+      return res.redirect("back");
+    }
+  
+    const userLocation = gpsData[0];
 
     // Render the delivery details page
     return res.render("./drivers/driversDeliveryDetails", {
@@ -307,13 +315,17 @@ exports.oneDelivery = async (req, res) => {
       orderedProducts,
       orderToComplete,
       totalAmountToPayOnDelivery,
-      customerData
+      customerData,
+      userLocation
     });
 
   } catch (error) {
     req.flash("error_msg", `Error: ${error.message}`);
     return res.redirect("back");
   }
+
+
+
 };
 
 

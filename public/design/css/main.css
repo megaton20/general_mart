@@ -813,6 +813,18 @@ section,
 # Service Details Section
 --------------------------------------------------------------*/
 
+.service-details .services-list {
+  display: grid;
+  grid-template-columns: 1fr; /* Default to a single column */
+
+}
+
+@media (max-width: 990px) {
+  .service-details .services-list {
+    gap: 8px; /* Space between items */
+    grid-template-columns: repeat(2, 1fr)
+  }
+}
 
 
 .service-details .service-box {

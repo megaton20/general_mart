@@ -1,6 +1,14 @@
 
 
-
+<style>
+  #map {
+    height: 500px;
+    width: 100%;
+  }
+  #eta {
+    margin-top: 10px;
+  }
+</style>
 
 
     <!-- Content Wrapper -->
@@ -77,8 +85,12 @@
                               </div>
     
     
-                        
-    
+                        <div class="col-lg-12">
+                          <h3>Track User and Get Directions</h3>
+                          <div id="map"></div>
+                          <p id="eta">Estimated Time of Arrival: Calculating...</p>
+                        </div>
+                        </div>    
     
                             </div>
                           </div>
@@ -138,3 +150,60 @@
                 </div>
                 </div>
                 <%- include ('../partials/openFooter')%>
+
+
+
+                  
+    <script>
+      let map, directionsService, directionsRenderer, marker;
+  
+      function initMap() {
+        directionsService = new google.maps.DirectionsService();
+        directionsRenderer = new google.maps.DirectionsRenderer();
+  
+        const initialLocation = { lat: <%= userLocation.latitude %>, lng: <%= userLocation.longitude %> };
+  
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: initialLocation,
+          zoom: 14,
+        });
+  
+        directionsRenderer.setMap(map);
+  
+        // Optionally, add a marker at the user's location
+        marker = new google.maps.Marker({
+          position: initialLocation,
+          map: map,
+        });
+  
+        // Automatically get directions and ETA
+        calculateAndDisplayRoute();
+  
+        // Refresh the location and ETA every 5 seconds
+        setInterval(calculateAndDisplayRoute, 5000);
+      }
+  
+      function calculateAndDisplayRoute() {
+        const userLocation = { lat: <%= userLocation.latitude %>, lng: <%= userLocation.longitude %> };
+        const destination = { lat: YOUR_DESTINATION_LATITUDE, lng: YOUR_DESTINATION_LONGITUDE }; // Replace with the actual destination
+  
+        directionsService.route(
+          {
+            origin: userLocation,
+            destination: destination,
+            travelMode: 'DRIVING',
+          },
+          (response, status) => {
+            if (status === 'OK') {
+              directionsRenderer.setDirections(response);
+  
+              // Display the ETA
+              const leg = response.routes[0].legs[0];
+              document.getElementById('eta').textContent = `Estimated Time of Arrival: ${leg.duration.text}`;
+            } else {
+              console.error('Directions request failed due to ' + status);
+            }
+          }
+        );
+      }
+    </script>
