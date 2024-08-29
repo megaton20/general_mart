@@ -539,11 +539,8 @@ a {
   }
   .scrolling-col{
     margin: 0;
-  overflow-y:scroll ;
-  height: 900px;
-  padding-bottom: 40px;
+    padding-bottom: 40px;
   }
-
 
 .truncate-container {
   width: 100%; /* Set a fixed width for demonstration */
