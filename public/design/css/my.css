@@ -498,9 +498,7 @@ a {
   justify-content: space-between;
   overflow-x: scroll;
 }
-.ads-banner {
-  /* margin-right: 1px; */
-}
+
 .ads-banner img{
   height: 100%;
   width: 300px;
@@ -541,8 +539,8 @@ a {
   }
   .scrolling-col{
     margin: 0;
-  /* overflow-y:scroll ; */
-  /* height: 900px; */
+  overflow-y:scroll ;
+  height: 900px;
   padding-bottom: 40px;
   }
 

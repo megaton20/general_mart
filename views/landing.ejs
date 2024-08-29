@@ -84,7 +84,7 @@
   </div>
 
   <div class="products container mt-5 mb-5">
-    <div class="card">
+    <div class="service-box">
       <div class="card-header">Our showcase items</div>
       <div class="card-body ">
         <div class="row">
@@ -92,7 +92,7 @@
           <% showcaseItem.forEach(data => { %>
 
           <div class="col-md-4 col-lg-3 col-6">
-            <div class="mt-4 card border-1">
+            <div class="mt-4 my-box-shadow border-1">
               <a href="/user/product-details/<%= data.id%>" class="card-body">
                 <div class="item-image-container d-flex justify-content-center align-items-center">
                   <img src="/uploads/<%= data.image %>" class="card-img-top rounded-4" alt="<%= data.image %>" style="max-width: 100%; height: auto;">
@@ -101,7 +101,7 @@
                   <p class="text-truncate"><%= data.ProductName%></p>
                 </div>
               </a>
-              <div class="card-footer p-1 d-flex justify-content-center align-items-center">
+              <div class=" p-1 d-flex justify-content-center align-items-center">
                 
                 <% if (userActive) { %>
                   <a href="/user/product-details/<%= data.id%>" style="" class="my-btn my-btn-outline w-100 m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>">Add to Cart ₦<small class="item-price"><%= data.UnitPrice %></small></a> 

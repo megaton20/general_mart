@@ -25,7 +25,6 @@
           <div class="col-lg-4 fixed-col" data-aos="fade-right" data-aos-delay="100" >
 
             <div class="service-box mb-4">
-              <h4>Category List</h4>
               <div class="services-list">
                 <% allCategory.forEach(data => { %>
                   <a href="/user/category/<%= data.Category_name %>#product-section" class=" categoryButton" data-category="<%= data.Category_name %>">
@@ -39,14 +38,13 @@
           </div>
 
 
-          <div class="col-lg-8 ml-0 scrolling-col" id="product-section">
-            <div class="card">
-              <div class="card-header">Our showcase items</div>
-              <div class="card-body ">
+          <div class="col-lg-8 ml-0 " id="product-section">
+            <div class="service-box scrolling-col">
+              <h5 >Our showcase items</h5>
                 <div class="row">
                   <% products.forEach(item => { %>
                     <div class="col-6 mt-4' col-md-4 col-lg-3">
-                      <div class="card mt-4 border-1">
+                      <div class="my-box-shadow mt-4 border-1">
                         <a href="/user/product-details/<%=item.id%>"> 
                         <div class="card-body">
                             <div class="item-image-container">
@@ -63,11 +61,8 @@
                           </div>
                         </div>
                     </div>
-                    
                   <% }) %>
                 </div>
-              </div>
-              <div class="card-footer">
                 <nav aria-label="Page navigation mt-4">
                   <ul class="pagination">
                   
@@ -83,17 +78,9 @@
               </nav><!-- End Pagination with icons -->
 
               </div>
-              </div>
 
           </div>
              
-
-
-        
-
-                     
-                <%- include('./partials/info') %>
-
       </div>
 
     </section><!-- /Service Details Section -->

@@ -36,14 +36,13 @@
 
           </div>
 
-          <div class="col-lg-8 ml-0 scrolling-col" id="product-section">
-            <div class="card">
-              <div class="card-header">Our showcase items</div>
-              <div class="card-body ">
+          <div class="col-lg-8 ml-0 " id="product-section">
+            <div class=" service-box scrolling-col">
+              <h5 >Our showcase items</h5>
                 <div class="row">
                   <% showcaseItem.forEach(data => { %>
                     <div class=" col-md-4 col-lg-3 col-6">
-                      <div class="mt-4 card  border-1 ">
+                      <div class="mt-4 my-box-shadow  border-1 ">
                           <a href="/user/product-details/<%= data.id%>">
                           <div class="card-body">
                             <div class="item-image-container ">
@@ -54,16 +53,14 @@
                             </div> 
                           </div>
                           </a>
-                            <div class="card-footer p-1 d-flex justify-content-center align-items-center">
+                            <div class=" p-1 d-flex justify-content-center align-items-center">
                                 <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>" onclick="handleButtonClick(this)">Buy   ₦<small class="item-price"><%= data.UnitPrice %>.00</small></button> 
                             </div>
                       </div>
                     </div>
                   <% }); %>
                 </div>
-              </div>
-              <div class="card-footer p-1">
-               
+
               <nav  class="container mt-2">
                 <ul class="pagination">
                 
@@ -79,13 +76,7 @@
             </nav><!-- End Pagination with icons -->
 
             </div>
-
-            </div>
           </div>
-
-                      
-                <%- include('./partials/info') %>
-
       </div>
       </div>
     </section><!-- /Service Details Section -->

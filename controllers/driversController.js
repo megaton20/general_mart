@@ -243,10 +243,7 @@ exports.myRides = async (req, res) => {
     const selectedRider = results[0].id;
 
     // Fetch available deliveries for the selected rider where the status is 'shipped'
-    const { rows: availableDeliveriesResults } = await query(
-      `SELECT * FROM "Orders" WHERE "rider_id" = $1 AND "status" = 'shipped'`,
-      [selectedRider]
-    );
+    const { rows: availableDeliveriesResults } = await query(`SELECT * FROM "Orders" WHERE "rider_id" = $1 AND "status" = 'shipped'`,[selectedRider]);
 
     // Render the assigned delivery page
     return res.render("./drivers/driversAsignedDelivery", {

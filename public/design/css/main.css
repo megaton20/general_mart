@@ -822,7 +822,8 @@ section,
 @media (max-width: 990px) {
   .service-details .services-list {
     gap: 8px; /* Space between items */
-    grid-template-columns: repeat(2, 1fr)
+    grid-template-columns: repeat(2, 1fr);
+    font-size: 12px;
   }
 }
 

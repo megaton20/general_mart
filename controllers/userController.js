@@ -27,7 +27,6 @@ const calculateShippingFee = require('../model/shippingFee');
 
 
 const calculateCashback = require('../model/cashback');
-const { route } = require('../router/userRouter');
 
 
 const appName = `General Mart`  
@@ -47,10 +46,7 @@ exports.profilePage = async (req, res) => {
 
   try {
     // Fetch ranks
-    const ranksQuery = `
-      SELECT name, threshold 
-      FROM "ranks"
-    `;
+    const ranksQuery = `SELECT name, threshold FROM "ranks"`;
     const ranksResult = await query(ranksQuery);
     const ranks = ranksResult.rows.map(rank => ({
       name: rank.name,
@@ -58,11 +54,7 @@ exports.profilePage = async (req, res) => {
     }));
 
     // Fetch user data
-    const userDataQuery = `
-      SELECT * 
-      FROM "Users" 
-      WHERE "id" = $1
-    `;
+    const userDataQuery = `SELECT * FROM "Users" WHERE "id" = $1`;
     const userDataResult = await query(userDataQuery, [userId]);
     const userData = userDataResult.rows[0];
 

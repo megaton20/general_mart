@@ -42,15 +42,14 @@
           </div>
 
 
-                <div class="col-lg-8 ml-0 scrolling-col" id="product-section">
-                  <div class="card">
-                    <div class="card-header"><%= products.length > 0 ? products[0].category : "no item" %></div>
-                    <div class="card-body">
+                <div class="col-lg-8 ml-0 " id="product-section">
+                  <div class="service-box scrolling-col">
+                    <h5><%= products.length > 0 ? products[0].category : "no item" %></h5>
                       <div class="row">
 
                         <% products.forEach(item => { %>
                           <div class="col-6 mt-4' col-md-4 col-lg-3">
-                            <div class="card mt-4 border-1">
+                            <div class="my-box-shadow mt-4 border-1">
                               <a href="/user/product-details/<%=item.id%>"> 
                               <div class="card-body">
                                   <div class="item-image-container">
@@ -62,7 +61,7 @@
                                 </div>
                           
                                 </a> 
-                                <div class="card-footer p-1">
+                                <div class=" p-1">
                                   <button style="width:100%" class="my-btn add-to-cart p-1 m-0" data-id="<%=item.id%>"  data-name="<%=item.ProductName %>" data-price="<%=item.UnitPrice %>" data-max="<%=item.total_on_shelf %>" data-image="<%=item.image%>" onclick="handleButtonClick(this)">Buy   ₦<small class="item-price"><%=item.UnitPrice%>.00</small></button>
                                 </div>
                               </div>
@@ -70,10 +69,6 @@
                           
                       <% }) %>
                       </div>
-                    </div>
-
-                    <div class="card-footer">
-
                       <nav aria-label="Page navigation mt-4">
                         <ul class="pagination">
       
@@ -88,17 +83,8 @@
                         </ul>
       
                     </nav><!-- End Pagination with icons -->
-      
-                    </div>
                   </div>
                 </div>
-
-
-
-        
-
-                     
-                <%- include('./partials/info') %>
 
       </div>
 
