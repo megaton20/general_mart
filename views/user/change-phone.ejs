@@ -1,39 +1,49 @@
 
 
 <%- include('./partials/navbar') %>
-
-
-<br>
-<br>
-
 <div class="container ">
-				  <%- include ('../partials/messages') %>
+<%- include ('../partials/messages') %>
+
+<div class="row">
+	<div class="col-lg-4 container mb-4">
+   
+		<!-- actions nav -->
+		 <div class="profile-nav mt-3 ">
+		   <a class="" href="/user/profile"><i class="bi bi-arrow-left-circle"></i> Back</a>
+		 </div>
+	 </div>
+
+	 <div class="col-lg-8" style="font-size: 12px;">
              
-				<div class="row justify-content-center">
-					<div class="col-lg-6 col-xl-6 col-xxl-4">
-		
-	
-							<div class=" border-1  m-3">
-								
-								<div class="card-body p-4" style="margin-top: 50px;" >
+		<div class="row justify-content-center">
+			<div class="col-lg-6 col-xl-6 col-xxl-4">
 
-									<form action="/user/reset-phone" method="post">
-										<div class="form-group">
-											<input type="phone" class="form-control mt-2 bg-transparent text-dark" placeholder="Enter Old phone" name="oldPhone">
-										</div>
-										<div class="form-group">
-											<input type="phone" class="form-control mt-2 bg-transparent text-dark" placeholder="Enter New phone" name="newPhone">
-										</div>
-					
-										<button class=" my-btn mt-2 m-0 " style="width: 100%;" type="submit">Reset Phone</button>
-									</form>
 
+					<div class=" border-1  m-3">
+						
+						<div class="card-body p-4" style="margin-top: 50px;" >
+
+							<form action="/user/reset-phone" method="post">
+								<div class="form-group">
+									<input type="phone" class="form-control mt-2 bg-transparent text-dark" placeholder="Enter Old phone" name="oldPhone">
 								</div>
-		
-							</div>
-		
-		
+								<div class="form-group">
+									<input type="phone" class="form-control mt-2 bg-transparent text-dark" placeholder="Enter New phone" name="newPhone">
+								</div>
+			
+								<button class=" my-btn mt-2 m-0 " style="width: 100%;" type="submit">Reset Phone</button>
+							</form>
+
+						</div>
+
 					</div>
-				</div>
+
+
 			</div>
+		</div>
+	</div>
+</div>
+<br>
+<br>
+</div>
 		

@@ -53,4 +53,10 @@ router.delete('/notifications/:id', ensureAuthenticated,isUser, userController.d
 router.get('/location/', ensureAuthenticated,isUser, userController.getMap);
 router.post('/save-location/', ensureAuthenticated,isUser, userController.saveLocation);
 
+
+// cashback airtime
+router.get('/buy-airtime', ensureAuthenticated,isUser, userController.getAirtimePage);
+router.post('/buy-airtime/', ensureAuthenticated,isUser, userController.buyAirtime);
+
+
 module.exports = router;

@@ -5,6 +5,17 @@
 <div class="container">
   <%- include ('../partials/messages') %>
 
+  <div class="row">
+    <div class="col-lg-4 container mb-4">
+   
+      <!-- actions nav -->
+       <div class="profile-nav mt-3 ">
+         <a class="" href="/user/profile"><i class="bi bi-arrow-left-circle"></i> Back</a>
+       </div>
+   </div>
+
+
+  <div class="col-lg-8" style="font-size: 12px;">  
     <h3 class="mb-4">Edit your profile information</h3>
 
     <form class="row g-3 mb-3"  action="/user/update-user-info/<%= userData.id %>" method="post">
@@ -56,13 +67,19 @@
         <input name="_method" type="submit" value="Update" class=" mt-2 my-btn " style="width: 100%;"/>
       </div>
     </form>
+  </div>
+  </div>
 
 
-
-
-
-<%- include('./partials/info') %>
 </div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <%- include('./partials/footer') %>
 
 
@@ -73,7 +90,6 @@
     const lgaSelect = document.getElementById("lga");
     const selectedState = stateSelect.value;
     
-    console.log("Selected State: ", selectedState); // Check the selected state
     
     // Clear the existing options in the LGA select element
     while (lgaSelect.options.length > 0) {

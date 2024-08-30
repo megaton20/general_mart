@@ -3,35 +3,43 @@
 
           <div class="container">
             <%- include ('../partials/messages') %>
-            <div class=" mt-4">
-                 
-                          <p class="text-uppercase text-primary">Recent Order List</p>
 
-                          <table class="table table-bordered" width="100%"cellspacing="0">
-                          <thead>
-                            <tr>
-                              <th>ID</th>
-                              <th>unit price</th>
-                              <th>Status</th>
-                              <th>Details</th>
-                            </tr>
-                          </thead>
-          
-                          <tbody>
-                              <% newOrder.forEach(function(data) {%>
-                              <tr>
-                                <td><%= data['id'] %></td>
-                                <td><%= data['total_amount'] %></td>
-                                <td><%= data['status'] %></td>
-                                <td><a class="btn btn-primary" href="/user/invoice/<%= data['sale_id'] %>"> Details </a></td>
-                              </tr>
-                                <% }) %>
-          
-          
-                        
-                          </tbody>
-                        </table>
-          </div>
+
+            <div class="row">
+              <div class="col-lg-4 container mb-4">
+   
+                <!-- actions nav -->
+                 <div class="profile-nav mt-3 ">
+                   <a class="" href="/user/profile"><i class="bi bi-arrow-left-circle"></i> Back</a>
+                 </div>
+             </div>
+
+
+              <div class="col-lg-8" style="font-size: 12px;">
+                <table class="table table-bordered" width="100%"cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>unit price</th>
+                      <th>Status</th>
+                      <th>Details</th>
+                    </tr>
+                  </thead>
+  
+                  <tbody>
+                      <% newOrder.forEach(function(data) {%>
+                      <tr>
+                        <td><%= data['total_amount'] %></td>
+                        <td><%= data['status'] %></td>
+                        <td><a class="btn btn-primary" href="/user/invoice/<%= data['sale_id'] %>"> Details </a></td>
+                      </tr>
+                        <% }) %>
+  
+  
+                
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
         </div>
             <br>

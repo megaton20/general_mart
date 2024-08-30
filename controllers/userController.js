@@ -1,10 +1,12 @@
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+const axios = require('axios');
 const nodemailer = require('nodemailer');
 const db = require("../model/databaseTable");
 const { promisify } = require('util');
 const query = promisify(db.query).bind(db);
 const stateData = require("../model/stateAndLGA");
+const airtimeData = require("../model/airtimeData");
 
 const systemCalander = new Date().toLocaleDateString();
 const yearModel = require("../model/getYear");
@@ -27,6 +29,7 @@ const calculateShippingFee = require('../model/shippingFee');
 
 
 const calculateCashback = require('../model/cashback');
+const { error } = require('console');
 
 
 const appName = `General Mart`  
@@ -1297,10 +1300,8 @@ exports.getMap = async (req, res) => {
   });
 };
 
-
-
-
 // Route to save user location
+
 exports.saveLocation = async (req, res) => {
 
   const { lat, lng } = req.body;
@@ -1322,3 +1323,108 @@ exports.saveLocation = async (req, res) => {
     return res.redirect('back');
   }
 };
+
+
+
+exports.buyAirtime = async (req, res) => {
+    const userId = req.user.id;
+    const amount = req.body.amount;
+    const phoneNumber = req.body.phone;
+    const network = req.body.network;
+
+    async function buyAirtime(userId, amount, phoneNumber, network) {
+        try {
+            // 1. Query the user's points from the database
+            const userResult = await query('SELECT "cashback", "email" FROM "Users" WHERE id = $1', [userId]);
+            if (userResult.rows.length === 0) {
+                return { status: 'error', message: 'User not found' };
+            }
+            const user = userResult.rows[0];
+            const userPoints = user.cashback; // Ensure you use the correct field name
+
+            // 2. Ensure the user's points are enough to cover the purchase amount
+            if (amount > userPoints) {
+                return { status: 'error', message: 'Insufficient points' };
+            }
+
+            // 3. Proceed with the Paystack transaction
+            const paymentResponse = await axios.post('https://api.paystack.co/transaction/initialize', {
+                email: user.email,
+                amount: amount * 100, // Paystack expects amount in kobo
+                currency: 'NGN',
+                metadata: {
+                    custom_fields: [
+                        {
+                            phone: phoneNumber,
+                            network: network
+                        }
+                    ]
+                }
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (paymentResponse.data.status === 'success') {
+                // Proceed with the airtime top-up API
+                const airtimeResponse = await axios.post('https://your-airtime-api.com/topup', {
+                    phone_number: phoneNumber,
+                    amount: amount,
+                    network: network,
+                    api_key: process.env.AIRTIME_API_KEY
+                });
+
+                if (airtimeResponse.data.status === 'success') {
+                    // 4. Deduct points from the user's account
+                    const newPoints = userPoints - amount;
+                    await query('UPDATE "Users" SET "cashback" = $1 WHERE id = $2', [newPoints, userId]);
+
+                    return { status: 'success', message: 'Airtime credited successfully' };
+                } else {
+                    return { status: 'error', message: 'Failed to credit airtime' };
+                }
+            } else {
+                return { status: 'error', message: 'Payment initiation failed' };
+            }
+        } catch (error) {
+            console.error('Error during airtime purchase:', error);
+            return { status: 'error', message: 'An error occurred' };
+        }
+    }
+
+    try {
+        const result = await buyAirtime(userId, amount, phoneNumber, network);
+        req.flash(result.status, result.message);
+        console.log(result);
+        res.redirect('/user/profile');
+    } catch (error) {
+        console.error('Error handling request:', error);
+        req.flash('error', 'An unexpected error occurred');
+        res.redirect('/user/profile');
+    }
+};
+exports.getAirtimePage = async (req, res) => {
+
+  const userId = req.user.id
+
+      // Fetch user data
+      const userDataQuery = `SELECT * FROM "Users" WHERE "id" = $1`;
+      const userDataResult = await query(userDataQuery, [userId]);
+      const userData = userDataResult.rows[0];
+
+  const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+    
+  let totalUnreadNotification = parseInt(result.totalunread, 10);
+
+  // Render the checkout page
+  res.render('./user/airtime', {
+    pageTitle: "map",
+    appName: process.env.APP_NAME,
+    totalUnreadNotification,
+    userData,
+    airtimeData,
+  });
+};
+

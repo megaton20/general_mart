@@ -4,6 +4,11 @@
   <div class="container">
 
             <div class=" mb-4">
+
+                    <!-- actions nav -->
+                    <div class="profile-nav mt-3 ">
+                      <a class="" href="/user"><i class="bi bi-arrow-left-circle"></i> Back</a>
+                    </div>
               
               <% if(userNotifications.length <= 0){ %>
                 
@@ -19,8 +24,6 @@
                         <% } else{ %>  
     
                           <div class="containeer mt-5">
-                            <h2 class="mb-4">Notifications</h2>
-                          
                             <% userNotifications.forEach(function(data) { %>
                               <div class="card mb-3 p-3 my-box-shadow border-0">
                                 <div class="card-body">
@@ -30,7 +33,7 @@
                                         <p class="mb-1">
                                           <i class="fas fa-bell me-2"></i> <%= data.message %>
                                         </p>
-                                        <small class="text-muted">
+                                        <small class="text-mutede text-danger">
                                           <%= new Date(data.created_at).toLocaleString() %>
                                         </small>
                                       </a>
@@ -38,9 +41,9 @@
                                     <div class="col-2 text-end">
                                       <!-- Status Badge -->
                                       <% if (data.is_read == false) { %>
-                                        <span class="badge bg-warning text-dark">Unread</span>
+                                        <span class="badge bg-warning text-dark">new</span>
                                       <% } else { %>
-                                        <span class="badge bg-secondary">Read</span>
+                                        <span class="badge bg-secondary">opened</span>
                                         
                                         <!-- Delete Form -->
                                         <form action="/user/notifications/<%=data.id%>" method="POST" class="d-inline mt-2">
