@@ -296,7 +296,7 @@ exports.oneDelivery = async (req, res) => {
 
     if (gpsData.length === 0) {
       req.flash("error_msg", "Customer location not found");
-      return res.redirect("back");
+      // return res.redirect("back");
     }
   
     const userLocation = gpsData[0];
