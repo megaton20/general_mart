@@ -157,15 +157,15 @@
               <p class="text-uppercase text-primary">Rider </p>
               <div class="row">
                 <div class="col-3"> Rider Name</div>
-                <div class="col-auto"><%= orderData[0].driver %></div>
+                <div class="col-auto"><%= orderData[0].rider_company_name %></div>
               </div>
               <div class="row">
                 <div class="col-lg-3">Rider Email:</div>
-                <div class="col-auto"><%= orderData[0].driver_email %></div>
+                <div class="col-auto"><%= orderData[0].rider_email %></div>
               </div>
               <div class="row">
                 <div class="col-lg-3"> Rider phone:</div>
-                <div class="col-auto"><%= orderData[0].driver_phone %></div>
+                <div class="col-auto"><%= orderData[0].rider_phone %></div>
               </div>
             </div>
           <% } %>
@@ -267,7 +267,7 @@
                 <div class="tab-content">
     
                   <div class="tab-pane fade show active profile-overview pt-3" id="profile-overview">
-                      <form action="/super/ship-order/<%= orderData[0].id %>"method="post">
+                      <form action="/super/new-driver/<%= orderData[0].id %>"method="post">
                         <div class="form-group">
                           <select name="logistics" id="" class="form-control">
                             <option value="">Select Company</option>
@@ -289,7 +289,7 @@
     
                   <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
     
-                    <form action="/super/ship-order-with-rider/<%= orderData[0].id %>"method="post">
+                    <form action="/super/new-rider/<%= orderData[0].id %>"method="post">
                       <div class="form-group">
                         <select name="rider"  class="form-control">
                           <option value="">Select Rider</option>

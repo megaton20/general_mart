@@ -3491,11 +3491,12 @@ exports.shipWithCompanyDriver = async (req, res) => {
     // Update sales, order products, and orders tables
     await query(`UPDATE "Sales" SET "status" = 'unresolved' WHERE "sale_id" = $1`, [saleID]);
     await query(`UPDATE "Order_Products" SET "status" = 'shipped' WHERE "sale_id" = $1`, [saleID]);
-    await query(`UPDATE "Orders" SET "status" = 'shipped', "driver" = $1, "driver_email" = $2, "driver_phone" = $3, "driver_id" = $4 WHERE "id" = $5`, [
+    await query(`UPDATE "Orders" SET "status" = 'shipped', "driver" = $1, "driver_email" = $2, "driver_phone" = $3, "driver_id" = $4, "pickup" = $5 WHERE "id" = $6`, [
       dispatchCompanyName,
       dispatchEmail,
       dispatchPhone,
       dispatchId,
+      "closed",
       editID
     ]);
 
@@ -3566,6 +3567,8 @@ exports.shipWithRider = async (req, res) => {
     return res.redirect(`/super`);
   }
 };
+
+
 exports.shipWithNewRider = async (req, res) => {
   const orderID = req.params.id;
   const rider = req.body.rider;
@@ -3596,17 +3599,16 @@ exports.shipWithNewRider = async (req, res) => {
       return res.redirect("/super");
     }
 
-    const thatOrder = orderResults[0];
-    const saleID = thatOrder.sale_id;
 
-    // Update Sales
-    await query(`UPDATE "Sales" SET "status" = 'unresolved' WHERE "sale_id" = $1`, [saleID]);
+    if (orderResults[0].rider_company_name === rider) {
+      req.flash("error_msg", "can not reassign to same rider twice");
+      return res.redirect("/super");
+    }
 
-    // Update Order_Products
-    await query(`UPDATE "Order_Products" SET "status" = 'shipped' WHERE "sale_id" = $1`, [saleID]);
+
 
     // Update Orders
-    await query(`UPDATE "Orders" SET "status" = 'shipped', "rider_company_name" = $1, "rider_email" = $2, "rider_phone" = $3, "rider_id" = $4, "pickup" = 'closed' WHERE "id" = $5`, [
+    await query(`UPDATE "Orders" SET "rider_company_name" = $1, "rider_email" = $2, "rider_phone" = $3, "rider_id" = $4 WHERE "id" = $5`, [
       dispatchCompanyName,
       dispatchEmail,
       dispatchPhone,
@@ -3614,8 +3616,16 @@ exports.shipWithNewRider = async (req, res) => {
       orderID
     ]);
 
-    await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[thatOrder.customer_id, `Your Order Has been Shipped.`, 'success', false]);
-    req.flash("success_msg", "Order has been shipped! Status is set to shipped (to be received then resolved)");
+        // Update Orders
+        await query(`UPDATE "Orders" SET "driver_id" = $1, "driver" = $2, "driver_phone" = $3, "driver_email" = $4 WHERE "id" = $5`, [
+          null,
+          null,
+          null,
+          null,
+          orderID
+        ]);
+
+    req.flash("success_msg", "Order has been reassigned");
     return res.redirect(`/super/sales`);
 
   } catch (error) {
@@ -3624,7 +3634,73 @@ exports.shipWithNewRider = async (req, res) => {
   }
 };
 
+exports.shipWithNewCompanyDriver = async (req, res) => {
+  const orderID = req.params.id;
+  const rider = req.body.logistics;
 
+  const trimedDrivervalue = rider.trim()
+
+  if (!rider) {
+    req.flash("warning_msg", "Please select a rider");
+    return res.redirect(`/super/view-order/${orderID}`);
+  }
+
+  try {
+    // Fetch rider details
+    const {rows:results} = await query(`SELECT * FROM "Logistics" WHERE "name" = $1`, [trimedDrivervalue]);
+    if (results.length === 0) {
+      req.flash("error_msg", "Driver not found");
+      return res.redirect(`/super/view-order/${orderID}`);
+    }
+
+    const dispatch = results[0];
+    const dispatchEmail = dispatch.email;
+    const dispatchCompanyName = dispatch.name;
+    const dispatchPhone = dispatch.phone;
+    const dispatchId = dispatch.id;
+
+    // Fetch order details
+    const {rows:orderResults} = await query(`SELECT * FROM "Orders" WHERE "id" = $1`, [orderID]);
+    if (orderResults.length === 0) {
+      req.flash("error_msg", "No record found for that order");
+      return res.redirect("/super");
+    }
+
+
+    if (orderResults[0].driver === rider) {
+      req.flash("error_msg", "can not reassign to same driver twice");
+      return res.redirect("/super");
+    }
+
+
+
+    // Update Orders
+    await query(`UPDATE "Orders" SET "rider_company_name" = $1, "rider_email" = $2, "rider_phone" = $3, "rider_id" = $4, "pickup" = $5 WHERE "id" = $6`, [
+      null,
+      null,
+      null,
+      null,
+      "closed",
+      orderID
+    ]);
+
+        // Update Orders
+        await query(`UPDATE "Orders" SET "driver_id" = $1, "driver" = $2, "driver_phone" = $3, "driver_email" = $4 WHERE "id" = $5`, [
+          dispatchId,
+          dispatchCompanyName,
+          dispatchPhone,
+          dispatchEmail,
+          orderID
+        ]);
+
+    req.flash("success_msg", "Order has been reassigned to new logistic driver");
+    return res.redirect(`/super/sales`);
+
+  } catch (error) {
+    req.flash('error_msg', `Error from server: ${error.message}`);
+    return res.redirect(`/super`);
+  }
+};
 
 
 
