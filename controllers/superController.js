@@ -2826,10 +2826,10 @@ exports.editNewInventory = async (req, res) => {
     );
 
          // Update cart if present
-         const {rows:allCartsResults} = await query(`SELECT * FROM "Cart" WHERE "product_id" = $1`,[productResults[0].id]);
+         const {rows:allCartsResults} = await query(`SELECT * FROM "Cart" WHERE "product_id" = $1`,[productResults.rows[0].id]);
          if (allCartsResults.length > 0) {
           await query(`UPDATE "Cart" SET "product_name" = $1 WHERE "product_id" = $2`,
-            [Product_name, productResults[0].id]
+            [Product_name, productResults.rows[0].id]
           );
          }
 
