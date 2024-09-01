@@ -2755,23 +2755,7 @@ exports.editNewInventory = async (req, res) => {
     return res.redirect(`/super/edit-inventory/${editID}`);
   }
 
-  const updateData = {
-    Category_name,
-    Brand_name,
-    Product_name,
-    Purchase_price,
-    Supplier_name,
-    Payment_method,
-    Reciever_name,
-    Delivery_method,
-    QTY_recieved,
-    total_in_pack,
-    Manufacture_date,
-    Expire_date,
-    Cost_of_delivery,
-    Total_damaged,
-    details
-  };
+
 
   try {
     const productResults = await query(
@@ -2808,8 +2792,7 @@ exports.editNewInventory = async (req, res) => {
     }
 
     // If the item is in the Products table, update both Products and inventory
-    await query(
-      `UPDATE "Products" SET "category" = $1, "Brand_name" = $2, "ProductName" = $3, "details" = $4, "StockQuantity" = $5, "total_in_pack" = $6 WHERE "inventory_id" = $7`,
+    await query(`UPDATE "Products" SET "category" = $1, "Brand_name" = $2, "ProductName" = $3, "details" = $4, "StockQuantity" = $5, "total_in_pack" = $6 WHERE "inventory_id" = $7`,
       [
         Category_name,
         Brand_name,
@@ -2821,8 +2804,7 @@ exports.editNewInventory = async (req, res) => {
       ]
     );
 
-    await query(
-      `UPDATE "inventory" SET "Category_name" = $1, "Brand_name" = $2, "Product_name" = $3, "Purchase_price" = $4, "Supplier_name" = $5, "Payment_method" = $6, "Reciever_name" = $7, "Delivery_method" = $8, "QTY_recieved" = $9, "total_in_pack" = $10, "Manufacture_date" = $11, "Expire_date" = $12, "Cost_of_delivery" = $13, "Total_damaged" = $14, "details" = $15 WHERE id = $16`,
+    await query(`UPDATE "inventory" SET "Category_name" = $1, "Brand_name" = $2, "Product_name" = $3, "Purchase_price" = $4, "Supplier_name" = $5, "Payment_method" = $6, "Reciever_name" = $7, "Delivery_method" = $8, "QTY_recieved" = $9, "total_in_pack" = $10, "Manufacture_date" = $11, "Expire_date" = $12, "Cost_of_delivery" = $13, "Total_damaged" = $14, "details" = $15 WHERE id = $16`,
       [
         Category_name,
         Brand_name,
@@ -2842,6 +2824,15 @@ exports.editNewInventory = async (req, res) => {
         editID
       ]
     );
+
+         // Update cart if present
+         const {rows:allCartsResults} = await query(`SELECT * FROM "Cart" WHERE "product_id" = $1`,[productResults[0].id]);
+         if (allCartsResults.length > 0) {
+          await query(`UPDATE "Cart" SET "product_name" = $1 WHERE "product_id" = $2`,
+            [Category_name, productResults[0].id]
+          );
+         }
+
 
     req.flash("success_msg", `"${Product_name}" updated successfully!`);
     return res.redirect("/super/all-inventory");
