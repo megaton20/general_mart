@@ -252,9 +252,9 @@ exports.editProfilePage = async (req, res) => {
     const userData = userResult.rows[0];
 
    
-  const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+    const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
-  let totalUnreadNotification = parseInt(result.totalunread, 10);
+    let totalUnreadNotification = parseInt(result.totalunread, 10);
     // Render the edit profile page
     return res.render('./user/userEditPage', {
       pageTitle: 'Edit Profile',
