@@ -171,16 +171,12 @@
           <% } %>
         
 
+
+          <!-- shhipping actions -->
           <div class="col-lg-6 mt-4">
             <% if( orderData[0].status == "incomplete" ){ %>
             <a href="/super/confirm-order/<%= orderData[0].id %>">
-              <button
-                type="submit"
-                class="btn btn-success mt-4"
-                style="width: 100%"
-              >
-                Confirm order
-              </button>
+              <button type="submit"class="btn btn-success mt-4"style="width: 100%">Confirm order</button>
             </a>
 
             <a href="/super/super-cancel/<%= orderData[0].id %>">
@@ -191,8 +187,6 @@
             <% } else{ %> <% if( orderData[0].status == "waiting" ){ %>
 
             <br />
-
-            <div class="">
               <div class="card-body pt-3">
                 <!-- Bordered Tabs -->
                 <ul class="nav nav-tabs nav-tabs-bordered">
@@ -252,19 +246,69 @@
                 </div><!-- End Bordered Tabs -->
     
               </div>
-              </div>
-
-
-
-
-              
-     
-
 
 
             <% } else{ %>
 
-            <button type="submit" class="btn btn-secondary mt-4"style="width: 100%"disabled>Done</button>
+              <div class="card-body pt-3">
+                <!-- Bordered Tabs -->
+                <ul class="nav nav-tabs nav-tabs-bordered">
+    
+                  <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">My Logistics</button>
+                  </li>
+    
+                  <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Select Other Riders</button>
+                  </li>
+    
+                </ul>
+    
+                <div class="tab-content">
+    
+                  <div class="tab-pane fade show active profile-overview pt-3" id="profile-overview">
+                      <form action="/super/ship-order/<%= orderData[0].id %>"method="post">
+                        <div class="form-group">
+                          <select name="logistics" id="" class="form-control">
+                            <option value="">Select Company</option>
+
+                            <% logisticsDrivers.forEach(function(data) {%>
+                            <option value="<%= data['name'] %>"><%=data['name'] %></option>
+                            <% }) %>
+
+                          </select>
+                        </div>
+
+                        <button style="width: 100%" class="btn btn-success">reassign Shipment</button>
+                      </form>
+    
+                  </div>
+
+
+
+    
+                  <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+    
+                    <form action="/super/ship-order-with-rider/<%= orderData[0].id %>"method="post">
+                      <div class="form-group">
+                        <select name="rider"  class="form-control">
+                          <option value="">Select Rider</option>
+        
+                          <% ridersData.forEach(function(data) {%>
+                          <option value="<%= data['companyName'] %>"><%=data['companyName'] %></option>
+                          <% }) %>
+        
+                        </select>
+                      </div>
+        
+                      <button style="width: 100%" class="btn btn-success">Ship With new Rider</button>
+                    </form>
+                  </div>
+    
+    
+                </div><!-- End Bordered Tabs -->
+    
+              </div>
 
             <% } %> <% } %>
           </div>
