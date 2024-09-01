@@ -3708,8 +3708,14 @@ exports.updateImage = async (req, res) => {
     if (productResults.length > 0) {
       // Update the product image
       await query(`UPDATE "Products" SET "image" = $1 WHERE "inventory_id" = $2`, [filename, uploadId]);
+      // Update cart if present
+      const {rows:allCartsResults} = await query(`SELECT * FROM "Cart" WHERE "product_id" = $1`,[productResults.rows[0].id]);
+      if (allCartsResults.length > 0) {
+        await query(`UPDATE "Cart" SET "image" = $1 WHERE "product_id" = $2`,
+        [filename, productResults.rows[0].id]
+        );
+      }
     }
-
     // Update the inventory image
     await query(`UPDATE "inventory" SET "image" = $1 WHERE "id" = $2`, [filename, uploadId]);
 
