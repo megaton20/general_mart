@@ -3188,13 +3188,19 @@ exports.deleteInventory = async (req, res) => {
     await query(`DELETE FROM "inventory" WHERE "id" = $1`, [editID]);
 
     // Check if the product exists and delete it
-    const productResults = await query(`SELECT * FROM "Products" WHERE "inventory_id" = $1`, [editID]);
+    const {rows:productResults} = await query(`SELECT * FROM "Products" WHERE "inventory_id" = $1`, [editID]);
 
-    if (productResults.rows.length <= 0) {
+    if (productResults.length <= 0) {
       req.flash("success_msg", `Item has been removed only from inventory`);
       return res.redirect("back");
     }
 
+    const {rows:cartResults} = await query(`SELECT * FROM "Cart" WHERE "product_id" = $1`, [productResults[0].id]);
+
+    if (cartResults.length > 0) {
+      await query(`DELETE FROM "Cart" WHERE "product_id" = $1`, [productResults[0].id]);
+    }
+    
     await query(`DELETE FROM "Products" WHERE "inventory_id" = $1`, [editID]);
     req.flash("success_msg", `Item has been removed from inventory and store`);
     return res.redirect("back");
@@ -3210,6 +3216,16 @@ exports.deletePosition = async (req, res) => {
   const editID = req.params.id;
 
   try {
+
+    // get user with such position and update them to "user"
+    const {rows:userResults} = await query(`SELECT * FROM "Users" WHERE "position_id" = $1`, [editID]);
+
+    if (userResults.length > 0) {
+      const positionId = null;
+      const position = null;
+      const userRole = "user";
+      await query(`UPDATE "Users" SET "position_id" = $1, "position" = $2, "userRole" = $3 WHERE "position_id" = $4`, [positionId, position, userRole, editID]);
+    }
     // Delete the position record using a parameterized query for PostgreSQL
     await query(`DELETE FROM "Positions" WHERE "id" = $1`, [editID]);
     req.flash("success_msg", `Item has been removed`);
@@ -3541,7 +3557,7 @@ exports.shipWithRider = async (req, res) => {
       orderID
     ]);
 
-    await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[thatOrder.customer_id, `Your Order Has been Shhipped.`, 'success', false]);
+    await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[thatOrder.customer_id, `Your Order Has been Shipped.`, 'success', false]);
     req.flash("success_msg", "Order has been shipped! Status is set to shipped (to be received then resolved)");
     return res.redirect(`/super/sales`);
 
@@ -3550,7 +3566,63 @@ exports.shipWithRider = async (req, res) => {
     return res.redirect(`/super`);
   }
 };
+exports.shipWithNewRider = async (req, res) => {
+  const orderID = req.params.id;
+  const rider = req.body.rider;
 
+  if (!rider) {
+    req.flash("warning_msg", "Please select a rider");
+    return res.redirect(`/super/view-order/${orderID}`);
+  }
+
+  try {
+    // Fetch rider details
+    const {rows:results} = await query(`SELECT * FROM "drivers" WHERE "companyName" = $1`, [rider]);
+    if (results.length === 0) {
+      req.flash("error_msg", "Driver not found");
+      return res.redirect(`/super/view-order/${orderID}`);
+    }
+
+    const dispatch = results[0];
+    const dispatchEmail = dispatch.companyEmail;
+    const dispatchCompanyName = dispatch.companyName;
+    const dispatchPhone = dispatch.companyPhone;
+    const dispatchId = dispatch.id;
+
+    // Fetch order details
+    const {rows:orderResults} = await query(`SELECT * FROM "Orders" WHERE "id" = $1`, [orderID]);
+    if (orderResults.length === 0) {
+      req.flash("error_msg", "No record found for that order");
+      return res.redirect("/super");
+    }
+
+    const thatOrder = orderResults[0];
+    const saleID = thatOrder.sale_id;
+
+    // Update Sales
+    await query(`UPDATE "Sales" SET "status" = 'unresolved' WHERE "sale_id" = $1`, [saleID]);
+
+    // Update Order_Products
+    await query(`UPDATE "Order_Products" SET "status" = 'shipped' WHERE "sale_id" = $1`, [saleID]);
+
+    // Update Orders
+    await query(`UPDATE "Orders" SET "status" = 'shipped', "rider_company_name" = $1, "rider_email" = $2, "rider_phone" = $3, "rider_id" = $4, "pickup" = 'closed' WHERE "id" = $5`, [
+      dispatchCompanyName,
+      dispatchEmail,
+      dispatchPhone,
+      dispatchId,
+      orderID
+    ]);
+
+    await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[thatOrder.customer_id, `Your Order Has been Shipped.`, 'success', false]);
+    req.flash("success_msg", "Order has been shipped! Status is set to shipped (to be received then resolved)");
+    return res.redirect(`/super/sales`);
+
+  } catch (error) {
+    req.flash('error_msg', `Error from server: ${error.message}`);
+    return res.redirect(`/super`);
+  }
+};
 
 
 

@@ -35,7 +35,7 @@ app.use(ejsLayouts);
 app.use(express.static(path.join(__dirname, './', 'public')));
 
 app.use(session({
-    secret: process.env.SESSION_SECRET, // Replace with your own secret
+    secret: process.env.SESSION_SECRET, 
     cookie: { maxAge: 24 * 60 * 60 * 1000 },
     resave: false,
     saveUninitialized: true

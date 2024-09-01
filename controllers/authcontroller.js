@@ -31,31 +31,6 @@ const appName = `General Mart`
 exports.authRequest = passport.authenticate('google', { scope: ['profile', 'email'] })
 
 
-exports.googleAuth = passport.authenticate('google', { failureRedirect: '/login' }),async (req, res) => {
-  console.log("results");
-  try {
-    // Parameterized query to prevent SQL injection
-    const updateQuery = `UPDATE "Users" SET "Previous_visit" = $1 WHERE "id" = $2`;
-
-    // Execute the query with parameters
-    await query(updateQuery, [new Date(), req.user.id]);
-
-    req.flash("success_msg", `Welcome back ${req.user.First_name}!`);
-    res.redirect('/handler');
-  } catch (error) {
-    console.log(error);
-    return res.render('login', {
-      error_msg: error.message,
-      pageTitle: `Login To continue Using ${appName}`,
-      appName: appName,
-    });
-  }
-}
-
-
-
-
-
 exports.verifyEmailRequest = async (req, res) => {
   const email = req.body.email;
   
@@ -190,10 +165,6 @@ exports.verifyEmailCallBack = (req, res) => {
     });
   });
 };
-
-
-
-
 
 
 

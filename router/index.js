@@ -19,7 +19,6 @@ const appName = `General Mart`
 const passport = require('../config/passport');
 
 
-
 router.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
   async (req, res) => {
@@ -34,18 +33,31 @@ router.get('/auth/google/callback',
       // Execute the query with parameters
       await query(updateQuery, [new Date(), req.user.id]);
 
+      // Flash a success message and redirect
       req.flash("success_msg", `Welcome back ${req.user.First_name}!`);
       res.redirect('/handler');
     } catch (error) {
-      console.log(error);
+      console.error('Error during user update:', error);
+
+      // Determine the type of error and respond accordingly
+      let errorMessage = 'An unexpected error occurred. Please try again later.';
+      
+      // Customize the error message based on the error type
+      if (error.name === 'QueryFailedError') {
+        errorMessage = 'Database error. Please contact support if this continues.';
+      } else if (error.message.includes('network')) {
+        errorMessage = 'Network error. Please check your connection and try again.';
+      }
+
       return res.render('login', {
-        error_msg: error.message,
+        error_msg: errorMessage,
         pageTitle: `Login To continue Using ${appName}`,
         appName: appName,
       });
     }
   }
 );
+
 
 // Welcome Page
 router.get('/', async (req, res) => {

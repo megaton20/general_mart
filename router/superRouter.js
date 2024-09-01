@@ -69,6 +69,7 @@ router.get("/view-order/:id", ensureAuthenticated,isSuper, superController.getSi
 router.get("/confirm-order/:id", ensureAuthenticated,isSuper, superController.confirmOrder); //
 router.post("/ship-order/:id", ensureAuthenticated,isSuper, superController.shipWithCompanyDriver); //
 router.post("/ship-order-with-rider/:id", ensureAuthenticated,isSuper, superController.shipWithRider); //
+router.put("/ship-order-with-rider/:id", ensureAuthenticated,isSuper, superController.shipWithNewRider); //
 
 // form area
 

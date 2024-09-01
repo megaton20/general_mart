@@ -7,7 +7,7 @@ module.exports = {
     if (openSession) {
       return next();
     }
-    req.flash("error_msg", "Please Enter Credentials to Continue")
+    req.flash("error_msg", "Please Enter sign in to Continue")
     res.redirect('/login')
     return
   },

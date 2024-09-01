@@ -19,18 +19,21 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   try {
-    // Use $1 for parameterized query
-    const {rows:results} = await query('SELECT * FROM "Users" WHERE id = $1', [id]);
+    // Use parameterized query to prevent SQL injection
+    const { rows: results } = await query('SELECT * FROM "Users" WHERE id = $1', [id]);
 
-    if (results.length <= 0) {
+    if (results.length === 0) {
+      console.warn(`User with ID ${id} not found during deserialization.`);
       return done(null, false); // User not found, return false
     }
 
     done(null, results[0]); // User found, return the user object
   } catch (err) {
-    done(err, null); // Pass the error to the done callback
+    console.error(`Error during deserialization of user with ID ${id}:`, err);
+    done(err, null); 
   }
 });
+
 
 
 
