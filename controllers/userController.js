@@ -325,10 +325,15 @@ exports.updateUserInfo = async (req, res) => {
     }
 
 
+    const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+    
+    let totalUnreadNotification = parseInt(result.totalunread, 10);
+
     if (errors.length > 0) {
       return res.render('./user/userEditPage', {
         pageTitle: 'Edit Profile',
         appName: appName,
+        totalUnreadNotification,
         userData: { ...req.body,id: req.user.id  }, // Pass current user data for the form
         stateData, // Ensure `stateData` is defined or fetched properly
         errors,
