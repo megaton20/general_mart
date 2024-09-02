@@ -20,7 +20,7 @@ module.exports = {
         
       }else if (userRole === "driver") {
         req.flash('warning_msg', `remember you're a driver ${req.user.First_name}`);
-        return next()
+        return res.redirect('/drivers');
       }
     }
       

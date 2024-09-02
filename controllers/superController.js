@@ -3160,19 +3160,27 @@ exports.deleteInventory = async (req, res) => {
   const editID = req.params.id;
 
   try {
-    const imageDirectory = process.env.IMAGE_DIRECTORY || path.join(__dirname, '../public/uploads/');
+    const imageDirectory = path.join(__dirname, '../public/uploads/');
 
-    // Fetch inventory data using parameterized query for PostgreSQL
+    console.log(imageDirectory);
+    
+    // Fetch inventory data using a parameterized query for PostgreSQL
     const results = await query(`SELECT * FROM "inventory" WHERE "id" = $1`, [editID]);
     const inventoryData = results.rows[0]; // Access the first row of the result set
     const unlinkPath = path.join(imageDirectory, inventoryData.image);
-
-    // Attempt to delete the image file
-    try {
-      fs.unlinkSync(unlinkPath);
-    } catch (error) {
-      req.flash("error_msg", `Could not delete image: ${error.message}`);
-      return res.redirect("back");
+    
+    console.log(unlinkPath); // Log the full path to check correctness
+    
+    // Check if the file exists before attempting to delete it
+    if (fs.existsSync(unlinkPath)) {
+      try {
+        fs.unlinkSync(unlinkPath);
+      } catch (error) {
+        req.flash("error_msg", `Could not delete image: ${error.message}`);
+        return res.redirect("back");
+      }
+    } else {
+      req.flash("warning_msg", "Image file does not exist.");
     }
 
     // Delete the inventory record
