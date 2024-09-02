@@ -99,7 +99,7 @@
                                     <img class="img-thumbnail" src="/uploads/<%= allInventory.image %>" alt="image">
 
 
-                                    <% if ( allInventory.image == null ) { %>
+                                    <% if ( allInventory.image == "default.jpg" ) { %>
                                         <form class="user" action="/super/add-image/<%= allInventory.id %>" method="post" enctype="multipart/form-data">
 
                                             <div class="form-group">
@@ -118,7 +118,7 @@
                                                 <input type="file" name="image">
                                             </div>
                                             
-                                            <input type="submit" value="Upload image"  class="btn btn-primary btn-user btn-block">
+                                            <input type="submit" value="Upload new image"  class="btn btn-primary btn-user btn-block">
                                                 
 
                                     
