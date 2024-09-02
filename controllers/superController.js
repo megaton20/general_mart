@@ -3725,6 +3725,7 @@ exports.updateImage = async (req, res) => {
     if (req.file) {
       fs.unlinkSync(req.file.path);
     }
+    console.log(err);
     req.flash("error_msg", `An error occurred from the database, try again!`);
     return res.redirect('/');
   }
