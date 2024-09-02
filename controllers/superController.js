@@ -3161,15 +3161,12 @@ exports.deleteInventory = async (req, res) => {
 
   try {
     const imageDirectory = path.join(__dirname, '../public/uploads/');
-
-    console.log(imageDirectory);
     
     // Fetch inventory data using a parameterized query for PostgreSQL
     const results = await query(`SELECT * FROM "inventory" WHERE "id" = $1`, [editID]);
     const inventoryData = results.rows[0]; // Access the first row of the result set
     const unlinkPath = path.join(imageDirectory, inventoryData.image);
     
-    console.log(unlinkPath); // Log the full path to check correctness
     
     // Check if the file exists before attempting to delete it
     if (fs.existsSync(unlinkPath)) {
