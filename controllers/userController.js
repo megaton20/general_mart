@@ -1599,7 +1599,7 @@ exports.wishlist =  async (req, res) => {
 
               if (wishlistItems.length <=0) {
                 req.flash('warning_msg', "nothing in wishlist!")
-                return res.redirect('back')
+                return res.redirect('/user/profile')
               }
 
 
