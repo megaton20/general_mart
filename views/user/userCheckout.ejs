@@ -1,15 +1,10 @@
 
 <%- include('./partials/navbar') %>
 
-<main class="main">
+
   <div class="container"><%- include('../partials/messages') %></div>
 
-        <!-- Page adverts -->
-        <div class="container">
-          <%- include('./partials/ads') %>
-        </div>
   <!-- Service Details Section -->
-  <section id="service-details" class="service-details section">
     
     <div class="container">
 
@@ -18,55 +13,47 @@
       
       <div class="col-lg-8">
           
-        <div class=" card mb-4"  >
-          <div class="card-header ">Items Selected</div>
+        <div class=" card  my-box-shadow mb-4"  >
           <div class="card-body">
 
             <% cartItems.forEach(item => { %>
-              <div class="cart-item row pt-2">
+              <div class="cart-item row pt-2 ">
                 
                 <div class="col-auto mr-1">
                   <img src="/uploads/<%= item.image %>" class="img-fluid rounded" alt="<%= item.product_name %>">
                 </div>
                 
-                <div class="cart-item-details col-auto " >
+                <div class="cart-item-details col-auto >
                   <p class="m-0" style="font-size: 14px;"><%= item.product_name %></p>
-                  <p class="m-0" style="font-size: 12px;"><%= item.quantity %> (x)</p>
+                  <p class="m-0" style="font-size: 8px;"><%= item.quantity %> (x)</p>
                 </div>
               </div>
               <% }); %>
-            </div>
-            <div class="card-footer">
-
+              <hr>
               <a href="/user/fetchCart" class=" mt-2 my-btn-outline ">Modify Cart</a>
             </div>
           </div>
 
-            <div class="card "  >
-              <div class="card-header ">Shiping information</div>
+            <div class="card my-box-shadow "  >
               <div class="card-body" style="font-size: 13px;">
                 <div class="row">
-                  <div class="col-6 m-0">Phone</div>
-                  <div class="col-6 m-0"><%= userData.Phone%></div>
-                  <div class="col-6 m-0">Address</div>
-                  <div class="col-6 m-0"><%= userData.Address%></div>
+                  <div class="col-2 m-0">Phone</div>
+                  <div class="col-10 m-0"><%= userData.Phone%></div>
+                  <div class="col-2 m-0">Address</div>
+                  <div class="col-10 m-0"><%= userData.Address%></div>
                   
                   
-                  <div class="col-6 m-0">State:</div>
-                  <div class="col-6 m-0"><%= userData.state%></div>
-                  <div class="col-6 m-0">LGA:</div>
-                  <div class="col-6 m-0"><%= userData.lga%></div>
-                  <div class="col-6 m-0">Land Mark:</div>
-                  <div class="col-6 m-0"><%= userData.land_mark%></div>
+                  <div class="col-2 m-0">State:</div>
+                  <div class="col-10 m-0"><%= userData.state%></div>
+                  <div class="col-2 m-0">LGA:</div>
+                  <div class="col-10 m-0"><%= userData.lga%></div>
+                  <div class="col-2 m-0">Land Mark:</div>
+                  <div class="col-10 m-0"><%= userData.land_mark%></div>
                   
                 </div>
 
-                <br>
-              </div>
-              <div class="card-footer">
-                
-                <a href="/user/edit-user/<%=userData.id %>" class=" mt-4 my-btn-outline ">Edit Your Info </a>
-
+                <hr>
+                <a href="/user/edit-user/<%=userData.id %>" class=" mt-4 my-btn ">Edit shipping Info </a>
               </div>
             </div>
      
@@ -74,10 +61,7 @@
 
       <div class="col-lg-4" data-aos="" data-aos-delay="0">
 
-        <div class="card">
-          <div class="card-header">
-            Cart value
-          </div>
+        <div class="card my-box-shadow">
           <div class="card-body" style="font-size: 12px; margin-top: 5px ;">
             
             <div class="row mb-4">
@@ -90,24 +74,10 @@
               <p class=" text-success">Based on your Registered state (<%= userData.state %>) and Local Government Area (<%= userData.lga%>) Our  shipping Fee is</p>
               <p class="m-0 text-warning">₦ <span class="item-price" style="font-size: 14px;"><%=shippingFee%></span></p>
             </div>
-    
-            <hr>
-          <p class="text-warning rounded" style="font-size: 12px; margin-top: 5px ; border: 1px solid ; padding: 5px;">item will be delivered in 1 hour(s) after confirmation</p>
-          </div>
-
-      </div>
-
-      <div class="card mt-2">
-        <div class="card-header">
-          Actions
-        </div>
-        <div class="card-body" style="font-size: 12px; margin-top: 5px ;">
-          
-
 
           <% if(shippingFee <= 0){ %>
         
-            <button  disabled class=" btn btn-outline-danger " style="width: 100%;">we do not ship to that location for now</button>
+            <button  disabled class=" btn btn-outline-danger " style="width: 100%;">we do not ship to <%= userData.lga%> for now</button>
 
             <hr>
             <p class="m-0"> See a list of states and local Government Area covered <a href="#" target="_blank">here</a> </p>
@@ -122,33 +92,28 @@
   
   
   
-            <button type="submit"  class=" mt-2 my-btn-outline " style="width: 100%;">Place Order ₦<span id="sumTotal" class="item-price"><%=totalSum%></span></button>
+            <button type="submit"  class=" mt-2 my-btn-outline " style="width: 100%;">Pay ₦<span id="sumTotal" class="item-price"><%=totalSum%></span></button>
   
             <hr>
   
             <p class="m-0"> You are paying through <a href="https://paystack.com" target="_blank">paystack</a> payment gateway</p>
             <p class="m-0" style="font-size: 12px ;">card info is kept secure with military grade encryption </p>
           </form>
+          <hr>
+          <p class="text-warning rounded" style="font-size: 12px; margin-top: 5px ; border: 1px solid ; padding: 5px;">item will be delivered in 1 hour(s) after confirmation</p>
+
           <% } %>
 
-       
+        </div>
         </div>
 
-    </div>
-
+      </div>
       <%- include('./partials/info') %>
-
-
-
-    
-
-    </div>
-
     </div>
     </div>
-  </section><!-- /Service Details Section -->
 
-</main>
+
+
 
 <%- include('./partials/footer') %>
 

@@ -296,7 +296,19 @@ exports.oneDelivery = async (req, res) => {
 
     if (gpsData.length === 0) {
       req.flash("error_msg", "Customer location not found");
-      // return res.redirect("back");
+    return res.render("./drivers/driversDeliveryDetails", {
+      pageTitle: "Delivery to Make",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      orderedProducts,
+      orderToComplete,
+      totalAmountToPayOnDelivery,
+      customerData,
+      userLocation:[]
+    });
     }
   
     const userLocation = gpsData[0];
@@ -317,6 +329,7 @@ exports.oneDelivery = async (req, res) => {
     });
 
   } catch (error) {
+    console.log(error);
     req.flash("error_msg", `Error: ${error.message}`);
     return res.redirect("back");
   }

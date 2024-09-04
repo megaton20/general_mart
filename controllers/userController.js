@@ -29,7 +29,6 @@ const calculateShippingFee = require('../model/shippingFee');
 
 
 const calculateCashback = require('../model/cashback');
-const { error } = require('console');
 
 
 const appName = `General Mart`  
@@ -85,6 +84,75 @@ exports.profilePage = async (req, res) => {
     return res.redirect('/user');
   }
 };
+exports.addPhonePage = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+
+    // Fetch user data
+    const userDataQuery = `SELECT * FROM "Users" WHERE "id" = $1`;
+    const {rows:userDataResult} = await query(userDataQuery, [userId]);
+    const userData = userDataResult[0];
+
+  
+    if (userData.Phone != null) {
+      req.flash("warning_msg", "can not add another phone, update instead")
+     return res.redirect('back')
+    }
+
+   const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+    
+    let totalUnreadNotification = parseInt(result.totalunread, 10);
+
+    // Render the profile page
+    return res.render('./user/add-phone', {
+      pageTitle: 'User Profile',
+      appName: appName,
+      userData,
+      totalUnreadNotification
+    });
+    
+  } catch (error) {
+    console.log(error);
+    req.flash('error_msg', `Error from server`);
+    return res.redirect('/user');
+  }
+};
+
+exports.putNewPhone = async(req, res) => {
+
+  const userId =  req.user.id
+
+  const { Phone } = req.body;
+
+  if (!Phone) {
+    req.flash('error_msg', 'Enter Phone');
+    return res.redirect(`back`);
+  }
+
+  try {
+
+          const userWithPhoneQuery = `SELECT * FROM "Users" WHERE "Phone" = $1`;
+          const {rows: results} = await query(userWithPhoneQuery, [Phone]);
+          
+          if (results.length != 0) {
+              req.flash('error_msg', 'Phone number belongs to another user');
+              return res.redirect('back')
+          }
+
+        await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[req.user.id, `Your Phone number is ${Phone}.`, 'Security', false]);
+
+          await query('UPDATE "Users" SET "Phone" = $1 WHERE id = $2', [Phone, req.user.id])
+              req.flash('success_msg', 'Phone number added successfully');
+            return  res.redirect('/user/profile');
+          
+        } catch (error) {
+          console.log(error);
+          req.flash('errror_msg', `errorr form server`);
+          return  res.redirect('back');
+        }
+};
+
 
 exports.changePhonePage = async (req, res) => {
     // Render the profile page
@@ -1273,6 +1341,24 @@ exports.readNotification = async (req, res) => {
   }
 };
 
+exports.readAllNotification = async (req, res) => {
+
+  const id = req.user.id
+
+  try {
+
+    await query('UPDATE "notifications" SET  "is_read" = $1 WHERE "user_id" = $2', [true, id])
+
+    // Render the checkout page
+    req.flash('warning_msg', 'All rrreaddd! ');
+    res.redirect('back')
+
+  } catch (error) {
+    console.error(`Error during checkout: ${error}`);
+    req.flash('error_msg', 'An error occurred ');
+    return res.redirect('/user');
+  }
+};
 
 exports.deleteNotification = async (req, res) => {
   const editID = req.params.id;
@@ -1317,7 +1403,7 @@ exports.saveLocation = async (req, res) => {
   }
   try {
     // Insert new email
-    const insertQuery = 'INSERT INTO user_locations (user_id, latitude, longitude) VALUES ($1, $2, $3) ON CONFLICT (user_id) DO UPDATE SET latitude = $2, longitude = $3';
+    const insertQuery = 'INSERT INTO "user_locations" (user_id, latitude, longitude) VALUES ($1, $2, $3) ON CONFLICT (user_id) DO UPDATE SET latitude = $2, longitude = $3';
     await query(insertQuery, [req.user.id, lat, lng]);
 
     req.flash('success_msg', `Location saved`);
@@ -1328,7 +1414,6 @@ exports.saveLocation = async (req, res) => {
     return res.redirect('back');
   }
 };
-
 
 
 exports.buyAirtime = async (req, res) => {

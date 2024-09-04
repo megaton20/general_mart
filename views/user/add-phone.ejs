@@ -1,0 +1,42 @@
+
+
+<%- include('./partials/navbar') %>
+<div class="container ">
+<%- include ('../partials/messages') %>
+
+<br>
+<br>
+<br>
+<div class="row">
+	<div class="col-lg-4 container mb-4">
+   
+		<!-- actions nav -->
+		 <div class="profile-nav mt-3 ">
+		   <a class="" href="/user/profile"><i class="bi bi-arrow-left-circle"></i> Back</a>
+		 </div>
+	 </div>
+
+	 <div class="col-lg-8" style="font-size: 12px;">
+             
+		<div class="row justify-content-center">
+			<div class="col-lg-6 col-xl-6 col-xxl-4 my-box-shadow card p-4">
+
+						
+							<form action="/user/add-phone" method="post">
+								<div class="form-group">
+									<input type="phone" class="form-control mt-2 bg-transparent text-dark" placeholder="Enter phone" name="Phone">
+								</div>
+
+								<div class=" mt-2">
+									<input type="hidden" name="_method" value="PUT">
+									<input name="_method" type="submit" value="Add phone" class="m-0 my-btn " style="width: 100%;"/>
+								  </div>
+							</form>
+			</div>
+		</div>
+	</div>
+</div>
+<br>
+<br>
+</div>
+		

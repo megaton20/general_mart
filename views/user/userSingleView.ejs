@@ -88,12 +88,11 @@
                                <!-- 1 -->
                                <form action="/auth/verify-request" method="post">
                                 <input type="hidden" value="<%=userData.email%>" name="email" >
-                                <button type="submit" class="btn btn-warning btn-circle btn-sm">   <i class="fas fa-exclamation-triangle"></i></button>
-                                
+                                <button type="submit" style="border: none; background: none;" class="text-warning bg-none"><i class="fas fa-exclamation"></i> </button>                                    
                               </form>
                                 <% } else { %>
     
-                            <button disabled class="btn btn-success btn-circle btn-sm" >  <i class="fas fa-check"></i></button>
+                            <a class="text-success" >  <i class="fas fa-check"></i> </a>
     
                               <% } %>
                          
@@ -112,17 +111,25 @@
                                 
                           <div class="col-3">
                               <!-- switch colors -->
-                              <% if ( userData.verify_phone  == false) { %>
-    
-                               <!-- 1 -->
-                               <form action="/auth/send-code" method="post">
-                                <input type="hidden" value="<%=userData.Phone%>" name="phoneNumber" >
-                                <button type="submit" class="btn btn-warning btn-circle btn-sm">   <i class="fas fa-exclamation-triangle"></i></button>
-                                
-                              </form>
+                              <% if ( userData.Phone  == null) { %>
+
+                                <a href="/user/add-phone"><i class="fas fa-plus"></i> add</a>
                                 <% } else { %>
     
-                            <button disabled class="btn btn-success btn-circle btn-sm" >  <i class="fas fa-check"></i></button>
+                                              <!-- verify -->
+                                              <% if ( userData.verify_phone  == false) { %>
+              
+                                                <form action="/auth/send-code" method="post">
+                                                  <input type="hidden" value="<%=userData.Phone%>" name="phoneNumber" >
+                                                  <button type="submit" style="border: none; background: none;" class="text-warning bg-none"><i class="fas fa-exclamation"></i> </button>                                                  
+                                                </form>
+                                                  <% } else { %>
+                      
+                                                    <a class="text-success" >  <i class="fas fa-check"></i> </a>
+                      
+                                                <% } %>
+        
+                                                <!-- verrify end -->
     
                               <% } %>
                          

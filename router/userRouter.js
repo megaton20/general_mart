@@ -18,6 +18,8 @@ router.get('/search', ensureAuthenticated,isUser, userController.searchPage);
 router.post('/search', ensureAuthenticated,isUser, userController.searchPost);
 
 router.get('/profile', ensureAuthenticated,isUser, userController.profilePage);
+router.get('/add-phone', ensureAuthenticated,isUser, userController.addPhonePage);
+router.put('/add-phone', ensureAuthenticated,isUser, userController.putNewPhone);
 
 // chnge phone number
 router.get('/change-phone', ensureAuthenticated,isUser, userController.changePhonePage); 
@@ -29,6 +31,7 @@ router.post('/reset-password', ensureAuthenticated,isUser, userController.newPas
 router.get('/edit-user/:id', ensureAuthenticated,isUser, userController.editProfilePage);
 router.post('/add-profile-image/:id', ensureAuthenticated,isUser, upload.single('image'), userController.updateImage);
 router.put('/update-user-info/:id', ensureAuthenticated,isUser, userController.updateUserInfo);
+
 
 router.get('/fetchCart', ensureAuthenticated,isUser,ensureBasicInformation, userController.fetchCart);
 
@@ -45,6 +48,7 @@ router.put('/cancel-order/:id', ensureAuthenticated,isUser, userController.cance
 
 // notifications
 router.get('/notifications', ensureAuthenticated,isUser, userController.notificationScreen);
+router.get('/notifications/read-all', ensureAuthenticated,isUser, userController.readAllNotification);
 router.get('/notifications/:id', ensureAuthenticated,isUser, userController.readNotification);
 router.delete('/notifications/:id', ensureAuthenticated,isUser, userController.deleteNotification);
 

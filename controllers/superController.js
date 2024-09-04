@@ -3528,6 +3528,7 @@ exports.shipWithRider = async (req, res) => {
     const dispatchCompanyName = dispatch.companyName;
     const dispatchPhone = dispatch.companyPhone;
     const dispatchId = dispatch.id;
+    const dispatchUserId = dispatch.user_id;
 
     // Fetch order details
     const {rows:orderResults} = await query(`SELECT * FROM "Orders" WHERE "id" = $1`, [orderID]);
@@ -3538,7 +3539,13 @@ exports.shipWithRider = async (req, res) => {
 
     const thatOrder = orderResults[0];
     const saleID = thatOrder.sale_id;
+    const thatOrderCustomerId = thatOrder.customer_id;
 
+    if (thatOrderCustomerId == dispatchUserId) {
+      req.flash("error_msg", "goods belong to that rider, ship with someone else");
+      return res.redirect("back");
+    }
+    
     // Update Sales
     await query(`UPDATE "Sales" SET "status" = 'unresolved' WHERE "sale_id" = $1`, [saleID]);
 
@@ -3587,6 +3594,7 @@ exports.shipWithNewRider = async (req, res) => {
     const dispatchCompanyName = dispatch.companyName;
     const dispatchPhone = dispatch.companyPhone;
     const dispatchId = dispatch.id;
+    const dispatchUserId = dispatch.user_id;
 
     // Fetch order details
     const {rows:orderResults} = await query(`SELECT * FROM "Orders" WHERE "id" = $1`, [orderID]);
@@ -3595,12 +3603,17 @@ exports.shipWithNewRider = async (req, res) => {
       return res.redirect("/super");
     }
 
+    const thatOrderCustomerId = orderResults[0].customer_id;
 
     if (orderResults[0].rider_company_name === rider) {
       req.flash("error_msg", "can not reassign to same rider twice");
       return res.redirect("/super");
     }
 
+    if (thatOrderCustomerId == dispatchUserId) {
+      req.flash("error_msg", "item(s) belong to that rider, ship with someone else");
+      return res.redirect("back");
+    }
 
 
     // Update Orders
