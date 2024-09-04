@@ -286,10 +286,26 @@ a {
   
 
   .item-image-container {
+    position: relative;
+    width: 100%;
+    height: auto;
     height: 100px; 
     overflow: hidden; 
-    box-shadow: 0 3px 3px -5px, 0 2px 5px #0000000f;
+
   }
+
+  .wishlist-icon {
+    font-size: 1rem;
+    color: var(--accent-color);
+    padding: 0.2rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+.wishlist-icon:hover {
+  color: var(--nav-dropdown-hover-color);
+}
+
   
   .item-image-container img {
     width: 100px;
@@ -301,29 +317,25 @@ a {
   
   .item-image-container img:hover {
     overflow: hidden;
-    transform: scale(1.1); /* Scale up the image on hover */
+    transform: scale(1.1); 
   }
-  .item-text{
-  padding: 0;
-  margin: 0;
-  
-}
+
 .item-text p{
   padding: 0;
   margin: 0;
 
 }
   .custom-button {
-    display: flex; /* Use flexbox for layout */
-    align-items: center; /* Align items vertically in the center */
-    width: 200px; /* Adjust the width as needed */
-    height: 50px; /* Adjust the height as needed */
-    border: none; /* Remove the default border */
-    cursor: pointer; /* Change cursor on hover */
-    border-radius: 8px; /* Rounded corners */
-    overflow: hidden; /* Hide overflow */
-    background-color: #f0f0f0; /* Background color */
-    transition: background-color 0.3s ease; /* Smooth transition for background color */
+    display: flex; 
+    align-items: center; 
+    width: 200px; 
+    height: 50px; 
+    border: none; 
+    cursor: pointer; 
+    border-radius: 8px; 
+    overflow: hidden; 
+    background-color: #f0f0f0; 
+    transition: background-color 0.3s ease; 
   }
   
   .custom-button:hover {

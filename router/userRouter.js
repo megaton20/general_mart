@@ -33,13 +33,13 @@ router.post('/add-profile-image/:id', ensureAuthenticated,isUser, upload.single(
 router.put('/update-user-info/:id', ensureAuthenticated,isUser, userController.updateUserInfo);
 
 
-router.get('/fetchCart', ensureAuthenticated,isUser,ensureBasicInformation, userController.fetchCart);
+router.get('/product-details/:id', ensureAuthenticated,isUser, userController.productDetails);
 
+router.get('/fetchCart', ensureAuthenticated,isUser,ensureBasicInformation, userController.fetchCart);
 // this is where payment button will be
 router.get('/checkout/:id', ensureAuthenticated,isUser,ensureAuthenticatedEmail, userController.checkoutScreen);
 // Submit-cart //reference is after payment for payment provider
 router.get('/order/:reference', ensureAuthenticated,isUser, userController.submitCart); //
-router.get('/product-details/:id', ensureAuthenticated,isUser, userController.productDetails);
 
 router.get('/orders', ensureAuthenticated,isUser, userController.allUserOrder);
 router.get('/invoice/:id', ensureAuthenticated,isUser, userController.invoice);
@@ -62,5 +62,13 @@ router.post('/save-location/', ensureAuthenticated,isUser, userController.saveLo
 router.get('/buy-airtime', ensureAuthenticated,isUser, userController.getAirtimePage);
 router.post('/buy-airtime/', ensureAuthenticated,isUser, userController.buyAirtime);
 
+
+
+
+
+// Create or retrieve a user's wishlist
+router.get('/wishlist/',ensureAuthenticated,isUser,userController.wishlist)
+router.get('/wishlist/:id/add',ensureAuthenticated,isUser,userController.addWishlist)
+router.get('/wishlist/:id/remove',ensureAuthenticated,isUser,userController.removeWishlist)
 
 module.exports = router;

@@ -29,6 +29,7 @@ const calculateShippingFee = require('../model/shippingFee');
 
 
 const calculateCashback = require('../model/cashback');
+const { log } = require('console');
 
 
 const appName = `General Mart`  
@@ -451,9 +452,11 @@ exports.userShop = async (req, res) => {
     LIMIT $4 OFFSET $5`;
   const queryParams = ['yes', 0, 'not-expired', limit, offset];
 
+
+
   try {
     const results = await query(showcaseQuery, queryParams);
-    const showcaseItem = JSON.parse(JSON.stringify(results.rows));
+    const showcase = JSON.parse(JSON.stringify(results.rows));
     const moreItemsAvailable = results.rows.length === limit;
 
     const countResult = await query(countSql);
@@ -469,6 +472,22 @@ exports.userShop = async (req, res) => {
     const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
     let totalUnreadNotification = parseInt(result.totalunread, 10);
+
+    const {rows:wishlistItems} = await query(
+      `SELECT "product_id" FROM "wishlists" WHERE "user_id" = $1`,
+      [req.user.id]
+    );
+
+
+    const wishlistProductIDs = wishlistItems.map(item => item.product_id);
+
+    const showcaseItem = showcase.map(item => {
+      return {
+        ...item,
+        inWishlist:wishlistProductIDs.includes(item.id)
+      }
+    })
+
 
     return res.render('./user/userCounter', {
       pageTitle: 'At the counter',
@@ -512,8 +531,8 @@ exports.userShopQuery = async (req, res) => {
   const queryParams = ['yes', 0, 'not-expired', limit, offset];
 
   try {
-    const results = await query(sql, queryParams.slice(0, 3).concat([limit, offset]));
-    const products = JSON.parse(JSON.stringify(results.rows));
+    const {rows:productsResults} = await query(sql, queryParams.slice(0, 3).concat([limit, offset]));
+
 
     const countResult = await query(countSql, queryParams.slice(0, 3));
     const totalRows = parseInt(countResult.rows[0].count, 10);
@@ -528,6 +547,22 @@ exports.userShopQuery = async (req, res) => {
     const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
     let totalUnreadNotification = parseInt(result.totalunread, 10);
+
+    const {rows:wishlistItems} = await query(
+      `SELECT "product_id" FROM "wishlists" WHERE "user_id" = $1`,
+      [req.user.id]
+    );
+
+
+    const wishlistProductIDs = wishlistItems.map(item => item.product_id);
+
+    const products = productsResults.map(item => {
+      return {
+        ...item,
+        inWishlist:wishlistProductIDs.includes(item.id)
+      }
+    })
+
 
     res.render('./user/userCounterQuery', {
       pageTitle: 'At the counter',
@@ -573,8 +608,8 @@ exports.userCategoryQuery = async (req, res) => {
   queryParams.push(limit, offset);
 
   try {
-    const results = await query(productQuery, queryParams);
-    const products = JSON.parse(JSON.stringify(results.rows));
+    const {rows:productsResults} = await query(productQuery, queryParams);
+
 
     // Adjust count query and parameters
     let countQuery = `
@@ -600,6 +635,22 @@ exports.userCategoryQuery = async (req, res) => {
     const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
     let totalUnreadNotification = parseInt(result.totalunread, 10);
+
+    const {rows:wishlistItems} = await query(
+      `SELECT "product_id" FROM "wishlists" WHERE "user_id" = $1`,
+      [req.user.id]
+    );
+
+
+    const wishlistProductIDs = wishlistItems.map(item => item.product_id);
+
+    const products = productsResults.map(item => {
+      return {
+        ...item,
+        inWishlist:wishlistProductIDs.includes(item.id)
+      }
+    })
+
 
     res.render('./user/userCategoryQuery', {
       pageTitle: 'Products by Category',
@@ -627,22 +678,37 @@ exports.productDetails = async (req, res) => {
   const itemId = req.params.id;
 
   try {
-    const cartResults = await query('SELECT * FROM "Cart" WHERE "user_id" = $1', [req.user.id]);
-    const presentCart = JSON.parse(JSON.stringify(cartResults.rows));
+    const {rows:presentCart} = await query('SELECT * FROM "Cart" WHERE "user_id" = $1', [req.user.id]);
 
-    const itemResults = await query('SELECT * FROM "Products" WHERE "id" = $1', [itemId]);
-    const itemData = JSON.parse(JSON.stringify(itemResults.rows));
+    const {rows:itemData} = await query('SELECT * FROM "Products" WHERE "id" = $1', [itemId]);
+
 
     const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
     let totalUnreadNotification = parseInt(result.totalunread, 10);
 
+    const {rows:wishlistItems} = await query(
+      `SELECT "product_id" FROM "wishlists" WHERE "user_id" = $1`,
+      [req.user.id]
+    );
+
+
+    const wishlistProductIDs = wishlistItems.map(item => item.product_id);
+
+    const products = itemData.map(item => {
+      return {
+        ...item,
+        inWishlist:wishlistProductIDs.includes(item.id)
+      }
+    })
+
+
     return res.render('./user/product-details', { 
       pageTitle: "Details",
       appName: process.env.APP_NAME,
-      itemData,
+      itemData:products,
       totalUnreadNotification,
-      presentCart
+      presentCart,
     });
   } catch (error) {
     console.error(`Error fetching product details: ${error.message}`);
@@ -1518,3 +1584,92 @@ exports.getAirtimePage = async (req, res) => {
   });
 };
 
+
+exports.wishlist =  async (req, res) => {
+  const userId = req.user.id;
+
+      try {
+        const {rows:wishlistItems} = await query(
+          `SELECT "Products".* 
+           FROM "Products" 
+           INNER JOIN "wishlists" ON "Products".id = wishlists.product_id
+           WHERE wishlists.user_id = $1`,
+          [userId]
+        );
+
+              if (wishlistItems.length <=0) {
+                req.flash('warning_msg', "nothing in wishlist!")
+                return res.redirect('back')
+              }
+
+
+              const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+    
+              let totalUnreadNotification = parseInt(result.totalunread, 10);
+          res.render('./user/wishlist', {
+            pageTitle:"wishlist",
+            appName,
+             wishlist: wishlistItems,
+             totalUnreadNotification
+             });
+
+  
+  } catch (err) {
+      console.error(err);
+      req.flash('warning_msg', "Server Error!")
+      return res.redirect('back')
+  }
+
+}
+
+exports.addWishlist = async (req, res) => {
+  const { id } = req.params; // Product ID
+  const userId = req.user.id;
+
+  try {
+           // Check if the user already has a wishlist
+           let {rows:wishlist} = await db.query('SELECT * FROM "wishlists" WHERE "user_id" = $1 AND "product_id" = $2', [userId,id]);
+
+
+         if (wishlist.length !=0) {
+          if (wishlist[0].product_id == id) {
+            req.flash('error_msg', 'already added to whhishhllllliiissst!');
+            return res.redirect('back');
+           }
+         }
+      // Add item to wishlist
+      await query('INSERT INTO wishlists (user_id, product_id) VALUES ($1, $2)', [userId, id]);
+
+      req.flash('success_msg', 'added to wishlist succesfuly');
+     return res.redirect('back');
+  } catch (err) {
+      console.error(err.message);
+      req.flash('error_msg', 'Error from server: cannot add to wishlist');
+      return res.redirect('back');
+  }
+}
+
+exports.removeWishlist = async (req, res) => {
+  const { id } = req.params; // Product ID
+  const userId = req.user.id;
+
+  try {
+           // Check if the user already has a wishlist
+           let {rows:wishlist} = await db.query('SELECT * FROM "wishlists" WHERE "user_id" = $1 AND "product_id" = $2', [userId,id]);
+
+
+           if (wishlist.length == 0) {
+            req.flash('error_msg', 'not found');
+            return res.redirect('back');
+           }
+      // remv item to wishlist
+      await query(`DELETE FROM "wishlists" WHERE "product_id" = $1 AND "user_id" = $2`, [id,userId]);
+
+      req.flash('error_msg', 'removed from wishlist succesful');
+     return res.redirect('back');
+  } catch (err) {
+      console.error(err.message);
+      req.flash('error_msg', 'Error from server: cannot add to wishlist');
+      return res.redirect('back');
+  }
+}

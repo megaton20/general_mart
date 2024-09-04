@@ -47,26 +47,42 @@
                     <h5><%= products.length > 0 ? products[0].category : "no item" %></h5>
                       <div class="row">
 
-                        <% products.forEach(item => { %>
-                          <div class="col-6 mt-4' col-md-4 col-lg-3">
-                            <div class="my-box-shadow mt-4 border-1">
-                              <a href="/user/product-details/<%=item.id%>"> 
-                              <div class="card-body">
-                                  <div class="item-image-container">
-                                  <img src="/uploads/<%=item.image%>" class="card-img-top rounded-4" alt="<%=item.ProductName%>">
+                        <% products.forEach(data => { %>
+                          <div class="col-md-4 col-lg-3 col-6">
+                            <div class="mt-4 card my-box-shadow border-1 position-relative">
+                              <a href="/user/product-details/<%= data.id %>">
+                                <div class="card-body">
+                                  <div class="item-image-container position-relative">
+                                    <img src="/uploads/<%= data.image %>" class="card-img-top rounded-4" alt="<%= data.ProductName %>">
+        
+                                  </div>
+                                  <div class="item-text text-dark truncate-container d-flex justify-content-center align-items-center mt-2">
+                                    <p class="text-truncate"><%= data.ProductName %></p>
+                                  </div>
                                 </div>
-                                <div class="item-text  text-dark truncate-container">
-                                  <p class="text-truncate"> <%=item.ProductName %></p>
+                              </a>
+                              <div class="row">
+                                <div class="col-2">
+                                  <% if (data.inWishlist) { %>
+                                    <a href="/user/wishlist/<%= data.id %>/remove" class="wishlist-icon m-1 ">
+                                      <i class="fas fa-heart"></i>
+                                    </a>
+                                    <% } else { %>
+                                      <a href="/user/wishlist/<%= data.id %>/add" class="wishlist-icon m-1 ">
+                                          <i class="far fa-heart"></i>
+                                        </a>
+                                    <% } %>
                                 </div>
-                                </div>
-                          
-                                </a> 
-                                <div class=" p-1">
-                                  <button style="width:100%" class="my-btn add-to-cart p-1 m-0" data-id="<%=item.id%>"  data-name="<%=item.ProductName %>" data-price="<%=item.UnitPrice %>" data-max="<%=item.total_on_shelf %>" data-image="<%=item.image%>" onclick="handleButtonClick(this)">Buy   ₦<small class="item-price"><%=item.UnitPrice%>.00</small></button>
+                                <div class="col-10">
+                                  <div class="p-1 d-flex justify-content-center align-items-center">
+                                    <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>" onclick="handleButtonClick(this)">₦<small class="item-price"><%= data.UnitPrice %>.00</small></button> 
+                                  </div>
                                 </div>
                               </div>
+                           
+                             
+                            </div>
                           </div>
-                          
                       <% }) %>
                       </div>
                       <nav aria-label="Page navigation mt-4">
@@ -174,10 +190,10 @@ let formattedPrices = document.querySelectorAll('.item-price');
     if (cartItem) {
       if (itemButton) {
         itemButton.outerHTML = `
-          <div style="width:100%; height:30px "  class="m-0 btn-group p-0" role="group" data-id="${itemId}">
-            <button class="btn btn-danger p-1" onclick="removeFromCart(${itemId})">-</button>
-            <button class="btn btn-secondary p-1" disabled>${cartItem.quantity}</button>
-            <button class="btn btn-success p-1" onclick="increaseQuantity(${itemId})">+</button>
+        <div style="width:100%; height:30px "  class="m-0 btn-group p-0 my-box-shadow border-1" role="group" data-id="${itemId}">
+            <button class="btn p-0" style="border:1px solid #333; color:var(--accent-color)" onclick="removeFromCart(${itemId})">-</button>
+            <button class="btn btn-secondary p-1" disabled style="background-color:var(--accent-color)" ">${cartItem.quantity}</button>
+            <button class="btn p-0" style="border:1px solid #333; color:var(--accent-color)" onclick="increaseQuantity(${itemId})">+</button>
           </div>
         `;
       }

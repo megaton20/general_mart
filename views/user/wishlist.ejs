@@ -6,7 +6,7 @@
 
 
             <div class="row">
-              <div class="col-lg-4 container mb-4">
+              <div class="col-lg-2 container mb-4">
    
                 <!-- actions nav -->
                  <div class="profile-nav mt-3 ">
@@ -15,16 +15,21 @@
              </div>
 
 
-              <div class="col-lg-8" style="font-size: 12px;">
-                <table class="table" width="100%"cellspacing="0">
-            
-  
+              <div class="col-lg-10" style="font-size: 12px;">
+                <table class="table " width="100%"cellspacing="0">
+
                   <tbody>
-                      <% newOrder.forEach(function(data) {%>
+                      <% wishlist.forEach(function(data) {%>
                       <tr>
-                        <td><%= data['total_amount'] %></td>
-                        <td><%= data['status'] %></td>
-                        <td><a class="btn btn-primary" href="/user/invoice/<%= data['sale_id'] %>"> Details </a></td>
+                        <td><img class="img-thumbnail" style="max-width: 40px;" src="/uploads/<%= data['image'] %>" alt="image"></td>
+                        <td class="truncate-container"><%= data['ProductName'] %></td>
+                        <td><%= data['UnitPrice'] %></td>
+                        <td>
+                        <a href="/user/product-details/<%= data.id %>"> Buy item  </a> <br>
+                        </td>
+                        <td>
+                          <a href="/user/wishlist/<%= data.id %>/remove"> Remove item  </a>
+                        </td>
                       </tr>
                         <% }) %>
   

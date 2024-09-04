@@ -17,26 +17,39 @@
       <div class="col-lg-4" data-aos="" data-aos-delay="0">
 
   
-            <div class="card border-1 ">
+            <div class="card my-box-shadow border-1 ">
               <div class="card-body">
                 <div class=" align-items-center" >
                   <img src="/uploads/<%= itemData[0].image %>" class=" card-img-top rounded-4" style="max-width: 290px; max-height: 300px;" alt="<%= itemData[0].ProductName %>">
                 </div>
                 <div class="item-text text-dark">
-                  <p style="font-size: 25px;" class="mb-4" ><%= itemData[0].ProductName%></p>
+                  <p style="font-size: 25px;" class="mb-2" ><%= itemData[0].ProductName%></p>
                 </div> 
                 <p class="text-warning m-0 rounded" style="font-size: 12px; margin-top: 5px ; border: 1px solid ; padding: 5px;">
                   <%=itemData[0].total_on_shelf%> items left 
                 </p>
               </div>
-                <div class="card-footer p-1">
-                    <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= itemData[0].id %>" data-name="<%= itemData[0].ProductName %>" data-price="<%= itemData[0].UnitPrice %>" data-max="<%= itemData[0].total_on_shelf %>" data-image="<%= itemData[0].image %>" onclick="handleButtonClick(this)">Buy   ₦<small class="item-price"><%= itemData[0].UnitPrice %>.00</small></button> 
-                </div>
+
+                  <div class="row">
+                    <div class="col-2">
+                      <% if (itemData[0].inWishlist) { %>
+                        <a href="/user/wishlist/<%= itemData[0].id %>/remove" class="wishlist-icon m-1 ">
+                          <i class="fas fa-heart"></i>
+                        </a>
+                        <% } else { %>
+                          <a href="/user/wishlist/<%= itemData[0].id %>/add" class="wishlist-icon m-1 ">
+                              <i class="far fa-heart"></i>
+                            </a>
+                        <% } %>
+                    </div>
+                    <div class="col-10 m-0">
+                      <div class="p-1 d-flex justify-content-center align-items-center">
+                        <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= itemData[0].id %>" data-name="<%= itemData[0].ProductName %>" data-price="<%= itemData[0].UnitPrice %>" data-max="<%= itemData[0].total_on_shelf %>" data-image="<%= itemData[0].image %>" onclick="handleButtonClick(this)">Buy   ₦<small class="item-price"><%= itemData[0].UnitPrice %>.00</small></button> 
+                      </div>
+                    </div>
+                  </div>
+
               </div>
-
-
-              <br>
-              <br>
 
               <div>
                 <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user/fetchCart/"> Checkout</a>
@@ -45,7 +58,7 @@
     </div>
 
     <div class="col-lg-8">
-        <div class="card">
+        <div class="card my-box-shadow">
           <div class="card-body pt-3">
             <!-- Bordered Tabs -->
             <ul class="nav nav-tabs nav-tabs-bordered">
@@ -106,7 +119,7 @@
         </div>
       </div>
       
-      <div class="card mb-4 mt-4">
+      <div class="card my-box-shadow mb-4 mt-4">
         <div class="container p-4">
           <p>Dear Valued Customer,</p>
           <p>Thank you for choosing G.Mart for your grocery and food needs. Our products are carefully selected to ensure quality and satisfaction. We pride ourselves on our credibility and are committed to providing fast response times to all orders.</p>
@@ -119,7 +132,6 @@
           <p>Best regards,<br><strong>The G.Mart Team</strong></p>
         </div>
       </div>
-      <%- include('./partials/info') %>
       </div>
     </div>
     </div>
