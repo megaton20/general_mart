@@ -221,7 +221,6 @@ async function checkReferrals() {
             }
         }
 
-        console.log('Referral cashback check completed successfully.');
     } catch (err) {
         console.error('Error checking referrals:', err);
     }
@@ -232,7 +231,6 @@ async function checkReferrals() {
 
 // Schedule the job to run every minute
 cron.schedule('* * * * *', () => {
-  console.log(' referral cashback check 9 minutes...');
   checkReferrals();
 });
 

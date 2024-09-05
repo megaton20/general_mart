@@ -92,7 +92,7 @@ const generateReferralCode = (username) => {
     if (results.length > 0) {
       return done(null, results[0]); // User exists, return the user
     } else {
-      const referralCode = generateReferralCode(email);
+      const referralCode = generateReferralCode(profile.emails[0].value);
 
       // User does not exist, create a new user record with Google data
       const newUser = {
