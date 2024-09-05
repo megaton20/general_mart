@@ -220,17 +220,23 @@ exports.verifyCode = async (req, res) => {
 
 exports.registerHandler = async (req, res) => {
   let errors = [];
-  const { phone, email, password, confirm_password, first_name, last_name } = req.body;
+  // Generate a referral code
+const generateReferralCode = (username) => {
+  return Buffer.from(username).toString('base64').slice(0, 8);
+};
 
-  if (!(phone && email && password && confirm_password && first_name && last_name)) {
-    errors.push({ msg: 'Enter all details' });
-  }
+const { phone, email, password, confirm_password, first_name, last_name, referrerCode } = req.body;
 
-  if (password !== confirm_password) {
-    errors.push({ msg: 'Passwords do not match' });
-  }
+if (!(phone && email && password && confirm_password && first_name && last_name)) {
+  errors.push({ msg: 'Enter all details' });
+}
 
-  if (errors.length > 0) {
+if (password !== confirm_password) {
+  errors.push({ msg: 'Passwords do not match' });
+}
+
+
+if (errors.length > 0) {
     return res.render('register', {
       pageTitle: 'Register again',
       appName: appName,
@@ -242,6 +248,8 @@ exports.registerHandler = async (req, res) => {
       last_name,
     });
   }
+
+  const referralCode = generateReferralCode(email);
 
   try {
     const salt = await bcrypt.genSalt(10);
@@ -260,13 +268,14 @@ exports.registerHandler = async (req, res) => {
         password,
         first_name,
         last_name,
+        referralCode
       });
     }
 
-    const insertResult = await query(
+ const {rows:newUser} = await query(
       `INSERT INTO "Users" 
-      ("First_name", "Last_name", "email", "Phone", "Password", "created_date", "previous_visit", "spending") 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
+      ("First_name", "Last_name", "email", "Phone", "Password", "created_date", "previous_visit", "spending", "referral_code") 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8,$9) RETURNING id`,
       [
         first_name,
         last_name,
@@ -275,9 +284,25 @@ exports.registerHandler = async (req, res) => {
         hashedPassword,
         new Date(),
         new Date(),
-        0 // initial spending
+        0,
+        referralCode
       ]
     );
+
+
+           // Link to referrer if referral code is provided
+           if (referrerCode) {
+            const referrerResult = await query(
+                `SELECT id FROM "Users" WHERE "referral_code" = $1`,
+                [referrerCode]
+            );
+            const referrerId = referrerResult.rows[0].id;
+
+            await query(
+                `INSERT INTO "referrals" (referrer_id, referee_id) VALUES ($1, $2)`,
+                [referrerId, newUser[0].id]
+            );
+        }
 
 
     req.flash('success_msg', `"${email}" Registration successful`);
@@ -357,7 +382,7 @@ exports.resetRequest = async (req, res, next) => {
 
       const userEmail = results.rows[0].email;
       const token = generateResetToken(userEmail);
-      const resetLink = `${process.env.LIVE_DIRR || 'http://localhost:2000'}/auth/reset-password/${token}`;
+      const resetLink = `${process.env.LIVE_DIRR || `http://localhost:${process.env.PORT || 2000}`}/auth/reset-password/${token}`;
 
           // Send verification email
           const transporter = nodemailer.createTransport({

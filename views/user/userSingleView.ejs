@@ -176,6 +176,47 @@
    
                 </div>
 
+                <div class="card mt-3">
+                  <div class="card-body">
+                    <h5>My invite link</h5>
+                    <div class="row">
+                      <div class="col-10"><input id="link" class="form-control" value=" <%=referLink%>"/></div>
+                      <div class="col-2">
+                        <i class="bi bi-clipboard" onclick="copyToClipboard()" style="font-size: 20px; color: var(--accent-color);"></i>
+
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="referrals">
+                      <h5 class="mb-4">You have <%= referralResult.length %> Ref(s)</h5>
+                      <table class="table" width="100%" cellspacing="0">
+                          <tbody>
+                              <% referralResult.forEach(function(data) { %>
+                              <tr>
+                                  <!-- Displaying the name from the users table -->
+                                  <td><%= data.First_name %> <%= data.Last_name %></td>
+                                  <!-- Displaying whether they have earned (based on has_earned) -->
+                                  <td>
+                                      <% if (data.has_earned) { %>
+                                      <i class="fas fa-check text-success"></i>
+                                      <% } else { %>
+                                      <i class="fas fa-times text-danger"></i>
+                                      <% } %>
+                                  </td>
+                              </tr>
+                              <% }) %>
+                          </tbody>
+                      </table>
+                  </div>
+                  
+
+                    <hr>
+                    <p class="text-success"> Refer and get extra bonus of NGN 500</p>
+                    <p class="text-warning"> Referrees must purchase an item for referrals to be vetted</p>
+                 
+                   </div>
+   
+                </div>
 
                 <div class="card mt-3">
                   <div class="card-body">
@@ -307,4 +348,20 @@ formatedDivs.forEach(div => {
   L.marker(location).addTo(map)
     .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
     .openPopup();
+</script>
+
+<script>
+  function copyToClipboard() {
+    // Get the link input element
+    var copyText = document.getElementById("link");
+
+    // Select the text
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); // For mobile devices
+
+    // Copy the text to clipboard
+    navigator.clipboard.writeText(copyText.value)
+      .then(() => alert("Link copied to clipboard!"))
+      .catch(err => console.error('Failed to copy: ', err));
+  }
 </script>

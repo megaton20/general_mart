@@ -69,6 +69,18 @@ exports.profilePage = async (req, res) => {
     
     let totalUnreadNotification = parseInt(result.totalunread, 10);
 
+    const referalCode = userData.referral_code || "21xdrd"
+
+  
+    const referLink = `${process.env.LIVE_DIRR || `http://localhost:${process.env.PORT}`}/register/?ref=${referalCode}`;
+    const usersQuery = `
+    SELECT u.id, u.cashback, u."First_name", u."Last_name", r.has_earned
+    FROM "Users" u
+    JOIN "referrals" r ON u.id = r.referee_id
+    WHERE r.referrer_id = $1
+`;
+const { rows: referees } = await query(usersQuery, [req.user.id]);
+    
     // Render the profile page
     return res.render('./user/userSingleView', {
       pageTitle: 'User Profile',
@@ -77,7 +89,9 @@ exports.profilePage = async (req, res) => {
       spending,
       ranks,
       cashBack,
-      totalUnreadNotification
+      totalUnreadNotification,
+      referLink,
+      referralResult:referees
     });
     
   } catch (error) {
@@ -488,7 +502,7 @@ exports.userShop = async (req, res) => {
       }
     })
 
-
+    
     return res.render('./user/userCounter', {
       pageTitle: 'At the counter',
       appName: process.env.APP_NAME,
@@ -498,6 +512,7 @@ exports.userShop = async (req, res) => {
       showcaseItem,
       moreItemsAvailable,
       totalUnreadNotification,
+      
       pagination: {
         page,
         totalPages

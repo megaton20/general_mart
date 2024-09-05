@@ -216,11 +216,17 @@ router.get('/login', forwardAuthenticated, (req, res) => res.render('login',{
   appName,
   }));
 
-router.get('/register', forwardAuthenticated, (req, res) => res.render('register',{
+router.get('/register', forwardAuthenticated, (req, res) =>{
+
+  const referrerCode = req.query.ref || null;
+  res.render('register',{
     pageTitle:`Create account with ${appName}`,
     appName,
+    referrerCode,
     stateData
-}));
+  })
+} 
+);
 
 router.get('/forget', forwardAuthenticated, (req, res) => res.render('forget-password',{
   pageTitle:`enter recovery email for  ${appName}`,

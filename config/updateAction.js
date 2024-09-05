@@ -183,6 +183,59 @@ console.log(`Removed ${results.rowCount} unverified users.`);
 
 
 
+// Function to check all referrals and update referrers' cashback if eligible
+async function checkReferrals() {
+
+  const referralBonus = 500
+    try {
+        // 1. Fetch all referral records where has_earned is false
+        const referralResult = await query(
+            `SELECT * FROM "referrals" WHERE "has_earned" = FALSE`
+        );
+        const referrals = referralResult.rows;
+
+        for (let referral of referrals) {
+            const { referrer_id, referee_id } = referral;
+
+            const refereeResult = await query(
+              `SELECT "spending" FROM "Users" WHERE id = $1`,
+              [referee_id]
+              );
+              const refereeSpending = refereeResult.rows[0].spending;
+              
+              console.log(refereeSpending);
+
+            if (refereeSpending >= 3000.00) {
+                // Add 1000 ₦ to the referrer's cashback
+                await query(
+                    `UPDATE "Users" SET cashback = cashback + ${referralBonus} WHERE id = $1`,
+                    [referrer_id]
+                );
+
+                // Mark the referral as "has_earned" to prevent duplicate rewards
+                await query(
+                    `UPDATE referrals SET "has_earned" = TRUE WHERE "referee_id" = $1`,
+                    [referee_id]
+                );
+                await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[referrer_id, `Your have been credited with NGN ${referralBonus}. on your referral bonus`, 'success', false]);
+            }
+        }
+
+        console.log('Referral cashback check completed successfully.');
+    } catch (err) {
+        console.error('Error checking referrals:', err);
+    }
+}
+
+
+
+
+// Schedule the job to run every minute
+cron.schedule('* * * * *', () => {
+  console.log(' referral cashback check 9 minutes...');
+  checkReferrals();
+});
+
 // Schedule the job to run every 48 hours
 cron.schedule('0 0 */2 * *', () => {
   removeUnverifiedUsers();

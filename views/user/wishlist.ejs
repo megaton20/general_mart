@@ -21,6 +21,7 @@
                   <tbody>
                       <% wishlist.forEach(function(data) {%>
                       <tr>
+                        
                         <td><img class="img-thumbnail" style="max-width: 40px;" src="/uploads/<%= data['image'] %>" alt="image"></td>
                         <td class="truncate-container"><%= data['ProductName'] %></td>
                         <td><%= data['UnitPrice'] %></td>
