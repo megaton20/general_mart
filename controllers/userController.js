@@ -439,7 +439,7 @@ exports.updateUserInfo = async (req, res) => {
       lga,
       userId
     ]);
-    await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[req.user.id, `Your Info was changed was changed.`, 'security', false]);
+    await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[req.user.id, `Your Info was updated.`, 'security', false]);
     req.flash("success_msg", "User updated successfully!");
     return res.redirect(`/user/profile/`);
 
