@@ -22,6 +22,7 @@ const passport = require('../config/passport');
 router.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
   async (req, res) => {
+
     try {
       // Parameterized query to prevent SQL injection
       const updateQuery = `

@@ -81,6 +81,10 @@ passport.use(new GoogleStrategy({
   callbackURL: '/auth/google/callback'
 }, async (accessToken, refreshToken, profile, done) => {
   try {
+          // Generate a referral code
+const generateReferralCode = (username) => {
+  return Buffer.from(username).toString('base64').slice(0, 8);
+};
     // Check if the user already exists
     const {rows:results} = await query('SELECT * FROM "Users" WHERE "googleId" = $1', [profile.id]);
 
@@ -88,6 +92,8 @@ passport.use(new GoogleStrategy({
     if (results.length > 0) {
       return done(null, results[0]); // User exists, return the user
     } else {
+      const referralCode = generateReferralCode(email);
+
       // User does not exist, create a new user record with Google data
       const newUser = {
         googleId: profile.id,
@@ -98,12 +104,13 @@ passport.use(new GoogleStrategy({
         previous_visit: new Date(),
         spending: 0,
         verify_email: true,
-        status: "verified"
+        status: "verified",
+        referralCode
       };
 
       // Insert the new user into the database
-      const {rows:insertResult} = await query(`INSERT INTO "Users" ("googleId", "First_name", "Last_name", "email", "created_date", "previous_visit", "spending", "verify_email", "status") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`, 
-        [newUser.googleId, newUser.First_name, newUser.Last_name, newUser.email, newUser.created_date, newUser.previous_visit, newUser.spending, newUser.verify_email, newUser.status]
+      const {rows:insertResult} = await query(`INSERT INTO "Users" ("googleId", "First_name", "Last_name", "email", "created_date", "previous_visit", "spending", "verify_email", "status", "referral_code") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`, 
+        [newUser.googleId, newUser.First_name, newUser.Last_name, newUser.email, newUser.created_date, newUser.previous_visit, newUser.spending, newUser.verify_email, newUser.status, newUser.referralCode]
       );
 
       newUser.id = insertResult[0].id; // Get the inserted user's ID
