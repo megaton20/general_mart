@@ -141,33 +141,8 @@ const shelfAvailableChecker = async () => {
   }
 };
 
-// const cartMonitor = async () => {
-//   try {
-//     const results = await query(`SELECT id FROM "Products" WHERE "total_on_shelf" <= 0`);
-
- 
-//     let shelfData = results.rows; // Accessing rows directly since `query` returns the data as an array of objects
-    
-//     if (shelfData.length > 0) {
-//       let productIds = shelfData.map(product => product.id); // Extracting the product IDs
-
-//       if (productIds.length > 0) {
-//         // Generate the query for deleting items from the Cart table
-//         let deleteQuery = `DELETE FROM "Cart" WHERE "product_id" = ANY($1::int[])`;
-
-//         const deleteResult = await query(deleteQuery, [productIds]);
-        
-//         console.log(`${deleteResult.rowCount} item(s) deleted from cart`);
-//       }
-//     }
-//   } catch (err) {
-//     console.error("Error during Cart monitor update:", err);
-//   }
-// };
 
 
-
-// Function to remove unverified users
 const removeUnverifiedUsers = async() => {
   try{
 
@@ -180,8 +155,6 @@ console.log(`Removed ${results.rowCount} unverified users.`);
     console.error('Error removing unverified users:', err);
   }
 };
-
-
 
 // Function to check all referrals and update referrers' cashback if eligible
 async function checkReferrals() {

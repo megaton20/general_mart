@@ -28,9 +28,6 @@ const appName = `General Mart`
 
 
 
-exports.authRequest = passport.authenticate('google', { scope: ['profile', 'email'] })
-
-
 exports.verifyEmailRequest = async (req, res) => {
   const email = req.body.email;
   

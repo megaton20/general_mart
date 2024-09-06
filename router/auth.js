@@ -4,7 +4,7 @@ const authController = require("../controllers/authcontroller");
 const { isUser } = require("../config/isUser");
 const { ensureAuthenticated,forwardAuthenticated } = require("../config/auth");
 
-
+const passport = require('../config/passport');
 
 
 
@@ -14,7 +14,15 @@ const { ensureAuthenticated,forwardAuthenticated } = require("../config/auth");
 router.post('/verify-request',ensureAuthenticated,isUser,authController.verifyEmailRequest);
 router.get('/verify-email',ensureAuthenticated,isUser,authController.verifyEmailCallBack);
 
-router.get('/google',authController.authRequest);
+
+router.get('/google', (req, res, next) => {
+    // If a referral code is present, include it in the state parameter
+    const referralCode = req.session.referrerCode ? req.session.referrerCode : '';
+    passport.authenticate('google', {
+      scope: ['profile', 'email'],
+      state: referralCode 
+    })(req, res, next);
+  });
 
 // Route to request verification code
 router.post('/send-code',ensureAuthenticated, isUser,authController.requestVerificationCode);

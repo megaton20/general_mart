@@ -1,6 +1,3 @@
-
-
-
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const db = require("../model/databaseTable");
@@ -10,7 +7,8 @@ const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
-// Convert db.query to return a promise
+
+let globalReferralCode;
 
 // Passport session setup
 passport.serializeUser((user, done) => {
@@ -78,9 +76,12 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: '/auth/google/callback'
-}, async (accessToken, refreshToken, profile, done) => {
+  callbackURL: '/auth/google/callback',
+  passReqToCallback:true
+}, async ( req,accessToken, refreshToken, profile, done) => {
   try {
+
+    const referrerCode = req.query.state
           // Generate a referral code
 const generateReferralCode = (username) => {
   return Buffer.from(username).toString('base64').slice(0, 8);
@@ -92,7 +93,7 @@ const generateReferralCode = (username) => {
     if (results.length > 0) {
       return done(null, results[0]); // User exists, return the user
     } else {
-      const referralCode = generateReferralCode(profile.emails[0].value);
+      const newReferralCode = generateReferralCode(profile.emails[0].value);
 
       // User does not exist, create a new user record with Google data
       const newUser = {
@@ -105,13 +106,25 @@ const generateReferralCode = (username) => {
         spending: 0,
         verify_email: true,
         status: "verified",
-        referralCode
+        newReferralCode
       };
 
       // Insert the new user into the database
       const {rows:insertResult} = await query(`INSERT INTO "Users" ("googleId", "First_name", "Last_name", "email", "created_date", "previous_visit", "spending", "verify_email", "status", "referral_code") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`, 
-        [newUser.googleId, newUser.First_name, newUser.Last_name, newUser.email, newUser.created_date, newUser.previous_visit, newUser.spending, newUser.verify_email, newUser.status, newUser.referralCode]
+        [newUser.googleId, newUser.First_name, newUser.Last_name, newUser.email, newUser.created_date, newUser.previous_visit, newUser.spending, newUser.verify_email, newUser.status, newUser.newReferralCode]
       );
+
+      // extract and link the referral code if present in session 
+
+
+        if (referrerCode) {
+          const referrerResult = await query(`SELECT id FROM "Users" WHERE "referral_code" = $1`,[referralCode]);
+          const referrerId = referrerResult.rows[0].id;
+
+          await query(`INSERT INTO "referrals" (referrer_id, referee_id) VALUES ($1, $2)`,[referrerId, newUser[0].id]);
+          
+        }
+
 
       newUser.id = insertResult[0].id; // Get the inserted user's ID
       return done(null, newUser);

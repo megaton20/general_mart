@@ -4,11 +4,12 @@ const axios = require('axios');
 const { promisify } = require('util');
 const db = require("../model/databaseTable");
 const query = promisify(db.query).bind(db);
-
-
+const passport = require('../config/passport');
+const { ensureAuthenticated, forwardAuthenticated } = require('../config/auth');
 const stateData = require("../model/stateAndLGA");
 
-const { ensureAuthenticated, forwardAuthenticated } = require('../config/auth');
+
+
 
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY ;
@@ -16,7 +17,7 @@ const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
 const appName = `General Mart` 
 
-const passport = require('../config/passport');
+
 
 
 router.get('/auth/google/callback',
@@ -220,6 +221,11 @@ router.get('/login', forwardAuthenticated, (req, res) => res.render('login',{
 router.get('/register', forwardAuthenticated, (req, res) =>{
 
   const referrerCode = req.query.ref || null;
+
+  if (referrerCode) {
+    req.session.referrerCode = referrerCode
+  }
+  
   res.render('register',{
     pageTitle:`Create account with ${appName}`,
     appName,

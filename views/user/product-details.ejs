@@ -214,10 +214,10 @@ function formatPrice() {
     if (cartItem) {
       if (itemButton) {
         itemButton.outerHTML = `
-          <div style="width:100%;height:30px "  class="m-0 btn-group p-0" role="group" data-id="${itemId}">
-            <button class="btn btn-danger p-1" onclick="removeFromCart(${itemId})">-</button>
-            <button class="btn btn-secondary p-1" disabled>${cartItem.quantity}</button>
-            <button class="btn btn-success p-1" onclick="increaseQuantity(${itemId})">+</button>
+        <div style="width:100%; height:30px "  class="m-0 btn-group p-0 my-box-shadow border-1" role="group" data-id="${itemId}">
+            <button class="btn p-0" style="border:1px solid #333; color:var(--accent-color)" onclick="removeFromCart(${itemId})">-</button>
+            <button class="btn btn-secondary p-1" disabled style="background-color:var(--accent-color)" ">${cartItem.quantity}</button>
+            <button class="btn p-0" style="border:1px solid #333; color:var(--accent-color)" onclick="increaseQuantity(${itemId})">+</button>
           </div>
         `;
       }
