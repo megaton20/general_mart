@@ -118,7 +118,7 @@ const generateReferralCode = (username) => {
 
 
         if (referrerCode) {
-          const referrerResult = await query(`SELECT id FROM "Users" WHERE "referral_code" = $1`,[referralCode]);
+          const referrerResult = await query(`SELECT id FROM "Users" WHERE "referral_code" = $1`,[referrerCode]);
           const referrerId = referrerResult.rows[0].id;
 
           await query(`INSERT INTO "referrals" (referrer_id, referee_id) VALUES ($1, $2)`,[referrerId, newUser[0].id]);
