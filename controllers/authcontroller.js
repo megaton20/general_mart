@@ -243,6 +243,7 @@ if (errors.length > 0) {
       password,
       first_name,
       last_name,
+      referralCode
     });
   }
 
