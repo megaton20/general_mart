@@ -545,10 +545,7 @@ a {
   font-size: 13px;
 }
 
-.fixed-col{
-  /* position: fixed !important; */
-  overflow: auto;
-  }
+
   .scrolling-col{
     margin: 0;
     padding-bottom: 40px;
