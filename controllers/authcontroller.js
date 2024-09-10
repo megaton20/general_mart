@@ -272,8 +272,8 @@ if (errors.length > 0) {
 
  const {rows:newUser} = await query(
       `INSERT INTO "Users" 
-      ("First_name", "Last_name", "email", "Phone", "Password", "created_date", "previous_visit", "spending", "referral_code") 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8,$9) RETURNING id`,
+      ("First_name", "Last_name", "email", "Phone", "Password", "created_date", "previous_visit", "spending", "referral_code", "userRole") 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8,$9, $10) RETURNING id`,
       [
         first_name,
         last_name,
@@ -283,7 +283,8 @@ if (errors.length > 0) {
         new Date(),
         new Date(),
         0,
-        referralCode
+        referralCode,
+        "user"
       ]
     );
 
