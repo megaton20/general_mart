@@ -168,6 +168,7 @@ exports.getAdminWelcomePage = async (req, res) => {
     });
 
   } catch (error) {
+    console.log(error);
     req.flash("error_msg", `Error: ${error.message}`);
     return res.redirect("/super");
   }
