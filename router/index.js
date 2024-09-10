@@ -229,7 +229,7 @@ router.get('/register', forwardAuthenticated, (req, res) =>{
   res.render('register',{
     pageTitle:`Create account with ${appName}`,
     appName,
-    referrerCode,
+    referralCode:referrerCode,
     stateData
   })
 } 
