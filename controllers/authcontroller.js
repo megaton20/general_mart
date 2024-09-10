@@ -232,6 +232,7 @@ if (password !== confirm_password) {
   errors.push({ msg: 'Passwords do not match' });
 }
 
+const referralCode = generateReferralCode(email);
 
 if (errors.length > 0) {
     return res.render('register', {
@@ -247,7 +248,6 @@ if (errors.length > 0) {
     });
   }
 
-  const referralCode = generateReferralCode(email);
 
   try {
     const salt = await bcrypt.genSalt(10);
