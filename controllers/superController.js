@@ -22,8 +22,7 @@ const monthModel = require("../model/getMonth");
 let presentMonth = monthModel(systemCalander, "/");
 
 const getDay = require("../model/getDay");
-const { stringify } = require("querystring");
-const { error, log } = require("console");
+
 let presentDay = getDay(systemCalander, "/");
 
 let sqlDate = presentYear + "-" + presentMonth + "-" + presentDay;
@@ -1475,7 +1474,7 @@ exports.getAddpriceUpdatePage = async (req, res) => {
 
   try {
     // Query to fetch inventory by ID using a parameterized query
-    const results = await query(`SELECT * FROM "Inventory" WHERE id = $1`, [singleId]);
+    const results = await query(`SELECT * FROM "inventory" WHERE id = $1`, [singleId]);
 
     if (results.rows.length <= 0) {
       req.flash('warning_msg', 'Item does not exist in our inventory');

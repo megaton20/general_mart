@@ -462,9 +462,8 @@ exports.userShop = async (req, res) => {
   const countSql = 'SELECT COUNT(*) as count FROM "Products"';
   const showcaseQuery = `
     SELECT * FROM "Products" 
-    WHERE "showcase" = $1 AND "total_on_shelf" > $2 AND "status" = $3 
-    LIMIT $4 OFFSET $5`;
-  const queryParams = ['yes', 0, 'not-expired', limit, offset];
+    WHERE "showcase" = $1 AND "total_on_shelf" > $2 AND "status" = $3 AND "activate" != $4  LIMIT $5 OFFSET $6`;
+  const queryParams = ['yes', 0, 'not-expired',"no", limit, offset];
 
 
 

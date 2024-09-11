@@ -28,6 +28,8 @@ const formatDate = (dateStr) => {
   return `${year}-${month}-${day}`;
 };
 
+const appName = `G.Mart` 
+
 exports.getAdminWelcomePage = (req, res) => {
 
   let userFirstName = req.user.First_name;

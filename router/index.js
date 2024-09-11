@@ -8,14 +8,10 @@ const passport = require('../config/passport');
 const { ensureAuthenticated, forwardAuthenticated } = require('../config/auth');
 const stateData = require("../model/stateAndLGA");
 
-
-
-
-
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY ;
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
-const appName = `General Mart` 
+const appName = `G.Mart` 
 
 
 

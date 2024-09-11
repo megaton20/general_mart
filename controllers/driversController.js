@@ -30,7 +30,7 @@ const formatDate = (dateStr) => {
   return `${year}-${month}-${day}`;
 };
 
-const appName = `General Mart` 
+const appName = `G.Mart` 
 
 
 exports.getAdminWelcomePage = async (req, res) => {

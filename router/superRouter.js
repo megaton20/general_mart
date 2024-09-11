@@ -58,6 +58,18 @@ router.get("/update-price/:id", ensureAuthenticated,isSuper, superController.get
 router.post("/create-sales/:id", ensureAuthenticated,isSuper, superController.addToShelfForSale);
 router.put("/update-price/:id", ensureAuthenticated,isSuper, superController.updatePrice);
 
+// add to store
+router.put('/product-status/unverified/:id',ensureAuthenticated,isSuper,superController.remove)
+router.put("/resolve/:id", ensureAuthenticated,isSuper, superController.resolveSale);
+router.put("/flag-product/:id", ensureAuthenticated,isSuper, superController.flagProduct);
+router.put("/unflag-product/:id", ensureAuthenticated,isSuper, superController.unflagProduct);
+// showcase
+router.put("/showcase-on/:id", ensureAuthenticated,isSuper, superController.addToShowcase);
+router.put("/showcase-off/:id", ensureAuthenticated,isSuper, superController.removeFromShowcase);
+
+
+
+
 // counter for super
 router.get("/create-sales", ensureAuthenticated,isSuper, superController.adminCounter);
 router.post("/submitCart", ensureAuthenticated,isSuper, superController.superSale);
@@ -96,16 +108,6 @@ router.post("/create-position", ensureAuthenticated,isSuper, superController.cre
 router.post("/create-logistics", ensureAuthenticated,isSuper, superController.createNewLogistics);
 router.post("/create-brand", ensureAuthenticated,isSuper, superController.createNewBrand);
 
-
-
-// // add to store
-router.put('/product-status/unverified/:id',ensureAuthenticated,isSuper,superController.remove)
-router.put("/resolve/:id", ensureAuthenticated,isSuper, superController.resolveSale);
-router.put("/flag-product/:id", ensureAuthenticated,isSuper, superController.flagProduct);
-router.put("/unflag-product/:id", ensureAuthenticated,isSuper, superController.unflagProduct);
-// showcase
-router.put("/showcase-on/:id", ensureAuthenticated,isSuper, superController.addToShowcase);
-router.put("/showcase-off/:id", ensureAuthenticated,isSuper, superController.removeFromShowcase);
 
 
 

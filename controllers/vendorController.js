@@ -22,7 +22,7 @@ const getDay = require("../model/getDay");
 let presentDay = getDay(systemCalander, "/");
 
 let sqlDate = presentYear + "-" + presentMonth + "-" + presentDay;
-
+const appName = `G.Mart` 
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);

@@ -20,7 +20,9 @@ const getDay = require("../model/getDay");
 let presentDay = getDay(systemCalander, "/");
 let sqlDate = presentYear + "-" + presentMonth + "-" + presentDay;
 const query = promisify(db.query).bind(db);
-const appName = `General Mart` 
+
+
+const appName = `G.Mart` 
 
 
 
