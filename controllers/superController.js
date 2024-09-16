@@ -2294,7 +2294,7 @@ exports.editCategory = async (req, res) => {
       return res.redirect("/super");
     }
 
-    const categoryData = results.rows[0]; // Extract the first result
+    const categoryData = results.rows; // Extract the first result
 
     return res.render("./super/categoryEditForm", {
       pageTitle: "Edit Category",

@@ -109,8 +109,6 @@ const mailOptions = {
   }
 };
 
-
-
 // callack
 exports.verifyEmailCallBack = (req, res) => {
   const token = req.query.token;
