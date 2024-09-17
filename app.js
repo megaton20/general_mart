@@ -72,6 +72,33 @@ app.use('/drivers', driversRouter);
 app.use('/user', userRouter);
 
 
+  // 404 Error handler for undefined routes
+  app.use((req, res) => {
+    let userActive= false
+    if (req.user) {
+      userActive = true
+    }
+
+    res.render('404',{
+      pageTitle:` ${appName} 404`,
+      appName,
+      userActive
+    });
+  });
+  
+  // General error handling middleware
+  app.use((err, req, res, next) => {
+        let userActive= false
+    if (req.user) {
+      userActive = true
+    }
+    
+    res.render('404',{
+      pageTitle:` ${appName} unexected error`,
+      appName,
+      userActive
+    });
+  });
 
 const PORT = process.env.PORT || 3000;
 
