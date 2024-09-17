@@ -10,7 +10,7 @@ const ejsLayouts = require('express-ejs-layouts');
 const updateWatch = require('./config/updateAction');
 const cors = require('cors');
 
-
+const appName = "G.Mart"
 require('dotenv').config();
 
 
@@ -80,7 +80,7 @@ app.use('/user', userRouter);
     }
 
     res.render('404',{
-      pageTitle:` 404`,
+      pageTitle:` ${appName} 404`,
       appName,
       userActive
     });
@@ -94,7 +94,7 @@ app.use('/user', userRouter);
     }
     
     res.render('404',{
-      pageTitle:` unexected error`,
+      pageTitle:` ${appName} unexected error`,
       appName,
       userActive
     });
