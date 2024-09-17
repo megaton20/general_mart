@@ -671,7 +671,7 @@ exports.createNewInventory = (req, res) => {
           Cost_of_delivery: Cost_of_delivery,
           Total_damaged: Total_damaged,
           created_date: sqlDate,
-          activate: "no",
+          activate: false,
           image:filename,
         },
         (err, results) => {
@@ -982,13 +982,13 @@ exports.addToShelfForSale = (req, res) => {
                   }
 
                   // item does has no price
-                  db.query(`UPDATE Products SET ? WHERE inventory_id = "${updateID}"`,{ UnitPrice: price, activate: "yes" },(err, results) => {
+                  db.query(`UPDATE Products SET ? WHERE inventory_id = "${updateID}"`,{ UnitPrice: price, activate: true },(err, results) => {
                       if (err) {
                         req.flash("error_msg",`Error from server Database: ${err.sqlMessage}`);
                         return res.redirect("/");
                       }
                       // further proceed to inventory
-                      db.query(`UPDATE inventory SET ? WHERE id = "${updateID}"`,{ activate: "yes" },(err, results) => {
+                      db.query(`UPDATE inventory SET ? WHERE id = "${updateID}"`,{ activate: true },(err, results) => {
                           if (err) {
                             console.log(err);
                             req.flash("error_msg",`Error from server Database: ${err.sqlMessage}`);
@@ -1007,14 +1007,14 @@ exports.addToShelfForSale = (req, res) => {
               // record found, no need to add just render price form
 
               // updated inventory table
-              db.query(`UPDATE inventory SET ? WHERE id =  "${updateID}"`,{activate: "yes",},(err, results) => {
+              db.query(`UPDATE inventory SET ? WHERE id =  "${updateID}"`,{activate: true,},(err, results) => {
                   if (err) {
                     req.flash("error_msg", `error for db: ${err.sqlMessage}`);
                     return res.redirect("/super");
                   }
 
                   // update  shelf table
-                  db.query(`UPDATE Products SET ? WHERE inventory_id =  "${updateID}"`,{activate: "yes",},(err, results) => {
+                  db.query(`UPDATE Products SET ? WHERE inventory_id =  "${updateID}"`,{activate: true,},(err, results) => {
                       if (err) {
                         req.flash("error_msg",`error for db: ${err.sqlMessage}`);
                         return res.redirect("/super");
@@ -1090,7 +1090,7 @@ exports.remove = (req, res) => {
 exports.flagProduct = (req, res) => {
   let editID = req.params.id;
   let deactivate = {
-    activate: "no",
+    activate:false,
   };
   db.query(`UPDATE inventory SET ? WHERE id = "${editID}" `,deactivate,(err, results) => {
       if (err) {
@@ -1119,7 +1119,7 @@ exports.unflagProduct = (req, res) => {
   let editID = req.params.id;
   // create the inventory
   let deactivate = {
-    activate: "yes",
+    activate: true,
   };
   db.query(`UPDATE inventory SET ? WHERE id = "${editID}" `,deactivate,(err, results) => {
       if (err) {
@@ -1312,7 +1312,7 @@ exports.addToShowcse = (req, res) => {
       return res.redirect("back");
     }
 
-    if (results[0].activate == "yes") {
+    if (results[0].activate == true) {
       let data = {
         showcase: "yes",
       };

@@ -32,7 +32,7 @@ const expiryChecker = async () => {
       let inventoryStatus = daysLeft <= 0 ? 'expired' : 'not-expired';
       let productStatus = daysLeft <= 0 ? 'expired' : 'not-expired';
       let productShowcase = daysLeft <= 0 ? 'no' : 'yes';
-      let productActivate = daysLeft <= 0 ? 'no' : 'yes';
+      let productActivate = daysLeft <= 0 ? false : true;
 
       // Update inventory status
       await query(`UPDATE "inventory" SET expired = $1 WHERE id = $2`, [inventoryStatus, itemId]);

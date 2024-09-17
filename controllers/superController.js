@@ -1756,7 +1756,7 @@ exports.createNewInventory = async (req, res) => {
     ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20,$21)`, [
       Category_name, Brand_name, Product_name, Purchase_price, categoryId, supplierId, brandID, 
       Supplier_name, Payment_method, Reciever_name, Delivery_method, QTY_recieved, total_in_pack, 
-      Manufacture_date, Expire_date, Cost_of_delivery, Total_damaged, new Date(), "no", filename, details
+      Manufacture_date, Expire_date, Cost_of_delivery, Total_damaged, new Date(), false, filename, details
     ]);
 
     req.flash("success_msg", `"${Product_name}" added successfully!`);
@@ -2005,7 +2005,7 @@ exports.addToShelfForSale = async (req, res) => {
         total_in_pack: inventoryDataFromDb[0].total_in_pack,
         total_on_shelf: totalOnShelf,
         created_date: sqlDate,
-        activate: "yes",
+        activate: true,
         image: inventoryDataFromDb[0].image,
         category_id: inventoryDataFromDb[0].category_id
       };
@@ -2033,13 +2033,13 @@ exports.addToShelfForSale = async (req, res) => {
 
       // Update Products table with price
       await query(
-        `UPDATE "Products" SET "UnitPrice" = $1, "activate" = 'yes' WHERE "inventory_id" = $2`,
+        `UPDATE "Products" SET "UnitPrice" = $1, "activate" = ${true} WHERE "inventory_id" = $2`,
         [price, updateID]
       );
 
       // Update inventory table
       await query(
-        `UPDATE "inventory" SET "activate" = 'yes' WHERE "id" = $1`,
+        `UPDATE "inventory" SET "activate" = ${true} WHERE "id" = $1`,
         [updateID]
       );
 
@@ -2049,11 +2049,11 @@ exports.addToShelfForSale = async (req, res) => {
     } else {
       // Update existing entry in inventory and Products table
       await query(
-        `UPDATE "inventory" SET "activate" = 'yes' WHERE "id" = $1`,
+        `UPDATE "inventory" SET "activate" = ${true} WHERE "id" = $1`,
         [updateID]
       );
       await query(
-        `UPDATE "Products" SET "activate" = 'yes', "UnitPrice" = $1 WHERE "inventory_id" = $2`,
+        `UPDATE "Products" SET "activate" = ${true}, "UnitPrice" = $1 WHERE "inventory_id" = $2`,
         [price, updateID]
       );
 
@@ -2933,7 +2933,7 @@ exports.resolveSale = async (req, res) => {
 exports.flagProduct = async (req, res) => {
   const editID = req.params.id;
   const deactivate = {
-    activate: "no",
+    activate: false,
   };
 
   try {
@@ -2954,7 +2954,7 @@ exports.flagProduct = async (req, res) => {
 
 exports.unflagProduct = async (req, res) => {
   const editID = req.params.id;
-  const activate = "yes";
+  const activate = true;
 
   try {
     // Update the inventory status to activate
@@ -3839,7 +3839,7 @@ exports.superStore = async (req, res) => {
 
   try {
     let queryStr = `SELECT * FROM "Products" WHERE "activate" = $1 AND "total_on_shelf" > $2 AND "status" = $3`;
-    let queryParams = ['yes', 0, 'not-expired'];
+    let queryParams = [true, 0, 'not-expired'];
 
     // Add category condition if it's not 'all'
     if (id !== 'all') {

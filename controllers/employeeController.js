@@ -284,7 +284,7 @@ exports.superStore =  async (req, res) => {
   const { search } = req.query;
 
   let query = `SELECT * FROM Products WHERE activate = ? AND total_on_shelf > ? AND status = ?`;
-  let queryParams = ['yes', 0, 'not-expired'];
+  let queryParams = [true, 0, 'not-expired'];
 
   // Add category condition
   if (id !== 'all') {

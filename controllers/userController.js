@@ -463,7 +463,7 @@ exports.userShop = async (req, res) => {
   const showcaseQuery = `
     SELECT * FROM "Products" 
     WHERE "showcase" = $1 AND "total_on_shelf" > $2 AND "status" = $3 AND "activate" != $4  LIMIT $5 OFFSET $6`;
-  const queryParams = ['yes', 0, 'not-expired',"no", limit, offset];
+  const queryParams = ['yes', 0, 'not-expired',false, limit, offset];
 
 
 
@@ -610,7 +610,7 @@ exports.userCategoryQuery = async (req, res) => {
   const offset = (page - 1) * limit;
 
   let productQuery = `SELECT * FROM "Products"  WHERE "activate" = $1 AND "total_on_shelf" > $2 AND "status" = $3`;
-  let queryParams = ['yes', 0, 'not-expired'];
+  let queryParams = [true, 0, 'not-expired'];
 
   // Add category condition if it's not 'all'
   if (categoryId !== 'all') {
