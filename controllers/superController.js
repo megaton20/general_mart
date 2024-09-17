@@ -3003,7 +3003,7 @@ exports.addToShowcase = async (req, res) => {
     }
 
     // Check if the product is activated
-    if (product.activate === "yes") {
+    if (product.activate === true) {
       // Update product to add to showcase
       await query(`UPDATE "Products" SET "showcase" = $1 WHERE id = $2`, ["yes", editID]);
       req.flash("success_msg", "Product added to showcase successfully!");
