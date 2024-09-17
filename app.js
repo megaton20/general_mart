@@ -80,7 +80,7 @@ app.use('/user', userRouter);
     }
 
     res.render('404',{
-      pageTitle:` ${appName} 404`,
+      pageTitle:` 404`,
       appName,
       userActive
     });
@@ -94,7 +94,7 @@ app.use('/user', userRouter);
     }
     
     res.render('404',{
-      pageTitle:` ${appName} unexected error`,
+      pageTitle:` unexected error`,
       appName,
       userActive
     });
