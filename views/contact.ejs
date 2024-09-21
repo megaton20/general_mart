@@ -1,0 +1,50 @@
+
+
+<%- include('./partials/openNav') %>
+
+              <section id="contact">
+
+                  <div class="container mt-5">
+                      <div class="row">
+                          <div class="col-md-8 mb-4">
+                              <h2>Contact Us</h2>
+                              <form action="/user/send-message" method="post">
+                                  <div class="mb-3">
+                                      <label for="email" class="form-label">Email Address</label>
+                                      <input type="email" name="senderEmail" class="form-control" id="email" placeholder="Your email">
+                                  </div>
+                                  <div class="mb-3">
+                                      <label for="title" class="form-label">Title</label>
+                                      <input type="text" name="title" class="form-control" id="title" placeholder="Message title">
+                                  </div>
+                                  <div class="mb-3">
+                                      <label for="message" class="form-label">Message</label>
+                                      <textarea class="form-control" name="message" id="message" rows="6" placeholder="Your message"></textarea>
+                                  </div>
+                                  <button type="submit" class="my-btn my-btn-outline m-0">Send Message</button>
+                              </form>
+                          </div>
+
+                          <div class="col-md-4 ">
+                              <h2>Our Address</h2>
+                              <address>
+                                  <strong>G.Mart Head Office</strong><br>
+                                  Parliamentary Extension, behind Udiking,<br>
+                                  Calabar, Nigeria.<br>
+                                  <br>
+                                  <strong>Phone:</strong> +234 916 020 9475<br>
+                                  <strong>Email:</strong> generalmartinfo@gmail.com
+                              </address>
+                          </div>
+                      </div>
+                  </div>
+              </section> 
+
+
+               
+  <%- include ('./partials/openFooter')%>
+  
+  <div id="preloader"></div>
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+

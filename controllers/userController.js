@@ -479,8 +479,8 @@ exports.userShop = async (req, res) => {
     const cartResults = await query('SELECT * FROM "Cart" WHERE "user_id" = $1', [req.user.id]);
     const presentCart = JSON.parse(JSON.stringify(cartResults.rows));
 
-    const categoryResults = await query('SELECT * FROM "Category"');
-    const allCategory = JSON.parse(JSON.stringify(categoryResults.rows));
+    const {rows:allCategory} = await query('SELECT * FROM "Category"');
+
 
     const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     

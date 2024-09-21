@@ -7,381 +7,156 @@
       <div class="container">
         <%- include ('./partials/messages') %>
       </div>
- 
- <!-- Hero Section -->
- <div id="hero">
-  <div id="carouselExampleCaptions" class="carousel slide hero" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-    </div>
 
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <a href="#">
-          <img src="/images/homepage-banner-1.jpg" class="d-block w-100 carousel-image" alt="...">
-        </a>
-        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-          <h1>Welcome to <span><%- include('./partials/appName') %></span></h1>
-          <p>We are here to give you a delightful shopping experience<br></p>
-          <div class="d-flex">
-            <% if(userActive == false) { %>
-              <a href="/abouts" class="my-btn my-btn-outline d-flex align-items-center mr-2 text-light"><span>Read more about us</span></a>
-              <a href="/login" class="my-btn d-flex align-items-center"><span>Visit Our Store</span></a>
-            <% } else { %>
-              <a href="/abouts" class="my-btn my-btn-outline d-flex align-items-center mr-2 text-light"><span>Read more about us</span></a>
-            <% } %>
-          </div>
-        </div>
-      </div>
-      <div class="carousel-item">
-        <a href="#">
-          <img src="/images/homepage-banner-2.jpg" class="d-block w-100 carousel-image" alt="...">
-        </a>
-        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-          <h1>Welcome to <span><%- include('./partials/appName') %></span></h1>
-          <p>Enjoy exceptional value with our wholesale discounts. Buy in bulk and save more on all your favorite products.<br></p>
-          <div class="d-flex">
-               <% if(userActive == false) { %>
-              <a href="/abouts" class="my-btn my-btn-outline d-flex align-items-center mr-2 text-light"><span>Read more about us</span></a>
-              <a href="/login" class="my-btn d-flex align-items-center"><span>Visit Our Store</span></a>
-            <% } else { %>
-              <a href="/abouts" class="my-btn my-btn-outline d-flex align-items-center mr-2 text-light"><span>Read more about us</span></a>
-            <% } %>
-          </div>
-        </div>
-      </div>
-      <div class="carousel-item ">
-        <a href="#">
-          <img src="/images/homepage-banner-3.jpg" class="d-block w-100 carousel-image" alt="...">
-        </a>
-        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-          <h1>Welcome to <span><%- include('./partials/appName') %></span></h1>
-          <p>! Shop the latest in food and household items with ease and convenience.<br></p>
-          <div class="d-flex">
-               <% if(userActive == false) { %>
-              <a href="/abouts" class="my-btn my-btn-outline d-flex align-items-center mr-2 text-light"><span>Read more about us</span></a>
-              <a href="/login" class="my-btn d-flex align-items-center"><span>Visit Our Store</span></a>
-            <% } else { %>
-              <a href="/abouts" class="my-btn my-btn-outline d-flex align-items-center mr-2 text-light"><span>Read more about us</span></a>
-            <% } %>
-          </div>
-        </div>
-      </div>
 
-      <!-- Repeat for the other carousel items -->
-    </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
 
-  <div class="products container mt-5 mb-5">
-    <div class="service-box">
-      <div class="card-header">Our showcase items</div>
-      <div class="card-body ">
-        <div class="row">
-  
-          <% showcaseItem.forEach(data => { %>
-
-          <div class="col-md-4 col-lg-3 col-6">
-            <div class="mt-4 my-box-shadow border-1">
-              <a href="/user/product-details/<%= data.id%>" class="card-body">
-                <div class="item-image-container d-flex justify-content-center align-items-center">
-                  <img src="/uploads/<%= data.image %>" class="card-img-top rounded-4" alt="<%= data.image %>" style="max-width: 100%; height: auto;">
-                </div>
-                <div class="item-text text-dark truncate-container d-flex justify-content-center align-items-center">
-                  <p class="text-truncate"><%= data.ProductName%></p>
-                </div>
-              </a>
-              <div class=" p-1 d-flex justify-content-center align-items-center">
-                
-                <% if (userActive) { %>
-                  <a href="/user/product-details/<%= data.id%>" style="" class="my-btn my-btn-outline w-100 m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>">Add to Cart ₦<small class="item-price"><%= data.UnitPrice %></small></a> 
-                <% } else { %>
-                  <a href="/user/product-details/<%= data.id%>" style="" class="my-btn my-btn-outline w-100 m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>">Log In To Buy  @ ₦<small class="item-price"><%= data.UnitPrice %></small></a> 
-                <% } %>
-              </div>
+    <div class="container mt-4">
+      <div class="row">
+        <!-- Category Cards (Disappears on mobile) -->
+        <div class="col-4 d-none d-md-block">
+          <div id="service-details" class="service-details section">
+            <div class="card-body">
+                <div class="service-box mb-4">
+                    <div class="services-list">
+                      <% allCategory.forEach(data => { %>
+                      <a href="/user/category/<%= data.Category_name %>#product-section" class=" categoryButton" data-category="<%= data.Category_name %>">
+                        <i class="bi bi-arrow-right-circle"></i><span> <%= data.Category_name %></span>
+                      </a>
+                     
+                      <% }); %>
+                    </div>
+                  </div>
             </div>
           </div>
-
-          <% }); %>
-
-            
+          <!-- Add more category cards as needed -->
         </div>
   
-      </div>
-  
-    </div>
-  </div>
-</div>
-
-
-
-
-
-<!-- Hero Section ends -->
-
-      <!-- Featured Services Section -->
-      <section id="featured-services" class="featured-services section">
-        <div class="container">
-          <div class="row gy-4">
-            <div class="d-flex flex-column justify-content-center align-items-center">
-              <h3> Services</h3>
-
+        <!-- Carousel (Turns into col-12 on mobile) -->
+        <div class="col-12 col-md-8">
+            <div id="carouselExample" class="carousel slide carousel-fade" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img src="/landing-imgs/wwwww.JPG" class="d-block w-100" alt="Slide 1">
+                </div>
+                <div class="carousel-item">
+                  <img src="/landing-imgs/zzzzz.JPG" class="d-block w-100" alt="Slide 2">
+                </div>
+                <div class="carousel-item">
+                  <img src="/landing-imgs/banner-2.png" class="d-block w-100" alt="Slide 3">
+                </div>
+                <div class="carousel-item">
+                  <img src="/landing-imgs/banner.png" class="d-block w-100" alt="Slide 4">
+                </div>
+                <div class="carousel-item">
+                  <img src="/landing-imgs/vvvvv.jpg" class="d-block w-100" alt="Slide 5">
+                </div>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
             </div>
-            <div class="col-xl-4 col-lg-6" data-aos="fade-up" data-aos-delay="100">
-              <div class="service-item d-flex">
-                <div class="icon flex-shrink-0"><i class="bi bi-cart"></i></div>
-                <div>
-                  <h4 class="title">Seamless Shopping Experience</h4>
-                  <p class="description">
-                    Browse a wide range of products from various categories.
-                    Easy-to-use search and filter options to quickly find what you need.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <!-- End Service Item -->
-  
-            <div class="col-xl-4 col-lg-6" data-aos="fade-up" data-aos-delay="200">
-              <div class="service-item d-flex">
-                <div class="icon flex-shrink-0"><i class="bi bi-truck"></i></div>
-                <div>
-                  <h4 class="title">Efficient Delivery Services</h4>
-                  <p class="description">
-                    Fast and reliable delivery of items bought through the app.
-                    Real-time tracking of your orders from dispatch to delivery.
-                    Multiple delivery options, including same-day and scheduled deliveries.
-                  </p>
-                </div>
-              </div>
-            </div><!-- End Service Item -->
-  
-            <div class="col-xl-4 col-lg-6" data-aos="fade-up" data-aos-delay="300">
-              <div class="service-item d-flex">
-                <!-- <div class="icon flex-shrink-0"><i class="bi bi-card-checklist"></i></div> -->
-                <div class="icon flex-shrink-0"><i class="bi bi-tag"></i></div>
-                
-                <div>
-                  <h4 class="title">Promotions and Discounts</h4>
-                  <p class="description">
-                    Regular promotions, discounts, and exclusive deals for app users.
-                    Loyalty programs and reward points for frequent shoppers.
-                  </p>
-                </div>
-              </div>
-            </div><!-- End Service Item -->
-
-
-            <div class="col-xl-4 col-lg-6" data-aos="fade-up" data-aos-delay="100">
-              <div class="service-item d-flex">
-                <div class="icon flex-shrink-0"><i class="bi bi-shield-lock"></i></div>
-                
-                <div>
-                  <h4 class="title">Secure Payment Options</h4>
-                  <p class="description">
-                    Multiple payment methods including credit/debit cards, digital wallets, and cash on delivery.
-                    Secure transactions with encryption and fraud detection.
-                  </p>
-                </div>
-              </div>
-            </div><!-- End Service Item -->
-
-            <div class="col-xl-4 col-lg-6" data-aos="fade-up" data-aos-delay="200">
-              <div class="service-item d-flex">
-                <!-- <div class="icon flex-shrink-0"><i class="bi bi-card-checklist"></i></div> -->
-                <div class="icon flex-shrink-0"><i class="bi bi-box-seam"></i></div>
-                
-                <div>
-                  <h4 class="title">Logistics Services</h4>
-                  <p class="description">
-                    we understand that timely and reliable delivery is critical to your business operations.
-                     Our logistics services are designed to ensure that your goods reach their destination safely, on time, and in perfect condition.
-                  </p>
-                </div>
-              </div>
-            </div><!-- End Service Item -->
-
-            <div class="col-xl-4 col-lg-6" data-aos="fade-up" data-aos-delay="300">
-              <div class="service-item d-flex">
-                <!-- <div class="icon flex-shrink-0"><i class="bi bi-card-checklist"></i></div> -->
-                <div class="icon flex-shrink-0"><i class="bi bi-check-circle"></i></div>
-                
-                <div>
-                  <h4 class="title">User-Friendly Interface</h4>
-                  <p class="description">Intuitive and clean design for a smooth user experience.
-                    - Easy account management with order history and preferences.</p>
-                </div>
-              </div>
-            </div><!-- End Service Item -->
           </div>
         </div>
-      </section><!-- /Featured Services Section -->
-  
+      </div>
 
-              <!-- Call to action -->
-              <!-- <section  class="featured-services section">
-                <div class="container">
-                  <div class="row gy-4">
-                      <div class="service-item">
-                        <div class="d-flex flex-column justify-content-center align-items-center">
-                          <h3>Logistics Services</h3>
-                          <p class="description">
-                            Click the link to register and offer your logistic services, you'll be notified on your email after registration us complete! 
-                          </p>
-                          <a class="my-btn " href="/drivers/new-rider">Register Your Logistics Company</a>
+
+      <!-- <div class="container mt-5 mb-4 d-none d-md-block">
+        <div class="landing-grid ">
+
+          <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/short-1.png" alt="" style="max-width: 100%;"></a>
+          <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/short-3.JPG" alt="" style="max-width: 100%;"></a>
+          <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/call.png" alt="" style="max-width: 100%;"></a>
+          <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/short-4.GIF" alt="" style="max-width: 100%;"></a>
+          <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/1.gif" alt="" style="max-width: 100%;"></a>
+          <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/1.gif" alt="" style="max-width: 100%;"></a>
+
+        </div>
+</div>  -->
+
+  <div class="container">
+
+   <!-- Part 1: Products -->
+   <% if (firstHalf && firstHalf.length > 0) { %>
+    <% firstHalf.forEach(category => { %>
+        <% if (category.products && category.products.length > 0) { %> <!-- Only render card if products are present -->
+            <div class="category-card">
+                <div class="top-cat">
+                    <h3><%= category.categoryName %></h3>
+                    <a href="/user/category/<%= category.categoryName %>#product-section" >See all</a>
+                </div>
+
+                <div class="products-grid">
+                    <% category.products.forEach(product => { %>
+                        <div class="product-item">
+                            <a href="/user/product-details/<%= product.id %>" class="home-card">
+                                    <img src="/uploads/<%= product.image %>" alt="<%= product.ProductName %>">
+
+                                <p><%= product.ProductName %></p> 
+                                <p>₦ <%= product.UnitPrice %></p>
+                            </a>
                         </div>
-                      </div>
-                  </div>
+                    <% }) %>
                 </div>
-              </section> -->
-              <%- include ('./partials/clients')%>
+            </div>
+        <% } %> <!-- End of condition to render only if products exist -->
+    <% }) %>
+<% } %>
 
-              <section id="faqs">
-                  <div class="container mt-5">
-                      <h1 class="mb-4">Frequently Asked Questions</h1>
-                      <div class="accordion" id="faqAccordion">
-                          <!-- FAQ 1 -->
-                          <div class="accordion-item">
-                              <h2 class="accordion-header" id="headingOne">
-                                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                      What is G.Mart?
-                                  </button>
-                              </h2>
-                              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
-                                  <div class="accordion-body">
-                                      G.Mart is an online grocery store that offers a wide range of food items and groceries. We operate in Calabar, Lagos, and Uyo, ensuring fast and secure deliveries to our customers.
-                                  </div>
-                              </div>
-                          </div>
-                          <!-- FAQ 2 -->
-                          <div class="accordion-item">
-                              <h2 class="accordion-header" id="headingTwo">
-                                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                      How do I place an order?
-                                  </button>
-                              </h2>
-                              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
-                                  <div class="accordion-body">
-                                      To place an order, simply browse through our catalog, select the items you want, add them to your cart, and proceed to checkout. Follow the instructions to complete your purchase.
-                                  </div>
-                              </div>
-                          </div>
-                          <!-- FAQ 3 -->
-                          <div class="accordion-item">
-                              <h2 class="accordion-header" id="headingThree">
-                                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                      What payment methods are accepted?
-                                  </button>
-                              </h2>
-                              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
-                                  <div class="accordion-body">
-                                      We accept a variety of secure payment options, including credit/debit cards, bank transfers, and mobile payments. Your transactions are safe and secure with us.
-                                  </div>
-                              </div>
-                          </div>
-                          <!-- FAQ 4 -->
-                          <div class="accordion-item">
-                              <h2 class="accordion-header" id="headingFour">
-                                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                      How long does delivery take?
-                                  </button>
-                              </h2>
-                              <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
-                                  <div class="accordion-body">
-                                      Delivery times vary depending on your location. Typically, orders within Calabar, Lagos, and Uyo are delivered within 24-48 hours. We strive to get your groceries to you as quickly as possible!
-                                  </div>
-                              </div>
-                          </div>
-                          <!-- FAQ 5 -->
-                          <div class="accordion-item">
-                              <h2 class="accordion-header" id="headingFive">
-                                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                                      Can I return an item?
-                                  </button>
-                              </h2>
-                              <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
-                                  <div class="accordion-body">
-                                      Yes, you can return items if they are damaged or incorrect. Please contact our customer service within 24 hours of receiving your order to initiate a return.
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
+    <!-- Advertisement or other content -->
+    <div class="advertisement">
+        <p>Advertisement Area</p>
+    </div>
+
+
+      <!-- <div class="wide mt-5 mb-4">
+        <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/wide.GIF" alt="" style="max-width: 100%;"></a>
+      </div>
+ -->
+
+
+
+    <!-- Part 2: Products -->
+    <% if (secondHalf && secondHalf.length > 0) { %>
+      <% secondHalf.forEach(category => { %>
+          <% if (category.products && category.products.length > 0) { %> <!-- Only render card if products are present -->
+              <div class="category-card">
+                  <div class="top-cat">
+                      <h3><%= category.categoryName %></h3>
+                      <a href="#">See all</a>
                   </div>
-              </section>
 
-              <section id="contact">
-
-                  <div class="container mt-5">
-                      <div class="row">
-                          <!-- Left Column (Contact Form) -->
-                          <div class="col-md-8 mb-4">
-                              <h2>Contact Us</h2>
-                              <form action="/user/send-message" method="post">
-                                  <div class="mb-3">
-                                      <label for="email" class="form-label">Email Address</label>
-                                      <input type="email" name="senderEmail" class="form-control" id="email" placeholder="Your email">
+                  <div class="products-grid">
+                      <% category.products.forEach(product => { %>
+                          <div class="product-item">
+                              <a href="/user/product-details/<%= product.id %>" class="home-card">
+                                  <div class="image-wap">
+                                      <img src="/uploads/<%= product.image %>" alt="<%= product.ProductName %>">
                                   </div>
-                                  <div class="mb-3">
-                                      <label for="title" class="form-label">Title</label>
-                                      <input type="text" name="title" class="form-control" id="title" placeholder="Message title">
-                                  </div>
-                                  <div class="mb-3">
-                                      <label for="message" class="form-label">Message</label>
-                                      <textarea class="form-control" name="message" id="message" rows="6" placeholder="Your message"></textarea>
-                                  </div>
-                                  <button type="submit" class="my-btn my-btn-outline m-0">Send Message</button>
-                              </form>
+                                  <p><%= product.ProductName %></p> 
+                                  <p>₦ <%= product.UnitPrice %></p>
+                              </a>
                           </div>
-
-                          <!-- Right Column (Address) -->
-                          <div class="col-md-4 ">
-                              <h2>Our Address</h2>
-                              <address>
-                                  <strong>G.Mart Head Office</strong><br>
-                                  Parliamentary Extension, behind Udiking,<br>
-                                  Calabar, Nigeria.<br>
-                                  <br>
-                                  <strong>Phone:</strong> +234 916 020 9475<br>
-                                  <strong>Email:</strong> generalmartinfo@gmail.com
-                              </address>
-                          </div>
-                      </div>
+                      <% }) %>
                   </div>
-              </section>
-  
+              </div>
+          <% } %> <!-- End of condition to render only if products exist -->
+      <% }) %>
+  <% } %>
+
+
+      <%- include ('./partials/clients')%>
+
+
       <br>
       <br>
   
-              <!-- Call to action  vendo-->
-              <!-- <section  class="featured-services section">
-                <div class="container">
-                  <div class="row gy-4">
-      
-          
-
-                      <div class="service-item">
-                        <div class="d-flex flex-column justify-content-center align-items-center">
-                          <h3>Become A Vendor</h3>
-                          <p class="description">
-                            Click the link to register and offer your Store, you'll be notified on your email after registration us complete! 
-                          </p>
-                          <a class="my-btn " href="/login">Register Your Business</a>
-                        </div>
-                      </div>
-          
-                  </div>
-                </div>
-              </section> -->
-              <!--  call to action -->
+   
     </main>
   
   <%- include ('./partials/openFooter')%>

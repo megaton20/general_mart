@@ -75,11 +75,48 @@ router.get('/', async (req, res) => {
   try {
     
       const {rows:showcaseItem} = await query(showcaseQuery, queryParams);
+
+
+
+              // Fetch all categories
+              const { rows: allCategory } = await query('SELECT * FROM "Category"');
+
+              // Divide categories into two halves
+              const half = Math.ceil(allCategory.length / 2);
+              const firstHalfCategories = allCategory.slice(0, half);
+              const secondHalfCategories = allCategory.slice(half);
+      
+              // Fetch products for the first half of categories
+              let firstHalfCategoriesWithProducts = [];
+              for (let category of firstHalfCategories) {
+                  const { rows: products } = await query('SELECT * FROM "Products" WHERE "category_id" = $1 LIMIT 6', [category.CategoryID]);
+
+
+                  firstHalfCategoriesWithProducts.push({
+                    categoryName: category.Category_name,
+                      products: products
+                  });
+              }
+      
+              // Fetch products for the second half of categories
+              let secondHalfCategoriesWithProducts = [];
+              for (let category of secondHalfCategories) {
+                  const { rows: products } = await query('SELECT * FROM "Products" WHERE "category_id" = $1 LIMIT 6', [category.CategoryID]);
+                  secondHalfCategoriesWithProducts.push({
+                      categoryName: category.Category_name,
+                      products: products
+                  });
+              }
+
+
       res.render('landing',{
         pageTitle:`Welcome to ${appName}`,
         appName,
         userActive,
-        showcaseItem
+        allCategory,
+        showcaseItem,
+        firstHalf:firstHalfCategoriesWithProducts,
+        secondHalf:secondHalfCategoriesWithProducts
       });
 
 
@@ -101,6 +138,71 @@ router.get('/policy', (req, res) => {
   }
   res.render('policy',{
     pageTitle:` ${appName} policy`,
+    appName,
+    userActive
+  });
+}
+)
+
+router.get('/faq', (req, res) => {
+  let userActive= false
+  if (req.user) {
+    userActive = true
+  }
+  res.render('faq',{
+    pageTitle:` ${appName} faq`,
+    appName,
+    userActive
+  });
+}
+)
+router.get('/featured-services', (req, res) => {
+  let userActive= false
+  if (req.user) {
+    userActive = true
+  }
+  res.render('featured-services',{
+    pageTitle:` ${appName} featured-services`,
+    appName,
+    userActive
+  });
+}
+)
+router.get('/contact', (req, res) => {
+  let userActive= false
+  if (req.user) {
+    userActive = true
+  }
+  res.render('contact',{
+    pageTitle:` ${appName} contact`,
+    appName,
+    userActive
+  });
+}
+)
+
+// driver Page
+router.get('/new-rider', (req, res) => {
+  let userActive= false
+  if (req.user) {
+    userActive = true
+  }
+  res.render('./drivers/about-riders',{
+    pageTitle:` ${appName} drivers`,
+    appName,
+    userActive
+  });
+}
+)
+
+// vendor Page
+router.get('/new-vendor', (req, res) => {
+  let userActive= false
+  if (req.user) {
+    userActive = true
+  }
+  res.render('./vendor/about-vendor',{
+    pageTitle:` ${appName} vendor`,
     appName,
     userActive
   });
@@ -188,16 +290,15 @@ router.get('/handler', (req, res)=>{
           }
 
           if(position == "Attendant") {
-            req.flash("success_msg", `welcome back ${user}`);
             return res.redirect("/employee");
           }
 
           // admins  ends here
         } else if(role == "user"){
-          req.flash("success_msg", `welcome back ${user}`);
+
          return res.redirect("/user");
         }else if(role == "driver"){
-          req.flash("success_msg", `welcome back ${user}`);
+
          return res.redirect("/drivers");
         }
         // not authenticated

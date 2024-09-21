@@ -784,7 +784,6 @@ section,
 }
 
 .clients .client-logo img {
-  padding: 20px 40px;
   max-width: 90%;
   transition: 0.3s;
   opacity: 0.5;

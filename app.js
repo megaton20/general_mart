@@ -88,12 +88,13 @@ app.use('/user', userRouter);
   
   // General error handling middleware
   app.use((err, req, res, next) => {
+    console.log(err);
         let userActive= false
     if (req.user) {
       userActive = true
     }
     
-    res.render('404',{
+    res.render('blank',{
       pageTitle:` ${appName} unexected error`,
       appName,
       userActive
