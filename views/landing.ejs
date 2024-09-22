@@ -40,7 +40,7 @@
                   <img src="/landing-imgs/wwww.png" class="d-block w-100" alt="Slide 1">
                 </div>
                 <div class="carousel-item">
-                  <!-- <img src="/landing-imgs/zzzzz.JPG" class="d-block w-100" alt="Slide 2"> -->
+                  <img src="/landing-imgs/wwww.png" class="d-block w-100" alt="Slide 2">
                 </div>
                 <div class="carousel-item">
                   <img src="/landing-imgs/banner-2.png" class="d-block w-100" alt="Slide 3">
@@ -66,42 +66,36 @@
       </div>
 
 
-      <!-- <div class="container mt-5 mb-4 d-none d-md-block">
-        <div class="landing-grid ">
-
-          <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/short-1.png" alt="" style="max-width: 100%;"></a>
-          <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/short-3.JPG" alt="" style="max-width: 100%;"></a>
-          <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/call.png" alt="" style="max-width: 100%;"></a>
-          <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/short-4.GIF" alt="" style="max-width: 100%;"></a>
-          <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/1.gif" alt="" style="max-width: 100%;"></a>
-          <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/1.gif" alt="" style="max-width: 100%;"></a>
-
-        </div>
-</div>  -->
-
   <div class="container">
 
    <!-- Part 1: Products -->
    <% if (firstHalf && firstHalf.length > 0) { %>
     <% firstHalf.forEach(category => { %>
         <% if (category.products && category.products.length > 0) { %> <!-- Only render card if products are present -->
-            <div class="category-card">
+            <div class="category-card card my-box-shadow">
                 <div class="top-cat">
                     <h3><%= category.categoryName %></h3>
                     <a href="/user/category/<%= category.categoryName %>#product-section" >See all</a>
                 </div>
 
-                <div class="products-grid">
+                <div class="scroll-items">
+                  <div class="products-grid my-box-shadow">
                     <% category.products.forEach(product => { %>
                         <div class="product-item">
                             <a href="/user/product-details/<%= product.id %>" class="home-card">
-                                    <img src="/uploads/<%= product.image %>" alt="<%= product.ProductName %>">
+                                
+                              <div class="card-image">
+                                <img src="/uploads/<%= product.image %>" alt="<%= product.ProductName %>">
+                              </div>
 
-                                <p><%= product.ProductName %></p> 
-                                <p>₦ <%= product.UnitPrice %></p>
+                              <div class="product-details">
+                                <p class="text-truncate"><%= product.ProductName %></p> 
+                                <div class="item-prices"><p>₦ <%= product.UnitPrice %></p> <p class="old-price text-grey">₦ <%= product.oldPrice %> 00</p></div>
+                              </div>
                             </a>
                         </div>
                     <% }) %>
+                </div>
                 </div>
             </div>
         <% } %> <!-- End of condition to render only if products exist -->
@@ -114,10 +108,14 @@
     </div>
 
 
-      <!-- <div class="wide mt-5 mb-4">
-        <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/wide.GIF" alt="" style="max-width: 100%;"></a>
+      <div class="wide mt-2">
+        <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/wide-1.jpg" alt="" style="max-width: 100%;"></a>
       </div>
- -->
+
+      <div class="wide mt-2 mb-4">
+        <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/wide-2.jpg" alt="" style="max-width: 100%;"></a>
+      </div>
+
 
 
 
