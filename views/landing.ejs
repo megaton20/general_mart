@@ -81,17 +81,17 @@
                 <div class="scroll-items">
                   <div class="products-grid my-box-shadow">
                     <% category.products.forEach(product => { %>
-                        <div class="product-item">
+                        <div class="landing-item" style="height: 250px; margin-bottom: 20px;">
                             <a href="/user/product-details/<%= product.id %>" class="home-card">
                                 
-                              <div class="card-image">
+                              <div class="landing-image">
                                 <img src="/uploads/<%= product.image %>" alt="<%= product.ProductName %>">
                               </div>
 
-                              <div class="product-details">
+                              <div class="landing-details">
                                 <p class="text-truncate"><%= product.ProductName %></p> 
-                                <div class="item-prices"><p>₦ <%= product.UnitPrice %></p> <p class="old-price text-grey">₦ <%= product.oldPrice %> 00</p></div>
                               </div>
+                              <div class="item-prices"><p>₦ <%= product.UnitPrice %></p> <p class="old-price text-grey">₦ <%= product.oldPrice %> 00</p></div>
                             </a>
                         </div>
                     <% }) %>

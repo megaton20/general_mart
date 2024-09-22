@@ -45,40 +45,36 @@
               <div class="store-grid ">
                   <% products.forEach(data => { %>
                     <div class="product-item">
-                      <div  class="home-card">
-                          
-                        <div class="card-image">
+                                
+                      <div class="card-image">
 
-                           <a href="/user/product-details/<%= data.id %>" >
-                             <img src="/uploads/<%= data.image %>" alt="<%= data.ProductName %>">
+                         <a href="/user/product-details/<%= data.id %>" >
+                           <img src="/uploads/<%= data.image %>" alt="<%= data.ProductName %>">
+                        </a>
+
+                      </div>
+                      <div class="wishlist">
+                        <% if (data.inWishlist) { %>
+                          <a href="/user/wishlist/<%= data.id %>/remove" class="wishlist-icon m-1 ">
+                            <i class="fas fa-heart"></i>
                           </a>
-
-                          <div class="wishlist">
-                            <% if (data.inWishlist) { %>
-                              <a href="/user/wishlist/<%= data.id %>/remove" class="wishlist-icon m-1 ">
-                                <i class="fas fa-heart"></i>
+                          <% } else { %>
+                            <a href="/user/wishlist/<%= data.id %>/add" class="wishlist-icon m-1 ">
+                                <i class="far fa-heart"></i>
                               </a>
-                              <% } else { %>
-                                <a href="/user/wishlist/<%= data.id %>/add" class="wishlist-icon m-1 ">
-                                    <i class="far fa-heart"></i>
-                                  </a>
-                              <% } %>
+                          <% } %>
+                      </div>
+                      
+                      <div class="product-details">
+                        <p class="text-truncate"><%= data.ProductName %>  mmjmj ujijiu jnjummmm nrejhr</p> 
+                      </div>
+                      <div class="item-prices"><p> ₦ <span class="item-price"> <%= data.UnitPrice %> </span></p> <p class="old-price text-grey">₦ <span class="item-price"> <%= data.oldPrice %> </p></div>
+
+                          <div class="mt-2 button-container">
+                            <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>" onclick="handleButtonClick(this)">Add to cart</button> 
                           </div>
 
-                        </div>
-                        
-                        <div class="product-details">
-                          <p class="text-truncate"><%= data.ProductName %></p> 
-                          <div class="item-prices"><p>₦ <%= data.UnitPrice %></p> <p class="old-price text-grey">₦ <%= data.oldPrice %> 00</p></div>
-                        </div>
-
-                        <div class="mt-2">
-                          <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>" onclick="handleButtonClick(this)">Add to cart</button> 
-                        </div>
-
-
-                          </div>
-                  </div>
+                </div>
                   <% }) %>
                 </div>
                 <nav aria-label="Page navigation mt-4">
@@ -202,7 +198,7 @@ let formattedPrices = document.querySelectorAll('.item-price');
       if (parentDiv) {
         
         parentDiv.outerHTML = `
-          <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="${itemId}" data-name="${itemName}" data-price="${itemPrice}" data-max="${itemMax}" data-image="${itemImage}" onclick="handleButtonClick(this)">Buy   ₦<small class="item-price">${itemPrice}.00</small></button>
+        <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="${itemId}" data-name="${itemName}" data-price="${itemPrice}" data-max="${itemMax}" data-image="${itemImage}" onclick="handleButtonClick(this)">Add to cart</button> 
         `;
       }
     }

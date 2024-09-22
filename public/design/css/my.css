@@ -690,22 +690,6 @@ margin-bottom: 2px;
 
 
 
-.home-card{
-  padding: 5px;
-  /* max-height: 100px; */
-}
-
-.home-card img{
-  max-width: 100%;
-
-}
-
-.home-card p {
-  padding: 0;
-  margin: 0;
-  font-size: 12px;
-}
-
 
 /* Basic styles for the card and grid */
 .category-card {
@@ -726,7 +710,8 @@ margin-bottom: 2px;
   
 
 .scroll-items {
-  overflow: scroll;
+  overflow-x: scroll;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* IE and Edge */
@@ -737,10 +722,55 @@ margin-bottom: 2px;
 }
 
 
+.home-card p {
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+}
+
+.card-image {
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+}
+
+.product-item img{
+  max-width: 100%;
+  padding: 8px;
+}
+
+.landing-item {
+  width: 160px;
+  padding: 10px;
+  height: 300px;
+  font-size: 12px;
+  overflow: hidden;
+}
+.landing-item:hover {
+  box-shadow: 0 2px 3px -5px, 0 2px 15px #0000000f;
+}
+.landing-image {
+  height: 150px;
+  width: 100% ;
+  overflow: hidden;
+}
+
+.landing-item img{
+  max-width: 100%;
+  padding: 8px;
+}
+.landing-details {
+  margin-top: 10px;
+  color: var(--default-color);
+  height: 30px;
+  overflow: hidden;
+}
 .product-item {
-    width: 155px;
+    width: 160px;
+    height: 300px;
     padding: 10px;
-    height: 250px;
+    font-size: 12px;
+    overflow: hidden;
   }
 
   .product-item:hover {
@@ -750,19 +780,33 @@ margin-bottom: 2px;
   .product-details {
     margin-top: 10px;
     color: var(--default-color);
+    height: 30px;
+    overflow: hidden;
   }
+
+  .product-details p{
+    margin: 0;
+    padding: 0;
+  }
+
+.button-container {
+  height: 40px;
+}
   .item-prices{
+    margin-top: 3px;
     display: flex;
     justify-content: space-between;
+    padding: 0;
+  }
+  .item-prices p{
+    padding: 0;
+    margin: 0;
   }
 
   .old-price{
     text-decoration: line-through;
   }
-  .product-item strong {
-    display: block;
-    margin-bottom: 8px;
-  }
+
 
   .product-item a {
   color: var(--accent-color) !important;
@@ -824,6 +868,15 @@ margin-bottom: 2px;
 
   .store-grid {
     grid-template-columns: 1fr 1fr  ;
+  }
+  .product-item {
+    width: 100%;
+    font-size: 12px;
+  }
 
-}
+  .card-image {
+    width: 130px;
+    height: 130px;
+    overflow: hidden;
+  }
 }
