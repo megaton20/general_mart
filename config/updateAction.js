@@ -177,7 +177,6 @@ async function checkReferrals() {
               );
               const refereeSpending = refereeResult.rows[0].spending;
               
-              console.log(refereeSpending);
 
             if (refereeSpending >= 3000.00) {
                 // Add 1000 ₦ to the referrer's cashback

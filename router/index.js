@@ -495,21 +495,19 @@ router.get('/verify', async (req, res) => {
 
       // Save transaction details to the database
       const query = `
-        INSERT INTO "Transactions" ("transaction_id", "reference", "amount", "currency", "status", "email", "paid_at") 
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        INSERT INTO "Transactions" ("transaction_id", "reference", "amount", "currency", "status", "email", "paid_at", "user_id") 
+        VALUES ($1, $2, $3, $4, $5, $6, $7,$8)
       `;
 
-      await db.query(query, [id, reference, amount / 100, currency, status, email, paid_at]);
+      await db.query(query, [id, reference, amount / 100, currency, status, email, paid_at, req.user.id]);
 
       // Fetch the user's current cashback using req.session.id
-      const userQuery = `
-        SELECT "cashback" FROM "Users" WHERE "id" = $1
-      `;
+      const userQuery = `SELECT "cashback" FROM "Users" WHERE "id" = $1`;
       const userResults = await db.query(userQuery, [req.user.id]);
       const currentCashback = userResults.rows[0].cashback;
 
       // Check if cashback was used
-      const applyCashback = req.session.applyCashback; // Assume this was set during the payment process
+      const applyCashback = req.session.applyCashback; 
 
       if (applyCashback) {
            // Deduct 60% of the total cashback
@@ -519,9 +517,7 @@ router.get('/verify', async (req, res) => {
 
 
         // Update user's cashback
-        const updateCashbackQuery = `
-          UPDATE "Users" SET "cashback" = $1 WHERE "id" = $2
-        `;
+        const updateCashbackQuery = `UPDATE "Users" SET "cashback" = $1 WHERE "id" = $2`;
         await db.query(updateCashbackQuery, [newCashback, req.user.id]);
       }
 
@@ -534,9 +530,29 @@ router.get('/verify', async (req, res) => {
       return res.redirect('/user');
     }
   } catch (error) {
-    console.error('Error verifying payment:', error.message);
-    req.flash('error_msg', 'Server error');
-    return res.redirect('/user');
+
+    try {
+      
+      const getItemQuery = `SELECT * FROM "Transactions" WHERE "reference" = $1 AND "email" = $2 `;
+      const { rows: results } = await query(getItemQuery, [reference, req.user.email]);
+  
+      if(results.length > 0) {
+
+        const updateCashbackQuery = `UPDATE "Transactions" SET "status" = $1 WHERE "reference" = $2`;
+        await db.query(updateCashbackQuery, ["failed", results.reference]);
+        
+        console.error('system Error verifying flaging payment succesful:', error);
+        req.flash('error_msg', 'Server error, flaging payment succesful');
+        return res.redirect('/user');
+      }
+
+    } catch (error) {
+
+      console.error('system Error verifying and flaging payment unsuccesful:', error);
+      req.flash('error_msg', 'Server error, flaging payment unsuccesful');
+      return res.redirect('/user');
+
+    }
   }
 });
 
