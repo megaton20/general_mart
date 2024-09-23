@@ -41,7 +41,7 @@ const expiryChecker = async () => {
       const existingProductResult = await query(`SELECT * FROM "Products" WHERE inventory_id = $1`, [itemId]);
 
       if (existingProductResult.rows.length <= 0) {
-        console.log(`The community is safe! Inventory with ID ${itemId} was not added to the shelf. ${daysLeft} days left.`);
+        // console.log(`The community is safe! Inventory with ID ${itemId} was not added to the shelf. ${daysLeft} days left.`);
         continue;
       }
 
@@ -69,7 +69,8 @@ const userRankingChecker = async () => {
     const rankResults = await query(`SELECT * FROM "ranks"`);
 
     if (rankResults.rows.length <= 0) {
-      return console.log("no ranks data");
+      // console.log("no ranks data");
+      return 
     }
     const ranks = rankResults.rows;
 

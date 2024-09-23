@@ -66,9 +66,9 @@
                       </div>
                       
                       <div class="product-details">
-                        <p class="text-truncate"><%= data.ProductName %>  mmjmj ujijiu jnjummmm nrejhr</p> 
+                        <p class="text-truncate"><%= data.ProductName %> </p> 
                       </div>
-                      <div class="item-prices"><p> ₦ <span class="item-price"> <%= data.UnitPrice %> </span></p> <p class="old-price text-grey">₦ <span class="item-price"> <%= data.oldPrice %> </p></div>
+                      <div class="item-prices"><p> ₦ <span class="item-price"> <%= data.UnitPrice %> </span></p> <p class="old-price text-grey">₦ <span class="item-price"> <%= data.old_price %> </p></div>
 
                           <div class="mt-2 button-container">
                             <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>" onclick="handleButtonClick(this)">Add to cart</button> 

@@ -446,7 +446,11 @@ router.post('/updateCartItem', ensureAuthenticated, async (req, res) => {
 
 // paystack
 router.post('/pay', async (req, res) => {
-  const { email, amount } = req.body;
+  const { email, amount,applyCashback,oAmnt } = req.body;
+
+  req.session.applyCashback = applyCashback;
+  req.session.oAmnt = oAmnt;
+
 
   try {
       const response = await axios.post('https://api.paystack.co/transaction/initialize', {
@@ -465,6 +469,7 @@ router.post('/pay', async (req, res) => {
       res.status(500).json({ message: error.message });
   }
 });
+
 
 
 
@@ -487,7 +492,7 @@ router.get('/verify', async (req, res) => {
     if (response.data.status && response.data.data.status === 'success') {
       // Extract transaction details
       const { id, reference, amount, currency, status, customer: { email }, paid_at } = response.data.data;
-      
+
       // Save transaction details to the database
       const query = `
         INSERT INTO "Transactions" ("transaction_id", "reference", "amount", "currency", "status", "email", "paid_at") 
@@ -495,6 +500,30 @@ router.get('/verify', async (req, res) => {
       `;
 
       await db.query(query, [id, reference, amount / 100, currency, status, email, paid_at]);
+
+      // Fetch the user's current cashback using req.session.id
+      const userQuery = `
+        SELECT "cashback" FROM "Users" WHERE "id" = $1
+      `;
+      const userResults = await db.query(userQuery, [req.user.id]);
+      const currentCashback = userResults.rows[0].cashback;
+
+      // Check if cashback was used
+      const applyCashback = req.session.applyCashback; // Assume this was set during the payment process
+
+      if (applyCashback) {
+           // Deduct 60% of the total cashback
+
+            cashbackDeduction = Math.min(currentCashback, req.session.oAmnt * 0.6);
+        const newCashback = Math.max(0, currentCashback - cashbackDeduction); // Ensure cashback doesn't go below 0
+
+
+        // Update user's cashback
+        const updateCashbackQuery = `
+          UPDATE "Users" SET "cashback" = $1 WHERE "id" = $2
+        `;
+        await db.query(updateCashbackQuery, [newCashback, req.user.id]);
+      }
 
       // No error, redirect to order page
       return res.redirect(`/user/order/${reference}`);
@@ -510,6 +539,7 @@ router.get('/verify', async (req, res) => {
     return res.redirect('/user');
   }
 });
+
 
 
 // webhook

@@ -88,23 +88,10 @@
                     <% if( data['activate'] == true ){ %>
 
                     <td style="display: flex; margin-right: 2px">
-                      <a
-                        class="btn btn-success"
-                        href="/super/inventory/<%= data['id'] %>"
-                      >
-                        View</a
-                      >
-                      <a
-                        class="btn btn-secondary"
-                        href="/super/edit-Inventory/<%= data['id'] %>"
-                      >
-                        edit</a
-                      >
-                      <form
-                        action="/super/delete-inventory/<%= data['id'] %>"
-                        method="POST"
-                        style="display: inline"
-                      >
+                      <a class="btn btn-success" href="/super/inventory/<%= data['id'] %>"> View</a>
+                      <a class="btn btn-secondary" href="/super/edit-Inventory/<%= data['id'] %>">edit</a>
+
+                      <form action="/super/delete-inventory/<%= data['id'] %>"method="POST"style="display: inline">
                         <input type="hidden" name="_method" value="DELETE" />
                         <button class="btn btn-danger">Delete</button>
                       </form>
@@ -115,35 +102,18 @@
                     <!-- check if price is null -->
                     <% if( data['status'] == "unverified" ){ %>
                     <td>
-                      <form
-                        action="/super/product-status/<%= data['status'] %>/<%= data['id'] %>"
-                        method="POST"
-                      >
+                      <form action="/super/product-status/<%= data['status'] %>/<%= data['id'] %>"method="POST">
                         <input type="hidden" name="_method" value="PUT" />
                         <button class="btn btn-primary">Switch Status</button>
                       </form>
 
-                      <form
-                      action="/super/delete-inventory/<%= data['id'] %>"
-                      method="POST"
-                      style="display: inline"
-                    >
+                      <form action="/super/delete-inventory/<%= data['id'] %>" method="POST" style="display: inline">
                       <input type="hidden" name="_method" value="DELETE" />
                       <button class="btn btn-danger">Delete</button>
                     </form>
 
-                    <a
-                    class="btn btn-success"
-                    href="/super/inventory/<%= data['id'] %>"
-                  >
-                    View</a
-                  >
-                  <a
-                    class="btn btn-secondary"
-                    href="/super/edit-Inventory/<%= data['id'] %>"
-                  >
-                    edit</a
-                  >
+                    <a class="btn btn-success" href="/super/inventory/<%= data['id'] %>">View</a>
+                  <a class="btn btn-secondary" href="/super/edit-Inventory/<%= data['id'] %>">edit</a>
                     </td>
                     <% } else{ %>
 
@@ -151,27 +121,13 @@
                 
                       <a href="/super/add-price/<%= data['id']%>" class="btn btn-primary">Add to Shelf</a>
 
-                      <form
-                      action="/super/delete-inventory/<%= data['id'] %>"
-                      method="POST"
-                      style="display: inline"
-                    >
+                      <form action="/super/delete-inventory/<%= data['id'] %>" method="POST" style="display: inline">
                       <input type="hidden" name="_method" value="DELETE" />
                       <button class="btn btn-danger">Delete</button>
                     </form>
 
-                    <a
-                    class="btn btn-success"
-                    href="/super/inventory/<%= data['id'] %>"
-                  >
-                    View</a
-                  >
-                  <a
-                    class="btn btn-secondary"
-                    href="/super/edit-Inventory/<%= data['id'] %>"
-                  >
-                    edit</a
-                  >
+                    <a class="btn btn-success" href="/super/inventory/<%= data['id'] %>">View</a>
+                  <a class="btn btn-secondary" href="/super/edit-Inventory/<%= data['id'] %>">edit</a>
                     </td>
                     <% } %> %>
 

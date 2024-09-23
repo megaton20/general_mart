@@ -1229,24 +1229,21 @@ exports.createInventoryPage = async (req, res) => {
 
   try {
     // Fetch all suppliers
-    const supplierResults = await query(`SELECT * FROM "Suppliers"`);
-    const supplierData = supplierResults.rows;
+    const {rows:supplierData} = await query(`SELECT * FROM "Suppliers"`);
 
     // Fetch all stores
-    const storeResults = await query(`SELECT * FROM "Stores"`);
-    const allStores = storeResults.rows;
+    const {rows:allStores} = await query(`SELECT * FROM "Stores"`);
 
     // Fetch all super admin users
-    const superAdminResults = await query(`SELECT * FROM "Users" WHERE "userRole" = 'super' ORDER BY id DESC`);
-    const superAdmin = superAdminResults.rows;
+    const {rows:superAdmin} = await query(`SELECT * FROM "Users" WHERE "userRole" = 'super' ORDER BY id DESC`);
 
     // Fetch all categories
-    const categoryResults = await query(`SELECT * FROM "Category"`);
-    const categoryData = categoryResults.rows;
+    const {rows:categoryData} = await query(`SELECT * FROM "Category"`);
+
 
     // Fetch all brands
-    const brandResults = await query(`SELECT * FROM "Brands"`);
-    const brandData = brandResults.rows;
+    const {rows:brandData} = await query(`SELECT * FROM "Brands"`);
+
 
     // Render the form
     res.render("./super/inventoryCreateForm", {
@@ -1275,8 +1272,8 @@ exports.getAllBrand = async (req, res) => {
 
   try {
     // Fetch all brands from the Brands table
-    const results = await query(`SELECT * FROM "Brands"`);
-    const brandResults = results.rows; // Use .rows to access the result data
+    const {rows:brandResults} = await query(`SELECT * FROM "Brands"`);
+
 
     // Render the brandTable view
     res.render("./super/brandTable", {
@@ -1300,8 +1297,7 @@ exports.editBrandPage = async (req, res) => {
 
   try {
     // Fetch the brand data by id from the Brands table
-    const results = await query(`SELECT * FROM "Brands" WHERE id = $1`, [req.params.id]);
-    const brandData = results.rows; // Access the first row of the result
+    const {rows:brandData} = await query(`SELECT * FROM "Brands" WHERE id = $1`, [req.params.id]);
 
     // Render the BrandEdit view
     res.render("./super/BrandEdit", {
@@ -2052,11 +2048,22 @@ exports.addToShelfForSale = async (req, res) => {
         `UPDATE "inventory" SET "activate" = ${true} WHERE "id" = $1`,
         [updateID]
       );
-      await query(
-        `UPDATE "Products" SET "activate" = ${true}, "UnitPrice" = $1 WHERE "inventory_id" = $2`,
-        [price, updateID]
-      );
+  
+    
+        let oldPrice 
+        if (productResult.rows[0].UnitPrice) {
+          oldPrice = productResult.rows[0].UnitPrice;
+        }else{
+          oldPrice = 0.00
+        }
+      
+        // Update the price in the Products table
+        await query(
+          `UPDATE "Products" SET "activate" = ${true}, "UnitPrice" = $1, "old_price" = $2 WHERE "inventory_id" = $3`,
+          [price, oldPrice, updateID]
+        );
 
+   
       req.flash("success_msg", `New price of ${price} added and status is activated.`);
       return res.redirect("/super");
     }
@@ -2084,11 +2091,21 @@ exports.updatePrice = async (req, res) => {
   }
 
   try {
-    // Update the price in the Products table
-    await query(
-      `UPDATE "Products" SET "UnitPrice" = $1 WHERE "inventory_id" = $2`,
-      [price, editID]
+    const { rows: productResult } = await query(
+      `SELECT * FROM "Products" WHERE "inventory_id" = $1`,
+      [editID]
     );
+    
+    // Ensure there's a product result to avoid errors
+    if (productResult.length > 0) {
+      const oldPrice = productResult[0].UnitPrice;
+    
+      // Update the price in the Products table
+      await query(
+        `UPDATE "Products" SET "UnitPrice" = $1, "old_price" = $2 WHERE "inventory_id" = $3`,
+        [price, oldPrice, editID]
+      );
+    }
 
     req.flash("success_msg", `Price updated successfully!`);
     return res.redirect("/super/all-products");

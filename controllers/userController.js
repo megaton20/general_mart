@@ -29,7 +29,7 @@ const calculateShippingFee = require('../model/shippingFee');
 
 
 const calculateCashback = require('../model/cashback');
-const { log } = require('console');
+
 
 
 const appName = `General Mart`  
@@ -462,25 +462,23 @@ exports.userShop = async (req, res) => {
   const countSql = 'SELECT COUNT(*) as count FROM "Products"';
   const showcaseQuery = `
     SELECT * FROM "Products" 
-    WHERE "showcase" = $1 AND "total_on_shelf" > $2 AND "status" = $3 AND "activate" != $4  LIMIT $5 OFFSET $6`;
+    WHERE "showcase" = $1 AND "total_on_shelf" > $2 AND "status" = $3 AND "activate" != $4 ORDER BY "id" ASC LIMIT $5 OFFSET $6 `;
   const queryParams = ['yes', 0, 'not-expired',false, limit, offset];
 
 
 
   try {
-    const results = await query(showcaseQuery, queryParams);
-    const showcase = JSON.parse(JSON.stringify(results.rows));
-    const moreItemsAvailable = results.rows.length === limit;
+    const {rows:showcase} = await query(showcaseQuery, queryParams);
+
+    const moreItemsAvailable = showcase.length === limit;
 
     const countResult = await query(countSql);
     const totalRows = parseInt(countResult.rows[0].count, 10);
     const totalPages = Math.ceil(totalRows / limit);
 
-    const cartResults = await query('SELECT * FROM "Cart" WHERE "user_id" = $1', [req.user.id]);
-    const presentCart = JSON.parse(JSON.stringify(cartResults.rows));
+    const {rows:presentCart} = await query('SELECT * FROM "Cart" WHERE "user_id" = $1', [req.user.id]);
 
     const {rows:allCategory} = await query('SELECT * FROM "Category"');
-
 
     const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
@@ -541,7 +539,7 @@ exports.userShopQuery = async (req, res) => {
     LIMIT $4 OFFSET $5`;
   const countSql = `
     SELECT COUNT(*) as count FROM "Products" 
-    WHERE "showcase" = $1 AND "total_on_shelf" > $2 AND "status" = $3`;
+    WHERE "showcase" = $1 AND "total_on_shelf" > $2 AND "status" = $3 `;
   const queryParams = ['yes', 0, 'not-expired', limit, offset];
 
   try {
@@ -814,8 +812,12 @@ exports.fetchCart = async (req, res) => {
     const userData = userResults.rows[0];
 
     // Fetch cart items
-    const fetchCartQuery = 'SELECT * FROM "Cart" WHERE "user_id" = $1 AND "user_email" = $2';
-    const fetchResult = await query(fetchCartQuery, [userId, userEmail]);
+    const fetchCartQuery = `
+    SELECT * FROM "Cart" 
+    WHERE "user_id" = $1 
+      AND "user_email" = $2 
+    ORDER BY "id" ASC`;
+  const fetchResult = await query(fetchCartQuery, [userId, userEmail]);
 
     // Check if the cart is empty
     if (fetchResult.rows.length <= 0) {
@@ -865,6 +867,7 @@ exports.fetchCart = async (req, res) => {
 exports.checkoutScreen = async (req, res) => {
   const userId = req.params.id;
   const userEmail = req.user.email;
+  const { applyCashback } = req.body; // Get whether the user chose to apply cashback
 
   try {
     // Fetch user data
@@ -872,7 +875,11 @@ exports.checkoutScreen = async (req, res) => {
     const userData = userResults.rows[0];
 
     // Fetch cart items
-    const fetchCartQuery = 'SELECT * FROM "Cart" WHERE "user_id" = $1 AND "user_email" = $2';
+    const fetchCartQuery = `
+      SELECT * FROM "Cart" 
+      WHERE "user_id" = $1 
+        AND "user_email" = $2 
+      ORDER BY "id" ASC`;
     const cartResults = await query(fetchCartQuery, [userId, userEmail]);
 
     // Check if the cart is empty
@@ -881,25 +888,30 @@ exports.checkoutScreen = async (req, res) => {
       return res.redirect('/user');
     }
 
-    // Calculate the total subtotal
+    // Calculate total subtotal
     const totalSubtotal = cartResults.rows.reduce((accumulator, item) => {
       return accumulator + parseFloat(item.subtotal);
     }, 0);
 
-    // Calculate the shipping fee based on user's LGA (Local Government Area)
-    const shippingFee = await calculateShippingFee(userData.lga); 
+    // Calculate the shipping fee
+    const shippingFee = await calculateShippingFee(userData.lga);
 
+    // Fetch cashback value
+    const userCashback = parseFloat(userData.cashback) || 0;
 
-    // Calculate total amount to be paid
-    const customerToPay = parseFloat(shippingFee) + totalSubtotal;
+    // Calculate the total amount to be paid
+    let customerToPay = parseFloat(shippingFee) + totalSubtotal;
 
+    // Format total for display
     const formattedCustomerToPay = customerToPay.toLocaleString("en-US");
+    const formattedShippingFee = shippingFee.toLocaleString("en-US");
 
-    const {rows:statusResults} = await query('SELECT * FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2', [userId, false]);
+    // Fetch notifications
+    const { rows: statusResults } = await query('SELECT * FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2', [userId, false]);
 
-    let totalUnreadNotification = 0
-    if(statusResults.length > 0){
-       totalUnreadNotification = statusResults.length
+    let totalUnreadNotification = 0;
+    if (statusResults.length > 0) {
+      totalUnreadNotification = statusResults.length;
     }
 
     // Render the checkout page
@@ -911,6 +923,7 @@ exports.checkoutScreen = async (req, res) => {
       shippingFee,
       totalSum: formattedCustomerToPay,
       customerToPay,
+      userCashback,
       totalUnreadNotification,
       userData,
     });
@@ -921,6 +934,8 @@ exports.checkoutScreen = async (req, res) => {
     return res.redirect('/user');
   }
 };
+
+
 
 
 // cart sending for order
