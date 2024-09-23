@@ -2246,8 +2246,8 @@ exports.remove = async (req, res) => {
 
   try {
     await query(
-      `UPDATE "inventory" SET "status" = $1 WHERE "id" = $2`,
-      ['verified', pageId]
+      `UPDATE "inventory" SET "status" = $1, "activate" = $2 WHERE "id" = $3`,
+      ['verified',true, pageId]
     );
 
     req.flash("success_msg", `Status is verified`);
@@ -3108,16 +3108,14 @@ exports.resolveSale = async (req, res) => {
 
 exports.flagProduct = async (req, res) => {
   const editID = req.params.id;
-  const deactivate = {
-    activate: false,
-  };
+  const deactivate = false
 
   try {
     // Update the inventory status to deactivate
-    await query(`UPDATE "inventory" SET "activate" = $1 WHERE id = $2`, [deactivate.activate, editID]);
+    await query(`UPDATE "inventory" SET "activate" = $1 WHERE id = $2`, [deactivate, editID]);
 
     // Update the products status to deactivate
-    await query(`UPDATE "Products" SET "activate" = $1 WHERE "inventory_id" = $2`, [deactivate.activate, editID]);
+    await query(`UPDATE "Products" SET "activate" = $1 WHERE "inventory_id" = $2`, [deactivate, editID]);
 
     req.flash("warning_msg", `Product deactivated successfully!`);
     return res.redirect("/super/all-products");

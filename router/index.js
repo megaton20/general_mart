@@ -69,9 +69,8 @@ router.get('/', async (req, res) => {
   const offset = (page - 1) * limit;
   
 
-  const showcaseQuery = `SELECT * FROM "Products" 
-  WHERE "showcase" = $1 AND "total_on_shelf" > $2 AND "status" = $3 LIMIT $4 OFFSET $5`;
-  const queryParams = ['yes', 0, 'not-expired', limit, offset];
+  const showcaseQuery = `SELECT * FROM "Products" WHERE "showcase" = $1 AND "total_on_shelf" > $2 AND "status" = $3 AND "activate"=$4 LIMIT $5 OFFSET $6`;
+  const queryParams = ['yes', 0, 'not-expired',true, limit, offset];
   try {
     
       const {rows:showcaseItem} = await query(showcaseQuery, queryParams);
@@ -89,7 +88,14 @@ router.get('/', async (req, res) => {
               // Fetch products for the first half of categories
               let firstHalfCategoriesWithProducts = [];
               for (let category of firstHalfCategories) {
-                  const { rows: products } = await query('SELECT * FROM "Products" WHERE "category_id" = $1 LIMIT 6', [category.CategoryID]);
+                const { rows: products } = await query(`
+                        SELECT * FROM "Products"
+                        WHERE "category_id" = $1 
+                          AND "total_on_shelf" > $2 
+                          AND "status" = $3 
+                          AND "activate" = $4
+                          LIMIT 6`,
+                        [category.CategoryID, 0, 'not-expired', true]);
 
 
                   firstHalfCategoriesWithProducts.push({
@@ -101,7 +107,15 @@ router.get('/', async (req, res) => {
               // Fetch products for the second half of categories
               let secondHalfCategoriesWithProducts = [];
               for (let category of secondHalfCategories) {
-                  const { rows: products } = await query('SELECT * FROM "Products" WHERE "category_id" = $1 LIMIT 6', [category.CategoryID]);
+                const { rows: products } = await query(`
+                SELECT * FROM "Products"
+                WHERE "category_id" = $1 
+                  AND "total_on_shelf" > $2 
+                  AND "status" = $3 
+                  AND "activate" = $4
+                  LIMIT 6`,
+                [category.CategoryID, 0, 'not-expired', true]);
+                
                   secondHalfCategoriesWithProducts.push({
                       categoryName: category.Category_name,
                       products: products
