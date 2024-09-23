@@ -1,0 +1,41 @@
+
+
+<%- include('./partials/openNav') %>
+<body>
+  <div class="container">
+      <div class="row">
+          <div class="col-md-12">
+              <div class="location-card p-3">
+                  <h5 class="card-title text-center">All Shipping Regions</h5>
+                  <div class="card-body">
+                      <% for (const state in shippingData) { %>
+                          <div class="location-state">
+                              <strong><%= state %></strong>
+                              <ul class="list-unstyled">
+                                  <% shippingData[state].forEach(({ lga, fee }) => { %>
+                                      <li class="location-lga">
+                                          <%= lga %> -  ₦<%= fee %>
+                                      </li>
+                                  <% }); %>
+                              </ul>
+                          </div>
+                      <% } %>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+
+
+
+
+
+
+
+  <%- include ('./partials/openFooter')%>
+  
+    <div id="preloader"></div>
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  

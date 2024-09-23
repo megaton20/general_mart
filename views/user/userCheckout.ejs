@@ -60,6 +60,8 @@
             <p class="m-0 text-warning">₦ <span class="item-price" style="font-size: 14px;"><%= shippingFee %></span></p>
           </div>
 
+          <% if (shippingFee > 0) { %>
+            
           <form id="paymentForm">
             <input type="email" class="form-control" id="email" required value="<%= userData.email %>" hidden>
             <input type="number" class="form-control" id="amount" value="<%= customerToPay %>" hidden>
@@ -75,9 +77,17 @@
             <p class="m-0">You are paying through <a href="https://paystack.com" target="_blank">Paystack</a> payment gateway</p>
             <p class="m-0" style="font-size: 12px;">Card info is kept secure with military-grade encryption.</p>
           </form>
-
           <hr>
           <p class="text-warning rounded" style="font-size: 12px; margin-top: 5px; border: 1px solid; padding: 5px;">Item will be delivered in 1 hour(s) after confirmation.</p>
+          <% } else { %>
+
+          <div class="mt-3">
+            <button class="btn btn-outline-danger w-100" disabled >We do not ship to <%= userData.lga %></button>
+            <p class="m-0 pt-2">click <a href="/valid-location" >Here</a> To see Valid States and LGAs we ship across</p>
+          </div>
+          <% } %>
+
+
         </div>
       </div>
     </div>

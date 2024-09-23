@@ -882,3 +882,19 @@ margin-bottom: 2px;
 }
 
 
+.location-card {
+  border-radius: 5px;
+  transition: transform 0.3s;
+}
+
+.location-card-title {
+  font-size: 1.5rem;
+}
+.location-state {
+  margin-top: 15px;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+.location-lga {
+  margin-left: 20px;
+}

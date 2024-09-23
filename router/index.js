@@ -269,6 +269,36 @@ router.get('/abouts', (req, res) => {
   });
 }
 )
+
+router.get('/valid-location', async(req, res) => {
+  let userActive= false
+  if (req.user) {
+    userActive = true
+  }
+  const { rows: shippingRegions } = await query(`SELECT state, lga, fee FROM "shipping_regions"`);
+
+  // Organizing data
+  const shippingData = {};
+  
+  shippingRegions.forEach(region => {
+      const { state, lga, fee } = region;
+  
+      if (!shippingData[state]) {
+          shippingData[state] = [];
+      }
+      shippingData[state].push({ lga, fee }); // Store both LGA and fee
+  });
+
+
+  res.render('valid-location',{
+    pageTitle:` ${appName} | valid-location`,
+    appName,
+    userActive,
+    shippingData
+  });
+}
+)
+
 router.get('/handler', (req, res)=>{
   
   if (req.isAuthenticated()) {
