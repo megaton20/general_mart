@@ -29,6 +29,7 @@ router.get("/all-positions", ensureAuthenticated,isSuper, superController.getAll
 router.get("/new-orders", ensureAuthenticated,isSuper, superController.getAllOrders);
 router.get("/all-canceled-order", ensureAuthenticated,isSuper, superController.getAllCanceledOrders);
 router.get("/view-canceled/:id", ensureAuthenticated,isSuper, superController.getOneCanceledOrder);
+router.get("/all-ranks", ensureAuthenticated,isSuper, superController.getAllRanks);
 
 // region and price delivery
 router.get("/all-regions/", ensureAuthenticated,isSuper, superController.gettAllPriceRegions);
@@ -96,6 +97,9 @@ router.get("/create-inventory", ensureAuthenticated,isSuper, superController.cre
 router.get("/create-brand", ensureAuthenticated,isSuper, superController.createBrandPage);
 router.get("/edit-brand/:id", ensureAuthenticated,isSuper, superController.editBrandPage);
 
+router.get("/create-rank", ensureAuthenticated,isSuper, superController.createRankPage);
+
+
 
 // post request
 router.post("/create-store", ensureAuthenticated,isSuper, superController.createNewStore);
@@ -107,6 +111,7 @@ router.post("/create-customer", ensureAuthenticated,isSuper, superController.cre
 router.post("/create-position", ensureAuthenticated,isSuper, superController.createNewPosition);
 router.post("/create-logistics", ensureAuthenticated,isSuper, superController.createNewLogistics);
 router.post("/create-brand", ensureAuthenticated,isSuper, superController.createNewBrand);
+router.post("/create-rank", ensureAuthenticated,isSuper, superController.createNewRank);
 
 
 
@@ -120,6 +125,8 @@ router.get("/edit-Inventory/:id", ensureAuthenticated,isSuper, superController.e
 router.get("/edit-position/:id", ensureAuthenticated,isSuper, superController.editPosition);
 router.get("/edit-employee/:id", ensureAuthenticated,isSuper, superController.editEmployee);
 
+
+router.get("/edit-rank/:id", ensureAuthenticated,isSuper, superController.rankEdit);
 
 
 
@@ -135,6 +142,7 @@ router.put("/edit-category/:id", ensureAuthenticated,isSuper, superController.ed
 router.put("/edit-inventory/:id", ensureAuthenticated,isSuper, superController.editNewInventory);
 router.put("/edit-position/:id", ensureAuthenticated,isSuper, superController.editNewPosition);
 router.put("/update-brand/:id", ensureAuthenticated,isSuper, superController.updateBrand);
+router.put("/edit-rank/:id", ensureAuthenticated,isSuper, superController.updateRank);
 
 
 
@@ -149,6 +157,7 @@ router.delete("/delete-category/:id", ensureAuthenticated,isSuper, superControll
 router.delete("/delete-inventory/:id", ensureAuthenticated,isSuper, superController.deleteInventory);
 router.delete("/delete-position/:id", ensureAuthenticated,isSuper, superController.deletePosition);
 router.delete("/delete-brand/:id", ensureAuthenticated,isSuper, superController.deleteBrand);
+router.delete("/delete-rank/:id", ensureAuthenticated,isSuper, superController.deleteRank);
 
 
 

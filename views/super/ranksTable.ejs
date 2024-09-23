@@ -1,0 +1,121 @@
+
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include ('../partials/superSidebar') %>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include ('../partials/topbar') %>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Store Shelf  </h1>
+                    <%- include ('../partials/messages') %>
+                    <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-rank">Add new rank</a>
+                    <!-- DataTales Example -->
+                    <div class=" mb-4">
+                        <% if(allRanks.length <= 0){ %>
+                            <div class="card-body">
+                                <h1>No Products Record Found !</h1>  
+                            </div> 
+                            <% } else{ %> 
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                  <th>Id</th>
+                                                  <th>name</th>
+                                                  <th>threshold</th>
+                                                  <th>Actions</th>
+
+                                                </tr>
+                                            </thead>
+                                          
+                                            <tbody>
+                                          
+        
+        
+                                                <% allRanks.forEach(function(data) {%>
+                                                    <tr>
+                                                        
+                                                        <td><%= data['id'] %> </td>
+                                                        <td><%= data['name'] %> </td>
+                                                        <td><%= data['threshold'] %> </td>
+                                                         <td>
+                                                          <a class="btn btn-secondary" href="/super/edit-rank/<%= data['id'] %>"> edit</a>
+                                                          <form action="/super/delete-rank/<%= data['id'] %>" method="POST" style="display: inline;">
+                                                              <input type="hidden" name="_method" value="DELETE" />
+                                                              <button  class="btn btn-danger">Delete</button>
+                                                          </form>
+                                                      </td>
+                                                  
+
+                                                   </tr> 
+                                                   
+                                                <% }) %>
+                                         
+                                           
+                                            
+        
+                                                </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <% } %>
+                       
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include ('../partials/footer') %>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+
+
+    <script>
+        // Select all buttons with the class "priceModal"
+        let addPriceButtons = document.querySelectorAll(".click-to-add-price");
+        let linkToAdd = document.getElementById("newLink");
+      
+        // Add event listener to each button
+        addPriceButtons.forEach(button => {
+
+          button.addEventListener("click", function() {
+            // Get the value of the data-value attribute
+      
+            const btnValue = this.getAttribute('data-value');
+      
+            // Set the form action dynamically
+            linkToAdd.action = `/super/update-price/${btnValue}`;
+          });
+        });
+      </script>

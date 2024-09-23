@@ -1219,6 +1219,18 @@ exports.createBrandPage = (req, res) => {
 });
 };
 
+exports.createRankPage = (req, res) => {
+  let nameA = req.user.First_name;
+  let nameB = req.user.Last_name;
+  res.render("./super/rankAddPage",{
+    pageTitle:"create rank",
+    name: `${nameA} ${nameB}`,
+    month:monthName,
+    day: dayName,
+    date: presentDay,
+    year: presentYear,
+});
+};
 
 
 
@@ -1366,8 +1378,120 @@ exports.updateBrand = async (req, res) => {
 };
 
 
+exports.getAllRanks = async (req, res) => {
+  const nameA = req.user.First_name;
+  const nameB = req.user.Last_name;
+
+  try {
+    // Fetch all brands from the Brands table
+    const {rows:allRanks} = await query(`SELECT * FROM "ranks"`);
 
 
+    // Render the brandTable view
+    res.render("./super/ranksTable", {
+      pageTitle: "Welcome",
+      name: `${nameA} ${nameB}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      allRanks: allRanks
+    });
+  } catch (error) {
+    req.flash("error_msg", `${error.message}`); // Use error.message instead of error.sqlMessage
+    return res.redirect("/super");
+  }
+};
+
+exports.createNewRank = async (req, res) => {
+  const { rankName,threshold } = req.body;
+
+  if (!(rankName && threshold)) {
+    req.flash("error_msg", "Enter all fields before submitting");
+    return res.redirect("back");
+  }
+
+  try {
+    // Check if the rank already exists
+    const { rows: nameResults } = await query(`SELECT * FROM "ranks" WHERE "name" = $1`, [rankName]);
+const { rows: thresholdResults } = await query(`SELECT * FROM "ranks" WHERE "threshold" = $1`, [threshold]);
+
+
+
+// Check if either name or threshold already exists
+if (nameResults.length > 0) {
+  req.flash("error_msg", `"${rankName}" already exists!`);
+  return res.redirect("back");
+} else if (thresholdResults.length > 0) {
+  req.flash("error_msg", `Threshold already exists!`);
+  return res.redirect("back");
+} else {
+  // Insert new rank only if both name and threshold do not exist
+  const insertQuery = `
+    INSERT INTO "ranks" ("name", "threshold") 
+    VALUES ($1, $2);
+  `;
+
+  const values = [rankName, threshold];
+
+  // Perform the insertion with a fresh query reference
+  const insertResult = await query(insertQuery, values);
+
+  req.flash("success_msg", `"${rankName}" added successfully!`);
+  return res.redirect("/super");
+}
+
+
+  } catch (error) {
+    req.flash("error_msg", `${error.message}`); 
+    return res.redirect("/super");
+  }
+};
+
+exports.updateRank = async (req, res) => {
+  const { rankName,threshold } = req.body;
+
+  if (!(rankName && threshold)) {
+    req.flash("error_msg", "Enter all fields before submitting");
+    return res.redirect("back");
+  }
+
+  try {
+    // Check if the rank already exists
+    const { rows: nameResults } = await query(`SELECT * FROM "ranks" WHERE "name" = $1`, [rankName]);
+const { rows: thresholdResults } = await query(`SELECT * FROM "ranks" WHERE "threshold" = $1`, [threshold]);
+
+
+
+// Check if either name or threshold already exists
+if (nameResults.length > 0) {
+  req.flash("error_msg", `"${rankName}" already exists!`);
+  return res.redirect("back");
+} else if (thresholdResults.length > 0) {
+  req.flash("error_msg", `Threshold already exists!`);
+  return res.redirect("back");
+} else {
+  
+  const updateQuery = `
+  UPDATE "ranks" 
+  SET "name" = $1, "threshold" = $2
+  WHERE "id" = $3;
+`;
+
+const values = [rankName, threshold, req.params.id];
+
+
+// Execute the query
+const updateResult = await query(updateQuery, values);
+
+  req.flash("success_msg", `"${rankName}" added successfully!`);
+  return res.redirect("/super");
+}
+  } catch (error) {
+    req.flash("error_msg", `${error.message}`); // Use error.message instead of error.sqlMessage
+    return res.redirect("/super");
+  }
+};
 // createReturn
 
 exports.createReturn = (req, res) => {
@@ -2172,6 +2296,41 @@ exports.storeEdit = async (req, res) => {
   }
 };
 
+exports.rankEdit = async (req, res) => {
+  const editID = req.params.id;
+  const userFirstName = req.user.First_name;
+  const userLastName = req.user.Last_name;
+
+  try {
+    const results = await query(
+      `SELECT * FROM "ranks" WHERE "id" = $1`,
+      [editID]
+    );
+
+    if (results.rows.length <= 0) {
+      req.flash("warning_msg", `No store found with ID ${editID}`);
+      return res.redirect("/super");
+    }
+
+    const rankData = results.rows[0];
+    // If you need to fetch stateData, do so here and include it in the render options
+
+    return res.render("./super/ranksEditForm", {
+      pageTitle: "Edit rank",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      rankData,
+      // stateData: stateData // Uncomment if stateData is being fetched and passed
+    });
+
+  } catch (error) {
+    req.flash("error_msg", `An error occurred: ${error.message}`);
+    return res.redirect("/super");
+  }
+};
 
 exports.editDiscount = async (req, res) => {
   const editID = req.params.id;
@@ -3285,6 +3444,22 @@ exports.deleteBrand = async (req, res) => {
     return res.redirect("/super");
   }
 };
+
+exports.deleteRank = async (req, res) => {
+  const editID = req.params.id;
+
+  try {
+    // Use a parameterized query with $1 for PostgreSQL
+    await query(`DELETE FROM "ranks" WHERE "id" = $1`, [editID]);
+    req.flash("success_msg", `Item has been removed`);
+    return res.redirect("back");
+
+  } catch (error) {
+    req.flash('error_msg', `Error from server: ${error.message}`);
+    return res.redirect("/super");
+  }
+};
+
 
 // view order
 exports.getSingleOrder = async (req, res) => {
