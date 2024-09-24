@@ -64,6 +64,10 @@ a:hover {
   color: color-mix(in srgb, var(--accent-color), transparent 25%);
   text-decoration: none !important;
 }
+p{
+  margin: 0;
+  padding: 0;
+}
 
 h1,
 h2,
@@ -75,10 +79,130 @@ h6 {
   font-family: var(--heading-font);
 }
 
+/* Fixed navbar at the top */
+.my-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+   right: 0; 
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--background-color);
+  padding: .7rem;
+  transition: 0.2s;
+  z-index: 1000;
+}
+
+.my-nav-left {
+  display: flex;
+  align-items: center;
+}
+
+/* Sidebar toggle button (hamburger icon) */
+.my-nav-toggle {
+  
+  font-size: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none; /* Hidden by default on larger screens */
+}
 
 
 
+/* Navigation links for large screens */
+.my-nav-links-large {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 
+.my-nav-links-large a {
+  text-decoration: none;
+  color: inherit;
+  font-size: 1.2rem;
+  margin-right: 1rem;
+}
+
+/* Sidebar links (hidden off-screen on mobile by default) */
+.my-nav-links-mobile {
+  position: fixed;
+  top: 0;
+  left: -300px; /* Start hidden off-screen */
+  width: 250px;
+  height: 100%;
+  background-color: var(--background-color);
+  padding-top: 60px;
+  padding-left: 0;
+  transition: transform 0.3s ease-in-out;
+  z-index: 1;
+  overflow-x: hidden; /* Prevent sidebar from overflowing */
+}
+
+.my-nav-links-mobile li{
+  list-style:none !important;
+  padding: 10px 12px;
+}
+
+.my-nav-links-mobile.active {
+  transform: translateX(250px); /* Slide in from the left */
+}
+
+.my-close-btn {
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+
+.my-toggle-container {
+  display: flex;
+  align-items: center;
+}
+
+.my-icon-links{
+  align-items: center;
+  padding: 0;
+}
+.my-icon-links li{
+   display: inline-block;
+   font-size: 20px;
+   padding: 0;
+   margin-right: 15px;
+   padding-top: 15px;
+}
+
+@media (max-width: 568px) {
+  .my-nav-toggle {
+    display: block; /* Show the toggle button on mobile */
+  }
+  .my-nav-links-large {
+    display: none; /* Hide regular links on mobile */
+  }
+
+  .my-nav-links-mobile {
+    display: block; 
+  }
+
+
+}
+@media (min-width: 568px) {
+  .my-nav-links-mobile {
+    display: none; 
+  }
+  .my-icon-links{
+    
+    display: none; 
+  }
+}
 
 /*--------------------------------------------------------------
 # Global Header
@@ -94,9 +218,6 @@ h6 {
     flex-direction: column;
   }
 
-  .header .logo h1 {
-    font-size: 24px;
-  }
 }
 
 
@@ -108,30 +229,18 @@ h6 {
   z-index: 997;
 }
 
-.header .logo {
-  line-height: 1;
-}
 
-.header .logo img {
-  max-height: 50px;
+.my-logo img {
+  max-height: 40px;
   margin-right: 8px;
 }
 
-.header .logo h1 {
-  font-size: 30px;
-  margin: 0;
-  font-weight: 600;
-  color: var(--heading-color);
-}
 
 @media (max-width: 480px) {
   .header .logo img {
     max-height: 35px;
   }
 
-  .header .logo h1 {
-    font-size: 24px;
-  }
 }
 
  .my-btn, .my-btn:focus {
@@ -173,16 +282,6 @@ h6 {
 @media (max-width: 1200px) {
   .header .logo {
     order: 1;
-  }
-
-  .header .my-btn {
-    order: 2;
-    margin: 0 15px 0 0;
-    padding: 6px 15px;
-  }
-
-  .header .navmenu {
-    order: 3;
   }
 }
 
@@ -729,7 +828,8 @@ margin-bottom: 2px;
 }
 
 .card-image {
-  width: 150px;
+  border: 1px solid #0000000f;
+  width: 100%;
   height: 150px;
   overflow: hidden;
 }
@@ -740,6 +840,7 @@ margin-bottom: 2px;
 }
 
 .landing-item {
+  border: 1px solid #0000000f;
   width: 160px;
   padding: 10px;
   height: 300px;
@@ -750,6 +851,7 @@ margin-bottom: 2px;
   box-shadow: 0 2px 3px -5px, 0 2px 15px #0000000f;
 }
 .landing-image {
+  border: 1px solid #0000000f;
   height: 150px;
   width: 100% ;
   overflow: hidden;
@@ -757,7 +859,6 @@ margin-bottom: 2px;
 
 .landing-item img{
   max-width: 100%;
-  padding: 8px;
 }
 .landing-details {
   margin-top: 10px;
@@ -766,6 +867,7 @@ margin-bottom: 2px;
   overflow: hidden;
 }
 .product-item {
+  border: 1px solid #0000000f;
     width: 160px;
     height: 300px;
     padding: 10px;
@@ -805,6 +907,8 @@ margin-bottom: 2px;
 
   .old-price{
     text-decoration: line-through;
+    font-size: 10px;
+    color: #00000057;
   }
 
 
@@ -875,9 +979,14 @@ margin-bottom: 2px;
   }
 
   .card-image {
-    width: 130px;
+    width: 100%;
     height: 130px;
     overflow: hidden;
+  }
+  .card-image img {
+    width: 130px;
+    height: 130px;
+
   }
 }
 

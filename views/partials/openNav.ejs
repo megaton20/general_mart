@@ -1,28 +1,101 @@
-<header id="header" class="header d-flex align-items-center sticky-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center">
-  
-      <a href="/" class="logo d-flex align-items-center me-auto">
-        <img src="/images/logo.png" alt="logo image">
-      </a>
-  
-      <nav id="navmenu" class="navmenu">
-        <ul>
-          <li><a href="/" class="">Home</a></li>
-          <li><a  href="/featured-services"> Services</a></li>
-          <li><a  href="/faq">FAQs</a></li>
-          <li><a  href="/contact">Contacts</a></li>
-          
-  
-        </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
-  
-      <% if(userActive == false){ %>
-        <a class="my-btn ml-4" href="/login">Log in</a>
-        <% } else{ %> 
-          <a class="my-btn ml-4" href="/handler">Continue</a>
 
-          <% } %>
-  
+
+
+
+<div class="container container-fluid container-xl">
+  <nav class="my-navbar ">
+    <div class="my-nav-left">
+      <!-- Sidebar toggle button (visible on mobile view) -->
+      <button class="my-nav-toggle" id="my-navToggle">&#9776;</button>
+      <a href="/" class="my-logo"><img src="/images/logo.png" alt="logo image"></a>
     </div>
-  </header>
+    <!-- Regular nav links (visible on large screens) -->
+    <ul class="my-nav-links my-nav-links-large">
+
+
+  <% if(userActive == false){ %>
+      <li><a href="/" class="">Home</a></li>
+      <li><a  href="/featured-services"> Services</a></li>
+      <li><a  href="/faq">FAQs</a></li>
+      <li><a  href="/contact">Contacts</a></li>
+      
+      <li> <a class="my-btn ml-1 text-white" href="/login">Log in</a></li>
+      
+      <% } else{ %> 
+        <li><a href="/" class="">Home</a></li>
+        <li><a  href="/featured-services"> Services</a></li>
+        <li><a  href="/faq">FAQs</a></li>
+        <li><a  href="/contact">Contacts</a></li>
+      <li><a href="/handler" class="my-btn text-white">Continue</a></li>
+      <% } %>
+      
+    </ul>
+    
+
+    <!-- mobile view -->
+
+    <ul class="my-nav-links my-nav-links-mobile" id="my-navLinks">
+      <!-- <a href="/" class="my-logo"><img src="/images/logo.png" alt="logo image"></a> -->
+      <button class="my-close-btn" id="my-closeBtn">&times;</button>
+      <% if(userActive == false){ %>
+
+        <p>Categories</p>
+        <% allCategory.forEach(data => { %>
+          <li>
+            <a href="/user/category/<%= data.Category_name %>#product-section" class=" categoryButton" data-category="<%= data.Category_name %>">
+              <i class="bi bi-arrow-right-circle"></i><span> <%= data.Category_name %></span>
+            </a>
+          </li>
+         
+          <% }); %>
+
+          <hr>
+          <p>Links</p>
+        <li><a  href="/featured-services"> Services</a></li>
+        <li><a  href="/faq">FAQs</a></li>
+        <li><a  href="/contact">Contacts</a></li>
+      <% } else{ %> 
+        <p>Categories</p>
+        <% allCategory.forEach(data => { %>
+          <li>
+            <a href="/user/category/<%= data.Category_name %>#product-section" class=" categoryButton" data-category="<%= data.Category_name %>">
+              <i class="bi bi-arrow-right-circle"></i><span> <%= data.Category_name %></span>
+            </a>
+          </li>
+         
+          <% }); %>
+
+        <hr>
+
+        
+        <p>User links</p>
+        <li><a href="/user" class="">Store Items</a></li>
+        <li><a  href="/user/orders"> My Orders</a></li>
+        <li><a  href="/user/wishlist"> My wishlist</a></li>
+        <li><a href="/user/profile"> Profile</a></li>
+        <hr>
+        <p>Links</p>
+        <li><a  href="/featured-services"> Services</a></li>
+        <li><a  href="/faq">FAQs</a></li>
+        <li><a  href="/contact">Contacts</a></li>
+        
+        <% } %>
+
+    </ul>
+
+<!--  -->
+    <ul class="my-icon-links my-icon-links-large">
+      <% if(userActive == false){ %>
+        <li><a href="/user/fetchCart" class="position-relative"><i class="fas fa-shopping-cart"></i> <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning"></span></a></li>
+        <% } else{ %> 
+          <li><a href="/user/fetchCart" class="position-relative"><i class="fas fa-shopping-cart"></i> <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning"></span></a></li>
+          <li><a href="/handler"> <i class="fas fa-user "></i></a></li>
+          <% } %>
+        </ul>
+  </nav>
+</div>
+
+
+<br>
+<br>
+<br>

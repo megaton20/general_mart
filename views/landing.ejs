@@ -2,6 +2,7 @@
 
   <%- include('./partials/openNav') %>
 
+  
 <!-- and closed if session is found -->
     <main class="main">
       <div class="container">
@@ -81,7 +82,7 @@
                 <div class="scroll-items">
                   <div class="products-grid my-box-shadow">
                     <% category.products.forEach(product => { %>
-                        <div class="landing-item" style="height: 250px; margin-bottom: 20px;">
+                        <div class="landing-item my-box-shadow" style="height: 250px; margin-bottom: 20px;">
                             <a href="/user/product-details/<%= product.id %>" class="home-card">
                                 
                               <div class="landing-image">
@@ -108,13 +109,13 @@
     </div>
 
 
-      <div class="wide mt-2">
+      <!-- <div class="wide mt-2">
         <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/wide-1.jpg" alt="" style="max-width: 100%;"></a>
       </div>
 
       <div class="wide mt-2 mb-4">
         <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/wide-2.jpg" alt="" style="max-width: 100%;"></a>
-      </div>
+      </div> -->
 
 
 
@@ -123,26 +124,32 @@
     <% if (secondHalf && secondHalf.length > 0) { %>
       <% secondHalf.forEach(category => { %>
           <% if (category.products && category.products.length > 0) { %> <!-- Only render card if products are present -->
-              <div class="category-card">
-                  <div class="top-cat">
-                      <h3><%= category.categoryName %></h3>
-                      <a href="#">See all</a>
-                  </div>
-
-                  <div class="products-grid">
-                      <% category.products.forEach(product => { %>
-                          <div class="product-item">
-                              <a href="/user/product-details/<%= product.id %>" class="home-card">
-                                  <div class="image-wap">
-                                      <img src="/uploads/<%= product.image %>" alt="<%= product.ProductName %>">
-                                  </div>
-                                  <p><%= product.ProductName %></p> 
-                                  <p>₦ <%= product.UnitPrice %></p>
-                              </a>
-                          </div>
-                      <% }) %>
-                  </div>
+            <div class="category-card card my-box-shadow">
+              <div class="top-cat">
+                  <h3><%= category.categoryName %></h3>
+                  <a href="/user/category/<%= category.categoryName %>#product-section" >See all</a>
               </div>
+
+              <div class="scroll-items">
+                <div class="products-grid my-box-shadow">
+                  <% category.products.forEach(product => { %>
+                      <div class="landing-item my-box-shadow" style="height: 250px; margin-bottom: 20px;">
+                          <a href="/user/product-details/<%= product.id %>" class="home-card">
+                              
+                            <div class="landing-image">
+                              <img src="/uploads/<%= product.image %>" alt="<%= product.ProductName %>">
+                            </div>
+
+                            <div class="landing-details">
+                              <p class="text-truncate"><%= product.ProductName %></p> 
+                            </div>
+                            <div class="item-prices"><p>₦ <%= product.UnitPrice %></p> <p class="old-price text-grey">₦ <%= product.old_price %></p></div>
+                          </a>
+                      </div>
+                  <% }) %>
+              </div>
+              </div>
+          </div>
           <% } %> <!-- End of condition to render only if products exist -->
       <% }) %>
   <% } %>
@@ -159,7 +166,7 @@
   
   <%- include ('./partials/openFooter')%>
   
-    <div id="preloader"></div>
+    <!-- <div id="preloader"></div> -->
 
   
   

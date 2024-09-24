@@ -145,80 +145,92 @@ router.get('/', async (req, res) => {
 )
 
 // policy Page
-router.get('/policy', (req, res) => {
+router.get('/policy', async(req, res) => {
   let userActive= false
   if (req.user) {
     userActive = true
   }
+  const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('policy',{
     pageTitle:` ${appName} policy`,
     appName,
-    userActive
+    userActive,
+    allCategory
   });
 }
 )
 
-router.get('/faq', (req, res) => {
+router.get('/faq', async(req, res) => {
   let userActive= false
   if (req.user) {
     userActive = true
   }
+  const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('faq',{
     pageTitle:` ${appName} faq`,
     appName,
-    userActive
+    userActive,
+    allCategory
   });
 }
 )
-router.get('/featured-services', (req, res) => {
+router.get('/featured-services', async(req, res) => {
   let userActive= false
   if (req.user) {
     userActive = true
   }
+  const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('featured-services',{
     pageTitle:` ${appName} featured-services`,
     appName,
-    userActive
+    userActive,
+    allCategory
   });
 }
 )
-router.get('/contact', (req, res) => {
+router.get('/contact', async (req, res) => {
   let userActive= false
   if (req.user) {
     userActive = true
   }
+  const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('contact',{
     pageTitle:` ${appName} contact`,
     appName,
-    userActive
+    userActive,
+    allCategory
   });
 }
 )
 
 // driver Page
-router.get('/new-rider', (req, res) => {
+router.get('/new-rider', async(req, res) => {
   let userActive= false
   if (req.user) {
     userActive = true
   }
+  const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('./drivers/about-riders',{
     pageTitle:` ${appName} drivers`,
     appName,
-    userActive
+    userActive,
+    allCategory
   });
 }
 )
 
 // vendor Page
-router.get('/new-vendor', (req, res) => {
+router.get('/new-vendor',async (req, res) => {
   let userActive= false
   if (req.user) {
     userActive = true
   }
+  const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('./vendor/about-vendor',{
     pageTitle:` ${appName} vendor`,
     appName,
-    userActive
+    userActive,
+    allCategory
   });
 }
 )
@@ -257,29 +269,33 @@ router.post('/forms/newsletter', async (req, res) => {
 
 
 // terms Page
-router.get('/terms', (req, res) => {
+router.get('/terms', async(req, res) => {
   let userActive= false
   if (req.user) {
     userActive = true
   }
+  const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('terms',{
     pageTitle:` ${appName} terms`,
     appName,
-    userActive
+    userActive,
+    allCategory
   });
 }
 )
 
 // terms Page
-router.get('/abouts', (req, res) => {
+router.get('/abouts', async (req, res) => {
   let userActive= false
   if (req.user) {
     userActive = true
   }
+  const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('abouts',{
     pageTitle:` ${appName} | Abouts`,
     appName,
-    userActive
+    userActive,
+    allCategory
   });
 }
 )
@@ -289,6 +305,7 @@ router.get('/valid-location', async(req, res) => {
   if (req.user) {
     userActive = true
   }
+  const { rows: allCategory } = await query('SELECT * FROM "Category"');
   const { rows: shippingRegions } = await query(`SELECT state, lga, fee FROM "shipping_regions"`);
 
   // Organizing data
@@ -308,7 +325,8 @@ router.get('/valid-location', async(req, res) => {
     pageTitle:` ${appName} | valid-location`,
     appName,
     userActive,
-    shippingData
+    shippingData,
+    allCategory
   });
 }
 )

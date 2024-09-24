@@ -4,9 +4,7 @@
 
   <%- include('./partials/navbar') %>
 
-  <main class="main">
-    
-  
+
       <div class="container"><%- include('../partials/messages') %></div>
 
       <!-- Page adverts -->
@@ -17,7 +15,7 @@
     <section id="service-details" class="service-details section">
       <div class="container">
         <div class="row">
-          <div class="col-lg-4 fixed-col" data-aos="fade-right" data-aos-delay="100" >
+          <div class="col-lg-4 fixed-col"  >
 
             <div class="service-box mb-4">
               <h6>Category List</h6>
@@ -41,7 +39,7 @@
               <div class="store-grid ">
               <% showcaseItem.forEach(data => { %>
 
-                        <div class="product-item">
+                        <div class="product-item my-box-shadow">
                                 
                               <div class="card-image">
 
@@ -65,7 +63,7 @@
                               <div class="product-details">
                                 <p class="text-truncate"><%= data.ProductName %> </p> 
                               </div>
-                              <div class="item-prices"><p> ₦ <span class="item-price"> <%= data.UnitPrice %> </span></p> <p class="old-price text-grey">₦ <span class="item-price"> <%= data.old_price %> </p></div>
+                              <div class="item-prices"><p> ₦ <span class="item-price"> <%= data.UnitPrice %> </span> <span class="old-price text-grey item-price ml-3"> ₦ <%= data.old_price %> </span></p></div>
 
                                   <div class="mt-2 button-container">
                                     <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>" onclick="handleButtonClick(this)">Add to cart</button> 
@@ -96,8 +94,7 @@
       </div>
       </div>
     </section><!-- /Service Details Section -->
-
-  </main>
+    
   <br>
   <br>
   <br>
@@ -108,7 +105,7 @@
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Preloader -->
-  <div id="preloader"></div>
+  <!-- <div id="preloader"></div> -->
 
   <!-- Vendor JS Files -->
 
