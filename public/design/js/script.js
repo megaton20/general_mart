@@ -9,5 +9,5 @@ navToggle.addEventListener('click', () => {
 
 // Sidebar close function
 closeBtn.addEventListener('click', () => {
-  navLinks.style.transform = 'translateX(-300px)';
+  navLinks.style.transform = 'translateX(-350px)';
 });

@@ -10,8 +10,8 @@
     <!-- Regular nav links (visible on large screens) -->
     <ul class="my-nav-links my-nav-links-large">
 
-      <li><a href="/user/notifications" class="position-relative"><i class="fas fa-bell "></i><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning"><%=totalUnreadNotification %></span></a></li>
-      <li><a href="/user/fetchCart" class="position-relative"><i class="fas fa-shopping-cart"></i> <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning"></span></a></li>
+      <li><a href="/user/notifications" class="position-relative"><i class="fas fa-bell "></i><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning cart-badge"><%=totalUnreadNotification %></span></a></li>
+      <li><a href="/user/fetchCart" class="position-relative"><i class="fas fa-shopping-cart"></i> <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning cart-badge"></span></a></li>
       <li><a href="/user/profile"> <i class="fas fa-user "></i></a></li>
       <li><a  href="/user/search"><i class="fas fa-search"></i></a></li>
     </ul>
@@ -19,21 +19,46 @@
     <ul class="my-nav-links my-nav-links-mobile" id="my-navLinks">
       <button class="my-close-btn" id="my-closeBtn">&times;</button>
 
+      <p>Categories</p>
+      <% allCategory.forEach(data => { %>
+        <li>
+          <a href="/user/category/<%= data.Category_name %>#product-section" class=" categoryButton" data-category="<%= data.Category_name %>">
+            <i class="bi bi-arrow-right-circle"></i><span> <%= data.Category_name %></span>
+          </a>
+        </li>
+       
+        <% }); %>
+
+        <hr>
+        <p>user management</p>
+
       <li><a href="/user" class=""><i class="fas fa-shopping-cart"></i> shop</a></li>
       <li><a href="/user/profile"><i class="fas fa-user"></i> Profile</a></li>
-      <li><a  href="/user/search"> <i class="fas fa-search"></i> Search</a></li>
       <li><a  href="/user/orders"> <i class="fas fa-clipboard-list"></i> My Orders</a></li>
+
+      <hr>
+      <p>useful Links</p>
+      <li><a  href="/featured-services"> Services</a></li>
+      <li><a  href="/faq">FAQs</a></li>
+      <li><a  href="/contact">Contacts</a></li>
+
       <% if (1 != 1) { %>
         <li class=""><a  href="/drivers/new-rider" class="" > My Ride</a></li>
         <% } else { %>
           <!-- <li class=""><a  href="/drivers/new-rider" class="" > Be A Rider</a></li> -->
         <% } %>
+
+        <hr>
+        <p>Actions</p>
+        <li><a  href="/logout">logout</a></li>
     </ul>
 
 
     <ul class="my-icon-links my-icon-links-large">
-          <li><a href="/user/fetchCart" class="position-relative"><i class="fas fa-shopping-cart"></i> <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning"></span></a></li>
-          <li><a href="/handler"> <i class="fas fa-user "></i></a></li>
+      
+          <li><a href="/user/search" class="position-relative"><i class="fas fa-search" style="font-size: 20px !important;"></i> </a></li>
+          <li><a href="/user/fetchCart" class="position-relative"><i class="fas fa-shopping-cart" style="font-size: 20px !important;"></i> <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning"></span></a></li>
+          <li><a href="/user/profile"> <i class="fas fa-user my-nav-icons" style="font-size: 20px !important;"></i></a></li>
         </ul>
   </nav>
 </div>

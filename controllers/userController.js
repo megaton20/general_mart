@@ -80,6 +80,7 @@ exports.profilePage = async (req, res) => {
     WHERE r.referrer_id = $1
 `;
 const { rows: referees } = await query(usersQuery, [req.user.id]);
+const { rows: allCategory } = await query('SELECT * FROM "Category"');
     
     // Render the profile page
     return res.render('./user/userSingleView', {
@@ -91,7 +92,7 @@ const { rows: referees } = await query(usersQuery, [req.user.id]);
       cashBack,
       totalUnreadNotification,
       referLink,
-      referralResult:referees
+      referralResult:referees,allCategory
     });
     
   } catch (error) {
@@ -118,13 +119,13 @@ exports.addPhonePage = async (req, res) => {
    const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
     let totalUnreadNotification = parseInt(result.totalunread, 10);
-
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
     // Render the profile page
     return res.render('./user/add-phone', {
       pageTitle: 'User Profile',
       appName: appName,
       userData,
-      totalUnreadNotification
+      totalUnreadNotification,allCategory
     });
     
   } catch (error) {
@@ -174,10 +175,11 @@ exports.changePhonePage = async (req, res) => {
    const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
     let totalUnreadNotification = parseInt(result.totalunread, 10);
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
     return res.render('./user/change-phone', {
       pageTitle: 'Change phone',
       appName: appName,
-      totalUnreadNotification
+      totalUnreadNotification,allCategory
     });
     
 
@@ -255,11 +257,11 @@ exports.changePasswordPage = async (req, res) => {
    const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
     let totalUnreadNotification = parseInt(result.totalunread, 10);
-
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
   return res.render('./user/change-password', {
     pageTitle: 'Change Password',
     appName: appName,
-    totalUnreadNotification,
+    totalUnreadNotification,allCategory
   });
   
 
@@ -338,13 +340,14 @@ exports.editProfilePage = async (req, res) => {
     const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
     let totalUnreadNotification = parseInt(result.totalunread, 10);
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
     // Render the edit profile page
     return res.render('./user/userEditPage', {
       pageTitle: 'Edit Profile',
       appName: appName,
       userData,
       stateData,
-      totalUnreadNotification
+      totalUnreadNotification,allCategory
     });
 
   } catch (error) {
@@ -411,7 +414,7 @@ exports.updateUserInfo = async (req, res) => {
     const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
     let totalUnreadNotification = parseInt(result.totalunread, 10);
-
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
     if (errors.length > 0) {
       return res.render('./user/userEditPage', {
         pageTitle: 'Edit Profile',
@@ -419,7 +422,7 @@ exports.updateUserInfo = async (req, res) => {
         totalUnreadNotification,
         userData: { ...req.body,id: req.user.id  }, // Pass current user data for the form
         stateData, // Ensure `stateData` is defined or fetched properly
-        errors,
+        errors,allCategory
       });
     }
 
@@ -714,13 +717,13 @@ exports.productDetails = async (req, res) => {
       }
     })
 
-
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
     return res.render('./user/product-details', { 
       pageTitle: "Details",
       appName: process.env.APP_NAME,
       itemData:products,
       totalUnreadNotification,
-      presentCart,
+      presentCart,allCategory
     });
   } catch (error) {
     console.error(`Error fetching product details: ${error.message}`);
@@ -738,7 +741,7 @@ exports.searchPage = async(req, res) => {
   const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
   let totalUnreadNotification = parseInt(result.totalunread, 10);
-
+  const { rows: allCategory } = await query('SELECT * FROM "Category"');
         return res.render("./user/userSearchPage", {
           pageTitle: "Search your item",
           appName:appName,
@@ -747,7 +750,7 @@ exports.searchPage = async(req, res) => {
           day: dayName,
           date: presentDay,
           totalUnreadNotification,
-          year: presentYear,
+          year: presentYear,allCategory
         }); // for admin only
         // not user
 };
@@ -778,7 +781,7 @@ exports.searchPost = async (req, res) => {
     const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
     let totalUnreadNotification = parseInt(result.totalunread, 10);
-
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
     // Render the search results page
     return res.render("./user/userSearchResults", {
       pageTitle: "Search Results",
@@ -790,7 +793,7 @@ exports.searchPost = async (req, res) => {
       month: monthName,
       day: dayName,
       date: presentDay,
-      year: presentYear,
+      year: presentYear,allCategory
     });
 
   } catch (error) {
@@ -842,7 +845,7 @@ exports.fetchCart = async (req, res) => {
     if(statusResults.length > 0){
        totalUnreadNotification = statusResults.length
     }
-
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
 
     // Render the cart page
     res.render('./user/cart', { 
@@ -852,7 +855,7 @@ exports.fetchCart = async (req, res) => {
       totalSubtotal,
       totalSum: formattedCustomerToPay,
       userData,
-      totalUnreadNotification,
+      totalUnreadNotification,allCategory
     });
 
   } catch (error) {
@@ -914,6 +917,7 @@ exports.checkoutScreen = async (req, res) => {
       totalUnreadNotification = statusResults.length;
     }
 
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
     // Render the checkout page
     res.render('./user/userCheckout', {
       pageTitle: "Payment Section",
@@ -925,7 +929,7 @@ exports.checkoutScreen = async (req, res) => {
       customerToPay,
       userCashback,
       totalUnreadNotification,
-      userData,
+      userData,allCategory
     });
 
   } catch (error) {
@@ -1210,7 +1214,7 @@ exports.invoice = async (req, res) => {
       const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
       let totalUnreadNotification = parseInt(result.totalunread, 10);
-
+      const { rows: allCategory } = await query('SELECT * FROM "Category"');
     // Render the invoice page
     return res.render('./user/userInvoice', {
       pageTitle: 'Invoice',
@@ -1225,7 +1229,7 @@ exports.invoice = async (req, res) => {
       newOrderProducts,
       newOrder,
       totalSum,
-      totalUnreadNotification
+      totalUnreadNotification,allCategory
     });
 
   } catch (error) {
@@ -1258,7 +1262,7 @@ exports.allUserOrder = async (req, res) => {
     const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
     let totalUnreadNotification = parseInt(result.totalunread, 10);
-
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
     // Render the orders page with fetched data
     return res.render('./user/userOrders', {
       pageTitle: 'Orders',
@@ -1269,7 +1273,7 @@ exports.allUserOrder = async (req, res) => {
       date: presentDay,
       year: presentYear,
       newOrder,
-      totalUnreadNotification
+      totalUnreadNotification,allCategory
     });
 
   } catch (err) {
@@ -1390,13 +1394,13 @@ exports.notificationScreen = async (req, res) => {
     const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
     let totalUnreadNotification = parseInt(result.totalunread, 10);
-
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
     // Render the checkout page
     res.render('./user/notifications', {
       pageTitle: "notifications ",
       appName: process.env.APP_NAME,
       userNotifications,
-      totalUnreadNotification,
+      totalUnreadNotification,allCategory
     });
 
   } catch (error) {
@@ -1420,13 +1424,13 @@ exports.readNotification = async (req, res) => {
       const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
       let totalUnreadNotification = parseInt(result.totalunread, 10);
-
+      const { rows: allCategory } = await query('SELECT * FROM "Category"');
     // Render the checkout page
     res.render('./user/notifications-details', {
       pageTitle: "notifications details ",
       appName: process.env.APP_NAME,
       userNotifications,
-      totalUnreadNotification
+      totalUnreadNotification,allCategory
     });
 
   } catch (error) {
@@ -1477,12 +1481,13 @@ exports.getMap = async (req, res) => {
   const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
   let totalUnreadNotification = parseInt(result.totalunread, 10);
-
+  const { rows: allCategory } = await query('SELECT * FROM "Category"');
   // Render the checkout page
   res.render('./user/user-map', {
     pageTitle: "map",
     appName: process.env.APP_NAME,
     totalUnreadNotification,
+    allCategory
   });
 };
 
@@ -1602,14 +1607,14 @@ exports.getAirtimePage = async (req, res) => {
   const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
   let totalUnreadNotification = parseInt(result.totalunread, 10);
-
+  const { rows: allCategory } = await query('SELECT * FROM "Category"');
   // Render the checkout page
   res.render('./user/airtime', {
     pageTitle: "map",
     appName: process.env.APP_NAME,
     totalUnreadNotification,
     userData,
-    airtimeData,
+    airtimeData,allCategory
   });
 };
 
@@ -1635,11 +1640,13 @@ exports.wishlist =  async (req, res) => {
               const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
               let totalUnreadNotification = parseInt(result.totalunread, 10);
+              const { rows: allCategory } = await query('SELECT * FROM "Category"');
+
           res.render('./user/wishlist', {
             pageTitle:"wishlist",
             appName,
              wishlist: wishlistItems,
-             totalUnreadNotification
+             totalUnreadNotification,allCategory
              });
 
   
@@ -1662,14 +1669,14 @@ exports.addWishlist = async (req, res) => {
 
          if (wishlist.length !=0) {
           if (wishlist[0].product_id == id) {
-            req.flash('error_msg', 'already added to whhishhllllliiissst!');
+            req.flash('warning_msg', 'already added to whhishhllllliiissst!');
             return res.redirect('back');
            }
          }
       // Add item to wishlist
       await query('INSERT INTO wishlists (user_id, product_id) VALUES ($1, $2)', [userId, id]);
 
-      req.flash('success_msg', 'added to wishlist succesfuly');
+      req.flash('success_msg', 'added to wishlist');
      return res.redirect('back');
   } catch (err) {
       console.error(err.message);
@@ -1694,7 +1701,6 @@ exports.removeWishlist = async (req, res) => {
       // remv item to wishlist
       await query(`DELETE FROM "wishlists" WHERE "product_id" = $1 AND "user_id" = $2`, [id,userId]);
 
-      req.flash('error_msg', 'removed from wishlist succesful');
      return res.redirect('back');
   } catch (err) {
       console.error(err.message);

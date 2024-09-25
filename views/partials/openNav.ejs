@@ -13,19 +13,14 @@
     <ul class="my-nav-links my-nav-links-large">
 
 
-  <% if(userActive == false){ %>
       <li><a href="/" class="">Home</a></li>
       <li><a  href="/featured-services"> Services</a></li>
       <li><a  href="/faq">FAQs</a></li>
       <li><a  href="/contact">Contacts</a></li>
-      
+    
+      <% if(userActive == false){ %>
       <li> <a class="my-btn ml-1 text-white" href="/login">Log in</a></li>
-      
       <% } else{ %> 
-        <li><a href="/" class="">Home</a></li>
-        <li><a  href="/featured-services"> Services</a></li>
-        <li><a  href="/faq">FAQs</a></li>
-        <li><a  href="/contact">Contacts</a></li>
       <li><a href="/handler" class="my-btn text-white">Continue</a></li>
       <% } %>
       
@@ -50,7 +45,7 @@
           <% }); %>
 
           <hr>
-          <p>Links</p>
+          <p>useful Links</p>
         <li><a  href="/featured-services"> Services</a></li>
         <li><a  href="/faq">FAQs</a></li>
         <li><a  href="/contact">Contacts</a></li>
@@ -74,11 +69,15 @@
         <li><a  href="/user/wishlist"> My wishlist</a></li>
         <li><a href="/user/profile"> Profile</a></li>
         <hr>
-        <p>Links</p>
+        <p>useful Links</p>
         <li><a  href="/featured-services"> Services</a></li>
         <li><a  href="/faq">FAQs</a></li>
         <li><a  href="/contact">Contacts</a></li>
+        <hr>
+        <p>Actions</p>
+        <li><a  href="/logout">logout</a></li>
         
+
         <% } %>
 
     </ul>
@@ -86,10 +85,10 @@
 <!--  -->
     <ul class="my-icon-links my-icon-links-large">
       <% if(userActive == false){ %>
-        <li><a href="/user/fetchCart" class="position-relative"><i class="fas fa-shopping-cart"></i> <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning"></span></a></li>
+        <li><a href="/user/fetchCart" class="position-relative"><i class="fas fa-shopping-cart" style="font-size: 20px;"></i> <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning"></span></a></li>
         <% } else{ %> 
-          <li><a href="/user/fetchCart" class="position-relative"><i class="fas fa-shopping-cart"></i> <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning"></span></a></li>
-          <li><a href="/handler"> <i class="fas fa-user "></i></a></li>
+          <li><a href="/user/fetchCart" class="position-relative"><i class="fas fa-shopping-cart" style="font-size: 20px;"></i> <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning"></span></a></li>
+          <li><a href="/handler"> <i class="fas fa-store" style="font-size: 20px !important;"></i></a></li>
           <% } %>
         </ul>
   </nav>

@@ -132,10 +132,11 @@ h6 {
   position: fixed;
   top: 0;
   left: -300px; /* Start hidden off-screen */
-  width: 250px;
+  width: 300px;
   height: 100%;
   background-color: var(--background-color);
   padding-top: 60px;
+  padding-bottom: 40px;
   padding-left: 0;
   transition: transform 0.3s ease-in-out;
   z-index: 1;
@@ -146,9 +147,14 @@ h6 {
   list-style:none !important;
   padding: 10px 12px;
 }
+.my-nav-links-mobile p{
+  padding: 10px 12px;
+  text-transform: uppercase;
+  color: #00000057;
+}
 
 .my-nav-links-mobile.active {
-  transform: translateX(250px); /* Slide in from the left */
+  /* transform: translateX(250px);  */
 }
 
 .my-close-btn {
@@ -162,6 +168,9 @@ h6 {
   right: 10px;
 }
 
+.cart-badge{
+  font-size: 9px;
+}
 
 .my-toggle-container {
   display: flex;
@@ -182,7 +191,8 @@ h6 {
 
 @media (max-width: 568px) {
   .my-nav-toggle {
-    display: block; /* Show the toggle button on mobile */
+    display: block;
+    margin: 0px;
   }
   .my-nav-links-large {
     display: none; /* Hide regular links on mobile */
@@ -195,12 +205,17 @@ h6 {
 
 }
 @media (min-width: 568px) {
+
   .my-nav-links-mobile {
     display: none; 
   }
   .my-icon-links{
     
     display: none; 
+  }
+  .my-logo img {
+    max-height: 30px;
+    margin-right: 8px;
   }
 }
 
@@ -232,7 +247,7 @@ h6 {
 
 .my-logo img {
   max-height: 40px;
-  margin-right: 8px;
+  margin-right: 3px;
 }
 
 
