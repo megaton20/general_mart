@@ -141,7 +141,7 @@ h6 {
   transition: transform 0.3s ease-in-out;
   z-index: 1;
   overflow-x: hidden; /* Prevent sidebar from overflowing */
-  overflow-y: scroll;
+
 }
 
 .my-nav-links-mobile li{
