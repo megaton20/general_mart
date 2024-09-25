@@ -1139,7 +1139,6 @@ exports.submitCart = async (req, res) => {
       }
     });
 
-
       // Clear the cart after the order is placed
       await query(`DELETE FROM "Cart" WHERE "user_id" = $1`, [userId]);
       await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[req.user.id, `Your Order was placed.`, 'success', false]);
@@ -1150,7 +1149,7 @@ exports.submitCart = async (req, res) => {
             const { rows: [result] } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
     
             let totalUnreadNotification = parseInt(result.totalunread, 10);
-
+            const { rows: allCategory } = await query('SELECT * FROM "Category"');
     return res.render('./user/order-success', {
       pageTitle: 'successful',
       appName: appName,
@@ -1161,7 +1160,7 @@ exports.submitCart = async (req, res) => {
       saleId:uuidForEachSale,
       cashback:cashbackEarned,
       PIN:privatePin,
-      totalUnreadNotification
+      totalUnreadNotification,allCategory
     });
 
 
