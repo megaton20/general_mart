@@ -141,6 +141,7 @@ h6 {
   transition: transform 0.3s ease-in-out;
   z-index: 1;
   overflow-x: hidden; /* Prevent sidebar from overflowing */
+  overflow-y: scroll;
 }
 
 .my-nav-links-mobile li{
@@ -153,9 +154,6 @@ h6 {
   color: #00000057;
 }
 
-.my-nav-links-mobile.active {
-  /* transform: translateX(250px);  */
-}
 
 .my-close-btn {
   font-size: 2rem;
@@ -169,7 +167,7 @@ h6 {
 }
 
 .cart-badge{
-  font-size: 9px;
+  font-size: 7px;
 }
 
 .my-toggle-container {

@@ -25,12 +25,10 @@
       <a href="/user/edit-user/<%=userData.id %>" style="font-size: 12px; text-transform: uppercase;">Edit shipping Info</a>
       <div class="card my-box-shadow mb-3">
         <div class="card-body" style="font-size: 13px;">
-          <div class="row">
-            <div class="col-4 m-0">Location:</div>
-            <div class="col-8 m-0"><%= userData.state %>, <%= userData.lga %>, <%= userData.Address %></div>
-            <div class="col-4 m-0">Land Mark:</div>
-            <div class="col-8 m-0"><%= userData.land_mark %></div>
-          </div>
+            <p class=" m-0">Location:</p>
+            <p class=" m-0"><%= userData.state %>, <%= userData.lga %>, <%= userData.Address %></p>
+            <p class=" mt-2 m-0">Land Mark:</p>
+            <p class=" m-0"><%= userData.land_mark %></p>
         </div>
       </div>
 
@@ -38,10 +36,10 @@
       <div class="card my-box-shadow">
         <div class="card-body" style="font-size: 13px;">
           <div class="row">
-            <div class="col-4 m-0">Phone</div>
-            <div class="col-8 m-0"><%= userData.Phone %></div>
-            <div class="col-4 m-0">Email</div>
-            <div class="col-8 m-0"><%= userData.email %></div>
+            <p class="col-3 m-0">Phone</p>
+            <p class="col-8 m-0"><%= userData.Phone %></p>
+            <p class="col-3 m-0">Email</p>
+            <p class="col-8 m-0"><%= userData.email %></p>
           </div>
         </div>
       </div>
