@@ -29,7 +29,7 @@ const calculateShippingFee = require('../model/shippingFee');
 
 
 const calculateCashback = require('../model/cashback');
-const { info } = require('console');
+
 
 
 
@@ -1147,7 +1147,18 @@ exports.submitCart = async (req, res) => {
       },
     to: "adarikumichael@gmail.com",
     subject: `New Order `,
-    html: `transaction reference #${transactionPaymentReference} from ${email} `
+    html: `transaction reference #${transactionPaymentReference} 
+    <br>
+    from ${email}
+    <br>
+    time ${sqlDate}
+    <br>
+    lga ${userData.lga}
+    <br>
+    state ${userData.state}
+    <br>
+    address ${userData.Address}
+     `
     };
 
     transporter.sendMail(emailNotificationOptions,(err, info)=>{
