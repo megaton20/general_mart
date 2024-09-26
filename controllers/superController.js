@@ -3469,6 +3469,7 @@ exports.getSingleOrder = async (req, res) => {
     // Fetch the order data
     const {rows:orderData} = await query(`SELECT * FROM "Orders" WHERE "id" = $1`, [editID]);
 
+    
     if (orderData.length === 0) {
       req.flash("error_msg", "No item found with this ID");
       return res.redirect("/super");
@@ -3484,10 +3485,13 @@ exports.getSingleOrder = async (req, res) => {
     // Fetch products associated with the sale
     const {rows:productBought} = await query(`SELECT * FROM "Order_Products" WHERE "sale_id" = $1`, [saleID]);
 
+
+    
     // Fetch logistics and riders data
     const {rows:ridersData} = await query(`SELECT * FROM "drivers"`);
     const {rows:logisticsDrivers} = await query(`SELECT * FROM "Logistics"`);
-
+    
+    
 
 
     return res.render("./super/orderSingle", {
@@ -3522,47 +3526,47 @@ exports.confirmOrder = async (req, res) => {
       return res.redirect("/super");
     }
 
-
-
+    
     if (thatOrder[0].status === "canceled") {
       req.flash("error_msg", "Order status is 'canceled'");
       return res.redirect("/super/all-orders");
     }
-
+    
     const saleID = thatOrder[0].sale_id;
     const customerId = thatOrder[0].customer_id;
     const totalSpentOnThisOrder = parseFloat(thatOrder[0].total_amount) + parseFloat(thatOrder[0].shipping_fee);
     const cashBack = calculateCashback(parseFloat(thatOrder[0].total_amount)); // Assuming this is a function you have defined
-
+    
     // Fetch order products
     const {rows:orderResults} = await query(`SELECT * FROM "Order_Products" WHERE "sale_id" = $1`, [saleID]);
-
-
+    
+    
     // Check availability of each product
     const availabilityPromises = orderResults.map(async (productBought) => {
       const {rows:shelfResults} = await query(`SELECT "total_on_shelf" FROM "Products" WHERE "id" = $1`, [productBought.product_id]);
+
       
-      if (shelfResults[0].length === 0) {
+      if (shelfResults.length === 0) {
         throw new Error(`Product with id ${productBought.product_id} not found`);
       }
-
+      
       const currentShelfQuantity = shelfResults[0].total_on_shelf;
       if (currentShelfQuantity <= 0) {
         throw new Error(`Product "${productBought.product_name}" is out of stock`);
       }
     });
-
+    
     await Promise.all(availabilityPromises);
-
+    
     // Proceed with confirmation if all products are available
     if (thatOrder[0].status === "incomplete") {
       const {rows:thatSale} = await query(`SELECT * FROM "Sales" WHERE "sale_id" = $1`, [saleID]);
-
       if (thatSale.length > 0) {
         req.flash("warning_msg", "This order has already been confirmed");
         return res.redirect("/super/new-orders");
       }
-
+      
+      
       // Insert into Sales table
       await query(`
       INSERT INTO "Sales" (
@@ -3611,6 +3615,7 @@ exports.confirmOrder = async (req, res) => {
 
       // Update user spending and cashback
       const {rows:userResults} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [customerId]);
+      
       if (userResults.length === 0) {
         req.flash("error_msg", "User not found");
         return res.redirect("/super");
@@ -3620,7 +3625,6 @@ exports.confirmOrder = async (req, res) => {
       const newUserSpending = parseFloat(buyingUser.spending) + totalSpentOnThisOrder;
 
       const newCashBack = parseFloat(buyingUser.cashback) + cashBack;
-
 
       await query(`UPDATE "Users" SET "spending" = $1, "cashback" = $2 WHERE "id" = $3`, [newUserSpending, newCashBack, customerId]);
       await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[customerId, `Your Order Has been confirmed.`, 'success', false]);
