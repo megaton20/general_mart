@@ -19,7 +19,7 @@
               <% if (userData.image == null) { %>
                   <!-- Display form for uploading image -->
                   <div class="my-profile-image">
-                      <img class="profile-img" src="/images/profile.jpg" alt="Default Profile Image">
+                      <img class="profile-img" src="/images/avatar.png" alt="Default Profile Image">
                       <div class="overlay">
                           <form class="user" action="/user/add-profile-image/<%= userData.id %>" method="post" enctype="multipart/form-data">
                               <label for="image-upload" class="upload-label">

@@ -29,6 +29,7 @@ const calculateShippingFee = require('../model/shippingFee');
 
 
 const calculateCashback = require('../model/cashback');
+const { info } = require('console');
 
 
 
@@ -136,8 +137,6 @@ exports.addPhonePage = async (req, res) => {
 };
 
 exports.putNewPhone = async(req, res) => {
-
-  const userId =  req.user.id
 
   const { Phone } = req.body;
 
@@ -1131,6 +1130,7 @@ exports.submitCart = async (req, res) => {
     html: emailBody
     };
 
+
     // Send the invoice email
      transporter.sendMail(mailOptions,(err,info)=>{
       if (err) {
@@ -1138,6 +1138,24 @@ exports.submitCart = async (req, res) => {
         req.flash('error_msg', `Error sending invoice:`);
       }
     });
+
+
+    const emailNotificationOptions = {
+      from: {
+        name: appName,
+        address: "noreply@gmail.com",
+      },
+    to: "adarikumichael@gmail.com",
+    subject: `New Order `,
+    html: `transaction reference #${transactionPaymentReference} from ${email} `
+    };
+
+    transporter.sendMail(emailNotificationOptions,(err, info)=>{
+      if (err) {
+        console.log(err);
+        req.flash('error_msg', `Error sending  ntification to admin email:`);
+      }
+    })
 
       // Clear the cart after the order is placed
       await query(`DELETE FROM "Cart" WHERE "user_id" = $1`, [userId]);

@@ -45,10 +45,15 @@ module.exports = {
       const { rows } = await query(fetchUserQuery, [userId]);
       const userData = rows[0];
 
-      if (userData.verify_phone == 0) {
-        req.flash("error_msg", "Please verify your phone number to complete request!");
-        return res.redirect('back');
+      console.log(userData.Phone);
+      if (userData.Phone == null) {
+        req.flash("error_msg", "Please Enter a contact phone to chheckout!");
+        return res.redirect('/user/add-phone');
       }
+      // if (userData.verify_phone == 0) {
+      //   req.flash("error_msg", "Please verify your phone number to complete request!");
+      //   return res.redirect('back');
+      // }
       return next();
     } catch (error) {
       req.flash('error_msg', `Error: ${error.message}`);
