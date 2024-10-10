@@ -1,47 +1,56 @@
 
+<style>
+
+    .form-ctrl {
+        margin-bottom: 15px;
+    }
+    .m-card {
+        max-width: 400px; /* Set max width for the card */
+        margin: auto; /* Center the card */
+        margin-top: 100px; /* Add top margin for spacing */
+    }
+  </style>
 
 <%- include('./partials/authNav') %>
 <div class="container">
-    <div style="font-size: 12px;">
-    </div>
-    
+    <p class="text-center"> <i class="bi bi-exclamation-triangle-fill"></i> use a verified email so you may recieve payment reciepts</p> 
+    <div class="m-card">
     <%- include('./partials/messages') %>
-    <div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
-        <div class="row">
-            <div class="col-12 col-sm-12 col-md-12 col-lg-6 mx-auto">
-                <div class="d-flex flex-column justify-content-center align-items-center my-box-shadow p-1">
+                <div class="card-body my-box-shadow p-2">
                     <form action="/auth/register" method="post">
                         <div class="row">
-                            <div class="form-group col-12 col-md-6">
+                            <div class="form-group">
                                 <input type="text" class="form-control mt-2 bg-transparent text-dark" placeholder="First name" name="first_name" value="<%= typeof first_name !== 'undefined' ? first_name : '' %>">
                             </div>
-                            <div class="form-group col-12 col-md-6">
+                            <div class="form-group">
                                 <input type="text" class="form-control mt-2 bg-transparent text-dark" placeholder="Last name" name="last_name" value="<%= typeof last_name !== 'undefined' ? last_name : '' %>">
                             </div>
-                            <div class="form-group col-12 col-md-6">
+                            <div class="form-group">
                                 <input type="email" class="form-control mt-2 bg-transparent text-dark" placeholder="Enter Email" name="email" value="<%= typeof email !== 'undefined' ? email : '' %>">
                             </div>
-                            <div class="form-group col-12 col-md-6">
+                            <div class="form-group">
                                 <input type="number" class="form-control mt-2 bg-transparent text-dark" placeholder="Enter phone" name="phone" value="<%= typeof phone !== 'undefined' ? phone : '' %>">
                             </div>
-                            <div class="form-group col-12 col-md-6">
+                            <div class="form-group">
                                 <input type="password" class="form-control mt-2 bg-transparent text-dark" placeholder="Enter password" name="password">
                             </div>
-                            <div class="form-group col-12 col-md-6">
+                            <div class="form-group">
                                 <input type="password" class="form-control mt-2 bg-transparent text-dark" placeholder="Enter same password" name="confirm_password">
                             </div>
 
                             <input type="hidden" name="referrerCode" value="<%= referralCode %>">
                         </div>
-
-                        <button class="my-btn mt-2 m-0" style="width: 100%;" type="submit">Register</button>
+                        <button class="btn btn-primary mt-2 m-0" style="width: 100%;" type="submit">Register</button>
+                        
+                        <p>or</p>
+                        <a href="/auth/google" class="btn btn-danger w-100 mt-2">
+                            <i class="fab fa-google"></i> Register with Google
+                        </a>
                     </form>
 
                     <p class="m-0 mt-2">By continuing you agree to our <a href="/terms">Terms and Conditions</a></p>
                     <p class="m-0">Already have an account? <a href="/login">Login</a></p>
 				</div>
-            </div>
-        </div>
     </div>
 </div>
 

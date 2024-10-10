@@ -31,66 +31,63 @@
             
 
           </div>
-
-          <div class="col-lg-8 ml-0 " id="product-section">
-            <div class=" service-box scrolling-col">
-              <h5 >Our showcase items</h5>
-
-              <div class="store-grid ">
-              <% showcaseItem.forEach(data => { %>
-
-                        <div class="product-item my-box-shadow">
-                                
-                              <div class="card-image">
-
-                                 <a href="/user/product-details/<%= data.id %>" >
-                                   <img src="/uploads/<%= data.image %>" alt="<%= data.ProductName %>">
-                                </a>
-
-                              </div>
-                              <div class="wishlist">
-                                <% if (data.inWishlist) { %>
-                                  <a href="/user/wishlist/<%= data.id %>/remove" class="wishlist-icon m-1 ">
-                                    <i class="fas fa-heart"></i>
-                                  </a>
-                                  <% } else { %>
-                                    <a href="/user/wishlist/<%= data.id %>/add" class="wishlist-icon m-1 ">
-                                        <i class="far fa-heart"></i>
-                                      </a>
-                                  <% } %>
-                              </div>
-                              
-                              <div class="product-details">
-                                <p class="text-truncate"><%= data.ProductName %> </p> 
-                              </div>
-                              <div class="item-prices"><p> ₦ <span class="item-price"> <%= data.UnitPrice %> </span> <span class="old-price text-grey item-price ml-3"> ₦ <%= data.old_price %> </span></p></div>
-
-                                  <div class="mt-2 button-container">
-                                    <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>" onclick="handleButtonClick(this)">Add to cart</button> 
-                                  </div>
-
-                        </div>
-
-                        
-                        <% }); %>
-                        
+          <div class="col-lg-8 ml-0" id="product-section">
+            <div class="service-box scrolling-col">
+              <h5>Our showcase items</h5>
+          
+              <% if (showcaseItem.length === 0) { %>
+                <div class="no-items text-center">
+                  <p>No items available</p>
+                </div>
+                <% } else { %>
+                  <div class="store-grid">
+                  <% showcaseItem.forEach(data => { %>
+                    <div class="product-item my-box-shadow">
+                      <div class="card-image">
+                        <a href="/user/product-details/<%= data.id %>">
+                          <img src="/uploads/<%= data.image %>" alt="<%= data.ProductName %>">
+                        </a>
                       </div>
-              <nav  class="container mt-2">
+                      <div class="wishlist">
+                        <% if (data.inWishlist) { %>
+                          <a href="/user/wishlist/<%= data.id %>/remove" class="wishlist-icon m-1">
+                            <i class="fas fa-heart"></i>
+                          </a>
+                        <% } else { %>
+                          <a href="/user/wishlist/<%= data.id %>/add" class="wishlist-icon m-1">
+                            <i class="far fa-heart"></i>
+                          </a>
+                        <% } %>
+                      </div>
+                      <div class="product-details">
+                        <p class="text-truncate"><%= data.ProductName %></p>
+                      </div>
+                      <div class="item-prices">
+                        <p>₦ <span class="item-price"><%= data.UnitPrice %></span>
+                          <span class="old-price text-grey item-price ml-3">₦ <%= data.old_price %></span>
+                        </p>
+                      </div>
+                      <div class="mt-2 button-container">
+                        <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>" onclick="handleButtonClick(this)">Add to cart</button>
+                      </div>
+                    </div>
+                  <% }); %>
+                <% } %>
+              </div>
+          
+              <nav class="container mt-2">
                 <ul class="pagination">
-                
-                    <% if (pagination.page > 1) { %>
-                      <a href="/user/pagination?page=<%= pagination.page - 1 %>#product-section" class="my-btn">&laquo;</a>
+                  <% if (pagination.page > 1) { %>
+                    <a href="/user/pagination?page=<%= pagination.page - 1 %>#product-section" class="my-btn">&laquo;</a>
                   <% } %>
-
-                  
                   <% if (pagination.page < pagination.totalPages) { %>
-                      <a href="/user/pagination?page=<%= pagination.page + 1 %>#product-section" class="my-btn ml-1">&raquo;</a>
+                    <a href="/user/pagination?page=<%= pagination.page + 1 %>#product-section" class="my-btn ml-1">&raquo;</a>
                   <% } %>
                 </ul>
-            </nav><!-- End Pagination with icons -->
-
+              </nav>
             </div>
           </div>
+          
       </div>
       </div>
     </section><!-- /Service Details Section -->

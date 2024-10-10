@@ -759,6 +759,10 @@ exports.searchPost = async (req, res) => {
   const userLastName = req.user.Last_name;
   const { search } = req.body;
 
+  if (!search) {
+    req.flash('error_msg', 'enter a search word')
+    return res.redirect('back')
+  }
   try {
     // Define the search pattern
     const searchPattern = `%${search}%`;
@@ -1149,15 +1153,17 @@ exports.submitCart = async (req, res) => {
     subject: `New Order `,
     html: `transaction reference #${transactionPaymentReference} 
     <br>
-    from ${email}
+    from: ${email}
     <br>
-    time ${sqlDate}
+    customer name: ${userData.First_name} ${userData.Last_name}
     <br>
-    lga ${userData.lga}
+    lga: ${userData.lga}
     <br>
-    state ${userData.state}
+    state: ${userData.state}
     <br>
-    address ${userData.Address}
+    address: ${userData.Address}
+    <br>
+    time: ${sqlDate}
      `
     };
 
