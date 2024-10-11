@@ -1550,7 +1550,7 @@ exports.getInventoryById = async (req, res) => {
 
 // add price page
 exports.getAddpricePage = async (req, res) => {
-  let singleId = req.params.id;
+  const singleId = req.params.id;
   const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
 
@@ -1560,9 +1560,16 @@ exports.getAddpricePage = async (req, res) => {
 
     if (results.rows.length <= 0) {
       req.flash('warning_msg', 'Item does not exist in our inventory');
-      return res.redirect('/super');
+      return res.redirect('back');
     }
 
+
+    const {rows: shelfResult} = await query(`SELECT * FROM "Products" WHERE "inventory_id" = $1`, [singleId]);
+
+    if (shelfResult.length > 0) {
+      req.flash('warning_msg', 'Item exist in shelf already');
+      return res.redirect('back');
+    }
     let allInventory = results.rows;
 
     // Reformat the dates for display
@@ -1880,7 +1887,7 @@ exports.createNewInventory = async (req, res) => {
     ]);
 
     req.flash("success_msg", `"${Product_name}" added successfully!`);
-    return res.redirect("/super");
+    return res.redirect("/super/all-inventory");
   } catch (error) {
     // Debugging: Log the error
     console.error("SQL Error:", error.message);
@@ -2229,7 +2236,20 @@ exports.updatePrice = async (req, res) => {
         `UPDATE "Products" SET "UnitPrice" = $1, "old_price" = $2 WHERE "inventory_id" = $3`,
         [price, oldPrice, editID]
       );
+
+      // check in cart
+      const { rows: cartResult } = await query(`SELECT * FROM "Cart" WHERE "product_id" = $1`,[productResult[0].id]);
+
+      if (cartResult.length > 0) {
+      
+        // Update the price in the Products table
+        await query(
+          `UPDATE "Cart" SET "price_per_item" = $1,"subtotal" = $2 WHERE "product_id" = $3`,
+          [price, price * cartResult[0].quantity, productResult[0].id]
+        );
+      }
     }
+
 
     req.flash("success_msg", `Price updated successfully!`);
     return res.redirect("/super/all-products");

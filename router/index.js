@@ -1,4 +1,5 @@
 const express = require('express');
+const crypto = require('crypto');
 const router = express.Router();
 const axios = require('axios');
 const { promisify } = require('util');
@@ -508,27 +509,32 @@ router.post('/updateCartItem', ensureAuthenticated, async (req, res) => {
 
 // paystack
 router.post('/pay', async (req, res) => {
-  const { email, amount,applyCashback,oAmnt } = req.body;
+  const { email, amount, applyCashback, oAmnt } = req.body;
 
+  // Store cashback details in the session
   req.session.applyCashback = applyCashback;
   req.session.oAmnt = oAmnt;
 
-
   try {
-      const response = await axios.post('https://api.paystack.co/transaction/initialize', {
-          email,
-          amount: amount * 100, // Paystack expects the amount in kobo
-           callback_url: `${process.env.LIVE_DIRR || `http://localhost:${process.env.PORT}`}/verify`
-      }, {
-          headers: {
-              Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`
-          }
-      });
+    const response = await axios.post('https://api.paystack.co/transaction/initialize', {
+      email,
+      amount: amount * 100, // Paystack expects the amount in kobo
+      callback_url: `${process.env.LIVE_DIRR || process.env.NGROK_URL || `http://localhost:${process.env.PORT}`}/verify`,
+      metadata: {
+        userId: req.user.id, // Include user ID from session
+        applyCashback: applyCashback,
+        oAmnt: oAmnt,        // Original amount (stored in metadata)
+      }
+    }, {
+      headers: {
+        Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`
+      }
+    });
 
-      res.json(response.data);
+    res.json(response.data);
   } catch (error) {
     console.log(error);
-      res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -552,39 +558,9 @@ router.get('/verify', async (req, res) => {
     });
 
     if (response.data.status && response.data.data.status === 'success') {
-      // Extract transaction details
-      const { id, reference, amount, currency, status, customer: { email }, paid_at } = response.data.data;
-
-      // Save transaction details to the database
-      const query = `
-        INSERT INTO "Transactions" ("transaction_id", "reference", "amount", "currency", "status", "email", "paid_at", "user_id") 
-        VALUES ($1, $2, $3, $4, $5, $6, $7,$8)
-      `;
-
-      await db.query(query, [id, reference, amount / 100, currency, status, email, paid_at, req.user.id]);
-
-      // Fetch the user's current cashback using req.session.id
-      const userQuery = `SELECT "cashback" FROM "Users" WHERE "id" = $1`;
-      const userResults = await db.query(userQuery, [req.user.id]);
-      const currentCashback = userResults.rows[0].cashback;
-
-      // Check if cashback was used
-      const applyCashback = req.session.applyCashback; 
-
-      if (applyCashback) {
-           // Deduct 60% of the total cashback
-
-            cashbackDeduction = Math.min(currentCashback, req.session.oAmnt * 0.6);
-        const newCashback = Math.max(0, currentCashback - cashbackDeduction); // Ensure cashback doesn't go below 0
-
-
-        // Update user's cashback
-        const updateCashbackQuery = `UPDATE "Users" SET "cashback" = $1 WHERE "id" = $2`;
-        await db.query(updateCashbackQuery, [newCashback, req.user.id]);
-      }
-
-      // No error, redirect to order page
+      req.flash('success_msg', 'Payment successful');
       return res.redirect(`/user/order/${reference}`);
+      
     } else {
       // Handle failed verification
       console.log('Payment verification failed:', response.data.data);
@@ -593,50 +569,88 @@ router.get('/verify', async (req, res) => {
     }
   } catch (error) {
 
-    try {
+    console.log(error);
+    // try {
       
-      const getItemQuery = `SELECT * FROM "Transactions" WHERE "reference" = $1 AND "email" = $2 `;
-      const { rows: results } = await query(getItemQuery, [reference, req.user.email]);
+    //   const getItemQuery = `SELECT * FROM "Transactions" WHERE "reference" = $1 AND "email" = $2 `;
+    //   const { rows: results } = await query(getItemQuery, [reference, req.user.email]);
   
-      if(results.length > 0) {
+    //   if(results.length > 0) {
 
-        const updateCashbackQuery = `UPDATE "Transactions" SET "status" = $1 WHERE "reference" = $2`;
-        await db.query(updateCashbackQuery, ["failed", results.reference]);
+    //     const updateCashbackQuery = `UPDATE "Transactions" SET "status" = $1 WHERE "reference" = $2`;
+    //     await db.query(updateCashbackQuery, ["failed", results.reference]);
         
-        console.error('system Error verifying flaging payment succesful:', error);
-        req.flash('error_msg', 'Server error, flaging payment succesful');
-        return res.redirect('/user');
-      }
+    //     console.error('system Error verifying flaging payment succesful:', error);
+    //     req.flash('error_msg', 'Server error, flaging payment succesful');
+    //     return res.redirect('/user');
+    //   }
 
-    } catch (error) {
+    // } catch (error) {
 
-      console.error('system Error verifying and flaging payment unsuccesful:', error);
-      req.flash('error_msg', 'Server error, flaging payment unsuccesful');
-      return res.redirect('/user');
+    //   console.error('system Error verifying and flaging payment unsuccesful:', error);
+    //   req.flash('error_msg', 'Server error, flaging payment unsuccesful');
+    //   return res.redirect('/user');
 
-    }
+    // }
   }
 });
 
 
 
-// webhook
-router.post('/webhook', (req, res) => {
-  const hash = crypto.createHmac('sha512', WEBHOOK_SECRET).update(JSON.stringify(req.body)).digest('hex');
+router.post('/webhook', async (req, res) => {
+  const hash = crypto.createHmac('sha512', PAYSTACK_SECRET_KEY)
+                     .update(JSON.stringify(req.body))
+                     .digest('hex');
+
+  // Check Paystack webhook signature
   if (hash === req.headers['x-paystack-signature']) {
-      const event = req.body;
-      switch (event.event) {
-          case 'charge.success':
-              console.log('Payment successful:', event.data);
-              break;
-          // Add more event types as needed
-      }
+    const event = req.body;
 
-      res.sendStatus(200);
+    try {
+      // Handle successful payments
+      if (event.event === 'charge.success') {
+        const { id, reference, amount, currency, status, customer: { email }, paid_at, metadata } = event.data;
+        const { applyCashback, userId, oAmnt } = metadata;
+
+        // Save transaction details to the database
+        const query = `
+          INSERT INTO "Transactions" ("transaction_id", "reference", "amount", "currency", "status", "email", "paid_at", "user_id") 
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        `;
+        await db.query(query, [id, reference, amount / 100, currency, status, email, paid_at, userId]);
+
+        // Fetch the user's current cashback using userId
+        const userQuery = `SELECT "cashback" FROM "Users" WHERE "id" = $1`;
+        const userResults = await db.query(userQuery, [userId]);
+        const currentCashback = userResults.rows[0].cashback;
+
+        // Apply cashback if applicable
+        if (applyCashback) {
+          const cashbackDeduction = Math.min(currentCashback, oAmnt * 0.6); // Deduct up to 60% of the total cashback
+          const newCashback = Math.max(0, currentCashback - cashbackDeduction); // Ensure cashback doesn't go below 0
+
+          // Update user's cashback in the database
+          const updateCashbackQuery = `UPDATE "Users" SET "cashback" = $1 WHERE "id" = $2`;
+          await db.query(updateCashbackQuery, [newCashback, userId]);
+        }
+
+        // Transaction successfully handled, respond with 200 OK
+        console.log('Payment successful and transaction recorded:', reference);
+        return res.sendStatus(200);
+      } else {
+        console.log(`Unhandled event type: ${event.event}`);
+        return res.sendStatus(200); // Acknowledge other unhandled events
+      }
+    } catch (error) {
+      console.error('Error processing Paystack webhook:', error);
+      return res.sendStatus(500); // Internal server error
+    }
   } else {
-      res.sendStatus(400);
+    console.log('Invalid webhook signature');
+    return res.sendStatus(400); // Bad request due to invalid signature
   }
 });
+
 
 
 // Logout route
