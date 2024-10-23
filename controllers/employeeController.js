@@ -1,4 +1,6 @@
 const db = require("../model/databaseTable");
+const { promisify } = require('util');
+const query = promisify(db.query).bind(db);
 const stateData = require("../model/stateAndLGA");
 
 
@@ -29,290 +31,310 @@ const formatDate = (dateStr) => {
   return `${year}-${month}-${day}`;
 };
 
-const appName = `G.Mart` 
 
-exports.getAdminWelcomePage = (req, res) => {
-
-  
+exports.getAdminWelcomePage = async (req, res) => {
   let userFirstName = req.user.First_name;
   let userLastName = req.user.Last_name;
 
-    db.query(`SELECT * FROM Category `, (err, results) => {
-      if (err) {
-        req.flash("error_msg", ` ${err.sqlMessage}`);
-        return res.redirect("/");
-      } else {
-        let data = JSON.stringify(results);
-        let allCategory = JSON.parse(data);
+  try {
+    // Query to fetch all categories
+    const { rows: allCategory } = await query(`SELECT * FROM "Category"`);
 
-         return res.render("./employee/employeeDash", {
-            pageTitle: "Employee dasdoard",
-            name: `${userFirstName} ${userLastName}`,
-            month: monthName,
-            day: dayName,
-            date: presentDay,
-            year: presentYear,
-            allCategory,
-          }); // for admin only
-          
-      }
+    // Render the employee dashboard
+    return res.render("./employee/employeeDash", {
+      pageTitle: "Employee Dashboard",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      allCategory,
     });
+  } catch (error) {
+    // Log and flash the error
+    console.log(error);
+    req.flash("error_msg", `Error: ${error.message}`);
+    return res.redirect("/");
+  }
 };
 
 //  at the counter page
-exports.counterForm = (req, res) => {
-
-    const userFirstName = req.user.First_name;
+exports.counterForm = async (req, res) => {
+  const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
-  const userId = req.user.id
-// return console.log(req.User
+  const userId = req.user.id;
 
-    return db.query(`SELECT * FROM Category `, (err, results) => {
-      if (err) {
-        req.flash("error_msg", ` ${err.sqlMessage}`);
-        return res.redirect("/");
-      } else {
-        let data = JSON.stringify(results);
-        let allCategory = JSON.parse(data);
+  try {
+    // Fetch categories from the database
+    const { rows: allCategory } = await query(`SELECT * FROM "Category"`);
 
-          return res.render("./employee/employeeCounter", {
-            pageTitle: "At the counter",
-            name: `${userFirstName} ${userLastName}`,
-            month: monthName,
-            day: dayName,
-            date: presentDay,
-            year: presentYear,
-            allCategory,
-            userId,
-          }); // for admin only
-          
-      }
+    // Render the counter form
+    return res.render("./employee/employeeCounter", {
+      pageTitle: "At the Counter",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      allCategory,
+      userId,
     });
-   
 
+  } catch (error) {
+    // Log the error and flash a message
+    console.log(error);
+    req.flash("error_msg", `Error: ${error.message}`);
+    return res.redirect("/");
+  }
 };
 
 
-exports.employeeSale = (req, res) => {
-  
-  const userId  = req.user.id;
- const storeId =   req.user.store_id;
-  const storeName = req.user.store_name
-    
-  var metaItems = JSON.parse(req.body.meta);
-  var cartItems = JSON.parse(req.body.cart);
-  
-  // chhecking for empt cart
+
+exports.employeeSale = async (req, res) => {
+  const userId = req.user.id;
+  const storeId = req.user.store_id;
+  const storeName = req.user.store_name;
+
+  const metaItems = JSON.parse(req.body.meta);
+  const cartItems = JSON.parse(req.body.cart);
+
+  // Checking if the cart is empty
   if (cartItems.length <= 0) {
-    // to make sure we got something in the cart
-
-      req.flash("error_msg", "Cart cannot  be empty");
-      res.redirect("/employee/create-sales");
-      return;
-
-  
+    req.flash("error_msg", "Cart cannot be empty");
+    return res.redirect("/employee/create-sales");
   }
 
+  // Unique sale identifier
+  const uuidForEachSale = Date.now() + Math.floor(Math.random() * 1000);
 
-  var uuidForEachSale = Date.now() + Math.floor(Math.random() * 1000);
+  const insertData = [
+    uuidForEachSale,
+    storeId,
+    storeName,
+    "counter",
+    sqlDate,  // Assuming sqlDate is handled elsewhere
+    userId,
+    metaItems.paymentType,
+    metaItems.sumTotal,
+    0,
+  ];
 
-  let insertData = {
-    sale_id: uuidForEachSale,
-    store_id: storeId,
-    store_name: storeName,
-    sale_type:"counter",
-    created_date: sqlDate,
-    attendant_id: userId,
-    Payment_type: metaItems.paymentType,
-    total_amount: metaItems.sumTotal,
-    shipping_fee:0,
-  };
+  try {
+    // Insert sale into Sales table
+    await query(`INSERT INTO "Sales" ("sale_id", "store_id", "store_name", "sale_type", "created_date", "attendant_id", "Payment_type", "total_amount", "shipping_fee") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, insertData);
 
-  db.query(
-    "INSERT INTO Sales SET ? ",
-    insertData,
-    (error, result) => {
-      if (error) {
-        req.flash("errror_msg", `error from db ${error.sqlMessage}`);
-        res.redirect("/employee/create-sales");
-        return;
-      }
+    // Process each cart item
+    const promises = cartItems.map(cartItem => {
+      const { id, name, price, uuid, quantity, image } = cartItem;
+      const newPricePerItem = price * quantity;
+      
+      const productItem = [
+        uuidForEachSale,
+        id,
+        price,
+        newPricePerItem,
+        storeId,
+        uuid,
+        name,
+        quantity,
+        image,
+      ];
 
-      // Define an array to store promises
-      const promises = [];
+      // Insert each product into Order_Products table
+      return query(`INSERT INTO "Order_Products" ("sale_id", "product_id", "price_per_item", "subTotal", "store_id", "cart_id", "name", "quantity", "image") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, productItem);
+    });
 
-      cartItems.forEach((cartItem) => {
-        const { id, name, price,  uuid, quantity,image } = cartItem;
+    // Wait for all insert operations to complete
+    await Promise.all(promises);
 
+    // Success message and redirect to invoice page
+    req.flash("success_msg", `Cart has been submitted. Your order reference number is: ${uuidForEachSale}`);
+    return res.redirect(`/employee/invoice/${uuidForEachSale}`);
 
-        let newPricePerItem = price*quantity
-        let productItem = {
-          sale_id: uuidForEachSale,
-          product_id: id,
-          price_per_item: price,
-          subTotal: newPricePerItem,
-          store_id: storeId,
-          cart_id:uuid,
-          name: name,
-          quantity:quantity,
-          image:image,
-        };
-
-        // Push the promise into the array
-        promises.push(
-          new Promise((resolve, reject) => {
-            // Step 3: Insert or retrieve product record from Products table
-            db.query(
-              "INSERT INTO Order_Products SET ?",
-              productItem,
-              async (error, result) => {
-                if (error) {
-                  req.flash('error_msg', `error occured: ${error}`)
-                  return res.redirect('/employee/create-sales')
-                }
-
-                // Resolve the promise
-                resolve(result);
-              }
-            );
-          })
-        );
-      });
-
-      // Wait for all promises to resolve
-      Promise.all(promises)
-        .then(() => {
-          req.flash(
-            "success_msg",
-            `Cart has been submitted, Your order reference number is: ${uuidForEachSale}`
-          );
-          return res.redirect(`/employee/invoice/${uuidForEachSale}`)
-        })
-        .catch((error) => {
-          req.flash('error_msg', `error occured: ${error}`)
-          return res.redirect('/employee/create-sales')
-        });
-    }
-  );
-}
-
-exports.invoice = (req, res) => {
-  const saleId  = req.params.id
-    const userFirstName = req.user.First_name;
-  const userLastName = req.user.Last_name
-
-
-
-
-  db.query(`SELECT * FROM Order_Products WHERE sale_id = "${saleId}"`, (err, results) => {
-    if (err) {
-      req.flash("error_msg", ` ${err.sqlMessage}`);
-      return res.redirect("/");
-    } else {
-      let data = JSON.stringify(results);
-      let newOrderProducts = JSON.parse(data);
-
-      db.query(`SELECT * FROM Sales WHERE sale_id =" ${saleId}"`, (err, results) => {
-        if (err) {
-          req.flash("error_msg", ` ${err.sqlMessage}`);
-          return res.redirect("/");
-        } else {
-          let data = JSON.stringify(results);
-          let newSale = JSON.parse(data);
-  
-          return res.render("./employee/saleInvoice", {
-            pageTitle: "invoice",
-            name: `${userFirstName} ${userLastName}`,
-            month: monthName,
-            day: dayName,
-            date: presentDay,
-            year: presentYear,
-            newSale,
-            newOrderProducts,
-          }); // for admin only
-          // not user
-        }
-      });
-    }
-  }) // products ordered
-
-   
-};
-
-exports.saleHistory = (req, res) => {
-    const userFirstName = req.user.First_name;
-  const userLastName = req.user.Last_name
-  const userId = req.user.id
-
-
-  const today = new Date();
-  const formattedToday = today.toISOString().split('T')[0]; // Format the date as YYYY-MM-DD
-  
-  const query = `
-    SELECT * FROM Sales 
-    WHERE attendant_id = ? 
-    AND DATE(created_date) = ?
-  `;
-  
-  db.query(query, [userId, formattedToday], (err, results) => {
-    if (err) {
-      req.flash("error_msg", `${err.sqlMessage}`);
-      return res.redirect("/");
-    } else {
-      let salesResults = JSON.parse(JSON.stringify(results));
-      salesResults.forEach((sales) => {
-        sales.created_date = formatDate(sales.created_date); // Assuming 'date' is the date field in your sales table
-      });
-  
-      return res.render("./employee/sales-history", {
-        pageTitle: "My recent sales",
-        name: `${userFirstName} ${userLastName}`,
-        month: monthName,
-        day: dayName,
-        date: presentDay,
-        year: presentYear,
-        salesResults,
-      });
-
-    }
-  })
+  } catch (error) {
+    // Handle any errors during the sale process
+    console.log(error);
+    req.flash("error_msg", `Error: ${error.message}`);
+    return res.redirect("/employee/create-sales");
+  }
 };
 
 
-exports.superStore =  async (req, res) => {
+exports.invoice = async (req, res) => {
+  const saleId = req.params.id;
+  const userFirstName = req.user.First_name;
+  const userLastName = req.user.Last_name;
+
+  try {
+    // Fetch all order products related to the sale
+    const { rows: newOrderProducts } = await query(`SELECT * FROM "Order_Products" WHERE "sale_id" = $1`, [saleId]);
+
+    // Fetch sale details
+    const { rows: newSale } = await query(`SELECT * FROM "Sales" WHERE "sale_id" = $1`, [saleId]);
+
+    if (!newSale.length) {
+      req.flash("error_msg", "Sale not found.");
+      return res.redirect("/");
+    }
+
+    // Render the invoice page with all the necessary data
+    return res.render("./employee/saleInvoice", {
+      pageTitle: "Invoice",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      newSale: newSale[0],  // Only one sale is expected, use the first item
+      newOrderProducts,     // All the products associated with the sale
+    });
+
+  } catch (error) {
+    // Handle any errors that may occur during the query execution
+    console.log(error);
+    req.flash("error_msg", `Error: ${error.message}`);
+    return res.redirect("/");
+  }
+};
+
+
+
+exports.saleHistory = async (req, res) => {
+  const userFirstName = req.user.First_name;
+  const userLastName = req.user.Last_name;
+  const userId = req.user.id;
+
+  // Format today's date as YYYY-MM-DD
+  const today = new Date().toISOString().split('T')[0];
+
+  try {
+    // Query for sales made by the logged-in user on the current date
+    const { rows: salesResults } = await query(
+      `SELECT * FROM "Sales" WHERE "attendant_id" = $1 AND DATE("created_date") = $2`,
+      [userId, today]
+    );
+
+    // Format the sales date before rendering (if applicable)
+    salesResults.forEach(sale => {
+      sale.created_date = formatDate(sale.created_date); // Assuming formatDate is a utility function
+    });
+
+    // Render the sales history page
+    return res.render("./employee/sales-history", {
+      pageTitle: "My Recent Sales",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      salesResults,
+    });
+
+  } catch (error) {
+    // Log the error and redirect the user
+    console.log(error);
+    req.flash("error_msg", `Error: ${error.message}`);
+    return res.redirect("/");
+  }
+};
+
+
+exports.getItems = async (req, res) => {
   const { id } = req.params;
   const { search } = req.query;
 
-  let query = `SELECT * FROM Products WHERE activate = ? AND total_on_shelf > ? AND status = ?`;
+
+  // Base query to select active products with stock and not expired
+  let sqlQuery = `SELECT * FROM "Products" WHERE "activate" = $1 AND "total_on_shelf" > $2 AND "status" = $3`;
   let queryParams = [true, 0, 'not-expired'];
 
-  // Add category condition
+  // Check if a category is selected and append the condition
   if (id !== 'all') {
-    query += ` AND category = ?`;
+    sqlQuery += ` AND "category" = $4`;
     queryParams.push(id);
   }
 
-  // Add search condition
+  // Check if there's a search query and append the condition
   if (search) {
-    query += ` AND ProductName LIKE ?`;
+    sqlQuery += ` AND "ProductName" LIKE $5`;
     queryParams.push(`%${search}%`);
   }
 
-  // Order by ProductName
-  query += ` ORDER BY ProductName ASC`;
+  // Order results by ProductName
+  sqlQuery += ` ORDER BY "ProductName" ASC`;
 
-  // Execute the query
-  db.query(query, queryParams, (err, results) => {
-    if (err) {
-      console.log(err.sqlMessage);
-      req.flash("error_msg", `${err.sqlMessage}`);
-      return res.redirect('/user');
-    } else {
-      if (results.length <= 0) {
-        return res.json([]);
+  try {
+    // Execute the query
+    const { rows: products } = await query(sqlQuery, queryParams);
+
+    // If no products are found, return an empty array
+    if (products.length <= 0) {
+      return res.json([]);
+    }
+
+    // Return the list of products
+    return res.json(products);
+
+  } catch (error) {
+    // Log and handle any errors during the query
+    console.error(error);
+    req.flash("error_msg", `Error: ${error.message}`);
+    return res.redirect('/user');
+  }
+};
+
+
+exports.resolveSale = async (req, res) => {
+  const editID = req.params.id;
+
+  try {
+    // Fetch the sale details
+    const salesResults = await query(`SELECT * FROM "Sales" WHERE id = $1`, [editID]);
+    if (salesResults.rows.length === 0) {
+      req.flash("error_msg", "Sale not found");
+      return res.redirect("back");
+    }
+    
+    const salesData = salesResults.rows[0];
+    
+    // Fetch products related to this sale
+    const {rows:orderResults} = await query(`SELECT * FROM "Order_Products" WHERE "sale_id" = $1`, [salesData.sale_id]);
+    
+    // Aggregate product quantities
+    const productQuantities = {};
+    orderResults.forEach(({ product_id, quantity }) => {
+      productQuantities[product_id] = (productQuantities[product_id] || 0) + quantity;
+    });
+
+    // Update stock quantities and handle errors
+    const promises = Object.entries(productQuantities).map(async ([product_id, quantity]) => {
+      const {rows:shelfResults} = await query(`SELECT "total_on_shelf" FROM "Products" WHERE id = $1`, [product_id]);
+      if (shelfResults.length === 0) {
+        req.flash("error_msg", `Product with id ${product_id} not found`);
+        throw new Error(`Product with id ${product_id} not found`);
       }
 
-      return res.json(results);
-    }
-  });
-}
+      const currentShelfQuantity = shelfResults[0].total_on_shelf;
+      const newQty = currentShelfQuantity - quantity;
+
+      if (newQty < 0) {
+        req.flash("error_msg", `Not enough stock for product id ${product_id}`);
+        throw new Error(`Not enough stock for product id ${product_id}`);
+      }
+
+      await query(`UPDATE "Products" SET "total_on_shelf" = $1 WHERE id = $2`, [newQty, product_id]);
+    });
+
+    await Promise.all(promises);
+
+    // Update sale status
+    await query(`UPDATE "Sales" SET "status" = $1 WHERE id = $2`, ['resolved', editID]);
+
+    req.flash("success_msg", "Sale has been resolved");
+    return res.redirect("/employee/create-sales");
+
+  } catch (error) {
+    req.flash("error_msg", `Error from server: ${error.message}`);
+    return res.redirect("back");
+  }
+};

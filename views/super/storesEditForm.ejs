@@ -26,11 +26,11 @@
                     <!-- DataTales Example -->
                     <div class=" mb-4">
 
-                        <div class="card-body">
+
                             <div class="form mt-4 mb-4">
                                 <form action="/super/edit-store/<%= storeData[0].id %>" method="post" class="form">
                                    <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="">Branch Name</label>
                                             <input type="text" name="Branch_Name" class="form-control" value="<%= storeData[0].store_name %>">
@@ -38,7 +38,7 @@
                                     </div>
 
 
-                                    <div class="col-4">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="">Branch State</label>
                                             <select name="Branch_state" id="edit-store-state" class="form-control" onchange="editStoreLGAs()">
@@ -51,7 +51,7 @@
                                     </div>
 
                                    
-                                    <div class="col-4">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="">Local Government</label>
                                             <select name="Branch_lga" id="edit-store-lga" class="form-control">
@@ -61,7 +61,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-4">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="">Branch Address</label>
                                             <input type="text" name="Branch_address" class="form-control" value="<%= storeData[0].store_address %>">
@@ -78,7 +78,7 @@
                                 </div>
                                 </form>
                             </div>
-                        </div>
+
                     </div>
 
                 </div>

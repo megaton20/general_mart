@@ -6,30 +6,27 @@
 
 
             <div class="row">
-              <div class="col-lg-2 container mb-4">
+              <div class="col-lg-2  mb-4">
    
                 <!-- actions nav -->
                  <div class="profile-nav mt-3 ">
-                   <a class="" href="/user"><i class="bi bi-arrow-left-circle"></i> Back</a>
+                   <a class="back-btn"  href="/user"><i class="bi bi-arrow-left-circle"></i> Back</a>
                  </div>
              </div>
 
 
-              <div class="col-lg-10" style="font-size: 12px;">
-                <table class="table " width="100%"cellspacing="0">
+              <div class="col-lg-10" style="font-size: 14px;">
+                <div class="table-responsive">
+                <table class="table" width="100%"cellspacing="0">
 
                   <tbody>
                       <% wishlist.forEach(function(data) {%>
                       <tr>
                         
                         <td><img class="img-thumbnail" style="max-width: 40px;" src="/uploads/<%= data['image'] %>" alt="image"></td>
-                        <td class="truncate-container"><%= data['ProductName'] %></td>
-                        <td><%= data['UnitPrice'] %></td>
+                        <td class="truncate-container"> <a href="/user/product-details/<%= data.id %>"> <%= data['ProductName'] %>     </a></td>
                         <td>
-                        <a href="/user/product-details/<%= data.id %>"> Buy item  </a> <br>
-                        </td>
-                        <td>
-                          <a href="/user/wishlist/<%= data.id %>/remove"> Remove item  </a>
+                          <a href="/user/wishlist/<%= data.id %>/remove">   <i class="fas fa-trash"></i>  </a>
                         </td>
                       </tr>
                         <% }) %>
@@ -38,6 +35,7 @@
                 
                   </tbody>
                 </table>
+                </div>
               </div>
             </div>
 

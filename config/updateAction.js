@@ -120,28 +120,45 @@ const clearCartAtTheEndOfTheDay = async () => {
 
 const shelfAvailableChecker = async () => {
   try {
-    const results = await query(`SELECT id FROM "Products" WHERE "total_on_shelf" <= 0`);
-
- 
-    let shelfData = results.rows; // Accessing rows directly since `query` returns the data as an array of objects
+    // Select products where total_on_shelf is 0 or less and activate is false (boolean)
+    const results = await query(`SELECT id FROM "Products" WHERE "total_on_shelf" <= 0 OR "activate" = $1`, [false]);
+    
+    // Access the rows from the query result
+    const shelfData = results.rows; // rows already hold the array of product objects
     
     if (shelfData.length > 0) {
-      let productIds = shelfData.map(product => product.id); // Extracting the product IDs
+      // Map to extract product IDs
+      const productIds = shelfData.map(product => product.id);
 
       if (productIds.length > 0) {
-        // Generate the query for deleting items from the Cart table
-        let deleteQuery = `DELETE FROM "Cart" WHERE "product_id" = ANY($1::int[])`;
-
-        const deleteResult = await query(deleteQuery, [productIds]);
         
-        console.log(`${deleteResult.rowCount} item(s) deleted from cart`);
+        // Check if the product is in the wishlist
+        const wishlistCheckQuery = `SELECT * FROM "wishlists" WHERE "product_id" = ANY($1::int[])`;
+        const wishlistResults = await query(wishlistCheckQuery, [productIds]);
+
+        if (wishlistResults.rowCount > 0) {
+          // If products are found in the wishlist, delete them from the wishlist
+          const deleteWishlistQuery = `DELETE FROM "wishlists" WHERE "product_id" = ANY($1::int[])`;
+          const deleteWishlistResult = await query(deleteWishlistQuery, [productIds]);
+          console.log(`${deleteWishlistResult.rowCount} item(s) deleted from wishlist`);
+        }
+
+        // Proceed to delete the product from the cart
+        const deleteCartQuery = `DELETE FROM "Cart" WHERE "product_id" = ANY($1::int[])`;
+        const deleteCartResult = await query(deleteCartQuery, [productIds]);
+        console.log(`${deleteCartResult.rowCount} item(s) deleted from cart`);
+
+      } else {
+        // console.log('No product IDs to delete.');
       }
+    } else {
+      console.log('No products found that match the criteria.');
     }
   } catch (err) {
+    // Catch and log any errors during execution
     console.error("Error during shelf availability check:", err);
   }
 };
-
 
 
 const removeUnverifiedUsers = async() => {

@@ -62,14 +62,14 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/', openRoutes);
-app.use('/auth', authRouter);
-app.use('/super', superRouter);
-app.use('/vendor', vendorRouter);
-app.use('/employee', employeeRouter);
-app.use('/logistics', logisticsRouter);
-app.use('/drivers', driversRouter);
-app.use('/user', userRouter);
+app.use('/', openRoutes); // open less secure routs
+app.use('/auth', authRouter); //  authentications 
+app.use('/super', superRouter); // general overseers
+app.use('/vendor', vendorRouter); // external sellers
+app.use('/employee', employeeRouter); // shhop attendant
+app.use('/logistics', logisticsRouter); // logistic shift
+app.use('/drivers', driversRouter); //exterrnal riders
+app.use('/user', userRouter); // customer order platform
 
 
   // 404 Error handler for undefined routes

@@ -1,8 +1,11 @@
 const { promisify } = require('util');
 const db = require("../model/databaseTable");
 const query = promisify(db.query).bind(db);
-
+const fs = require('fs');
 const stateData = require("../model/stateAndLGA");
+const bankData = require("../model/bank");
+
+
 
 const systemCalander = new Date().toLocaleDateString();
 const yearModel = require("../model/getYear");
@@ -33,9 +36,12 @@ const formatDate = (dateStr) => {
 const appName = `G.Mart` 
 
 
+
+
 exports.getAdminWelcomePage = async (req, res) => {
   const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
+
 
   try {
     // Fetch the driver with the given user ID
@@ -99,6 +105,7 @@ exports.newRider = async (req, res) => {
   res.render('./drivers/riderRegisterForm',{
   pageTitle:`Rregister your company to  ${appName} `,
   stateData,
+  bank:bankData,
   appName,
   userActive,
   totalUnreadNotification,allCategory
@@ -119,12 +126,15 @@ exports.createNewDrivers = async (req, res) => {
     errors.push({ msg: 'Enter all details' });
   }
   if (errors.length > 0) {
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
     return res.render('./drivers/riderRegisterForm', {
       pageTitle: 'Register again',
       appName: appName,
       errors,
       userActive,
-      stateData, // Ensure this is defined somewhere in your controller
+      stateData, 
+      bank:bankData,
+      allCategory,
       companyName,
       companyEmail,
       companyPhone,
@@ -173,7 +183,6 @@ exports.createNewDrivers = async (req, res) => {
     req.user.id
   ];
   
-  console.log(insertQuery, insertValues); // Debugging the SQL query and values
   
   await query(insertQuery, insertValues);
 
@@ -189,6 +198,180 @@ exports.createNewDrivers = async (req, res) => {
   }
 };
 
+
+exports.kycSubmit = async (req, res) => {
+  let userActive = false;
+  if (req.user) {
+    userActive = true;
+  }
+
+  try {
+    const { businessNumber, ninNumber, passportNumber, voterNumber, idType } = req.body;
+    const userId = req.user.id;
+
+    // Ensure required fields are present based on idType
+    if (!businessNumber || 
+        (idType === 'nin' && !ninNumber) || 
+        (idType === 'passport' && !passportNumber) || 
+        (idType === 'voter' && !voterNumber)) {
+
+      // If validation fails, unlink any uploaded files
+      const files = req.files || {};
+      const uploadedFiles = [
+        files['cacDocument'] ? files['cacDocument'][0].path : null,
+        files['ninDocument'] ? files['ninDocument'][0].path : null,
+        files['passportDocument'] ? files['passportDocument'][0].path : null,
+        files['voterDocument'] ? files['voterDocument'][0].path : null,
+      ];
+
+      for (const file of uploadedFiles) {
+        if (file) {
+          fs.unlink(file, (err) => {
+            if (err && err.code !== 'ENOENT') {
+              console.error(`Failed to delete file: ${file}`, err);
+            } else if (!err) {
+              console.log(`Successfully deleted file: ${file}`);
+            }
+          });
+        }
+      }
+
+      req.flash('error_msg', 'Form incomplete. Please provide all necessary details.');
+      return res.redirect('/drivers');  // Redirect back to form page with error
+    }
+
+    // Default update fields (CAC is always required and not conditional)
+    let updateFields = {
+      business_number: businessNumber,  // CAC business number
+      status: 'pending'  // Always set status to pending
+    };
+
+    // Add identification type data based on what was provided
+    if (idType === 'nin' && ninNumber) {
+      updateFields.nin_number = ninNumber;
+    }
+    if (idType === 'passport' && passportNumber) {
+      updateFields.passport_number = passportNumber;
+    }
+    if (idType === 'voter' && voterNumber) {
+      updateFields.voter_number = voterNumber;
+    }
+
+    // Check if `req.files` exists and contains the uploaded files
+    if (req.files) {
+      if (req.files['cacDocument']) {
+        updateFields.cac_document = req.files['cacDocument'][0].filename;
+      }
+      if (req.files['ninDocument']) {
+        updateFields.nin_document = req.files['ninDocument'][0].filename;
+      }
+      if (req.files['passportDocument']) {
+        updateFields.passport_document = req.files['passportDocument'][0].filename;
+      }
+      if (req.files['voterDocument']) {
+        updateFields.voter_document = req.files['voterDocument'][0].filename;
+      }
+    }
+
+    // Construct SQL query to update driver info where user_id matches
+    const query = `
+      UPDATE "drivers"
+      SET "CAC_number" = $1, "nation_id_number" = $2, "passport_number" = $3, 
+          "voter_number" = $4, "CAC_image" = $5, "NIN_image" = $6,
+          "passport_image" = $7, "voter_image" = $8, "status" = $9
+      WHERE "user_id" = $10
+    `;
+
+    const values = [
+      updateFields.business_number || null,
+      updateFields.nin_number || null,
+      updateFields.passport_number || null,
+      updateFields.voter_number || null,
+      updateFields.cac_document || null,
+      updateFields.nin_document || null,
+      updateFields.passport_document || null,
+      updateFields.voter_document || null,
+      updateFields.status,
+      userId
+    ];
+
+    // Execute the query with PostgreSQL
+    await db.query(query, values);
+
+    req.flash('success_msg', 'Submitted, under review');
+    return res.redirect('/drivers');
+
+  } catch (error) {
+    console.error('Error updating driver info:', error);
+
+    // Unlink uploaded files on error
+    const files = req.files || {};
+    const uploadedFiles = [
+      files['cacDocument'] ? files['cacDocument'][0].path : null,
+      files['ninDocument'] ? files['ninDocument'][0].path : null,
+      files['passportDocument'] ? files['passportDocument'][0].path : null,
+      files['voterDocument'] ? files['voterDocument'][0].path : null,
+    ];
+
+    for (const file of uploadedFiles) {
+      if (file) {
+        fs.unlink(file, (err) => {
+          if (err && err.code !== 'ENOENT') {
+            console.error(`Failed to delete file: ${file}`, err);
+          } else if (!err) {
+            console.log(`Successfully deleted file: ${file}`);
+          }
+        });
+      }
+    }
+
+    req.flash('error_msg', 'Server error, please try again later.');
+    return res.redirect('/');
+  }
+};
+
+
+
+
+
+exports.kyc = async (req, res) => {
+  const userFirstName = req.user.First_name;
+  const userLastName = req.user.Last_name;
+
+  let userActive = false;
+  if (req.user) {
+    userActive = true;
+  }
+
+  try {
+    // Fetch the driver with the given user ID
+    const {rows:driverWithIDResult} = await query(`SELECT * FROM "drivers" WHERE "user_id" = $1`, [req.user.id]);
+
+    if (driverWithIDResult.length <= 0) {
+      req.flash("error_msg", "Not recognized as a driver");
+      return res.redirect('/');
+    }
+
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
+    // Render the driver's dashboard
+    return res.render("./drivers/kyc", {
+      pageTitle: "driver kyc",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      driverWithIDResult,
+      allCategory,
+      userActive
+    });
+
+  } catch (error) {
+    console.error(error);
+    req.flash('error_msg', `Server error: ${error.message}`);
+    return res.redirect('/');
+  }
+};
 
 
 // delivery

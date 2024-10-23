@@ -26,13 +26,13 @@
                     <%- include ('../partials/messages') %>
                     <!-- DataTales Example -->
                     <div class=" mb-4">
-                        <div class="card-body">
+
                             <div class="form mt-4 mb-4">
                                 <form action="/super/edit-position/<%= positionData[0].id%>" method="post" class="form">
                                    <div class="row">
                                  
 
-                                    <div class="col-6">
+                                    <div class="col-md-6">
                                         <div class="form-group">
 
                                                     <label for="">Position</label>
@@ -43,13 +43,13 @@
 
                                   
 
-                                    <div class="col-6">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="">Enter Salary</label>
                                             <input type="number" name="Salary" class="form-control" value="<%= positionData[0].Salary %>">
                                         </div>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="">Job description</label>
                                             <textarea name="Job_description" class="form-control"  id="" cols="30" rows="10"><%= positionData[0].Job_description %></textarea>
@@ -63,7 +63,7 @@
                                 </div>
                                 </form>
                             </div>
-                        </div>
+
                     </div>
 
                 </div>

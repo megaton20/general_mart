@@ -1,249 +1,222 @@
-<!-- Page Wrapper -->
-<div id="wrapper">
-  <!-- Sidebar -->
+<!-- Top Navbar -->
+<!-- Topbar -->
+<%- include ('../partials/topbar') %>
+  <!-- End of Topbar -->
+  <!-- Offcanvas Menu for Mobile -->
   <%- include ('../partials/superSidebar') %>
-  <!-- End of Sidebar -->
 
-  <!-- Content Wrapper -->
-  <div id="content-wrapper" class="d-flex flex-column">
-    <!-- Main Content -->
-    <div id="content">
-      <!-- Topbar -->
-      <%- include ('../partials/topbar') %>
-      <!-- End of Topbar -->
-
-      <!-- Begin Page Content -->
-      <div class="container-fluid">
-        <%- include ('../partials/messages') %>
-
+    <!-- Admin Panel Content -->
+    <div class="container-fluid p-4">
+      <%- include ('../partials/messages') %>
         <!--  top Content Row -->
-        <div class=" card p-2 mb-4">
-      <div class="row">
+        
+        <div class="  p-2 mb-4">
+          <div class="row">
             <div class="col-xl-2 col-md-6 mb-3">
-            <div class="card border-left-primary h-100 py-2">
-              <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                  <div class="col mr-2">
-                    <div
-                      class="text-xs font-weight-bold text-primary text-uppercase mb-1"
-                    >
-                      Total Sales
-                    </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                      <%= totalNumberOfSales%>
-                    </div>
-                  </div>
-                  <div class="col-auto">
-                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-xl-2 col-md-6 mb-3">
-            <div class="card border-left-secondary h-100 py-2">
-              <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                  <div class="col mr-2">
-                    <div
-                      class="text-xs font-weight-bold text-primary text-uppercase mb-1"
-                    >
-                      Total Users
-                    </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                      <%= totalVerifiedUsers.length %>
-                    </div>
-                  </div>
-                  <div class="col-auto">
-                    <i class="fas fa-user fa-2x text-gray-300"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-xl-2 col-md-6 mb-3">
-            <div class="card border-left-secondary h-100 py-2">
-              <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                  <div class="col mr-2">
-                    <div
-                      class="text-xs font-weight-bold text-primary text-uppercase mb-1"
-                    >
-                      Home Sales
-                    </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                      <%= counterSaleData.length %>
-                    </div>
-                  </div>
-                  <div class="col-auto">
-                    <i class="fas fa-home fa-2x text-gray-300"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Earnings (Monthly) Card Example -->
-          <div class="col-xl-2 col-md-6 mb-3">
-            <div class="card border-left-success h-100 py-2">
-              <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                  <div class="col mr-2">
-                    <div
-                      class="text-xs font-weight-bold text-success text-uppercase mb-1"
-                    >
-                      Total Earnings
-                    </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                      <%= formatedProfit%>
-                    </div>
-                  </div>
-                  <div class="col-auto">
-                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-                  <!-- Earnings (Monthly) Card Example -->
-                  <div class="col-xl-2 col-md-6 mb-3">
-                    <div class="card border-left-success h-100 py-2">
-                      <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                          <div class="col mr-2">
-                            <div
-                              class="text-xs font-weight-bold text-success text-uppercase mb-1"
-                            >
-                              Shipping Earnings
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                              <%= formatedProfitForShipping%>
-                            </div>
-                          </div>
-                          <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                          </div>
-                        </div>
+              <div class="card border-left-primary h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Total Sales
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <%= totalNumberOfSales%>
                       </div>
                     </div>
-                  </div>
-          <!-- Earnings (Monthly) Card Example -->
-          <div class="col-xl-2 col-md-6 mb-3">
-            <div class="card border-left-danger h-100 py-2">
-              <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                  <div class="col mr-2">
-                    <div
-                      class="text-xs font-weight-bold text-danger text-uppercase mb-1"
-                    >
-                      Processing Orders
+                    <div class="col-auto">
+                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
                     </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                      <%= pendingOrders%>
-                    </div>
-                  </div>
-                  <div class="col-auto">
-                    <i class="fas fa-table fa-2x text-gray-300"></i>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <!-- Earnings (Monthly) Card Example -->
-          <div class="col-xl-2 col-md-6 mb-3">
-            <div class="card border-left-warning h-100 py-2">
-              <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                  <div class="col mr-2">
-                    <div
-                      class="text-xs font-weight-bold text-warning text-uppercase mb-1"
-                    >
-                      on route
+
+            <div class="col-xl-2 col-md-6 mb-3">
+              <div class="card border-left-secondary h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Total Users
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <%= totalVerifiedUsers.length %>
+                      </div>
                     </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                      <%= shippedData.length %>
+                    <div class="col-auto">
+                      <i class="fas fa-user fa-2x text-gray-300"></i>
                     </div>
                   </div>
-                  <div class="col-auto">
-                    <i class="fas fa-truck fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-3">
+              <div class="card border-left-secondary h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Home Sales
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <%= counterSaleData.length %>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-home fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-2 col-md-6 mb-3">
+              <div class="card border-left-success h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        Total Earnings
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <%= formatedProfit%>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-2 col-md-6 mb-3">
+              <div class="card border-left-success h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        Shipping Earnings
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <%= formatedProfitForShipping%>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-2 col-md-6 mb-3">
+              <div class="card border-left-danger h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                        Processing Orders
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <%= pendingOrders%>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-table fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-2 col-md-6 mb-3">
+              <div class="card border-left-warning h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                        on route
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <%= shippedData.length %>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-truck fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pending Requests Card Example -->
+            <div class="col-xl-2 col-md-6 mb-3">
+              <div class="card border-left-success h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        Orders completed
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <%= completedOrders %>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-fw fa-truck fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-md-6 mb-3">
+              <div class="card border-left-danger h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                        Canceled order
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <%= totalCanceledOrder.length %>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-times fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-xl-2 col-md-6 mb-3">
+              <div class="card border-left-danger h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                        unresolved sales
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <%= unresolvedSales.length %>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-times fa-2x text-gray-300"></i>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Pending Requests Card Example -->
-          <div class="col-xl-2 col-md-6 mb-3">
-            <div class="card border-left-success h-100 py-2">
-              <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                  <div class="col mr-2">
-                    <div
-                      class="text-xs font-weight-bold text-success text-uppercase mb-1"
-                    >
-                      Orders completed
-                    </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                      <%= completedOrders %>
-                    </div>
-                  </div>
-                  <div class="col-auto">
-                    <i class="fas fa-fw fa-truck fa-2x text-gray-300"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-xl-2 col-md-6 mb-3">
-            <div class="card border-left-danger h-100 py-2">
-              <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                  <div class="col mr-2">
-                    <div
-                      class="text-xs font-weight-bold text-danger text-uppercase mb-1"
-                    >
-                       Canceled order
-                    </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                      <%= totalCanceledOrder.length %>
-                    </div>
-                  </div>
-                  <div class="col-auto">
-                    <i class="fas fa-times fa-2x text-gray-300"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="col-xl-2 col-md-6 mb-3">
-            <div class="card border-left-danger h-100 py-2">
-              <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                  <div class="col mr-2">
-                    <div
-                      class="text-xs font-weight-bold text-danger text-uppercase mb-1"
-                    >
-                       unresolved sales
-                    </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                      <%= unresolvedSales.length %>
-                    </div>
-                  </div>
-                  <div class="col-auto">
-                    <i class="fas fa-times fa-2x text-gray-300"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-      </div>
-          
         </div>
 
         <div class="row">
@@ -252,45 +225,57 @@
             <div class="mb-4">
               <!-- Card Header - Dropdown -->
 
-            <div class="card">
-              <div class="card-header">Top 50 Customers</div>
-              <div class="card-body">
+              <div class="card">
+                <div class="card-header">Top 50 Customers</div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table " id="dataTable" width="100%" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>email</th>
+                          <th>phone</th>
+                          <th>Spending</th>
+                          <th>Last seen</th>
 
-                    <table class="table " id="dataTable"  cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>email</th>
-                                <th>phone</th>
-                                <th>Spending</th>
-                                <th>Last seen</th>
+                        </tr>
+                      </thead>
 
-                            </tr>
-                        </thead>
+                      <tbody>
 
-                        <tbody>
-
-                            <tr>
-                           
-
-                              <% totalVerifiedUsers.forEach(function(data) {%>
-        
-                                <tr>
-                                  <td><%= data['First_name'] %>  <%= data['Last_name'] %> </td>
-                                    <td><%= data['email'] %></td>
-                                    <td><%= data['Phone'] %></td>
-                                    <td ><span class="item-price"><%= data['spending'] %> </span></td>
-                                    <td><%= data['previous_visit'] %></td>
-                               </tr> 
-                               
-                                   <% }) %>
+                        <tr>
 
 
-                            </tr>
-                        </tbody>
+                          <% totalVerifiedUsers.forEach(function(data) {%>
+
+                        <tr>
+                          <td>
+                            <%= data['First_name'] %>
+                              <%= data['Last_name'] %>
+                          </td>
+                          <td>
+                            <%= data['email'] %>
+                          </td>
+                          <td>
+                            <%= data['Phone'] %>
+                          </td>
+                          <td><span class="item-price">
+                              <%= data['spending'] %>
+                            </span></td>
+                          <td>
+                            <%= data['previous_visit'] %>
+                          </td>
+                        </tr>
+
+                        <% }) %>
+
+
+                          </tr>
+                      </tbody>
                     </table>
-            </div>
-            </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -302,52 +287,38 @@
               <!-- Card Body -->
 
               <div class="card-body">
+                <a class="btn btn-outline-secondary mb-1 mr-2" href="/super/all-logistic-company">Logistics Shifts</a>
+                <a class="btn btn-outline-secondary mb-1 mr-2" href="/super/all-external-riders">External Logistics </a>
                 <a class="btn btn-outline-primary mb-1 mr-2" href="/super/all-brands">Brands</a>
                 <a class="btn btn-outline-primary mb-1 mr-2" href="/super/all-ranks">Ranks</a>
                 <a class="btn btn-outline-primary mb-1 mr-2" href="/super/new-orders">New Orders</a>
                 <a class="btn btn-outline-primary mb-1 mr-2" href="/super/all-regions">All Regions</a>
-                <a class="btn btn-outline-secondary mb-1 mr-2"href="/super/sales">Resolve Sales</a>
-                <a class="btn btn-outline-secondary mb-1 mr-2"href="/super/all-logistic-company">Logistics Companies</a>
-                <a class="btn btn-outline-secondary mb-1 mr-2"href="super/all-products">Shelf items</a>
-                <a class="btn btn-outline-success mb-1 mr-2"href="/super/create-sales">Shopping</a>
-                <a class="btn btn-outline-success mb-1 mr-2"href="/super/all-supplier">Suppliers</a>
-                <a class="btn btn-outline-primary mb-1 mr-2"href="/super/all-canceled-order">canceled table</a>
-                
+                <a class="btn btn-outline-secondary mb-1 mr-2" href="/super/sales">Resolve Sales</a>
+                <a class="btn btn-outline-secondary mb-1 mr-2" href="super/all-products">Shelf items</a>
+                <a class="btn btn-outline-success mb-1 mr-2" href="/super/create-sales">Shopping</a>
+                <a class="btn btn-outline-success mb-1 mr-2" href="/super/all-supplier">Suppliers</a>
+                <a class="btn btn-outline-primary mb-1 mr-2" href="/super/all-canceled-order">canceled table</a>
+
               </div>
             </div>
           </div>
         </div>
 
 
-
-      
-      </div>
-      <!-- /.container-fluid -->
     </div>
-    <!-- End of Main Content -->
 
-    <!-- Footer -->
-    <%- include ('../partials/footer') %>
-    <!-- End of Footer -->
-  </div>
-  <!-- End of Content Wrapper -->
-</div>
-<!-- End of Page Wrapper -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Display current date
+      document.getElementById('currentDate').innerText = new Date().toLocaleDateString();
 
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-  <i class="fas fa-angle-up"></i>
-</a>
-
-
-
-<script>
-  let formattedPrices = document.querySelectorAll('.item-price');
-function formatPrice() {
-    formattedPrices.forEach(priceElement => {
-      let price = parseFloat(priceElement.textContent.replace(/[^0-9.-]+/g, "")); // Remove any non-numeric characters
-      priceElement.textContent = price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    });
-  }
-  formatPrice()
-</script>
+      let formattedPrices = document.querySelectorAll('.item-price');
+      function formatPrice() {
+        formattedPrices.forEach(priceElement => {
+          let price = parseFloat(priceElement.textContent.replace(/[^0-9.-]+/g, "")); // Remove any non-numeric characters
+          priceElement.textContent = price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        });
+      }
+      formatPrice()
+    </script>

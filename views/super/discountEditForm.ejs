@@ -25,27 +25,27 @@
                     <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-discount">Add new Discount</a>
                     <!-- DataTales Example -->
                     <div class=" mb-4">
-                        <div class="card-body">
+
                             <div class="form mt-4 mb-4">
                                 <form action="/super/edit-discount/<%= discountData.id %>" method="post" class="form">
                                    <div class="row">
                                  
 
-                                    <div class="col-6">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="">Discount Name</label>
                                             <input type="text" name="Discount_name" class="form-control" value="<%= discountData.Discount_name %>">
                                         </div>
                                     </div>
 
-                                    <div class="col-6">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="">Discount Provider</label>
                                             <input type="text" name="Discount_Provider" class="form-control" value="<%= discountData.Discount_provider %>">
                                         </div>
                                     </div>
 
-                                    <div class="col-4">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="">Discount Perrcentage</label>
                                             <input type="number" name="Discount_Percentage" class="form-control" placeholder="Not above 100%" value="<%= discountData.Discount_percentage %>">
@@ -53,14 +53,14 @@
                                     </div>
 
 
-                                    <div class="col-4">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="">Start Date</label>
                                             <input type="date" name="Start_Date" class="form-control" value="">
                                         </div>
                                     </div>
 
-                                    <div class="col-4">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="">End Date</label>
                                             <input type="date" name="End_Date" class="form-control" value="">
@@ -76,7 +76,7 @@
                                 </div>
                                 </form>
                             </div>
-                        </div>
+
                     </div>
 
                 </div>

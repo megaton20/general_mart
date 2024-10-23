@@ -14,50 +14,47 @@
 
     <div class="container mt-4">
       <div class="row">
-        <!-- Category Cards (Disappears on mobile) -->
-        <div class="col-4 d-none d-md-block">
-          <div id="service-details" class="service-details section">
+        <!-- Carousel (Appears first on mobile) -->
+        <div class="col-12 col-md-8 order-1 order-md-2">
+            <div id="carouselExample" class="carousel slide carousel-fade shadow" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item">
+                        <img src="/landing-imgs/free.jpg" class="d-block w-100" alt="Slide 5">
+                    </div>
+                    <div class="carousel-item active">
+                        <img src="/landing-imgs/vvvvv.png" class="d-block w-100" alt="Slide 6">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+    
+            <%- include ('./partials/clients') %>
+        </div>
+    
+        <!-- Category Cards (Appears second on mobile) -->
+        <div class="col-md-4 order-2 order-md-1 d-md-block">
+            <div id="service-details" class="service-details section">
                 <div class="service-box mb-4">
                     <div class="services-list">
-                      <% allCategory.forEach(data => { %>
-                      <a href="/user/category/<%= data.Category_name %>#product-section" class=" categoryButton" data-category="<%= data.Category_name %>">
-                        <i class="bi bi-arrow-right-circle"></i><span> <%= data.Category_name %></span>
-                      </a>
-                     
-                      <% }); %>
+                        <% allCategory.forEach(data => { %>
+                        <a href="/user/category/<%= data.Category_name %>#product-section" class="categoryButton" data-category="<%= data.Category_name %>">
+                            <i class="bi bi-arrow-right-circle"></i><span><%= data.Category_name %></span>
+                        </a>
+                        <% }); %>
                     </div>
-                  </div>
-
-          </div>
-          <!-- Add more category cards as needed -->
-        </div>
-  
-        <!-- Carousel (Turns into col-12 on mobile) -->
-        <div class="col-12 col-md-8">
-            <div id="carouselExample" class="carousel slide carousel-fade" data-bs-ride="carousel">
-              <div class="carousel-inner">
-               
-                <div class="carousel-item active">
-                  <img  src="/landing-imgs/banner.png" class="d-block w-100" alt="Slide 1">
                 </div>
-                <div class="carousel-item">
-                  <img src="/landing-imgs/free.jpg"  class="d-block w-100" alt="Slide 5">
-                </div>
-                <div class="carousel-item">
-                  <img src="/landing-imgs/vvvvv.png" class="d-block w-100" alt="Slide 6">
-                </div>
-              </div>
-              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-              </button>
             </div>
-          </div>
+            <!-- Add more category cards as needed -->
         </div>
+    </div>
+    
       </div>
 
 
@@ -67,7 +64,7 @@
    <% if (firstHalf && firstHalf.length > 0) { %>
     <% firstHalf.forEach(category => { %>
         <% if (category.products && category.products.length > 0) { %> <!-- Only render card if products are present -->
-            <div class="category-card card my-box-shadow">
+            <div class="category-card ">
                 <div class="top-cat">
                     <h3><%= category.categoryName %></h3>
                     <a href="/user/category/<%= category.categoryName %>#product-section" >See all</a>
@@ -118,7 +115,7 @@
     <% if (secondHalf && secondHalf.length > 0) { %>
       <% secondHalf.forEach(category => { %>
           <% if (category.products && category.products.length > 0) { %> <!-- Only render card if products are present -->
-            <div class="category-card card my-box-shadow">
+            <div class="category-card ">
               <div class="top-cat">
                   <h3><%= category.categoryName %></h3>
                   <a href="/user/category/<%= category.categoryName %>#product-section" >See all</a>
@@ -149,7 +146,7 @@
   <% } %>
 
 
-      <%- include ('./partials/clients')%>
+      
 
 
       <br>

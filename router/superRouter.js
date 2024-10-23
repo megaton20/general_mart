@@ -31,6 +31,7 @@ router.get("/all-canceled-order", ensureAuthenticated,isSuper, superController.g
 router.get("/view-canceled/:id", ensureAuthenticated,isSuper, superController.getOneCanceledOrder);
 router.get("/all-ranks", ensureAuthenticated,isSuper, superController.getAllRanks);
 
+
 // region and price delivery
 router.get("/all-regions/", ensureAuthenticated,isSuper, superController.gettAllPriceRegions);
 router.get("/create-region", ensureAuthenticated,isSuper, superController.getAddRegions);
@@ -45,9 +46,16 @@ router.get("/asign-driver-to-company/:id", ensureAuthenticated,isSuper, superCon
 router.put("/add-driver-to-company/:id", ensureAuthenticated,isSuper, superController.addDriverToCompany); //
 
 
+router.get("/all-external-riders", ensureAuthenticated,isSuper, superController.getExternalRiders);
+router.get("/view-rider/:id", ensureAuthenticated,isSuper, superController.getOneExternalRider);
 
-router.get("/upgrade-users/:id", ensureAuthenticated,isSuper, superController.usersToUpgrade);
+// todo
+router.put("/approve-rider/:id", ensureAuthenticated,isSuper, superController.getAllRanks);
+router.put("/disable-rider/:id", ensureAuthenticated,isSuper, superController.getAllRanks);
+// modify drivers to follow verified = true
+
 router.get("/upgrade-users", ensureAuthenticated,isSuper, superController.getAllUsersToUpgrade);
+router.get("/upgrade-users/:id", ensureAuthenticated,isSuper, superController.usersToUpgrade);
 router.put("/upgrade-users/:id", ensureAuthenticated,isSuper, superController.postUsersToUpgrade);
 // get single
 router.get("/inventory/:id", ensureAuthenticated,isSuper, superController.getInventoryById);

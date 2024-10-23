@@ -1,4 +1,6 @@
 const db = require("../model/databaseTable");
+const { promisify } = require('util');
+const query = promisify(db.query).bind(db);
 const stateData = require("../model/stateAndLGA");
 
 const systemCalander = new Date().toLocaleDateString();
@@ -69,147 +71,144 @@ exports.createNewLogistics = (req, res) => {
 
 };
 // delivery
-exports.allPendingDelivery = (req, res)=>{
-
-    const userFirstName = req.user.First_name;
+exports.allPendingDelivery = async (req, res) => {
+  const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
   const userId = req.user.id;
 
-  db.query(`SELECT * FROM Users WHERE id = ? `,[userId], (err, results) => {
-    if (err) {
-      req.flash("error_msg", ` ${err.sqlMessage}`);
-      return res.redirect("/");
-    } 
+  try {
+    // Use parameterized query to prevent SQL injection
+    const { rows: user } = await query(
+      `SELECT * FROM "Users" WHERE "id" = $1 `,
+      [userId]
+    );
 
-      const logisticId = JSON.parse(JSON.stringify(results[0].logistic_id));
+    const { rows: results } = await query(
+      `SELECT * FROM "Orders" WHERE "driver_id" = $1 AND "status" = $2`,
+      [user[0].logistic_id, "shipped"]
+    );
 
-      db.query(`SELECT * FROM Orders WHERE driver_id = "${logisticId}" AND status = "shipped" `, (err, results) => {
-        if (err) {
-          req.flash("error_msg", ` ${err.sqlMessage}`);
-          return res.redirect("/");
-        } else {
-          let pendingDelivery = JSON.parse(JSON.stringify(results));
-    
-           return res.render("./logistics/logistcsDeliveryTable", {
-              pageTitle: "delivery to maked",
-              name: `${userFirstName} ${userLastName}`,
-              month: monthName,
-              day: dayName,
-              date: presentDay,
-              year: presentYear,
-              pendingDelivery,
-            }); // for logistics alone only
-            
-          }
-        });
-    
-    })
+    // Check if there are any pending deliveries
+    let pendingDelivery = results; // Pass the entire result array
 
 
+    // Render the logistics delivery table
+    return res.render("./logistics/logistcsDeliveryTable", {
+      pageTitle: "Delivery to be made",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      pendingDelivery, // Pass the entire array of pending deliveries
+    });
 
-}
+  } catch (error) {
+    console.log(error);
+    req.flash("error_msg", `Error: ${error.message}`);
+    return res.redirect("back");
+  }
+};
 
-exports.oneDelivery = (req, res)=>{
-  let editId = req.params.id
-    const userFirstName = req.user.First_name;
+exports.oneDelivery = async (req, res) => {
+  let editId = req.params.id;
+  const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
-  
 
-  db.query(`SELECT * FROM Orders WHERE  id = "${editId}" `, (err, results) => {
-    if (err) {
-      req.flash("error_msg", ` ${err.sqlMessage}`);
+  try {
+    // Query for the specific order
+    const { rows: orderToComplete } = await query(
+      `SELECT * FROM "Orders" WHERE id = $1`,
+      [editId]
+    );
+
+    if (orderToComplete.length === 0) {
+      req.flash("error_msg", "Order not found");
+      return res.redirect("back");
+    }
+
+    let itemId = orderToComplete[0].sale_id;
+    let itemShippingFee = orderToComplete[0].shipping_fee;
+
+    // Calculate the total amount to pay on delivery
+    const totalAmountToPayOnDelivery =
+      itemShippingFee + orderToComplete[0].total_amount;
+
+    // Query for ordered products
+    const { rows: orderedProducts } = await query(
+      `SELECT * FROM "Order_Products" WHERE sale_id = $1`,
+      [itemId]
+    );
+
+    // Query for customer data
+    const { rows: customerData } = await query(
+      `SELECT * FROM "Users" WHERE id = $1`,
+      [orderToComplete[0].customer_id]
+    );
+
+    if (customerData.length === 0) {
+      req.flash("error_msg", "Customer not found");
+      return res.redirect("back");
+    }
+
+
+    // Render the delivery details page
+    return res.render("./logistics/logisticsDeliveryDetails", {
+      pageTitle: "Delivery to Make",
+      name: `${userFirstName} ${userLastName}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      orderedProducts,
+      orderToComplete: orderToComplete[0],
+      totalAmountToPayOnDelivery,
+      customerData: customerData[0], // Ensure you send only one customer's data
+    });
+  } catch (error) {
+    console.log(error);
+    req.flash("error_msg", `Error: ${error.message}`);
+    return res.redirect("back");
+  }
+};
+
+
+exports.finishDelivery = async (req, res) => {
+  let editId = req.params.id;
+
+  try {
+    // Fetch the Order_Products based on the id
+    const { rows: orderToComplete } = await query(
+      `SELECT * FROM "Order_Products" WHERE id = $1`,
+      [editId]
+    );
+
+    if (orderToComplete.length === 0) {
+      req.flash("error_msg", "Order product not found");
       return res.redirect("/logistics");
-    } else {
-      let orderToComplete = JSON.parse(JSON.stringify(results));
+    }
 
-      let itemId = orderToComplete[0].sale_id
-      let itemShippingFee = orderToComplete[0].shipping_fee
+    let itemId = orderToComplete[0].sale_id;
 
-      const totalAmountToPayOnDelivery = itemShippingFee + orderToComplete[0].total_amount
+    // Update the Orders table to mark as complete
+    await query(
+      `UPDATE "Orders" SET status = $1 WHERE sale_id = $2`,
+      ["complete", itemId]
+    );
 
+    // Update the Order_Products table to mark as sold
+    await query(
+      `UPDATE "Order_Products" SET status = $1 WHERE sale_id = $2`,
+      ["sold", itemId]
+    );
 
-      db.query(`SELECT * FROM Order_Products WHERE  sale_id = "${itemId}" `, (err, results) => {
-        if (err) {
-          console.log(err);
-          req.flash("error_msg", `error from db ${err}`)
-          return res.redirect("/logistics")
-        }
-        let orderedProducts = JSON.parse(JSON.stringify(results));
+    // If successful, send success message
+    req.flash("success_msg", "Order has been marked as completed");
+    return res.redirect("/logistics/all-deliveries");
 
-
-        db.query(`SELECT * FROM Users WHERE  id = "${orderToComplete[0].customer_id}" `, (err, results) => {
-          if (err) {
-            req.flash("error_msg", ` ${err.sqlMessage}`);
-            return res.redirect("/logistics");
-          } else {
-            let customerData = JSON.parse(JSON.stringify(results));
-            
-            return res.render("./logistics/logisticsDeliveryDetails", {
-              pageTitle: "delivery to make",
-              name: `${userFirstName} ${userLastName}`,
-              month: monthName,
-              day: dayName,
-              date: presentDay,
-              year: presentYear,
-              orderedProducts,
-              orderToComplete,
-              totalAmountToPayOnDelivery,
-              customerData
-            }); // for admin only
-  
-          }
-        })
-
-
-     
-      })// to get the products ordered
-    
-      }
-    }); // to get the pending item
-
-}
-exports.finishDelivery = (req, res)=>{
-  let editId = req.params.id
-  const sessionRole = req.user.userRole;
-
-
-
-      db.query(`SELECT * FROM Order_Products WHERE  id = "${editId}" `, (err, results) => {
-        if (err) {
-          req.flash("error_msg", ` ${err.sqlMessage}`);
-          return res.redirect("/");
-        } else {
-          let data = JSON.stringify(results);
-          let orderToComplete = JSON.parse(data);
-          
-          let itemId = orderToComplete[0].sale_id
-          
-          
-          db.query(`UPDATE Orders SET ? WHERE  sale_id = "${itemId}" `, {
-            status: 'complete'
-          },(err, results) => {
-            
-            if(err){
-              console.log(err);
-              req.flash('error_msg', `error whhile updating ${err}`)
-              return res.redirect("/logistics")
-            }
-  
-            db.query(`UPDATE  Order_Products SET ? WHERE  sale_id = "${itemId}" `, {
-              status: 'sold'
-            },(err, results) => {
-              if (err) {
-                req.flash("error_msg", `error from db ${err}`)
-                return res.redirect("/logistics")
-              }  
-              req.flash("success_msg", `order has been marked as completed`)
-              return res.redirect('/logistics/all-deliveries')
-            })// to complete the products ordered
-          }) // update  order to conplete
-  
-  
-        
-          }
-        }); // to get the pending item
-
-}
+  } catch (error) {
+    console.log(error);
+    req.flash("error_msg", `Error: ${error.message}`);
+    return res.redirect("/logistics");
+  }
+};

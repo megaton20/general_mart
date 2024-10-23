@@ -373,11 +373,18 @@ exports.usersToUpgrade = async (req, res) => {
     // Fetch all positions
     const results = await query(`SELECT * FROM "Positions"`);
     const allPositions = results.rows;
+    if (allPositions.length === 0) {
+      req.flash('error_msg', "Position not found. Create new positions.");
+      return res.redirect('/super/create-position');
+    }
 
     // Fetch all stores
     const allStoresResult = await query(`SELECT * FROM "Stores"`);
     const allStores = allStoresResult.rows;
-
+    if (allStores.length === 0) {
+      req.flash('error_msg', "Store not found. Add store to continue.");
+      return res.redirect('/super/create-store');
+    }
     // Fetch the selected user details
     const allUsersResult = await query(`SELECT * FROM "Users" WHERE id = $1`, [selectedUser]);
     
@@ -387,7 +394,7 @@ exports.usersToUpgrade = async (req, res) => {
       return res.redirect('/super');
     }
     
-    const allUsers = allUsersResult.rows;
+    const allUsers = allUsersResult.rows[0];
 
     res.render("./super/userEditUpgrade", {
       pageTitle: "All users",
@@ -409,6 +416,7 @@ exports.usersToUpgrade = async (req, res) => {
 };
 
 exports.postUsersToUpgrade = async (req, res) => {
+
   const userId = req.params.id;
   const { store_name, position } = req.body;
 
@@ -417,12 +425,13 @@ exports.postUsersToUpgrade = async (req, res) => {
     return res.redirect(`/super/upgrade-users/${userId}`);
   }
 
+
   try {
     // Check if the position exists
     const positionResult = await query(`SELECT * FROM "Positions" WHERE "Position_name" = $1`, [position]);
     if (positionResult.rows.length === 0) {
-      req.flash('error_msg', "Position not found. Create new positions.");
-      return res.redirect('/super');
+      req.flash('warning_msg', "Position not found. Create new positions.");
+      return res.redirect('/super/create-position');
     }
 
     const positionData = positionResult.rows[0];
@@ -432,8 +441,8 @@ exports.postUsersToUpgrade = async (req, res) => {
     // Check if the store exists
     const storeResult = await query(`SELECT * FROM "Stores" WHERE "store_name" = $1`, [store_name]);
     if (storeResult.rows.length === 0) {
-      req.flash('error_msg', "Store not found. Add store to continue.");
-      return res.redirect('/super');
+      req.flash('warning_msg', "Store not found. Add store to continue.");
+      return res.redirect('/super/create-store');
     }
 
     const storeData = storeResult.rows[0];
@@ -1088,7 +1097,7 @@ exports.addDriverToCompany = async (req, res) => {
 
     // Update the user with the selected logistics company
     await query(`UPDATE "Users" SET logistic_id = $1, logistics_company_name = $2 WHERE id = $3`, 
-      [company, logisticsResults.rows[0].name, editId]
+      [company, logisticsResults[0].name, editId]
     );
 
     req.flash("success_msg", `Successfully updated`);
@@ -1492,6 +1501,58 @@ const updateResult = await query(updateQuery, values);
     return res.redirect("/super");
   }
 };
+
+
+
+exports.getExternalRiders= async (req, res) => {
+  const nameA = req.user.First_name;
+  const nameB = req.user.Last_name;
+
+  try {
+    // Fetch all brands from the Brands table
+    const {rows:allExterrnalRiders} = await query(`SELECT * FROM "drivers"`);
+
+
+    // Render the brandTable view
+    res.render("./super/driversTable", {
+      pageTitle: "Welcome",
+      name: `${nameA} ${nameB}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      allExterrnalRiders: allExterrnalRiders
+    });
+  } catch (error) {
+    req.flash("error_msg", `${error.message}`); // Use error.message instead of error.sqlMessage
+    return res.redirect("/super");
+  }
+};
+
+exports.getOneExternalRider= async (req, res) => {
+  const nameA = req.user.First_name;
+  const nameB = req.user.Last_name;
+
+  try {
+    // Fetch all brands from the Brands table
+    const {rows:allExterrnalRiders} = await query(`SELECT * FROM "drivers" WHERE id = $1`,[req.params.id]);
+
+
+    // Render the brandTable view
+    res.render("./super/driversView", {
+      pageTitle: "Welcome",
+      name: `${nameA} ${nameB}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      allExterrnalRiders: allExterrnalRiders
+    });
+  } catch (error) {
+    req.flash("error_msg", `${error.message}`); // Use error.message instead of error.sqlMessage
+    return res.redirect("/super");
+  }
+};
 // createReturn
 
 exports.createReturn = (req, res) => {
@@ -1844,7 +1905,7 @@ exports.createNewInventory = async (req, res) => {
     )
   ) {
     req.flash("error_msg", "Enter all fields before submitting");
-    return res.redirect("/super");
+    return res.redirect("/super/create-inventory");
   }
 
   try {
@@ -1868,7 +1929,7 @@ exports.createNewInventory = async (req, res) => {
     const categoryResult = await query(`SELECT * FROM "Category" WHERE "Category_name" = $1`, [Category_name]);
     if (categoryResult.rows.length === 0) {
       req.flash('error_msg', 'Category not found');
-      return res.redirect('/super');
+      return res.redirect("/super/create-inventory");
     }
     const categoryId = categoryResult.rows[0].CategoryID;
 
@@ -1888,6 +1949,7 @@ exports.createNewInventory = async (req, res) => {
 
     req.flash("success_msg", `"${Product_name}" added successfully!`);
     return res.redirect("/super/all-inventory");
+    
   } catch (error) {
     // Debugging: Log the error
     console.error("SQL Error:", error.message);
@@ -1949,7 +2011,7 @@ exports.createNewPosition = async (req, res) => {
 
   if (!(Position_name && Salary && Job_description)) {
     req.flash("error_msg", "Enter all fields before submitting");
-    return res.redirect("/super");
+    return res.redirect("back");
   }
 
   try {
@@ -1969,12 +2031,13 @@ exports.createNewPosition = async (req, res) => {
       );
 
       req.flash("success_msg", `"${Position_name}" added successfully!`);
-      return res.redirect("/super");
+      return res.redirect("/super/all-positions");
     } else {
       req.flash("error_msg", `"${Position_name}" already exists!`);
       return res.redirect("/super");
     }
   } catch (error) {
+    console.log(error);
     req.flash("error_msg", `${error.message}`); // Changed to error.message for better error handling
     return res.redirect("/super");
   }
@@ -2296,7 +2359,7 @@ exports.storeEdit = async (req, res) => {
       return res.redirect("/super");
     }
 
-    const storeData = results.rows[0];
+    const storeData = results.rows;
     // If you need to fetch stateData, do so here and include it in the render options
 
     return res.render("./super/storesEditForm", {
@@ -2307,7 +2370,7 @@ exports.storeEdit = async (req, res) => {
       date: presentDay,
       year: presentYear,
       storeData,
-      // stateData: stateData // Uncomment if stateData is being fetched and passed
+      stateData: stateData 
     });
 
   } catch (error) {
@@ -2386,50 +2449,6 @@ exports.editDiscount = async (req, res) => {
   }
 };
 
-exports.editEmployee = async (req, res) => {
-  const editID = req.params.id;
-  const userFirstName = req.user.First_name;
-  const userLastName = req.user.Last_name;
-
-  try {
-    // Fetch all stores
-    const allStoresResult = await query(`SELECT * FROM "Stores"`);
-    const allStores = allStoresResult;
-
-    // Fetch all positions
-    const allPositionsResult = await query(`SELECT * FROM "Positions"`);
-    const allPositions = allPositionsResult;
-
-    // Fetch employee data by ID
-    const employeeResult = await query(
-      `SELECT * FROM "Employees" WHERE "id" = $1`,
-      [editID]
-    );
-
-    if (employeeResult.length <= 0) {
-      req.flash("error_msg", `No employee found with ID ${editID}`);
-      return res.redirect("/super");
-    }
-
-    const employeeData = employeeResult[0]; // Extract the first result
-
-    res.render("./super/employeeEditForm", {
-      pageTitle: "Edit Employee",
-      name: `${userFirstName} ${userLastName}`,
-      month: monthName,
-      day: dayName,
-      date: presentDay,
-      year: presentYear,
-      allStores,
-      allPositions,
-      employeeData,
-    });
-
-  } catch (error) {
-    req.flash("error_msg", `An error occurred: ${error.message}`);
-    return res.redirect("/super");
-  }
-};
 
 
 
@@ -2516,15 +2535,17 @@ exports.editInventory = async (req, res) => {
 
   try {
     // Fetch all necessary data with parameterized queries
-    const [supplierData, allUsersData, categoryDataResult, inventoryDataResults] = await Promise.all([
+    const [supplierData, allUsersData, categoryDataResult, inventoryDataResults, brandData] = await Promise.all([
       query(`SELECT * FROM "Suppliers"`),
       query(`SELECT * FROM "Users" WHERE "userRole" = $1`, ["super"]),
       query(`SELECT * FROM "Category"`),
-      query(`SELECT * FROM "inventory" WHERE "id" = $1`, [editID])
+      query(`SELECT * FROM "inventory" WHERE "id" = $1`, [editID]),
+      query(`SELECT * FROM "Brands"`)
     ]);
 
     // Convert results to JSON if needed
     const allSuppliers = JSON.parse(JSON.stringify(supplierData.rows));
+    const allBrands = JSON.parse(JSON.stringify(brandData.rows));
     const allUsers = JSON.parse(JSON.stringify(allUsersData.rows));
     const categoryData = JSON.parse(JSON.stringify(categoryDataResult.rows));
     const inventoryData = JSON.parse(JSON.stringify(inventoryDataResults.rows));
@@ -2550,6 +2571,7 @@ exports.editInventory = async (req, res) => {
       allUsers,
       supplierData:allSuppliers,  
       stateData,
+      allBrands
     });
 
   } catch (error) {
@@ -2566,23 +2588,19 @@ exports.editPosition = async (req, res) => {
 
   try {
     // Retrieve all necessary data
-    const [allPositionsResult, allStoresResult, allUsersResult, categoryResults, positionResult] = await Promise.all([
-      query(`SELECT * FROM Positions`),
-      query(`SELECT * FROM Stores`),
-      query(`SELECT * FROM Users`),
-      query(`SELECT * FROM Category`),
-      query(`SELECT * FROM Positions WHERE id = $1`, [editID])
+    const [allPositionsResult, allStoresResult, allUsersResult, categoryResults, positionData] = await Promise.all([
+      query(`SELECT * FROM "Positions"`),
+      query(`SELECT * FROM "Stores"`),
+      query(`SELECT * FROM "Users"`),
+      query(`SELECT * FROM "Category"`),
+      query(`SELECT * FROM "Positions" WHERE id = $1`, [editID])
     ]);
 
-    // Parse results
-    const allPositions = JSON.parse(JSON.stringify(allPositionsResult));
-    const allStores = JSON.parse(JSON.stringify(allStoresResult));
-    const allUsers = JSON.parse(JSON.stringify(allUsersResult));
-    const categoryData = JSON.parse(JSON.stringify(categoryResults));
-    const positionData = JSON.parse(JSON.stringify(positionResult));
+  
+
 
     // Check if the specific position exists
-    if (positionData.length <= 0) {
+    if (positionData.rows.length <= 0) {
       req.flash("error_msg", `Position not found`);
       return res.redirect("/super");
     }
@@ -2595,11 +2613,8 @@ exports.editPosition = async (req, res) => {
       day: dayName,
       date: presentDay,
       year: presentYear,
-      positionData: positionData[0], // Ensure single item is passed
-      allPositions,
-      allStores,
-      categoryData,
-      allUsers,
+      positionData: positionData.rows, // Ensure single item is passed
+ 
     });
      
   } catch (error) {
@@ -2613,28 +2628,36 @@ exports.editEmployee = async (req, res) => {
   const editID = req.params.id;
   const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
-
+  
   try {
     // Retrieve all necessary data
     const [allPositions, allStores, allUsersResult] = await Promise.all([
-      query(`SELECT * FROM Positions`),
-      query(`SELECT * FROM Stores`),
-      query(`SELECT * FROM Users WHERE id = ?`, [editID])
+      query(`SELECT * FROM "Positions"`),
+      query(`SELECT * FROM "Stores"`),
+      query(`SELECT * FROM "Users" WHERE id = $1`, [editID]) // Use $1 for parameterized queries (PostgreSQL style)
     ]);
+    
 
     // Check if the user exists
-    if (allUsersResult.length <= 0) {
+    if (allUsersResult.rows.length === 0) {
       req.flash("error_msg", `Employee not found`);
       return res.redirect("/super");
     }
 
     // Check if the user is an admin
-    if (allUsersResult[0].userRole === "super") {
+    if (allUsersResult.rows[0].userRole === "super") {
       req.flash("warning_msg", `Cannot edit admin user`);
       return res.redirect("back");
     }
 
-    const allUsers = JSON.parse(JSON.stringify(allUsersResult));
+    const allUsers = allUsersResult.rows[0];
+
+    // Set the date variables (define them appropriately)
+    const now = new Date();
+    const monthName = now.toLocaleString('default', { month: 'long' });
+    const dayName = now.toLocaleDateString('en-US', { weekday: 'long' });
+    const presentDay = now.getDate();
+    const presentYear = now.getFullYear();
 
     // Render the employee edit form
     return res.render("./super/employeeEditUpgrade", {
@@ -2644,9 +2667,9 @@ exports.editEmployee = async (req, res) => {
       day: dayName,
       date: presentDay,
       year: presentYear,
-      allPositions,
+      allPositions: allPositions.rows, // Add rows if necessary for result formatting
       allUsers,
-      allStores,
+      allStores: allStores.rows, // Add rows if necessary for result formatting
     });
     
   } catch (error) {
@@ -2663,9 +2686,9 @@ exports.editEmployee = async (req, res) => {
 // put section
 exports.updateEmployee = async (req, res) => {
   const updateID = req.params.id;
-  const { store_name, position, Salary } = req.body;
+  const { store_name, position } = req.body;
 
-  if (!(store_name && position && Salary)) {
+  if (!(store_name && position )) {
     req.flash("error_msg", `Enter all fields before updating Employee`);
     return res.redirect("/super/all-employees");
   }
@@ -2673,10 +2696,11 @@ exports.updateEmployee = async (req, res) => {
   try {
     // Get the ID for the position
     const positionResults = await query(
-      `SELECT id FROM Positions WHERE Position_name = $1`,
+      `SELECT id FROM "Positions" WHERE "Position_name" = $1`,
       [position]
     );
     
+
     if (positionResults.length === 0) {
       req.flash('error_msg', `Position not found`);
       return res.redirect('/super');
@@ -2686,7 +2710,7 @@ exports.updateEmployee = async (req, res) => {
 
     // Get the ID for the store
     const storeResults = await query(
-      `SELECT id FROM Stores WHERE store_name = $1`,
+      `SELECT id FROM "Stores" WHERE "store_name" = $1`,
       [store_name]
     );
 
@@ -2699,8 +2723,8 @@ exports.updateEmployee = async (req, res) => {
 
     // Update the employee record
     await query(
-      `UPDATE Users SET store_name = $1, store_id = $2, position_id = $3, position = $4, Salary = $5 WHERE id = $6`,
-      [store_name, storeId, positionId, position, Salary, updateID]
+      `UPDATE "Users" SET "store_name" = $1, "store_id" = $2, "position_id" = $3, "position" = $4 WHERE "id" = $5`,
+      [store_name, storeId, positionId, position, updateID]
     );
 
     req.flash("success_msg", `Employee updated successfully!`);
@@ -2952,8 +2976,45 @@ exports.editNewInventory = async (req, res) => {
   }
 
 
+  let newStatus;
+  const currentDate = new Date();
+  const expiryDate = new Date(Expire_date); 
+  
+  if (expiryDate > currentDate) {
+    newStatus = "not-expired";
+  } else {
+    newStatus = "expired";
+  }
+  
 
   try {
+
+    // Get the Brand ID
+    const brandResult = await query(`SELECT * FROM "Brands" WHERE "Name" = $1`, [Brand_name]);
+    if (brandResult.rows.length > 0) {
+      brandID = brandResult.rows[0].id;
+    } else {
+      brandID = 0;
+    }
+
+    // Get the Supplier ID
+    const supplierResult = await query(`SELECT * FROM "Suppliers" WHERE "Business_name" = $1`, [Supplier_name]);
+    if (supplierResult.rows.length > 0) {
+      supplierId = supplierResult.rows[0].id;
+    } else {
+      supplierId = 0;
+    }
+
+    // Get the Category ID
+    const categoryResult = await query(`SELECT * FROM "Category" WHERE "Category_name" = $1`, [Category_name]);
+    if (categoryResult.rows.length === 0) {
+      req.flash('error_msg', 'Category not found');
+      return res.redirect('/super');
+    }
+    const categoryId = categoryResult.rows[0].CategoryID;
+
+
+
     const productResults = await query(
       `SELECT * FROM "Products" WHERE "inventory_id" = $1`,
       [editID]
@@ -2962,7 +3023,7 @@ exports.editNewInventory = async (req, res) => {
     // If the item is not in the Products table, update only the inventory
     if (productResults.rows.length === 0) {
       await query(
-        `UPDATE "inventory" SET "Category_name" = $1, "Brand_name" = $2, "Product_name" = $3, "Purchase_price" = $4, "Supplier_name" = $5, "Payment_method" = $6, "Reciever_name" = $7, "Delivery_method" = $8, "QTY_recieved" = $9, "total_in_pack" = $10, "Manufacture_date" = $11, "Expire_date" = $12, "Cost_of_delivery" = $13, "Total_damaged" = $14, "details" = $15 WHERE id = $16`,
+        `UPDATE "inventory" SET "Category_name" = $1, "Brand_name" = $2, "Product_name" = $3, "Purchase_price" = $4, "Supplier_name" = $5, "Payment_method" = $6, "Reciever_name" = $7, "Delivery_method" = $8, "QTY_recieved" = $9, "total_in_pack" = $10, "Manufacture_date" = $11, "Expire_date" = $12, "Cost_of_delivery" = $13, "Total_damaged" = $14, "details" = $15, "category_id"=$16,"supplier_id"=$17, "brand_id" =$18,"expired"=$19 WHERE id = $20`,
         [
           Category_name,
           Brand_name,
@@ -2978,29 +3039,29 @@ exports.editNewInventory = async (req, res) => {
           Expire_date,
           Cost_of_delivery,
           Total_damaged,
-          details,
+          details,categoryId, supplierId, brandID,newStatus,
           editID
         ]
       );
 
-      req.flash("success_msg", `"${Product_name}" updated successfully!`);
+      req.flash("success_msg", `"${Product_name}" updated successfully for inventory alone !`);
       return res.redirect("/super/all-inventory");
     }
 
     // If the item is in the Products table, update both Products and inventory
-    await query(`UPDATE "Products" SET "category" = $1, "Brand_name" = $2, "ProductName" = $3, "details" = $4, "StockQuantity" = $5, "total_in_pack" = $6 WHERE "inventory_id" = $7`,
+    await query(`UPDATE "Products" SET "category" = $1, "Brand_name" = $2, "ProductName" = $3, "details" = $4, "StockQuantity" = $5, "total_in_pack" = $6,"category_id" =$7,"status"=$8 WHERE "inventory_id" = $9`,
       [
         Category_name,
         Brand_name,
         Product_name,
         details,
         QTY_recieved,
-        total_in_pack,
+        total_in_pack,categoryId,newStatus,
         editID
       ]
     );
 
-    await query(`UPDATE "inventory" SET "Category_name" = $1, "Brand_name" = $2, "Product_name" = $3, "Purchase_price" = $4, "Supplier_name" = $5, "Payment_method" = $6, "Reciever_name" = $7, "Delivery_method" = $8, "QTY_recieved" = $9, "total_in_pack" = $10, "Manufacture_date" = $11, "Expire_date" = $12, "Cost_of_delivery" = $13, "Total_damaged" = $14, "details" = $15 WHERE id = $16`,
+    await query(`UPDATE "inventory" SET "Category_name" = $1, "Brand_name" = $2, "Product_name" = $3, "Purchase_price" = $4, "Supplier_name" = $5, "Payment_method" = $6, "Reciever_name" = $7, "Delivery_method" = $8, "QTY_recieved" = $9, "total_in_pack" = $10, "Manufacture_date" = $11, "Expire_date" = $12, "Cost_of_delivery" = $13, "Total_damaged" = $14, "details" = $15, "category_id"=$16,"supplier_id"=$17, "brand_id" =$18,"expired"=$19 WHERE id = $20`,
       [
         Category_name,
         Brand_name,
@@ -3016,7 +3077,7 @@ exports.editNewInventory = async (req, res) => {
         Expire_date,
         Cost_of_delivery,
         Total_damaged,
-        details,
+        details,categoryId, supplierId, brandID, newStatus,
         editID
       ]
     );
@@ -3030,7 +3091,7 @@ exports.editNewInventory = async (req, res) => {
          }
 
 
-    req.flash("success_msg", `"${Product_name}" updated successfully!`);
+    req.flash("success_msg", `"${Product_name}" updated successfully! on shelf too`);
     return res.redirect("/super/all-inventory");
 
   } catch (error) {
@@ -3508,7 +3569,7 @@ exports.getSingleOrder = async (req, res) => {
 
     
     // Fetch logistics and riders data
-    const {rows:ridersData} = await query(`SELECT * FROM "drivers"`);
+    const {rows:ridersData} = await query(`SELECT * FROM "drivers" WHERE "verified" = $1`, [true]);
     const {rows:logisticsDrivers} = await query(`SELECT * FROM "Logistics"`);
     
     

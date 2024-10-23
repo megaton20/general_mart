@@ -8,15 +8,14 @@
         <%- include('./partials/ads') %>
       </div>
   <!-- Service Details Section -->
-  <section id="service-details" class="service-details section">
+
     
     <div class="container">
 
       <div class="row gy-5">
 
       
-      <div class="col-lg-8 card">
-          <div class="card-body">
+      <div class="col-lg-8 ">
 
             <% cartItems.forEach(item => { %>
               <div class="row  my-box-shadow" >
@@ -40,13 +39,12 @@
                 <hr>
     
             <% }); %>
-          </div>
+
 
         </div>
 
       <div class="col-lg-4" >
-        <div class="card">
-           <div class="card-body">
+    
             <div class="row">
               <div class="col-6 m-0">Subtotal</div>
               <div class="col-6 m-0">NGN <span class="item-price"><%= totalSubtotal%></span></div>
@@ -57,8 +55,7 @@
               <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user/checkout/<%= userData.id %>"> Proceed To Checkout</a>
               <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user"> Back To store</a>
      
-           </div>
-            </div>
+        
 
     
       <%- include('./partials/info') %>
@@ -67,7 +64,7 @@
 
   </div>
 </div>
-</section><!-- /Service Details Section -->
+
 
 <br>
 <br>

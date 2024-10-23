@@ -1,0 +1,111 @@
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <%- include ('../partials/superSidebar') %>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include ('../partials/topbar') %>
+                    <!-- End of Topbar -->
+
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
+
+                        <a class="btn btn-outline-primary mr-2 mb-1" href="/super/all-external-riders">all external
+                            drivers</a>
+
+                        <!-- allExterrnalRiders[0].lesxample -->
+                        <div class=" mb-4">
+                            <%- include ('../partials/messages') %>
+
+                                <div class="container">
+
+                                   <div class="mt-5">
+                                    <div class="row">
+
+                                        <div class="col-6">Company Name</div>
+                                        <div class="col-6"> <%= allExterrnalRiders[0].companyName %></div>
+                                        <div class="col-6"> company Phone</div>
+                                        <div class="col-6"><%= allExterrnalRiders[0].companyPhone %></div>
+                                        <div class="col-6">Headquaters State </div>
+                                        <div class="col-6"><%= allExterrnalRiders[0].HQ_state %></div>
+                                        <div class="col-6">LGA </div>
+                                        <div class="col-6"><%= allExterrnalRiders[0].HQ_lga %></div>
+                                        <div class="col-6">Company Address </div>
+                                        <div class="col-6"><%= allExterrnalRiders[0].companyAddress %></div>
+                                        
+                                        <hr>
+                                        
+                                        <div class="col-6">Bank Name</div>
+                                        <div class="col-6"> <%= allExterrnalRiders[0].Bank_name %></div>
+                                        <div class="col-6"> coporate Account number</div>
+                                        <div class="col-6"><%= allExterrnalRiders[0].bankAccount %></div>
+                                        <div class="col-6">Bearer name </div>
+                                        <div class="col-6"><%= allExterrnalRiders[0].accountName %></div>
+                                        <div class="col-6">verified </div>
+                                        <div class="col-6"><%= allExterrnalRiders[0].verified %></div>
+                                        <div class="col-6">status </div>
+                                        <div class="col-6"><%= allExterrnalRiders[0].status %></div>
+                                        <div class="col-6">NIN number </div>
+                                        <div class="col-6"><%= allExterrnalRiders[0].nation_id_number %></div>
+                                        <div class="col-6">CAC number </div>
+                                        <div class="col-6"><%= allExterrnalRiders[0].CAC_number %></div>
+
+                                        <hr>
+                                        <div class="col-6">goods Handled </div>
+                                        <div class="col-6"><%= allExterrnalRiders[0].goodsHandled %></div>
+                                        <div class="col-6">hours </div>
+                                        <div class="col-6"><%= allExterrnalRiders[0].hours %></div>
+                                        <div class="col-6">days </div>
+                                        <div class="col-6"><%= allExterrnalRiders[0].days %></div>
+                                        <div class="col-6">service </div>
+                                        <div class="col-6"><%= allExterrnalRiders[0].service %></div>
+                                    </div>
+                                   </div>
+                                    
+                               <div class="mt-5">
+                                <form action="/super/approve-rider/<%= allExterrnalRiders[0].id %>" method="POST"
+                                    style="display: inline;">
+                                    <input type="hidden" name="_method" value="PUT" />
+                                    <button class="btn btn-outline-success">approve</button>
+                                </form>
+                                
+                                <form action="/super/disable-rider/<%= allExterrnalRiders[0].id %>" method="POST"
+                                    style="display: inline;">
+                                    <input type="hidden" name="_method" value="PUT" />
+                                    <button class="btn btn-danger">Disable</button>
+                                </form>
+                               </div>
+                                    
+                                    
+                                    
+                                </div>
+                        </div>
+
+                    </div>
+                    <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include ('../partials/footer') %>
+                <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>

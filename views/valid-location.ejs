@@ -1,30 +1,31 @@
 
 
 <%- include('./partials/openNav') %>
-<body>
-  <div class="container">
-      <div class="row">
-          <div class="col-md-12">
-              <div class="location-card p-3">
-                  <h5 class="card-title text-center">All Shipping Regions</h5>
-                  <div class="card-body">
-                      <% for (const state in shippingData) { %>
-                          <div class="location-state">
-                              <strong><%= state %></strong>
-                              <ul class="list-unstyled">
-                                  <% shippingData[state].forEach(({ lga, fee }) => { %>
-                                      <li class="location-lga">
-                                          <%= lga %> -  ₦<%= fee %>
-                                      </li>
-                                  <% }); %>
-                              </ul>
-                          </div>
-                      <% } %>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
+<div class=" mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="location-card p-2 rounded bg-light">
+                <h3 class="card-title text-center mb-4">All Shipping Regions</h3>
+                <div class="card-body">
+                    <% for (const state in shippingData) { %>
+                        <div class="location-state mb-4">
+                            <h5 class="state-name text-primary mb-2"><%= state %></h5>
+                            <ul class="list-group">
+                                <% shippingData[state].forEach(({ lga, fee }) => { %>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><%= lga %></span>
+                                        <span class="badge bg-success p-2">₦<%= fee %></span>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 

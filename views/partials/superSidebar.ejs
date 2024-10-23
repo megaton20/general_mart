@@ -1,108 +1,95 @@
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-  <!-- Sidebar - Brand -->
-  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/super">
-      <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-shop"></i>
-      </div>
-      <div class="sidebar-brand-text mx-3">General mart</div>
-  </a>
-
-  <!-- Divider -->
-  <hr class="sidebar-divider my-0">
-
-  <!-- Nav Item - Dashboard -->
-  <li class="nav-item">
-      <a class="nav-link" href="/super">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
-  </li>
-
-
-
-  <li class="nav-item">
-    <a class="nav-link collapsed"  href="/super/upgrade-users">
-      <i class="fas fw fa-home"></i> <span>Upgrade list</span>
-    </a>
-</li>
-
-  <li class="nav-item">
-    <a class="nav-link collapsed"  href="/super/all-employees">
-      <i class="fas fw fa-home"></i> <span>Employees</span>
-    </a>
-</li>
-
-  <li class="nav-item">
-    <a class="nav-link collapsed"  href="/super/all-discounts">
-      <i class="fas fw fa-home"></i> <span>Discounts</span>
-    </a>
-</li>
-  <li class="nav-item">
-    <a class="nav-link collapsed"  href="/super/all-sales">
-      <i class="fas fw fa-home"></i> <span>Sales</span>
-    </a>
-</li>
-
-  <li class="nav-item">
-    <a class="nav-link collapsed"  href="/super/all-damaged">
-      <i class="fas fw fa-home"></i> <span>Damaged Records</span>
-    </a>
-</li>
-
-  <li class="nav-item">
-    <a class="nav-link collapsed"  href="/super/all-logistics-drivers">
-      <i class="fas fw fa-home"></i> <span>Logistics Drivers</span>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a class="nav-link collapsed"  href="/super/all-customers">
-      <i class="fas fw fa-home"></i> <span>Customers</span>
-    </a>
-</li>
-<li class="nav-item">
-  <a class="nav-link collapsed"  href="/super/all-categories">
-    <i class="fas fw fa-home"></i> <span>categories</span>
-  </a>
-</li>
-<li class="nav-item">
-    <a class="nav-link collapsed"  href="/super/all-positions">
-      <i class="fas fw fa-home"></i> <span>Position</span>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a class="nav-link collapsed"  href="/super/all-transactions">
-      <i class="fas fw fa-home"></i> <span>All Transactions</span>
-    </a>
-</li>
-
-  <li class="nav-item">
-      <a class="nav-link collapsed"  href="/super/all-stores">
-        <i class="fas fw fa-home"></i> <span>Stores</span>
-      </a>
-  </li>
-
-  <li class="nav-item">
-      <a class="nav-link collapsed"  href="/super/all-inventory">
-        <i class="fas fw fa-book"></i> <span>Inventory</span>
-      </a>
-  </li>
-
-  <li class="nav-item">
-    <a class="nav-link collapsed"  href="/logout">
-      <i class="fas fw fa-book"></i> <span>logout</span>
-    </a>
-</li>
-
-
-
-  <!-- Divider -->
-  <hr class="sidebar-divider d-none d-md-block">
-
-  <!-- Sidebar Toggler (Sidebar) -->
-  <div class="text-center d-none d-md-inline">
-      <button class="rounded-circle border-0" id="sidebarToggle"></button>
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNav" aria-labelledby="offcanvasNavLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasNavLabel"><a class="navbar-brand" href="/super">Dashboard</a></h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
+  <div class="offcanvas-body">
+    
+  <!-- Nav Item - Employees -->
+  <li class="nav-item">
+    <a class="nav-link text-dark collapsed" href="/super/all-employees">
+      <i class="fas fa-users"></i> Employees
+    </a>
+  </li>
 
-</ul>
+  <!-- Nav Item - Discounts -->
+  <li class="nav-item">
+    <a class="nav-link text-dark collapsed" href="/super/all-discounts">
+      <i class="fas fa-percent"></i> Discounts
+    </a>
+  </li>
+
+  <!-- Nav Item - Sales -->
+  <li class="nav-item">
+    <a class="nav-link text-dark collapsed" href="/super/all-sales">
+      <i class="fas fa-chart-line"></i> Sales
+    </a>
+  </li>
+
+  <!-- Nav Item - Damaged -->
+  <li class="nav-item">
+    <a class="nav-link text-dark collapsed" href="/super/all-damaged">
+      <i class="fas fa-exclamation-triangle"></i> Damaged
+    </a>
+  </li>
+
+  <!-- Nav Item - Logistics -->
+  <li class="nav-item">
+    <a class="nav-link text-dark collapsed" href="/super/all-logistics-drivers">
+      <i class="fas fa-truck"></i> Our Logistics Dept
+    </a>
+  </li>
+
+  <!-- Nav Item - Customers -->
+  <li class="nav-item">
+    <a class="nav-link text-dark collapsed" href="/super/all-customers">
+      <i class="fas fa-user-friends"></i> Customers
+    </a>
+  </li>
+
+  <!-- Nav Item - Categories -->
+  <li class="nav-item">
+    <a class="nav-link text-dark collapsed" href="/super/all-categories">
+      <i class="fas fa-list"></i> Categories
+    </a>
+  </li>
+
+  <!-- Nav Item - Positions -->
+  <li class="nav-item">
+    <a class="nav-link text-dark collapsed" href="/super/all-positions">
+      <i class="fas fa-user-tag"></i> Position
+    </a>
+  </li>
+
+  <!-- Nav Item - Transactions -->
+  <li class="nav-item">
+    <a class="nav-link text-dark collapsed" href="/super/all-transactions">
+      <i class="fas fa-receipt"></i> Transactions
+    </a>
+  </li>
+
+  <!-- Nav Item - Stores -->
+  <li class="nav-item">
+    <a class="nav-link text-dark collapsed" href="/super/all-stores">
+      <i class="fas fa-store"></i> Stores
+    </a>
+  </li>
+
+  <!-- Nav Item - Inventory -->
+  <li class="nav-item">
+    <a class="nav-link text-dark collapsed" href="/super/all-inventory">
+      <i class="fas fa-boxes"></i> Inventory
+    </a>
+  </li>
+
+  <!-- Nav Item - Logout -->
+  <li class="nav-item">
+    <a class="nav-link text-dark collapsed" href="/logout">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </li>
+
+
+
+  </div>
+</div>

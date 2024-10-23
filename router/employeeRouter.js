@@ -12,13 +12,15 @@ router.get("/", ensureAuthenticated,isAttendant, employeeController.getAdminWelc
 
 // counter for attendants
 router.get("/create-sales", ensureAuthenticated,isAttendant, employeeController.counterForm);
-router.get("/getItems/:id", ensureAuthenticated,isAttendant,employeeController.superStore);
+router.get("/getItems/:id", ensureAuthenticated,isAttendant,employeeController.getItems);
 
 
 router.get("/invoice/:id", ensureAuthenticated,isAttendant, employeeController.invoice);
 
 // counter for attendants
 router.post("/submitCart", ensureAuthenticated,isAttendant, employeeController.employeeSale);
+
+router.put("/resolve/:id", ensureAuthenticated,isAttendant, employeeController.resolveSale);
 
 
 

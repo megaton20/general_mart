@@ -21,20 +21,20 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Upgrade <%= allUsers[0].First_name%></h1>
+                    <h1 class="h3 mb-2 text-gray-800">Upgrade <%= allUsers.First_name%></h1>
 
 
                     <!-- DataTales Example -->
                     <div class=" mb-4">
                         <%- include ('../partials/messages') %>
-                        <div class="card-body">
+
                             <div class="form mt-4 mb-4">
-                                <form action="/super/edit-employee/<%= allUsers[0].id%>" method="post" class="form">
+                                <form action="/super/edit-employee/<%= allUsers.id%>" method="post" class="form">
                                    <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <select name="store_name" id="" class="form-control">
-                                                <option value="<%= allUsers[0].store_name%>"><%= allUsers[0].store_name%></option>
+                                                <option value="<%= allUsers.store_name%>"><%= allUsers.store_name%></option>
                                                 <% allStores.forEach(function(data) {%>
                                                 <option value="<%= data['store_name'] %>"> <%= data['store_name'] %></option>
                                                 <% }) %>
@@ -44,10 +44,10 @@
 
                             
 
-                                    <div class="col-4">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <select name="position" id="" class="form-control">
-                                                <option value="<%= allUsers[0].position%>"><%= allUsers[0].position%></option>
+                                                <option value="<%= allUsers.position%>"><%= allUsers.position%></option>
                                                 <% allPositions.forEach(function(data) {%>
                                                 <option value="<%= data['Position_name'] %>"> <%= data['Position_name'] %></option>
                                                 <% }) %>
@@ -56,9 +56,9 @@
                                     </div>
                                 
 
-                                    <div class="col-4">
+                                    <div class="col-md-4">
                                         <div class="form-group">
-                                            <input type="number" name="Salary" class="form-control" placeholder="Enter Salary" value="<%= allUsers[0].salary %>">
+                                            <input type="number" name="Salary" class="form-control" placeholder="Enter Salary" value="<%= allUsers.salary %>">
                                         </div>
                                     </div>
 
@@ -71,7 +71,7 @@
                                 </div>
                                 </form>
                             </div>
-                        </div>
+
                     </div>
 
                 </div>

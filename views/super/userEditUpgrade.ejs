@@ -21,7 +21,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Upgrade <%= allUsers[0].First_name%></h1>
+                    <h1 class="h3 mb-2 text-gray-800">Upgrade <%= allUsers.First_name%></h1>
 
 
                     <!-- DataTales Example -->
@@ -29,7 +29,7 @@
                         <%- include ('../partials/messages') %>
                         <div class="card-body">
                             <div class="form mt-4 mb-4">
-                                <form action="/super/upgrade-users/<%= allUsers[0].id%>" method="post" class="form">
+                                <form action="/super/upgrade-users/<%= allUsers.id%>" method="post" class="form">
                                    <div class="row">
                                     <div class="col-4">
                                         <div class="form-group">
@@ -56,17 +56,11 @@
                                     </div>
                                 
 
-                                    <!-- <div class="col-4">
-                                        <div class="form-group">
-                                            <input type="number" name="Salary" class="form-control" placeholder="Enter Salary" value="<%= allUsers[0].Salary %>">
-                                        </div>
-                                    </div> -->
-
 
                                 </div>
                                 <div class="mt-4">
                                     <input type="hidden" name="_method" value="PUT">
-                                    <input name="_method" type="submit" value="upgrade user" style="width: 100%;" class="btn btn-primary "/>
+                                    <input name="_method" type="submit" value="upgrade customer" style="width: 100%;" class="btn btn-primary "/>
 
                                 </div>
                                 </form>

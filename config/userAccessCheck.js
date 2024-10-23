@@ -2,7 +2,8 @@ const db = require("../model/databaseTable");
 const { promisify } = require('util');
 const query = promisify(db.query).bind(db);
 
-const fetchUserQuery = 'SELECT * FROM "Users" WHERE id = $1'; // PostgreSQL parameterized query
+const fetchUserQuery = 'SELECT * FROM "Users" WHERE id = $1'; 
+const fetchDriverQuery = 'SELECT * FROM "drivers" WHERE "user_id" = $1'; 
 
 module.exports = {
   ensureBasicInformation: async (req, res, next) => {
@@ -45,7 +46,7 @@ module.exports = {
       const { rows } = await query(fetchUserQuery, [userId]);
       const userData = rows[0];
 
-      console.log(userData.Phone);
+
       if (userData.Phone == null) {
         req.flash("error_msg", "Please Enter a contact phone to chheckout!");
         return res.redirect('/user/add-phone');
@@ -56,6 +57,36 @@ module.exports = {
       // }
       return next();
     } catch (error) {
+      req.flash('error_msg', `Error: ${error.message}`);
+      return res.redirect('/');
+    }
+  },
+
+  ensureDriverKYC: async (req, res, next) => {
+    const userId = req.user.id;
+    try {
+      const { rows } = await query(fetchDriverQuery, [userId]);
+      const userData = rows[0];
+  
+      // Check if CAC is provided and complete
+      const hasCAC = userData.CAC_number && userData.CAC_image;
+  
+      // Check if at least one of the personal IDs is provided and complete
+      const hasNIN = userData.nation_id_number && userData.NIN_image;
+      const hasPassport = userData.passport_number && userData.passport_image;
+      const hasVoter = userData.voter_number && userData.voter_image;
+  
+      // If CAC is not complete or none of the personal IDs is complete, redirect to KYC
+      if (!(hasCAC && (hasNIN || hasPassport || hasVoter))) {
+        req.flash("warning_msg", "Please complete your KYC registration (CAC is mandatory)!");
+        return res.redirect('/drivers/KYC');
+      }
+  
+      // If CAC is complete and at least one personal ID is provided, proceed
+      return next();
+  
+    } catch (error) {
+      console.log("middleware error" + " " + error);
       req.flash('error_msg', `Error: ${error.message}`);
       return res.redirect('/');
     }

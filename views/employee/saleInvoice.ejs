@@ -21,10 +21,17 @@
             <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
               <div class="row">
                 <div class="col-6">Sale Id</div>
-                <div class="col-6"><%=newSale[0].sale_id%></div>
+                <div class="col-6"><%=newSale.sale_id%></div>
 
                 <div class="col-6">Payement method</div>
-                <div class="col-6"><%=newSale[0].Payment_type%></div>
+                <div class="col-6"><%=newSale.Payment_type%></div>
+              </div>
+
+              <div class="col-lg-6 col-sm-12 col-md-8">
+                <form action="/employee/resolve/<%= newSale.id %>" method="POST">
+                  <input type="hidden" name="_method" value="PUT" />
+                  <button class="btn btn-primary">Resolve sale with shelf</button>
+                </form>
               </div>
             </div>
 

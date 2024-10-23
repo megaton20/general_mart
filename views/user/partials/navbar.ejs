@@ -1,70 +1,76 @@
 
+<!-- Transparent Navbar -->
+<nav id="navbar" class="navbar navbar-expand-lg navbar-light fixed-top">
+	<div class="container">
+	  <!-- Toggler and logo in the same div to avoid flex spacing issues -->
+	  <div class="navbar-toggler-logo">
+		<!-- Navbar Toggler (Hamburger) -->
+		<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<!-- Brand/Logo -->
+		<a class="navbar-brand" href="/"><img src="/images/logo.png" alt="logo"></a>
+	  </div>
+  
+	  <!-- Navbar items visible on larger screens -->
+	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+		  <!-- Additional links can be added here if needed -->
+		</ul>
+	  </div>
 
-<div class="container container-fluid container-xl">
-  <nav class="my-navbar ">
-    <div class="my-nav-left">
-      <!-- Sidebar toggle button (visible on mobile view) -->
-      <button class="my-nav-toggle" id="my-navToggle">&#9776;</button>
-      <a href="/" class="my-logo"><img src="/images/logo.png" alt="logo image"></a>
-    </div>
-    <!-- Regular nav links (visible on large screens) -->
-    <ul class="my-nav-links my-nav-links-large">
+	  <!-- Navbar icons for search, cart, and profile (always visible) -->
+	  <div class="navbar-icons">
+		<a href="/user/search" class="nav-link">
+			<i class="fas fa-search icon-size"></i>
+		</a>
+		<a href="/user/fetchCart" class="nav-link position-relative">
+			<i class="fas fa-shopping-cart icon-size"></i>
+			<span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning cart-badge"></span>
+		</a>
+		<a href="/user/profile" class="nav-link">
+			<i class="fas fa-user icon-size"></i>
+		</a>
+	  </div>
+	</div>
+</nav>
 
-      <li><a href="/user/notifications" class="position-relative"><i class="fas fa-bell "></i><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning cart-badge"><%=totalUnreadNotification %></span></a></li>
-      <li><a href="/user/fetchCart" class="position-relative"><i class="fas fa-shopping-cart"></i> <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning cart-badge"></span></a></li>
-      <li><a href="/user/profile"> <i class="fas fa-user "></i></a></li>
-      <li><a  href="/user/search"><i class="fas fa-search"></i></a></li>
-    </ul>
-    <!-- Sidebar links (will appear on toggle in mobile view) -->
-    <ul class="my-nav-links my-nav-links-mobile" id="my-navLinks">
-      <button class="my-close-btn" id="my-closeBtn">&times;</button>
+<!-- Offcanvas Navbar for smaller screens -->
+<div class="offcanvas offcanvas-start offcanvas-fullscreen" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+	<div class="offcanvas-header">
+	  <button type="button" class="btn-close text-light" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	</div>
+	<div class="offcanvas-body">
+		<ul class="my-nav-links my-nav-links-mobile" id="my-navLinks">
+			
+			<p>Categories</p>
+			<% allCategory.forEach(data => { %>
+				<li>
+				  <a href="/user/category/<%= data.Category_name %>#product-section" class="categoryButton nav-link text-dark" data-category="<%= data.Category_name %>">
+					<i class="bi bi-arrow-right-circle"></i><span> <%= data.Category_name %></span>
+				  </a>
+				</li>
+			<% }); %>
 
-      <p>Categories</p>
-      <% allCategory.forEach(data => { %>
-        <li>
-          <a href="/user/category/<%= data.Category_name %>#product-section" class=" categoryButton" data-category="<%= data.Category_name %>">
-            <i class="bi bi-arrow-right-circle"></i><span> <%= data.Category_name %></span>
-          </a>
-        </li>
-       
-        <% }); %>
+			<hr>
+			
+			<p>User Links</p>
+			<li><a class="nav-link text-dark" href="/user" >Store Items</a></li>
+			<li><a class="nav-link text-dark" href="/user/orders">My Orders</a></li>
+			<li><a class="nav-link text-dark" href="/user/wishlist">My Wishlist</a></li>
+			<li><a class="nav-link text-dark" href="/user/profile">Profile</a></li>
+			
+			<hr>
+			<p>Useful Links</p>
+			<li><a class="nav-link text-dark" href="/featured-services">Services</a></li>
+			<li><a class="nav-link text-dark" href="/faq">FAQs</a></li>
+			<li><a class="nav-link text-dark" href="/contact">Contacts</a></li>
 
-        <hr>
-        <p>user management</p>
-
-      <li><a href="/user" class=""><i class="fas fa-shopping-cart"></i> shop</a></li>
-      <li><a href="/user/profile"><i class="fas fa-user"></i> Profile</a></li>
-      <li><a  href="/user/orders"> <i class="fas fa-clipboard-list"></i> My Orders</a></li>
-
-      <hr>
-      <p>useful Links</p>
-      <li><a  href="/featured-services"> Services</a></li>
-      <li><a  href="/faq">FAQs</a></li>
-      <li><a  href="/contact">Contacts</a></li>
-
-      <% if (1 != 1) { %>
-        <li class=""><a  href="/drivers/new-rider" class="" > My Ride</a></li>
-        <% } else { %>
-          <!-- <li class=""><a  href="/drivers/new-rider" class="" > Be A Rider</a></li> -->
-        <% } %>
-
-        <hr>
-        <p>Actions</p>
-        <li><a  href="/logout">logout</a></li>
-    </ul>
-
-
-    <ul class="my-icon-links my-icon-links-large">
-      
-          <li><a href="/user/search" class="position-relative"><i class="fas fa-search" style="font-size: 20px !important;"></i> </a></li>
-          <li><a href="/user/fetchCart" class="position-relative"><i class="fas fa-shopping-cart" style="font-size: 20px !important;"></i> <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning cart-badge"></span></a></li>
-          <li><a href="/user/profile"> <i class="fas fa-user my-nav-icons" style="font-size: 20px !important;"></i></a></li>
-        </ul>
-  </nav>
+			<hr>
+			<p>Actions</p>
+			<li><a class="nav-link text-dark" href="/logout">Logout</a></li>
+		</ul>
+	</div>
 </div>
 
-
-<br>
-<br>
-<br>
-<br>
+<br><br><br><br><br>
