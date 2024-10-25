@@ -1,7 +1,7 @@
 <%- include('./partials/openNav') %>
 <!-- If session is found, close the nav -->
-<main class="main">
-  <div class="container mt-5">
+<main class="main ">
+  <div class="container mt-5 mb-4">
     <section id="faqs">
       <div class="mt-5">
         <h1 class="mb-4">Frequently Asked Questions</h1>
@@ -10,12 +10,12 @@
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
               <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                What is G.Mart?
+                What is <%- include ('./partials/appName') %>?
               </button>
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
               <div class="accordion-body">
-                G.Mart is an online grocery store that offers a wide range of food items and groceries. We operate in Calabar, Lagos, and Uyo, ensuring fast and secure deliveries to our customers.
+                <%- include ('./partials/appName') %> is an online grocery store that offers a wide range of food items and groceries. We operate in Calabar, Lagos, and Uyo, ensuring fast and secure deliveries to our customers.
               </div>
             </div>
           </div>
@@ -109,7 +109,7 @@
     </h2>
     <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#faqAccordion">
         <div class="accordion-body">
-            While we make every effort to display an accurate list of items that are in stock at the stores we partner with, these stores are ultimately responsible for maintaining their inventory levels. In the normal course of a business day, the stores may occasionally run out of some items. You will not be obliged to pay for any unavailable item. If you are not satisfied with the replacement suggested to you by the Personal Shopper, we will refund the monetary value of the item to your G.Mart wallet.
+            While we make every effort to display an accurate list of items that are in stock at the stores we partner with, these stores are ultimately responsible for maintaining their inventory levels. In the normal course of a business day, the stores may occasionally run out of some items. You will not be obliged to pay for any unavailable item. If you are not satisfied with the replacement suggested to you by the Personal Shopper, we will refund the monetary value of the item to your <%- include ('./partials/appName') %> wallet.
         </div>
     </div>
 </div>
@@ -120,7 +120,6 @@
     </section>
   </div>
 
-  <%- include ('./partials/clients') %>
 </main>
 
 <%- include ('./partials/openFooter') %>

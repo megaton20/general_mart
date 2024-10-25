@@ -581,27 +581,31 @@ h6 {
   margin: 0;
 }
 #navbar   {
-  background: #41afa6d5; 
+  background: #3333; 
   color: #fff !important;
+  transition: background-color 0.3s ease-in-out;
 }
 #navbar.scrolled  {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.352);
   color: #292727 !important;
-  background: #41afa6ed; 
-  transition: background-color 0.3s ease-in-out;
+  background: #969595; 
+}
+.navbar-toggler{
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 
 
 .navbar-brand img {
-  max-width: 120px; /* Set a maximum width for the logo */
+  max-width: 40px; /* Set a maximum width for the logo */
   height: auto; /* Ensure the logo scales proportionally */
   display: block; /* Ensures it behaves like a block element */
 }
 
 @media (max-width: 768px) {
   .navbar-brand img {
-    max-width: 100px; /* Reduce the size slightly for mobile screens */
+    max-width: 40px; /* Reduce the size slightly for mobile screens */
   }
 }
 

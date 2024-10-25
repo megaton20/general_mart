@@ -13,6 +13,7 @@ const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY ;
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
 const appName = "True Essentials Mart"
+const appEmail = "Trueessentialsmart@gmail.com" 
 
 
 
@@ -52,6 +53,7 @@ router.get('/auth/google/callback',
         error_msg: errorMessage,
         pageTitle: `Login To continue Using ${appName}`,
         appName: appName,
+        appEmail
       });
     }
   }
@@ -144,6 +146,7 @@ products.forEach(product => {
     res.render('landing', {
       pageTitle: `Welcome to ${appName}`,
       appName,
+      appEmail,
       userActive,
       allCategory,
       showcaseItem,
@@ -167,7 +170,7 @@ router.get('/policy', async(req, res) => {
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('policy',{
     pageTitle:` ${appName} policy`,
-    appName,
+    appName,appEmail,
     userActive,
     allCategory
   });
@@ -182,7 +185,7 @@ router.get('/faq', async(req, res) => {
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('faq',{
     pageTitle:` ${appName} faq`,
-    appName,
+    appName,appEmail,
     userActive,
     allCategory
   });
@@ -196,7 +199,7 @@ router.get('/featured-services', async(req, res) => {
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('featured-services',{
     pageTitle:` ${appName} featured-services`,
-    appName,
+    appName,appEmail,
     userActive,
     allCategory
   });
@@ -210,7 +213,7 @@ router.get('/contact', async (req, res) => {
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('contact',{
     pageTitle:` ${appName} contact`,
-    appName,
+    appName,appEmail,
     userActive,
     allCategory
   });
@@ -226,7 +229,7 @@ router.get('/new-rider', async(req, res) => {
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('./drivers/about-riders',{
     pageTitle:` ${appName} drivers`,
-    appName,
+    appName,appEmail,
     userActive,
     allCategory
   });
@@ -242,7 +245,7 @@ router.get('/new-vendor',async (req, res) => {
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('./vendor/about-vendor',{
     pageTitle:` ${appName} vendor`,
-    appName,
+    appName,appEmail,
     userActive,
     allCategory
   });
@@ -291,7 +294,7 @@ router.get('/terms', async(req, res) => {
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('terms',{
     pageTitle:` ${appName} terms`,
-    appName,
+    appName,appEmail,
     userActive,
     allCategory
   });
@@ -307,7 +310,7 @@ router.get('/abouts', async (req, res) => {
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('abouts',{
     pageTitle:` ${appName} | Abouts`,
-    appName,
+    appName,appEmail,
     userActive,
     allCategory
   });
@@ -337,7 +340,7 @@ router.get('/valid-location', async(req, res) => {
 
   res.render('valid-location',{
     pageTitle:` ${appName} | valid-location`,
-    appName,
+    appName,appEmail,
     userActive,
     shippingData,
     allCategory
@@ -388,7 +391,7 @@ router.get('/handler', (req, res)=>{
 
 router.get('/login', forwardAuthenticated, (req, res) => res.render('login',{
   pageTitle:`Login To continue Using  ${appName} `,
-  appName,
+  appName,appEmail,
   }));
 
 router.get('/register', forwardAuthenticated, (req, res) =>{
@@ -401,7 +404,7 @@ router.get('/register', forwardAuthenticated, (req, res) =>{
   
   res.render('register',{
     pageTitle:`Create account with ${appName}`,
-    appName,
+    appName,appEmail,
     referralCode:referrerCode,
     stateData
   })
@@ -410,7 +413,7 @@ router.get('/register', forwardAuthenticated, (req, res) =>{
 
 router.get('/forget', forwardAuthenticated, (req, res) => res.render('forget-password',{
   pageTitle:`enter recovery email for  ${appName}`,
-  appName,
+  appName,appEmail,
   }));
 
 

@@ -33,14 +33,8 @@ const calculateCashback = require('../model/cashback');
 
 
 
-const appName = `General Mart`  
-
-
-
-
-
-
-
+const appName = "True Essentials Mart" 
+const appEmail = "Trueessentialsmart@gmail.com" 
 
 
 
@@ -87,6 +81,7 @@ const { rows: allCategory } = await query('SELECT * FROM "Category"');
     return res.render('./user/userSingleView', {
       pageTitle: 'User Profile',
       appName: appName,
+      appEmail,
       userData,
       spending,
       ranks,
@@ -125,6 +120,7 @@ exports.addPhonePage = async (req, res) => {
     return res.render('./user/add-phone', {
       pageTitle: 'User Profile',
       appName: appName,
+      appEmail,
       userData,
       totalUnreadNotification,allCategory
     });
@@ -178,6 +174,7 @@ exports.changePhonePage = async (req, res) => {
     return res.render('./user/change-phone', {
       pageTitle: 'Change phone',
       appName: appName,
+      appEmail,
       totalUnreadNotification,allCategory
     });
     
@@ -260,6 +257,7 @@ exports.changePasswordPage = async (req, res) => {
   return res.render('./user/change-password', {
     pageTitle: 'Change Password',
     appName: appName,
+    appEmail,
     totalUnreadNotification,allCategory
   });
   
@@ -327,11 +325,7 @@ exports.editProfilePage = async (req, res) => {
 
   try {
     // Fetch user data
-    const userQuery = `
-      SELECT * 
-      FROM "Users" 
-      WHERE "id" = $1
-    `;
+    const userQuery = `SELECT * FROM "Users" WHERE "id" = $1`;
     const userResult = await query(userQuery, [updateId]);
     const userData = userResult.rows[0];
 
@@ -344,6 +338,7 @@ exports.editProfilePage = async (req, res) => {
     return res.render('./user/userEditPage', {
       pageTitle: 'Edit Profile',
       appName: appName,
+      appEmail,
       userData,
       stateData,
       totalUnreadNotification,allCategory
@@ -418,6 +413,7 @@ exports.updateUserInfo = async (req, res) => {
       return res.render('./user/userEditPage', {
         pageTitle: 'Edit Profile',
         appName: appName,
+        appEmail,
         totalUnreadNotification,
         userData: { ...req.body,id: req.user.id  }, // Pass current user data for the form
         stateData, // Ensure `stateData` is defined or fetched properly
@@ -504,7 +500,8 @@ exports.userShop = async (req, res) => {
     
     return res.render('./user/userCounter', {
       pageTitle: 'At the counter',
-      appName: process.env.APP_NAME,
+      appName: appName,
+      appEmail,
       name: `${userFirstName} ${userLastName}`,
       allCategory,
       presentCart,
@@ -580,7 +577,8 @@ exports.userShopQuery = async (req, res) => {
 
     res.render('./user/userCounterQuery', {
       pageTitle: 'At the counter',
-      appName: process.env.APP_NAME,
+      appName: appName,
+      appEmail,
       name: `${userFirstName} ${userLastName}`,
       allCategory,
       presentCart,
@@ -626,9 +624,7 @@ exports.userCategoryQuery = async (req, res) => {
 
 
     // Adjust count query and parameters
-    let countQuery = `
-      SELECT COUNT(*) as count FROM "Products" 
-      WHERE "activate" = $1 AND "total_on_shelf" > $2 AND "status" = $3`;
+    let countQuery = `SELECT COUNT(*) as count FROM "Products" WHERE "activate" = $1 AND "total_on_shelf" > $2 AND "status" = $3`;
     let countParams = queryParams.slice(0, 3);
 
     if (categoryId !== 'all') {
@@ -668,7 +664,8 @@ exports.userCategoryQuery = async (req, res) => {
 
     res.render('./user/userCategoryQuery', {
       pageTitle: 'Products by Category',
-      appName: process.env.APP_NAME,
+      appName: appName,
+      appEmail,
       name: `${userFirstName} ${userLastName}`,
       allCategory,
       presentCart,
@@ -719,7 +716,8 @@ exports.productDetails = async (req, res) => {
     const { rows: allCategory } = await query('SELECT * FROM "Category"');
     return res.render('./user/product-details', { 
       pageTitle: "Details",
-      appName: process.env.APP_NAME,
+      appName: appName,
+      appEmail,
       itemData:products,
       totalUnreadNotification,
       presentCart,allCategory
@@ -744,6 +742,7 @@ exports.searchPage = async(req, res) => {
         return res.render("./user/userSearchPage", {
           pageTitle: "Search your item",
           appName:appName,
+          appEmail,
           name: `${userFirstName} ${userLastName}`,
           month: monthName,
           day: dayName,
@@ -788,7 +787,8 @@ exports.searchPost = async (req, res) => {
     // Render the search results page
     return res.render("./user/userSearchResults", {
       pageTitle: "Search Results",
-      appName: process.env.APP_NAME,
+      appName: appName,
+      appEmail,
       name: `${userFirstName} ${userLastName}`,
       products: searchResults.rows,
       presentCart,
@@ -853,7 +853,8 @@ exports.fetchCart = async (req, res) => {
     // Render the cart page
     res.render('./user/cart', { 
       pageTitle: "Cart items",
-      appName: process.env.APP_NAME,
+      appName: appName,
+      appEmail,
       cartItems: fetchResult.rows,
       totalSubtotal,
       totalSum: formattedCustomerToPay,
@@ -924,7 +925,8 @@ exports.checkoutScreen = async (req, res) => {
     // Render the checkout page
     res.render('./user/userCheckout', {
       pageTitle: "Payment Section",
-      appName: process.env.APP_NAME,
+      appName: appName,
+      appEmail,
       cartItems: cartResults.rows,
       totalSubtotal,
       shippingFee,
@@ -1019,7 +1021,7 @@ exports.submitCart = async (req, res) => {
             <!-- Footer -->
             <div style="text-align: center; color: #fffff; font-size: 12px;">
               <p>&copy; ${new Date().getFullYear()} ${appName}. All rights reserved.</p>
-              <p> Cross River State, Calabar | Phone: +234 916 020 9475 | Email: noreply@gmail.com</p>
+              <p> Cross River State, Calabar | Phone: +234 916 020 9475 | Email: ${appEmail}</p>
             </div>
           </div>
         `;
@@ -1127,7 +1129,7 @@ exports.submitCart = async (req, res) => {
     const mailOptions = {
       from: {
         name: appName,
-        address: "noreply@gmail.com",
+        address: appEmail,
       },
     to: userData.email,
     subject: `Your Purchase Invoice - Order #${transactionPaymentReference}`,
@@ -1147,9 +1149,9 @@ exports.submitCart = async (req, res) => {
     const emailNotificationOptions = {
       from: {
         name: appName,
-        address: "noreply@gmail.com",
+        address: appEmail,
       },
-    to: "adarikumichael@gmail.com",
+    to: "adarikumichael@gmail.com", //personal email
     subject: `New Order `,
     html: `transaction reference #${transactionPaymentReference} 
     <br>
@@ -1163,7 +1165,7 @@ exports.submitCart = async (req, res) => {
     <br>
     address: ${userData.Address}
     <br>
-    time: ${sqlDate}
+    date: ${sqlDate}
      `
     };
 
@@ -1188,6 +1190,7 @@ exports.submitCart = async (req, res) => {
     return res.render('./user/order-success', {
       pageTitle: 'successful',
       appName: appName,
+      appEmail,
       month: monthName,
       day: dayName,
       date: presentDay,
@@ -1253,6 +1256,7 @@ exports.invoice = async (req, res) => {
     return res.render('./user/userInvoice', {
       pageTitle: 'Invoice',
       appName: appName,
+      appEmail,
       name: `${userFirstName} ${userLastName}`,
       month: monthName,
       day: dayName,
@@ -1301,6 +1305,7 @@ exports.allUserOrder = async (req, res) => {
     return res.render('./user/userOrders', {
       pageTitle: 'Orders',
       appName: appName,
+      appEmail,
       name: `${userFirstName} ${userLastName}`,
       month: monthName,
       day: dayName,
@@ -1432,7 +1437,8 @@ exports.notificationScreen = async (req, res) => {
     // Render the checkout page
     res.render('./user/notifications', {
       pageTitle: "notifications ",
-      appName: process.env.APP_NAME,
+      appName: appName,
+      appEmail,
       userNotifications,
       totalUnreadNotification,allCategory
     });
@@ -1462,7 +1468,8 @@ exports.readNotification = async (req, res) => {
     // Render the checkout page
     res.render('./user/notifications-details', {
       pageTitle: "notifications details ",
-      appName: process.env.APP_NAME,
+      appName: appName,
+      appEmail,
       userNotifications,
       totalUnreadNotification,allCategory
     });
@@ -1519,7 +1526,8 @@ exports.getMap = async (req, res) => {
   // Render the checkout page
   res.render('./user/user-map', {
     pageTitle: "map",
-    appName: process.env.APP_NAME,
+    appName: appName,
+    appEmail,
     totalUnreadNotification,
     allCategory
   });
@@ -1645,7 +1653,8 @@ exports.getAirtimePage = async (req, res) => {
   // Render the checkout page
   res.render('./user/airtime', {
     pageTitle: "map",
-    appName: process.env.APP_NAME,
+    appName: appName,
+    appEmail,
     totalUnreadNotification,
     userData,
     airtimeData,allCategory
@@ -1658,11 +1667,7 @@ exports.wishlist =  async (req, res) => {
 
       try {
         const {rows:wishlistItems} = await query(
-          `SELECT "Products".* 
-           FROM "Products" 
-           INNER JOIN "wishlists" ON "Products".id = wishlists.product_id
-           WHERE wishlists.user_id = $1`,
-          [userId]
+          `SELECT "Products".* FROM "Products"  INNER JOIN "wishlists" ON "Products".id = wishlists.product_id WHERE wishlists.user_id = $1`,[userId]
         );
 
               if (wishlistItems.length <=0) {
@@ -1679,6 +1684,7 @@ exports.wishlist =  async (req, res) => {
           res.render('./user/wishlist', {
             pageTitle:"wishlist",
             appName,
+            appEmail,
              wishlist: wishlistItems,
              totalUnreadNotification,allCategory
              });

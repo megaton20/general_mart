@@ -34,6 +34,7 @@ const formatDate = (dateStr) => {
 };
 
 const appName = "True Essentials Mart"
+const appEmail = "Trueessentialsmart@gmail.com" 
 
 
 

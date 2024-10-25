@@ -23,7 +23,7 @@ const query = promisify(db.query).bind(db);
 
 
 const appName = "True Essentials Mart"
-
+const appEmail = "Trueessentialsmart@gmail.com" 
 
 
 

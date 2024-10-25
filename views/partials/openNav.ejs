@@ -8,7 +8,7 @@
 			<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<a class="navbar-brand" href="/"><img src="/images/logo.png" alt=""></a>
+			<a class="navbar-brand" href="/"><%- include ('./appLogo') %></a>
 		</div>
 
 		<!-- Navbar items visible on larger screens -->
@@ -34,9 +34,9 @@
 			</ul>
 		</div>
 
-		<!-- Navbar icons (Cart, Store) always visible -->
+
 		<div class="navbar-icons">
-			<a href="/user/fetchCart" class="position-relative">
+			<a class="mr-3" href="/user/fetchCart" class="position-relative">
 				<i class="fas fa-store icon-size"></i>
 				<span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning"></span>
 			</a>
