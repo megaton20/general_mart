@@ -33,7 +33,7 @@ const formatDate = (dateStr) => {
   return `${year}-${month}-${day}`;
 };
 
-const appName = `G.Mart` 
+const appName = "True Essentials Mart"
 
 
 

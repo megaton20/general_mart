@@ -10,16 +10,12 @@
   <!-- Service Details Section -->
   <section id="service-details" class="service-details section">
     
+    <a class="back-btn" href="/user"><i class="bi bi-arrow-left-circle"></i> Back</a>
     <div class="container">
-      <a class="back-btn" href="/user"><i class="bi bi-arrow-left-circle"></i> Back</a>
 
       <div class="row gy-5">
 
-        <div class="col-lg-4 p-2" >
-
-    
-              <div class="card my-box-shadow border-1 ">
-                <div class="card-body">
+        <div class="col-lg-4 " >
                   <div class=" align-items-center" style="border: 1px solid #0000021c; padding: 5px;" >
                     <img src="/uploads/<%= itemData[0].image %>" class=" card-img-top rounded-4" style="max-width: 290px; max-height: 300px;" alt="<%= itemData[0].ProductName %>">
                   </div>
@@ -53,10 +49,7 @@
                     
                     <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= itemData[0].id %>" data-name="<%= itemData[0].ProductName %>" data-price="<%= itemData[0].UnitPrice %>" data-max="<%= itemData[0].total_on_shelf %>" data-image="<%= itemData[0].image %>" onclick="handleButtonClick(this)">Add to cart  </button> 
                   </div>
-                </div>
 
-
-                </div>
 
                 <div>
                   <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user/fetchCart/"> Checkout</a>

@@ -12,7 +12,7 @@ const stateData = require("../model/stateAndLGA");
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY ;
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
-const appName = `G.Mart` 
+const appName = "True Essentials Mart"
 
 
 
@@ -60,90 +60,103 @@ router.get('/auth/google/callback',
 
 // Welcome Page
 router.get('/', async (req, res) => {
-  let userActive= false
+  let userActive = false;
   if (req.user) {
-    userActive = true
+    userActive = true;
   }
 
   const limit = 16;
   const page = parseInt(req.query.page) || 1;
   const offset = (page - 1) * limit;
-  
 
   const showcaseQuery = `SELECT * FROM "Products" WHERE "showcase" = $1 AND "total_on_shelf" > $2 AND "status" = $3 AND "activate"=$4 LIMIT $5 OFFSET $6`;
-  const queryParams = ['yes', 0, 'not-expired',true, limit, offset];
+  const queryParams = ['yes', 0, 'not-expired', true, limit, offset];
+
   try {
-    
-      const {rows:showcaseItem} = await query(showcaseQuery, queryParams);
+    // Fetch showcase items
+    const { rows: showcaseItem } = await query(showcaseQuery, queryParams);
 
+    // Format prices for showcase items
+    showcaseItem.forEach(product => {
+      product.price = product.UnitPrice.toLocaleString("en-US");
+    });
 
+    // Fetch all categories
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
 
-              // Fetch all categories
-              const { rows: allCategory } = await query('SELECT * FROM "Category"');
+    // Divide categories into two halves
+    const half = Math.ceil(allCategory.length / 2);
+    const firstHalfCategories = allCategory.slice(0, half);
+    const secondHalfCategories = allCategory.slice(half);
 
-              // Divide categories into two halves
-              const half = Math.ceil(allCategory.length / 2);
-              const firstHalfCategories = allCategory.slice(0, half);
-              const secondHalfCategories = allCategory.slice(half);
-      
-              // Fetch products for the first half of categories
-              let firstHalfCategoriesWithProducts = [];
-              for (let category of firstHalfCategories) {
-                const { rows: products } = await query(`
-                        SELECT * FROM "Products"
-                        WHERE "category_id" = $1 
-                          AND "total_on_shelf" > $2 
-                          AND "status" = $3 
-                          AND "activate" = $4
-                          LIMIT 6`,
-                        [category.CategoryID, 0, 'not-expired', true]);
+    // Fetch products for the first half of categories
+    let firstHalfCategoriesWithProducts = [];
+    for (let category of firstHalfCategories) {
+      const { rows: products } = await query(`
+        SELECT * FROM "Products"
+        WHERE "category_id" = $1 
+          AND "total_on_shelf" > $2 
+          AND "status" = $3 
+          AND "activate" = $4
+        LIMIT 6`,
+        [category.CategoryID, 0, 'not-expired', true]);
 
+  // Format prices for each product
+products.forEach(product => {
+  // Ensure the price is a number and then format it
+  product.price = parseFloat(product.UnitPrice).toLocaleString("en-US");
+});
 
-                  firstHalfCategoriesWithProducts.push({
-                    categoryName: category.Category_name,
-                      products: products
-                  });
-              }
-      
-              // Fetch products for the second half of categories
-              let secondHalfCategoriesWithProducts = [];
-              for (let category of secondHalfCategories) {
-                const { rows: products } = await query(`
-                SELECT * FROM "Products"
-                WHERE "category_id" = $1 
-                  AND "total_on_shelf" > $2 
-                  AND "status" = $3 
-                  AND "activate" = $4
-                  LIMIT 6`,
-                [category.CategoryID, 0, 'not-expired', true]);
-                
-                  secondHalfCategoriesWithProducts.push({
-                      categoryName: category.Category_name,
-                      products: products
-                  });
-              }
-
-
-      res.render('landing',{
-        pageTitle:`Welcome to ${appName}`,
-        appName,
-        userActive,
-        allCategory,
-        showcaseItem,
-        firstHalf:firstHalfCategoriesWithProducts,
-        secondHalf:secondHalfCategoriesWithProducts
+      firstHalfCategoriesWithProducts.push({
+        categoryName: category.Category_name,
+        products: products
       });
 
+    }
+
+    // Fetch products for the second half of categories
+    let secondHalfCategoriesWithProducts = [];
+    for (let category of secondHalfCategories) {
+      const { rows: products } = await query(`
+        SELECT * FROM "Products"
+        WHERE "category_id" = $1 
+          AND "total_on_shelf" > $2 
+          AND "status" = $3 
+          AND "activate" = $4
+        LIMIT 6`,
+        [category.CategoryID, 0, 'not-expired', true]);
+
+  // Format prices for each product
+products.forEach(product => {
+  // Ensure the price is a number and then format it
+  product.price = parseFloat(product.UnitPrice).toLocaleString("en-US");
+});
+
+      secondHalfCategoriesWithProducts.push({
+        categoryName: category.Category_name,
+        products: products
+      });
+
+    }
+
+
+    // Render the landing page
+    res.render('landing', {
+      pageTitle: `Welcome to ${appName}`,
+      appName,
+      userActive,
+      allCategory,
+      showcaseItem,
+      firstHalf: firstHalfCategoriesWithProducts,
+      secondHalf: secondHalfCategoriesWithProducts
+    });
 
   } catch (error) {
     console.error(`Error fetching user shop data: ${error}`);
     req.flash('error_msg', 'An error occurred while loading the shop items');
     return res.redirect('/');
   }
-
-
-}
-)
+});
 
 // policy Page
 router.get('/policy', async(req, res) => {

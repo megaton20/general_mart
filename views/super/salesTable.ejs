@@ -1,10 +1,8 @@
+<!-- Page Wrapper -->
+<div id="wrapper">
 
-
-    <!-- Page Wrapper -->
-    <div id="wrapper">
-
-        <!-- Sidebar -->
-        <%- include ('../partials/superSidebar') %>
+    <!-- Sidebar -->
+    <%- include ('../partials/superSidebar') %>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -15,107 +13,125 @@
 
                 <!-- Topbar -->
                 <%- include ('../partials/topbar') %>
-                <!-- End of Topbar -->
+                    <!-- End of Topbar -->
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
 
-                    <%- include ('../partials/messages') %>
+                        <div class=" mt-4">
+                        <%- include ('../partials/messages') %>
 
-                    <!-- DataTales Example -->
-                    <div class=" mb-4">
+                            <!-- DataTales Example -->
 
-                        <% if(allSales.length <= 0){ %>
-                            <div class="card-body">
-                                
-                                <h1>No Sales Record Found !</h1>  
-                            </div> 
-                            <% } else{ %>  
-                                <div class="card-body">
-                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                              <th>Id</th>
-                                              <th>Store Name</th>
-                                              <th>Store id</th>
-                                              <th>Sale UUID</th>
-                                              <th>Sale Type</th>
-                                              <th>Total Amount</th>
-                                              <th>Payment type</th>
-                                              <th>Attendant id</th>
-                                              <th>Date</th>
-                                              <th>Action</th>
-    
-                                            </tr>
-                                        </thead>
-                                        
-                                        <tbody>
-                                      
-                                            <% allSales.forEach(function(data) {%>     
-                                             
-                                                <tr>
-                                                    <td><%= data['id'] %></td>
-                                                    <td><%= data['store_name'] %> </td>
-                                                    <td><%= data['store_id'] %></td>
-                                                    <td><%= data['sale_id'] %></td>
-                                                    <td><%= data['sale_type'] %></td>
-                                                    <td><%= data['total_amount'] %></td>
-                                                    <td><%= data['Payment_type'] %></td>
-                                                    <td><%= data['attendant_id'] %></td>
-                                                    <td><%= data['created_date'] %></td>
+                                <% if(allSales.length <=0){ %>
+                                    <div class="card-body">
 
-                                                    <% if( data['status'] == "resolved" ){ %>
-                                                        <td>
-                                                            <button disabled class="btn btn-primary"> Resolved</button>
-                                                        </td>
-                                                        <% } else{ %>  
+                                        <h1>No Sales Record Found !</h1>
+                                    </div>
+                                    <% } else{ %>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="dataTable" width="100%"
+                                                cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Store Name</th>
+                                                        <th>Store id</th>
+                                                        <th>Sale UUID</th>
+                                                        <th>Sale Type</th>
+                                                        <th>Total Amount</th>
+                                                        <th>Payment type</th>
+                                                        <th>Attendant id</th>
+                                                        <th>Date</th>
+                                                        <th>Action</th>
 
-                                                    <td>
-                                                        <form
-                                                        action="/super/resolve/<%= data['id'] %>"
-                                                        method="POST"
-                                                      >
-                                                        <input type="hidden" name="_method" value="PUT" />
-                                                        <button class="btn btn-primary">Resolve</button>
-                                                      </form>
-                                                    </td>
-                                                        
-                                                     <% } %>
-                                              
-                                               </tr> 
-                                               
-                                            <% }) %>
-                                               
+                                                    </tr>
+                                                </thead>
 
-                                       
-                                        
-    
-                                            </tbody>
-                                    </table>
-                                </div>
-                        
-                        <% } %>
+                                                <tbody>
 
-                      
+                                                    <% allSales.forEach(function(data) {%>
+
+                                                        <tr>
+                                                            <td>
+                                                                <%= data['id'] %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data['store_name'] %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data['store_id'] %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data['sale_id'] %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data['sale_type'] %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data['total_amount'] %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data['Payment_type'] %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data['attendant_id'] %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data['created_date'] %>
+                                                            </td>
+
+                                                            <% if( data['status']=="resolved" ){ %>
+                                                                <td>
+                                                                    <p  class="text-success">
+                                                                        <i class="fas fa-check"></i> Resolved
+                                                                    </p>
+                                                                </td>
+                                                            <% } else{ %>
+                                                                <td>
+                                                                    <form action="/super/resolve/<%= data['id'] %>" method="POST">
+                                                                        <input type="hidden" name="_method" value="PUT" />
+                                                                        <button class="btn ">
+                                                                            <i class="fas fa-check-circle"></i> Resolve
+                                                                        </button>
+                                                                    </form>
+                                                                </td>
+                                                            <% } %>
+
+                                                        </tr>
+
+                                                        <% }) %>
+
+
+
+
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <% } %>
+
+
+                            </div>
+
                     </div>
-
-                </div>
-                <!-- /.container-fluid -->
+                    <!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
             <%- include ('../partials/footer') %>
-            <!-- End of Footer -->
+                <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->
 
-    </div>
-    <!-- End of Page Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>

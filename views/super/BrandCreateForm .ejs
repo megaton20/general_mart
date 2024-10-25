@@ -19,18 +19,15 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <div class=" mt-4">
                     <a class="btn btn-outline-primary mb-1 mr-2" href="/super/all-brands">Brands</a>
                     <!-- DataTales Example -->
-                    <div class=" mb-4">
-                           <!-- DataTales Example -->
-                           <div class="card shadow mb-4">
-                            <div class="card-body">
-                                <div class="form mt-4 mb-4">
+
                                     <form action="/super/create-brand" method="post" class="form">
                                        <div class="row">
                                      
         
-                                        <div class="col-6">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="">Brand Name</label>
                                                 <input type="text" name="brandName" class="form-control" value="<%= typeof brandName !== 'undefined' ? brandName : '' %>" >
@@ -47,9 +44,7 @@
                                         <input type="submit" class="btn btn-success" style="width: 100%;" value="Submit">
                                     </div>
                                     </form>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
 
                 </div>

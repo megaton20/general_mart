@@ -10,7 +10,7 @@ const ejsLayouts = require('express-ejs-layouts');
 const updateWatch = require('./config/updateAction');
 const cors = require('cors');
 
-const appName = "G.Mart"
+const appName = "True Essentials Mart"
 require('dotenv').config();
 
 

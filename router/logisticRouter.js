@@ -17,7 +17,7 @@ router.post("/register", logisticsController.createNewLogistics);
 router.get("/all-deliveries", ensureAuthenticated,isLogistics, logisticsController.allPendingDelivery);
 router.get("/all-deliveries/:id", ensureAuthenticated,isLogistics, logisticsController.oneDelivery);
 // finish delivery
-router.get("/finish-order/:id", ensureAuthenticated,isLogistics, logisticsController.finishDelivery);
+router.post("/finish-order/:id", ensureAuthenticated,isLogistics, logisticsController.finishDelivery);
 
 //canceled delivery
 // delivery history

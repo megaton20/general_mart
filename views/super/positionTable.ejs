@@ -1,108 +1,121 @@
+<!-- Page Wrapper -->
+<div id="wrapper">
 
-
-    <!-- Page Wrapper -->
-    <div id="wrapper">
-
-        <!-- Sidebar -->
-        <%- include ('../partials/superSidebar') %>
+    <!-- Sidebar -->
+    <%- include ('../partials/superSidebar') %>
         <!-- End of Sidebar -->
 
-        <!-- Content Wrapper -->
+
         <div id="content-wrapper" class="d-flex flex-column">
 
             <!-- Main Content -->
             <div id="content">
-
-                <!-- Topbar -->
                 <%- include ('../partials/topbar') %>
-                <!-- End of Topbar -->
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
+                    <!-- Topbar -->
+                    <!-- End of Topbar -->
 
-                    <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-position">Add Position</a>
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
 
-                    <!-- DataTales Example -->
-                    <div class=" mb-4">
-                        <%- include ('../partials/messages') %>
-                        <div class="card-body">
+                        <div class=" mt-4">
+                        <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-position">Add Position</a>
 
-                            <% if(allPosition.length <= 0){ %>
-                            
-                                <h1>No Category Record Found !</h1>  
-                                <% } else{ %>  
+                        <!-- DataTales Example -->
+                            <%- include ('../partials/messages') %>
+
+                                <% if(allPosition.length <=0){ %>
+
+                                    <h1>No Category Record Found !</h1>
+                                    <% } else{ %>
 
 
-                                
+
                                         <div class="table-responsive">
-                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <table class="table table-bordered" id="dataTable" width="100%"
+                                                cellspacing="0">
                                                 <thead>
                                                     <tr>
 
-                                                      <th>Id</th>
-                                                      <th>Position name</th>
-                                                      <th>Salary</th>
-                                                      <th>Discription</th>
-                                                      <th>
-                                                        action
-                                                      </th>
+                                                        <th>Id</th>
+                                                        <th>Position name</th>
+                                                        <th>Salary</th>
+                                                        <th>Discription</th>
+                                                        <th>
+                                                            action
+                                                        </th>
                                                     </tr>
                                                 </thead>
-                                                
+
                                                 <tbody>
-                                              
-            
-            
+
+
+
                                                     <% allPosition.forEach(function(data) {%>
                                                         <tr>
-                                                            <td><%= data['id'] %></td>
-                                                            <td><%= data['Position_name'] %></td>
-                                                            <td><%= data['Salary'] %> </td>
-                                                            <td><%= data['Job_description'] %> </td>
                                                             <td>
-                                                                <a class="btn btn-primary" href="/super/edit-position/<%= data['id'] %>"> edit</a>
+                                                                <%= data['id'] %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data['Position_name'] %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data['Salary'] %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data['Job_description'] %>
+                                                            </td>
+                                                            <td style="display: flex; margin-right: 2px">
+                                                                <!-- Edit button with icon -->
+                                                                <a class="btn "
+                                                                    href="/super/edit-position/<%= data['id'] %>">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </a>
 
-                                                            <form action="/super/delete-position/<%= data['id'] %>" method="POST" style="display: inline;">
-                                                                <input type="hidden" name="_method" value="DELETE" />
-                                                                <button  class="btn btn-danger">Delete</button>
-                                                            </form>
+                                                                <!-- Delete button with icon -->
+                                                                <form action="/super/delete-position/<%= data['id'] %>"
+                                                                    method="POST" style="display: inline;">
+                                                                    <input type="hidden" name="_method"
+                                                                        value="DELETE" />
+                                                                    <button class="btn">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </button>
+                                                                </form>
                                                             </td>
 
-                                                            
-                                                       </tr> 
-                                                       
-                                                           <% }) %>
-                                             
-                                               
-                                                
-            
-                                                    </tbody>
+
+                                                        </tr>
+
+                                                        <% }) %>
+
+
+
+
+                                                </tbody>
                                             </table>
                                         </div>
 
-                                    <% } %>
-                           
-                        </div>
-                    </div>
+                                        <% } %>
 
-                </div>
-                <!-- /.container-fluid -->
+                        </div>
+
+                    </div>
+                    <!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
             <%- include ('../partials/footer') %>
-            <!-- End of Footer -->
+                <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->
 
-    </div>
-    <!-- End of Page Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>

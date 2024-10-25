@@ -1,110 +1,112 @@
+<!-- Page Wrapper -->
+<div id="wrapper">
 
-
-    <!-- Page Wrapper -->
-    <div id="wrapper">
-
-        <!-- Sidebar -->
-        <%- include ('../partials/superSidebar') %>
+    <!-- Sidebar -->
+    <%- include ('../partials/superSidebar') %>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content-wrapper" class="d-flex flex-col-mdumn">
 
             <!-- Main Content -->
             <div id="content">
 
                 <!-- Topbar -->
                 <%- include ('../partials/topbar') %>
-                <!-- End of Topbar -->
+                    <!-- End of Topbar -->
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
+                        <div class=" mt-4">
 
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Edit Supplier</h1>
-                    <a class="btn btn-outline-success mb-1 mr-2"href="/super/all-supplier">Suppliers</a>
+                            <!-- Page Heading -->
+                            <h1 class="h3 mb-2 text-gray-800">Edit Supplier</h1>
+                            <a class="btn btn-outline-success mb-1 mr-2" href="/super/all-supplier">Suppliers</a>
 
-                    <!-- DataTales Example -->
-                    <div class=" mb-4">
-                        <%- include ('../partials/messages') %>
-                        <div class="card-body">
-                            <div class="form mt-4 mb-4">
-                                <form action="/super/edit-supplier/<%= supplierData.id%>" method="post" class="form">
-                                   <div class="row">
-                                    <input type="hidden" name="_method" value="PUT">
-                                    <div class="col-4">
-                                        <div class="form-group">
-                                            <label for="">First Name</label>
-                                            <input type="text" name="First_name" class="form-control" placeholder="Enter First Name" value="<%= supplierData.First_name%>">
+                            <!-- DataTales Example -->
+                            <%- include ('../partials/messages') %>
+
+                                <form action="/super/edit-supplier/<%= supplierData.id%>" method="post">
+                                    <div class="row">
+                                        <input type="hidden" name="_method" value="PUT">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="">First Name</label>
+                                                <input type="text" name="First_name" class="form-control"
+                                                    placeholder="Enter First Name"
+                                                    value="<%= supplierData.First_name%>">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-4">
-                                        <div class="form-group">
-                                            <label for="">Last Name</label>
-                                            <input type="text" name="Last_name" class="form-control" placeholder="Enter Last Name" value="<%= supplierData.Last_name%>">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="">Last Name</label>
+                                                <input type="text" name="Last_name" class="form-control"
+                                                    placeholder="Enter Last Name" value="<%= supplierData.Last_name%>">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-4">
-                                        <div class="form-group">
-                                            <label for="">Business Name</label>
-                                            <input type="text" name="Business_name" class="form-control" placeholder="Enter Last Name" value="<%= supplierData.Business_name%>">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="">Business Name</label>
+                                                <input type="text" name="Business_name" class="form-control"
+                                                    placeholder="Enter Last Name"
+                                                    value="<%= supplierData.Business_name%>">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-4">
-                                        <div class="form-group">
-                                            <label for="">Email Address</label>
-                                            <input type="email" name="email" class="form-control" placeholder="Enter email address"value="<%= supplierData.email%>">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="">Email Address</label>
+                                                <input type="email" name="email" class="form-control"
+                                                    placeholder="Enter email address" value="<%= supplierData.email%>">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-4">
-                                        <div class="form-group">
-                                            <label for="">Contact Phone</label>
-                                            <input type="number" name="Phone" class="form-control" placeholder="e.g 231 133 1331" value="<%= supplierData.Phone%>">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="">Contact Phone</label>
+                                                <input type="number" name="Phone" class="form-control"
+                                                    placeholder="e.g 231 133 1331" value="<%= supplierData.Phone%>">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                
-                                    
 
-                                    <div class="col-4">
-                                        <div class="form-group">
-                                            <label for="">Supplier Address</label>
-                                            <input type="text" name="Address" class="form-control" placeholder="Enter Address" value="<%= supplierData.Address %>">
+
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="">Supplier Address</label>
+                                                <input type="text" name="Address" class="form-control"
+                                                    placeholder="Enter Address" value="<%= supplierData.Address %>">
+                                            </div>
                                         </div>
+
+
                                     </div>
+                                    <div class="mt-4">
+                                        <input name="_method" type="submit" value="Update" class="btn btn-primary " />
 
-
-                                </div>
-                                <div class="mt-4">
-                                    <input name="_method" type="submit" value="Update" class="btn btn-primary "/>
-
-                                </div>
+                                    </div>
                                 </form>
-                            </div>
                         </div>
-                    </div>
 
-                </div>
-                <!-- /.container-fluid -->
+                    </div><!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
             <%- include ('../partials/footer') %>
-            <!-- End of Footer -->
+                <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->
 
-    </div>
-    <!-- End of Page Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>

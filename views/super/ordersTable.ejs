@@ -20,16 +20,16 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
+                    <div class=" mt-4">
+                        <p>orders recieved</p>
                     <!-- Page Heading -->
                     <%- include ('../partials/messages') %>
 
                     <!-- DataTales Example -->
-                    <div class=" mb-4">
                         <% if(allOrders.length <= 0){ %>
 
                                 <h1>No Order Record Found! (NORF)</h1>  
                             <% } else{ %> 
-                                <div class="card-body">
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                             <thead>
@@ -104,7 +104,6 @@
                                                 </tbody>
                                         </table>
                                     </div>
-                                </div>
                                 <% } %>
                        
                     </div>

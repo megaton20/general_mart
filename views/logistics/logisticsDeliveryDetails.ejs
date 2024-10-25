@@ -1,155 +1,139 @@
+<%- include ('./logisticsTopbar') %>
 
+  <%- include ('./logisticsSidebar') %>
 
-
-
-
-    <!-- Content Wrapper -->
-    <%- include ('./logisticsTopbar') %>
     <div class="container-fluid">
-      <hr>
-
-      <!-- Page Heading -->
-
 
       <%- include ('../partials/messages') %>
 
-      <!-- DataTales Example -->
-      <div class=" mb-4">
-        <div id="content-wrapper" class="d-flex flex-column">
+        <div class="row">
 
-          <!-- Main Content -->
-          <div id="content">
-
-               <!-- Topbar -->
-
-               <!-- End of Topbar -->
-
-              <!-- Begin Page Content -->
-              <div class="container-fluid">
-
-
-                      <%- include ('../partials/messages') %>
-
-                <div class="containerw">
-
-                  <div class="row">
-
-                    <!-- Area Chart -->
-                    <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
-                        <div class=" mb-4">
-                            <!-- Card Header - Dropdown -->
-                 
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                <p class="text-uppercase text-primary">customer details</p>
-
-                                <div class="row"> <div class="col-6"> customer email</div> <div class="col-6"><%= orderToComplete.customer_email %></div></div>
-                                <div class="row"> <div class="col-6">customer id: </div> <div class="col-6"><%= orderToComplete.customer_id %></div></div>
-                                <div class="row"> <div class="col-6">Sale id: </div> <div class="col-6"><%= orderToComplete.sale_id %></div></div>
-                                <div class="row"> <div class="col-6">Payment: </div> <div class="col-6"><%= orderToComplete.payment_type %></div></div>
-                                <div class="row"> <div class="col-6">Date: </div> <div class="col-6"><%= orderToComplete.created_date %></div></div>
-                                <div class="row"> <div class="col-6">Status: </div> <div class="col-6"><%= orderToComplete.status %></div></div>
-                                <div class="row"> <div class="col-6">Address: </div> <div class="col-6"><%= orderToComplete.customer_address %></div></div>
-                                <div class="row"> <div class="col-6">phone: </div> <div class="col-6"><%= orderToComplete.customer_phone %></div></div>
-                                <div class="row"> <div class="col-6">State: </div> <div class="col-6"><%= orderToComplete.customer_state %></div></div>
-                                <div class="row"> <div class="col-6">lga: </div> <div class="col-6"><%= orderToComplete.customer_lga %></div></div>
-                                <div class="row"> <div class="col-6">Land mark: </div> <div class="col-6"><%= customerData.land_mark %></div></div>
-
-
-                                <br>
-                                
-                                
-                         
-                            </div>
-                        </div>
-                    </div>
-
-                          
-                   
-
-                    <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
-                        <div class=" mb-4">
-                            <!-- Card Header - Dropdown -->
-                 
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                <p class="text-uppercase text-primary">ItemS Ordered List</p>
-
-                                <table class="table table-bordered" width="100%" cellspacing="0">
-                                <thead>
-                                  <tr>
-
-                                    <th>item Image</th>
-                                    <th>Product Name</th>
-                                    <th>price</th>
-                                    <th>QTY</th>
-                                    <th>ST</th>
-                                  </tr>
-                                </thead>
+          <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
+            <div class="mb-3">
+              <div class="row no-gutters align-items-center">
                 
-                                <tbody>
-                                    <% orderedProducts.forEach(function(data) {%>
-                                    <tr>
-
-                                      <td><img class="img-thumbnail" style="max-width: 40px;" src="/uploads/<%= data['image'] %>" alt="image"></td>
-                                      <td> <%= data['name'] %></td>
-                                      <td><%= data['price_per_item'] %></td>
-                                      <td><%= data['quantity'] %></td>
-                                      <td><%= data['subTotal'] %></td>
-
-                                      <!-- Display the expiry date directly -->
-
-                                      <% }) %>
-                
-                
-                              
-                                </tbody>
-                              </table>
-
-
-                              <div class="row mt-4">
-                
-
-                
-
-                                </div>
-                                <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
-                                  <% if( orderedProducts[0].status == "shipped" ){ %>               
-                                    <a href="/logistics/finish-order/<%= orderedProducts[0].id %>">
-                                      <button type="submit" class="btn btn-success mt-4" style="width: 100%;"> Complete Delivery</button>
-    
-                                      </a>
-                                    <% } else{ %>  
-                                      <button type="submit" class="btn btn-secondary mt-4" style="width: 100%;" disabled> Completed</button>
-                                     <% } %>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                
-                </div>
+                <div class="col-12 mr-5 mb-4">
+                  <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    Customer Email
+                  </div>
+                  <div class="text-gray-500">
+                    <%= orderToComplete.customer_email %>
+                  </div>
                 </div>
 
-                           
-
-
+                
+                <div class="col-12 mr-5 mb-4">
+                  <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    Sale ID
+                  </div>
+                  <div class="text-gray-500">
+                    <%= orderToComplete.sale_id %>
+                  </div>
+                </div>
+                
+           
+                
+                <div class="col-12 mr-5 mb-4">
+                  <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    Address
+                  </div>
+                  <div class="text-gray-500">
+                    <%= orderToComplete.customer_address %>
+                  </div>
+                </div>
+                
+                <div class="col-12 mr-5 mb-4">
+                  <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    Phone
+                  </div>
+                  <div class="text-gray-500">
+                    <%= orderToComplete.customer_phone %>
+                  </div>
+                </div>
+                
+                <div class="col-12 mr-5 mb-4">
+                  <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    State
+                  </div>
+                  <div class="text-gray-500">
+                    <%= orderToComplete.customer_state %>
+                  </div>
+                </div>
+                
+                <div class="col-12 mr-5 mb-4">
+                  <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    LGA
+                  </div>
+                  <div class="text-gray-500">
+                    <%= orderToComplete.customer_lga %>
+                  </div>
+                </div>
+                
+                <div class="col-12 mr-5 mb-4">
+                  <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    Landmark
+                  </div>
+                  <div class="text-gray-500">
+                    <%= customerData.land_mark %>
+                  </div>
+                </div>
               </div>
-              <!-- /.container-fluid -->
-
+            </div>
           </div>
-          <!-- End of Main Content -->
+            <br>
 
-            <!-- Footer -->
-            <!-- End of Footer -->
-            
+          <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
+            <div class=" mb-4">
+              <p class="text-uppercase text-primary">ItemS Ordered List</p>
+              <div class="list-group">
+                <% orderedProducts.forEach(function(data) { %>
+                  <div class="list-group-item">
+                    <div class="row align-items-center text-center">
+                      
+                      <!-- Item Image -->
+                      <div class="col-2 col-md-2 col-lg-1 d-flex justify-content-center">
+                        <img class="img-fluid rounded" src="/uploads/<%= data['image'] %>" alt="image" style="max-width: 100px;">
+                      </div>
+                      
+                      <!-- Product Name -->
+                      <div class="col-6 col-md-4 text-center text-md-left">
+                        <p class="mb-1 font-weight-bold text-primary">Product Name</p>
+                        <p class="text-gray-500"><%= data['name'] %></p>
+                      </div>
+                      
+                      <!-- Quantity -->
+                      <div class="col-2 col-md-3 col-lg-2">
+                        <p class="mb-1 font-weight-bold text-primary">Quantity</p>
+                        <p class="text-gray-500"><%= data['quantity'] %></p>
+                      </div>
+                      
+              
+                    </div>
+                  </div>
+                <% }) %>
+              </div>
+
+              <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+                <% if( orderedProducts[0].status=="shipped" ){ %>
+
+                  <br>
+                  <form action="/logistics/finish-order/<%= orderedProducts[0].id %>" method="post">
+                    <div class="from-group">
+                      <label>Customer Order Pin</label>
+                      <input type="number" name="pin" class="form-control" >
+                      <button type="submit" class="my-btn mt-4 w-100">Complete Delivery</button>
+                    </div>
+                  </form>
+                  <% } else{ %>
+                    <button type="submit" class="btn btn-secondary mt-4" style="width: 100%;" disabled>
+                      Completed</button>
+                    <% } %>
+              </div>
+
+            </div>
           </div>
-          
 
-          <!-- End of Page Wrapper -->
-          
+
         </div>
-      </div>
 
-
-<!-- Logout Modal-->
+    </div>

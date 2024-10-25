@@ -19,16 +19,15 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <div class=" mt-4">
                     <%- include ('../partials/messages') %>
                     <a class="btn btn-outline-primary mr-2 mb-1" href="/super/all-regions">All Regions</a>
 
                     <!-- DataTales Example -->
-                    <div class=" mb-4">
               
-                        <div class="card-body">
                             <form action="/super/create-region" method="post" class="form">
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="">Branch State</label>
                                             <select name="state" id="state" class="form-control" onchange="storeLGAs()">
@@ -41,7 +40,7 @@
                                     </div>
     
                                    
-                                   <div class="col-4">
+                                   <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="">Local Government</label>
                                             <select name="lga" id="lga" class="form-control">
@@ -51,7 +50,7 @@
                                         </div>
                                     </div>
  
-                                 <div class="col-4">
+                                 <div class="col-md-4">
                                      <div class="form-group">
                                          <label for="">Fee</label>
                                          <input type="number" name="fee" class="form-control" placeholder="fee">
@@ -67,7 +66,7 @@
                                  <input type="submit" class="btn btn-success" style="width: 100%;" value="Submit">
                              </div>
                              </form>
-                        </div>        
+      
                       
                     </div>
 

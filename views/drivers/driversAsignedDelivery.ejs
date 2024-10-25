@@ -14,7 +14,6 @@
               
               <% if(availableDeliveries.length <= 0){ %>
                 
-                <div class="card-body">
                       <div style="margin-top: 200px;">
                         <div class="d-flex flex-column justify-content-center align-items-center" >
                           <img style="max-width: 100px; max-height: 100px" src="/images/shipped.png" class=" rounded-4"alt="images"/>
@@ -22,25 +21,26 @@
                         </div>
                         
                       </div> 
-                    </div>
-
                         <% } else{ %>  
     
+                          <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Your assigned deliveries
+                          </div>
                           <% availableDeliveries.forEach(function(data) {%> 
                           <div class=" mb-3">
                               <div class="card">
                                 <div class="card-body">
                                 <div class="row align-items-center">
-                                  <div class="col-lg-8">
+                                  <div class="col-md-8">
                                     <div class="row no-gutters align-items-center">
-                                      <div class="col mr-5 mb-4">
+                                      <!-- <div class="col mr-5 mb-4">
                                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                           Pick up
                                         </div>
                                         <div class="text-gray-500">
                                           Store A
                                         </div>
-                                      </div>
+                                      </div> -->
 
                                       <div class="col-auto mr-5 mb-4">
                                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
@@ -76,9 +76,9 @@
                                 
                                     </div>
                                   </div>
-                                  <div class="col-lg-4">
+                                  <div class="col-md-4">
 
-                                  <div class="ml-5">
+                                  <div class="">
                                       <a class="m-btn my-btn-outline" style="width: 100%;" href="/drivers/deliveries/<%= data['id'] %>"> See Details</a>
                                   </div>
 
@@ -90,14 +90,7 @@
                               </div>
                             </div>
                             <% }) %>
-                            <div class="card-body">
-                              <div >
-                                <div class="d-flex flex-column justify-content-center align-items-center" >
-                                  <img style="max-width: 100px; max-height: 100px" src="/images/delivery-truck.png" class=" rounded-4"alt="images"/>
-                                </div>
-                                
-                              </div> 
-                            </div>
+                         
          
                             <% } %>
                    

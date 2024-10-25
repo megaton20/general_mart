@@ -19,11 +19,11 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <div class=" mt-4">
 
                     <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-store">Add Store</a>
 
                     <!-- DataTales Example -->
-                    <div class=" mb-4">
                         <%- include ('../partials/messages') %>
 
                         <% if(allStores.length <= 0){ %>
@@ -32,7 +32,6 @@
                                 <h1>No Stores Record Found !</h1>  
                             </div> 
                             <% } else{ %>  
-                                <div class="card-body">
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                             <thead>
@@ -57,17 +56,20 @@
                                                         <td><%= data['store_address'] %></td>
                                                         <td><%= data['state'] %></td>
                                                         <td><%= data['lga'] %></td>
-                                                        <td>
-                                                            <a class="btn btn-secondary" href="/super/edit-stores/<%= data['id'] %>"> edit</a>
+                                                        <td class="" style="display: flex;">
+                                                            <!-- Edit button with icon -->
+                                                            <a class="btn " href="/super/edit-stores/<%= data['id'] %>">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                        
+                                                            <!-- Delete button with icon -->
                                                             <form action="/super/delete-store/<%= data['id'] %>" method="POST" style="display: inline;">
                                                                 <input type="hidden" name="_method" value="DELETE" />
-                                                                <button  class="btn btn-danger">Delete</button>
+                                                                <button class="btn ">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
                                                             </form>
                                                         </td>
-id
-
-                                                        </td>
-                                                  
                                                    </tr> 
                                                    
                                                        <% }) %>
@@ -78,7 +80,6 @@ id
                                                 </tbody>
                                         </table>
                                     </div>
-                                </div>
                                 <% } %>
                        
                     </div>

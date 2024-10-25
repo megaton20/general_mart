@@ -19,14 +19,12 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <div class=" mt-4">
                     <%- include ('../partials/messages') %>
                     <a class="btn btn-outline-primary mr-2 mb-1" href="/super/all-regions">All Regions</a>
 
                     <p>Editing <%=results[0].state%></p>
-                    <!-- DataTales Example -->
-                    <div class=" mb-4">
-              
-                        <div class="card-body">
+
                             <form action="/super/edit-region/<%=results[0].id %>" method="post" class="form">
                                 <div class="row">
                             
@@ -48,8 +46,6 @@
                                 <input name="_method" type="submit" value="Update" class="btn btn-primary "/>
                             </div>
                              </form>
-                        </div>        
-                      
                     </div>
 
                 </div>

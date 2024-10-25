@@ -19,18 +19,15 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-category">Add Category</a>
-
-                    <div class=" mb-4">
+                    <div class=" mt-4">
                         <%- include ('../partials/messages') %>
-                        <div class="card-body">
+                    <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-category">Add Category</a>
 
                             <% if(allCategory.length <= 0){ %>
 
                                     <h1>No Category Record Found !</h1>  
                                 <% } else{ %>  
-                                    <div class="card-body">
-                                
+
                                         <div class="table-responsive">
                                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                                 <thead>
@@ -55,13 +52,19 @@
                                                             <td>
                                                                 <div class="row">
                                                                     <div class="col-6">
-                                                                        <a class="btn btn-primary" href="/super/edit-category/<%= data['CategoryID'] %>"> edit</a>
+                                                                        <!-- Edit button with Font Awesome icon -->
+                                                                        <a class="btn " href="/super/edit-category/<%= data['CategoryID'] %>">
+                                                                            <i class="fas fa-edit"></i>
+                                                                        </a>
                                                                     </div>
-
+                                                                
                                                                     <div class="col-6">
+                                                                        <!-- Delete button with Font Awesome icon -->
                                                                         <form action="/super/delete-category/<%= data['CategoryID'] %>" method="POST" style="display: inline;">
                                                                             <input type="hidden" name="_method" value="DELETE" />
-                                                                            <button  class="btn btn-danger">Delete</button>
+                                                                            <button class="btn ">
+                                                                                <i class="fas fa-trash"></i>
+                                                                            </button>
                                                                         </form>
                                                                     </div>
                                                                 </div>
@@ -78,10 +81,9 @@
                                                     </tbody>
                                             </table>
                                         </div>
-                                    </div> 
+
                                     <% } %>
                            
-                        </div>
                     </div>
 
                 </div>

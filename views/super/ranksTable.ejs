@@ -19,18 +19,18 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <div class=" mt-4">
 
                     <!-- Page Heading -->
                     <%- include ('../partials/messages') %>
                     <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-rank">Add new rank</a>
                     <!-- DataTales Example -->
-                    <div class=" mb-4">
                         <% if(allRanks.length <= 0){ %>
                             <div class="card-body">
                                 <h1>No Products Record Found !</h1>  
                             </div> 
                             <% } else{ %> 
-                                <div class="card-body">
+
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                             <thead>
@@ -53,13 +53,20 @@
                                                         <td><%= data['id'] %> </td>
                                                         <td><%= data['name'] %> </td>
                                                         <td><%= data['threshold'] %> </td>
-                                                         <td>
-                                                          <a class="btn btn-secondary" href="/super/edit-rank/<%= data['id'] %>"> edit</a>
-                                                          <form action="/super/delete-rank/<%= data['id'] %>" method="POST" style="display: inline;">
-                                                              <input type="hidden" name="_method" value="DELETE" />
-                                                              <button  class="btn btn-danger">Delete</button>
-                                                          </form>
-                                                      </td>
+                                                        <td style="display: flex; margin-right: 2px">
+                                                            <!-- Edit button with icon -->
+                                                            <a class="btn " href="/super/edit-rank/<%= data['id'] %>">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                        
+                                                            <!-- Delete button with icon -->
+                                                            <form action="/super/delete-rank/<%= data['id'] %>" method="POST" style="display: inline;">
+                                                                <input type="hidden" name="_method" value="DELETE" />
+                                                                <button class="btn">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        </td>
                                                   
 
                                                    </tr> 
@@ -72,7 +79,7 @@
                                                 </tbody>
                                         </table>
                                     </div>
-                                </div>
+
                                 <% } %>
                        
                     </div>

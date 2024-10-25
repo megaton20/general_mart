@@ -2,6 +2,8 @@
   #map {
     height: 500px; /* Adjust height as needed */
     width: 100%;
+    border: 1px solid #333;
+    border-radius: 5px;
   }
 </style>
     <!-- Main Content -->
@@ -219,16 +221,15 @@
                 <div class="card mt-3">
                   <div class="card-body">
                     
-                    <div class=" mb-3 text-success" >location</div>
-                    <!-- <div id="map"></div> -->
+                    <div class=" mb-3 text-success" >Your map location</div>
+                    <div id="map"></div>
                    </div>
    
                 </div>
 
                 <div class="mt-5 card" >
-                  <div class="card-header">Actions</div>
+                  <div class="card-header">Delete account</div>
                   <div class="card-body">
-                    <div class="container mt-5">
                       <h2>We're sorry to see you go</h2>
                       <p>Please let us know why you're deactivating your account:</p>
                       <form action="/auth/delete-account" method="post">
@@ -251,7 +252,7 @@
                         </div>
                         <button type="submit" class="btn btn-danger">Deactivate Account</button>
                       </form>
-                    </div>
+
                   </div>
     
                 </div>
@@ -360,7 +361,7 @@ formatedDivs.forEach(div => {
 
     // Copy the text to clipboard
     navigator.clipboard.writeText(copyText.value)
-      .then(() => alert("Link copied to clipboard!"))
+      .then(() => console.log("Link copied to clipboard!"))
       .catch(err => console.error('Failed to copy: ', err));
   }
 </script>

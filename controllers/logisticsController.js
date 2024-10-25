@@ -30,7 +30,7 @@ const formatDate = (dateStr) => {
   return `${year}-${month}-${day}`;
 };
 
-const appName = `G.Mart` 
+const appName = "True Essentials Mart"
 
 exports.getAdminWelcomePage = (req, res) => {
 
@@ -175,6 +175,12 @@ exports.oneDelivery = async (req, res) => {
 
 exports.finishDelivery = async (req, res) => {
   let editId = req.params.id;
+  const { pin } = req.body;
+
+  if (!pin) {
+    req.flash("error_msg", "Provide pin");
+    return res.redirect("back");
+  }
 
   try {
     // Fetch the Order_Products based on the id
@@ -184,12 +190,30 @@ exports.finishDelivery = async (req, res) => {
     );
 
     if (orderToComplete.length === 0) {
-      req.flash("error_msg", "Order product not found");
+      req.flash("error_msg", "Ordered product not found");
       return res.redirect("/logistics");
     }
 
-    let itemId = orderToComplete[0].sale_id;
+    const itemId = orderToComplete[0].sale_id;
 
+       // Fetch the corresponding order
+       const { rows: orderResult } = await query(`SELECT * FROM "Orders" WHERE "sale_id" = $1`, [itemId]);
+
+       if (orderResult.length <= 0) {
+         req.flash("error_msg", "Order not found");
+         return res.redirect('/driver/new-rider');
+       }
+   
+       const order = orderResult[0];
+       const savedPin = +order.delivery_pin;
+
+         // Verify the pin
+    if (savedPin !== parseInt(pin, 10)) {
+      req.flash("error_msg", "The pin you entered is incorrect or does not exist! Let the receiver provide the correct pin.");
+      return res.redirect("back");
+    }
+
+    
     // Update the Orders table to mark as complete
     await query(
       `UPDATE "Orders" SET status = $1 WHERE sale_id = $2`,

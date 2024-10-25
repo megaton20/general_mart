@@ -3089,6 +3089,12 @@ exports.editNewInventory = async (req, res) => {
             [Product_name, productResults.rows[0].id]
           );
          }
+         const {rows:orderedProductResults} = await query(`SELECT * FROM "Order_Products" WHERE "product_id" = $1`,[productResults.rows[0].id]);
+         if (orderedProductResults.length > 0) {
+          await query(`UPDATE "Order_Products" SET "name" = $1 WHERE "product_id" = $2`,
+            [Product_name, productResults.rows[0].id]
+          );
+         }
 
 
     req.flash("success_msg", `"${Product_name}" updated successfully! on shelf too`);

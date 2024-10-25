@@ -27,9 +27,6 @@
                     <!-- DataTales Example -->
                     <div class=" mb-4">
                         <%- include ('../partials/messages') %>
-                        <div class="card-body">
-
-
                             <% if(allSuppliers.length <= 0){ %>
                                 <div class="card-body">
                                     
@@ -66,11 +63,18 @@
                                                         <td><%= data['email'] %></td>
                                                         <td><%= data['Address'] %></td>
                                                         <td><%= data['created_date'] %></td>
-                                                        <td>
-                                                            <a class="btn btn-secondary" href="/super/edit-supplier/<%= data['id'] %>"> edit</a>
+                                                        <td class="" style="display: flex;">
+                                                            <!-- Edit button with icon -->
+                                                            <a class="btn " href="/super/edit-supplier/<%= data['id'] %>">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                        
+                                                            <!-- Delete button with icon -->
                                                             <form action="/super/delete-supplier/<%= data['id'] %>" method="POST" style="display: inline;">
                                                                 <input type="hidden" name="_method" value="DELETE" />
-                                                                <button  class="btn btn-danger">Delete</button>
+                                                                <button class="btn ">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
                                                             </form>
                                                         </td>
                                                   
@@ -88,8 +92,6 @@
                                     </div>
 
                                     <% } %>
-                        
-                        </div>
                     </div>
 
                 </div>

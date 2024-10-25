@@ -44,8 +44,13 @@
 
           <div class="col-lg-8 ml-0" id="product-section">
             <div class="service-box scrolling-col">
-              <h5><%= products.length > 0 ? products[0].category : " " %></h5>
               
+              <div class="top-cat">
+                <div class=""><p>
+                  <%= products.length > 0 ? products[0].category : "empty shelf category" %>
+                </p></div>
+             
+            </div>
               <% if (products.length === 0) { %>
                 <div class="no-items text-center">
                   <p>No items available in this category </p>
