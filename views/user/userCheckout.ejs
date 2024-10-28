@@ -58,23 +58,42 @@
             <p class="m-0 text-warning">₦ <span class="item-price" style="font-size: 14px;"><%= shippingFee %></span></p>
           </div>
 
+          <hr>
           <% if (shippingFee > 0) { %>
             
-          <form id="paymentForm">
-            <input type="email" class="form-control" id="email" required value="<%= userData.email %>" hidden>
-            <input type="number" class="form-control" id="amount" value="<%= customerToPay %>" hidden>
-
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="applyCashback" id="applyCashback">
-              <label class="form-check-label" for="applyCashback">Apply Cashback (₦<%= userCashback %>) and save 60%</label>
-            </div>
-
-            <button type="submit" class="mt-2 my-btn-outline" style="width: 100%;">Pay ₦<span id="sumTotal" class="item-price"><%= customerToPay %></span></button>
-
-            <hr>
-            <p class="m-0">You are paying through <a href="https://paystack.com" target="_blank">Paystack</a> payment gateway</p>
-            <p class="m-0" style="font-size: 12px;">Card info is kept secure with military-grade encryption.</p>
-          </form>
+            <form id="paymentForm">
+              <input type="email" class="form-control" id="email" required value="<%= userData.email %>" hidden>
+              <input type="number" class="form-control" id="amount" value="<%= customerToPay %>" hidden>
+            
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="applyCashback" id="applyCashback">
+                <label class="form-check-label" for="applyCashback" id="cashbackLabel">
+                  Apply discount (₦<%= userCashback %>)
+                </label>
+              </div>
+            
+              <!-- Display cashback details -->
+              <div id="cashbackDetails" style="margin-top: 10px;">
+                <p id="removedCashback" style="display: none;">
+                  <i class="fas fa-times-circle" style="color: red;"></i> <!-- Red icon for removed cashback -->
+                  Removed Cashback: ₦<span id="removedAmount">0.00</span>
+                </p>
+                <p id="remainingCashback" style="display: none;">
+                  <i class="fas fa-check-circle" style="color: green;"></i> <!-- Green icon for remaining cashback -->
+                  Remaining Cashback: ₦<span id="remainingAmount"><%= userCashback %></span>
+                </p>
+              </div>
+            
+              <button type="submit" class="mt-2 my-btn-outline" style="width: 100%;">
+                Pay ₦<span id="sumTotal" class="item-price"><%= customerToPay %></span>
+              </button>
+            
+              <hr>
+              <p class="m-0">You are paying through <a href="https://paystack.com" target="_blank">Paystack</a> payment gateway</p>
+              <p class="m-0" style="font-size: 12px;">Card info is kept secure with military-grade encryption.</p>
+            </form>
+            
+          
           <hr>
           <p class="text-warning rounded" style="font-size: 12px; margin-top: 5px; border: 1px solid; padding: 5px;">Item will be delivered in 1 hour(s) after confirmation.</p>
           <% } else { %>
@@ -94,7 +113,7 @@
   <%- include('./partials/info') %>
 </div>
 
-<%- include('../partials/openFooter') %>
+
 
 <!-- Scroll Top -->
 <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
@@ -116,26 +135,69 @@ function formatPrice() {
 formatPrice();
 
 document.getElementById("applyCashback").addEventListener("change", function() {
-  let originalAmount = parseFloat(document.getElementById("amount").value);
+  let originalAmount = parseFloat(document.getElementById("amount").value);  // Cart value
+  let cashback = <%= userCashback %>;  // Cashback amount
   let amount = originalAmount;
-  
+  let discount = 0; // Initialize discount
+
+  // Reset the cashback details initially
+  document.getElementById("removedCashback").style.display = "none";
+  document.getElementById("remainingCashback").style.display = "none";
+
+  // Determine the discount and amount after cashback application
   if (this.checked) {
-    let discount = Math.min(originalAmount * 0.6, <%= userCashback %>);
-    amount -= discount;
-  }
+    if (cashback > originalAmount) {
+      // Calculate 60% of the cashback
+      discount = Math.min(cashback * 0.6, originalAmount);
+    } else {
+      // Use the entire cashback
+      discount = cashback;
+    }
+
+    amount -= discount;  // Subtract the applicable discount from the cart value
+
+    // Ensure the amount to pay does not go below 1000
+    amount = Math.max(amount, 1000);
+
+    // Show removed cashback and remaining cashback
+    document.getElementById("removedCashback").style.display = "block";
+    document.getElementById("remainingCashback").style.display = "block";
+    document.getElementById("removedAmount").textContent = discount.toLocaleString("en-NG", { minimumFractionDigits: 2 });
+    document.getElementById("remainingAmount").textContent = (cashback - discount).toLocaleString("en-NG", { minimumFractionDigits: 2 });
+    
+    // Update the label to reflect the amount of cashback applied
   
+  } else {
+    // Reset the label and cashback details when cashback is not applied
+    document.getElementById("cashbackLabel").textContent = `Apply Cashback (₦<%= userCashback %>) ? (save up to 60%)`;
+  }
+
   // Update the displayed amount
-  document.getElementById("sumTotal").textContent = Math.floor(amount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  document.getElementById("sumTotal").textContent = amount.toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 });
 
-// Add the submit event listener
+
+
 document.getElementById("paymentForm").addEventListener("submit", function(e) {
   e.preventDefault();
   
   let email = document.getElementById("email").value;
   let finalAmount = parseFloat(document.getElementById("sumTotal").textContent.replace(/[^0-9.-]+/g, "")); // Get the displayed amount
   let applyCashback = document.getElementById("applyCashback").checked; // Get checkbox state
-  let oAmnt = parseFloat(document.getElementById("amount").value);
+  let oAmnt = parseFloat(document.getElementById("amount").value); // Original amount
+  let cashback = <%= userCashback %>;  // Cashback amount
+
+  // Calculate discount to send to the server for verification
+  let discount = 0;
+  if (applyCashback) {
+    if (cashback > oAmnt) {
+      // If cashback is greater than cart value, apply 60% of the cashback or up to the cart value
+      discount = Math.min(cashback * 0.6, oAmnt);
+    } else {
+      // Use entire cashback if it's less than or equal to cart value
+      discount = cashback;
+    }
+  }
 
   // Make Paystack payment request
   fetch('/pay', {
@@ -143,20 +205,24 @@ document.getElementById("paymentForm").addEventListener("submit", function(e) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({oAmnt, applyCashback, email, amount: Math.floor(finalAmount) }), // Send amount as an integer
+    body: JSON.stringify({ oAmnt, applyCashback, email, amount: Math.floor(finalAmount), discount }), // Send discount for verification
   })
   .then(response => response.json())
   .then(data => {
+
     if (data.status) {
       window.location.href = data.data.authorization_url;
     } else {
-      alert('Payment failed. Please try again.');
+      alert(data.message);
+      alert('Payment failed. Please refresh and try again.');
     }
   })
   .catch((error) => {
     console.error('Error:', error);
-    alert('An error occurred. Please try again.');
+
+    alert('An error occurred. Please try again');
   });
 });
+
 
 </script>

@@ -91,13 +91,14 @@
                 <% } %>
               </div>
               
-              <nav aria-label="Page navigation mt-4">
+              <hr>
+              <nav class="mt-4">
                 <ul class="pagination">
                   <% if (pagination.page > 1) { %>
                     <a href="/user/category/<%= activeCategory %>?page=<%= pagination.page - 1 %>#product-section" class="my-btn">&laquo;</a>
                   <% } %>
                   <% if (pagination.page < pagination.totalPages) { %>
-                    <a href="/user/category/<%= activeCategory %>?page=<%= pagination.page + 1 %>#product-section" class="my-btn ml-1">&raquo;</a>
+                    <a href="/user/category/<%= activeCategory %>?page=<%= pagination.page + 1 %>#product-section" class="my-btn ">&raquo;</a>
                   <% } %>
                 </ul>
               </nav>
@@ -114,7 +115,6 @@
   <br>
   <br>
   <br>
-  <%- include ('../partials/openFooter')%>
 
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

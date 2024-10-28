@@ -146,7 +146,7 @@ const shelfAvailableChecker = async () => {
         // Proceed to delete the product from the cart
         const deleteCartQuery = `DELETE FROM "Cart" WHERE "product_id" = ANY($1::int[])`;
         const deleteCartResult = await query(deleteCartQuery, [productIds]);
-        console.log(`${deleteCartResult.rowCount} item(s) deleted from cart`);
+        // console.log(`${deleteCartResult.rowCount} item(s) deleted from cart`);
 
       } else {
         // console.log('No product IDs to delete.');

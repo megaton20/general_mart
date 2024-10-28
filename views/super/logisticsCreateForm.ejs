@@ -1,10 +1,8 @@
+<!-- Page Wrapper -->
+<div id="wrapper">
 
-
-    <!-- Page Wrapper -->
-    <div id="wrapper">
-
-        <!-- Sidebar -->
-        <%- include ('../partials/superSidebar') %>
+    <!-- Sidebar -->
+    <%- include ('../partials/superSidebar') %>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -15,73 +13,74 @@
 
                 <!-- Topbar -->
                 <%- include ('../partials/topbar') %>
-                <!-- End of Topbar -->
+                    <!-- End of Topbar -->
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
 
-                    <!-- DataTales Example -->
-                    <div class=" mb-4">
+                        <!-- DataTales Example -->
+                        <div class=" mb-4">
 
-                        <div class="form mt-4 mb-4">
-                            <form action="/super/create-logistics" method="post" class="form ">
-                               <div class="row ">
+                            <div class="form mt-4 mb-4">
+                                <form action="/super/create-logistics" method="post" class="form ">
+                                    <div class="row ">
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for=""> Name</label>
-                                        <input type="text" name="name" class="form-control" >
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for=""> Name</label>
+                                                <input type="text" name="name" class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for=""> phone</label>
+                                                <input type="text" name="phone" class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for=""> Email Address</label>
+                                                <input type="email" name="email" class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for=""> address</label>
+                                                <input type="text" name="address" class="form-control">
+                                            </div>
+                                        </div>
+
+
                                     </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for=""> phone</label>
-                                        <input type="text" name="phone" class="form-control" >
+                                    <div class="mt-4">
+                                        <input type="submit" class="btn btn-success" style="width: 100%;"
+                                            value="Submit">
                                     </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for=""> Email Address</label>
-                                        <input type="email" name="email" class="form-control" >
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for=""> address</label>
-                                        <input type="text" name="address" class="form-control" >
-                                    </div>
-                                </div>
-
-
+                                </form>
                             </div>
-                            <div class="mt-4">
-                                <input type="submit" class="btn btn-success" style="width: 100%;" value="Submit">
-                            </div>
-                            </form>
+
                         </div>
-                
-                    </div>
 
-                </div>
-                <!-- /.container-fluid -->
+                    </div>
+                    <!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
             <%- include ('../partials/footer') %>
-            <!-- End of Footer -->
+                <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->
 
-    </div>
-    <!-- End of Page Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>

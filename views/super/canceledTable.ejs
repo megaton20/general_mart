@@ -28,12 +28,10 @@
                             </div> 
                             <% } else{ %> 
 
-                                <div class="card-body">
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
-                                                  <th>Id</th>
                                                   <th>Cart Value</th>
                                                   <th>email</th>
                                                   <th>phone</th>
@@ -48,7 +46,6 @@
                                           
                                                 <% canceledResults.forEach(function(data) {%>
                                                     <tr>
-                                                        <td><%= data['id'] %></td>
                                                         <td>₦<%=  data['total_amount'] %> </td>
                                                         <td><%= data['customer_email'] %> </td>
                                                         <td><%= data['customer_phone'] %> </td>
@@ -64,7 +61,7 @@
                                                 </tbody>
                                         </table>
                                     </div>
-                                </div>
+
                                 <% } %>
                                 
                                 

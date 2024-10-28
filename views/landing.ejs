@@ -66,9 +66,7 @@
         <% if (category.products && category.products.length> 0) { %> <!-- Only render card if products are present -->
           <div class="category-card ">
             <div class="top-cat">
-                <div class=""><p>
-                  <%= category.categoryName %>
-                </p></div>
+                  <p><%= category.categoryName %></p>
               <div class="">
                 <a href="/user/category/<%= category.categoryName %>#product-section">See all</a>
               </div>
@@ -83,7 +81,6 @@
                       <div class="landing-image">
                         <img src="/uploads/<%= product.image %>" alt="<%= product.ProductName %>">
                       </div>
-
                       <div class="landing-details">
                         <p class="text-truncate">
                           <%= product.ProductName %>

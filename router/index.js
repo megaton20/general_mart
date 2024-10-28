@@ -525,21 +525,38 @@ router.post('/updateCartItem', ensureAuthenticated, async (req, res) => {
 
 // paystack
 router.post('/pay', async (req, res) => {
-  const { email, amount, applyCashback, oAmnt } = req.body;
+  const { email, amount, applyCashback, oAmnt, discount } = req.body; 
 
   // Store cashback details in the session
   req.session.applyCashback = applyCashback;
   req.session.oAmnt = oAmnt;
+  req.session.discount = discount; 
 
+  // Fetch the user's current cashback using userId
+  const userId = req.user.id; // Assume user ID is stored in the session
+  const userQuery = `SELECT "cashback" FROM "Users" WHERE "id" = $1`;
+  
   try {
+    const {rows:userResults} = await query(userQuery, [userId]);
+    const currentCashback = userResults[0].cashback;
+
+    // Check if cashback is applied and if sufficient
+    if (applyCashback) {
+      if (currentCashback < discount) {
+        return res.status(400).json({ message: 'Insufficient cashback available to apply.' });
+      }
+    }
+
+    // Proceed with Paystack payment initialization
     const response = await axios.post('https://api.paystack.co/transaction/initialize', {
       email,
       amount: amount * 100, // Paystack expects the amount in kobo
       callback_url: `${process.env.LIVE_DIRR || process.env.NGROK_URL || `http://localhost:${process.env.PORT}`}/verify`,
       metadata: {
-        userId: req.user.id, // Include user ID from session
+        userId: userId,       // Include user ID from session
         applyCashback: applyCashback,
-        oAmnt: oAmnt,        // Original amount (stored in metadata)
+        oAmnt: oAmnt,         // Original amount (stored in metadata)
+        discount: discount     // Pass the discount amount for verification
       }
     }, {
       headers: {
@@ -553,9 +570,6 @@ router.post('/pay', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
-
-
 
 router.get('/verify', async (req, res) => {
   const reference = req.query.reference;
@@ -613,6 +627,9 @@ router.get('/verify', async (req, res) => {
 
 
 
+
+
+// Paystack webhook handler
 router.post('/webhook', async (req, res) => {
   const hash = crypto.createHmac('sha512', PAYSTACK_SECRET_KEY)
                      .update(JSON.stringify(req.body))
@@ -626,28 +643,28 @@ router.post('/webhook', async (req, res) => {
       // Handle successful payments
       if (event.event === 'charge.success') {
         const { id, reference, amount, currency, status, customer: { email }, paid_at, metadata } = event.data;
-        const { applyCashback, userId, oAmnt } = metadata;
+        const { applyCashback, userId, oAmnt, discount } = metadata; // Retrieve discount from metadata
 
         // Save transaction details to the database
-        const query = `
+        const insertTransactionQuery = `
           INSERT INTO "Transactions" ("transaction_id", "reference", "amount", "currency", "status", "email", "paid_at", "user_id") 
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         `;
-        await db.query(query, [id, reference, amount / 100, currency, status, email, paid_at, userId]);
+        await query(insertTransactionQuery, [id, reference, amount / 100, currency, status, email, paid_at, userId]);
 
         // Fetch the user's current cashback using userId
         const userQuery = `SELECT "cashback" FROM "Users" WHERE "id" = $1`;
-        const userResults = await db.query(userQuery, [userId]);
+        const userResults = await query(userQuery, [userId]);
         const currentCashback = userResults.rows[0].cashback;
 
-        // Apply cashback if applicable
-        if (applyCashback) {
-          const cashbackDeduction = Math.min(currentCashback, oAmnt * 0.6); // Deduct up to 60% of the total cashback
+        // Apply the exact discount if cashback was applied
+        if (applyCashback && discount) {
+          const cashbackDeduction = Math.min(currentCashback, discount); // Use the exact discount value from metadata
           const newCashback = Math.max(0, currentCashback - cashbackDeduction); // Ensure cashback doesn't go below 0
 
           // Update user's cashback in the database
           const updateCashbackQuery = `UPDATE "Users" SET "cashback" = $1 WHERE "id" = $2`;
-          await db.query(updateCashbackQuery, [newCashback, userId]);
+          await query(updateCashbackQuery, [newCashback, userId]);
         }
 
         // Transaction successfully handled, respond with 200 OK
@@ -666,7 +683,6 @@ router.post('/webhook', async (req, res) => {
     return res.sendStatus(400); // Bad request due to invalid signature
   }
 });
-
 
 
 // Logout route

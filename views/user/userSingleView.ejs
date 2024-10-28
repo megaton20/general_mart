@@ -13,263 +13,140 @@
         
       <div class="container">
         <%- include ('../partials/messages') %>
-        <a class="back-btn" href="/user"><i class="bi bi-arrow-left-circle"></i> Back</a>
-
-        <div class="row">
-          <div class="col-lg-4 container mb-4">
-            <div class="profile-section card">
-              <% if (userData.image == null) { %>
-                  <!-- Display form for uploading image -->
-                  <div class="my-profile-image">
-                      <img class="profile-img" src="/images/avatar.png" alt="Default Profile Image">
-                      <div class="overlay">
-                          <form class="user" action="/user/add-profile-image/<%= userData.id %>" method="post" enctype="multipart/form-data">
-                              <label for="image-upload" class="upload-label">
-                                  Upload Image
-                              </label>
-                              <input id="image-upload" type="file" name="image" class="file-input" style="display:none;" onchange="handleFileInputChange()">
-                              <input id="submit-button" type="submit" value="Submit" class="btn btn-warning btn-user btn-block" style="display: none;">
-                          </form>
-                      </div>
-                  </div>
-              <% } else { %>
-                  <!-- Display user's profile image -->
-                  <div class="my-profile-image">
-                      <img class="profile-img" src="/uploads/<%= userData.image %>" alt="User Profile Image">
-                      <div class="overlay">
-                          <form class="user" action="/user/add-profile-image/<%= userData.id %>" method="post" enctype="multipart/form-data">
-                              <label for="image-upload" class="upload-label">
-                                  Change Image
-                              </label>
-                              <input id="image-upload" type="file" name="image" class="file-input" style="display:none;" onchange="handleFileInputChange()">
-                              <button id="submit-button" style="display: none;" class="my-btn" type="submit"><i class="fas fa-exclamation-triangle"></i>Submit</button>
-
-                          </form>
-                      </div>
-                  </div>
-              <% } %>
-          </div>
-
-   
-             <!-- actions nav -->
-              <div class="profile-nav mt-3 ">
-                <a class="profile-nav-items" href="/user/orders">My Orders </a>
-                <a class="profile-nav-items" href="/user/wishlist">My wishlist </a>
-                <a class="profile-nav-items" href="/user/buy-airtime">Buy Airtime With Cashback</a>
-                <a class="profile-nav-items" href="/user/edit-user/<%=userData.id %>">Edit profile detail</a>
-                <a class="profile-nav-items" href="/user/change-phone">Change Phone Number </a>
-                <a class="profile-nav-items" href="/user/reset">Change password</a>
-                <a class="text-danger profile-nav-items" href="/logout">log out</a>
-
+ 
+        <div class="dash-jumbotron-wrap">
+            <div class="dashboard-info">
+              <div class="info-item">
+                <p class="user-name"><%= userData.First_name %> <%= userData.Last_name %></p>
               </div>
+            </div>
+
+            <div class="dashboard-info">
+              <div class="info-item">
+                <p>Cashback</p>
+                <div class="info-value ">₦ <span class="format"><%= cashBack %></span></div>
+              </div>
+
+              <div class="info-item">
+                <p>Spent</p>
+                <div class="spent"><p class="format-number-spent info-value"></p></div>
+              </div>
+            </div>
+
+
+              <div class="bar-item">
+                <div class="mt-2 mb-4">
+                  <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                    <div id="progress-percent" class="progress-percent"></div>
+                  </div>
+                  <!-- center  of the  -->
+                  <div class="rank-name"><%= userData.rank %> </div>
+                </div>
+              </div>
+        </div>
+      
+            <!-- actions nav -->
+            <div class="profile-nav mt-5 mb-5">
+              <a class="profile-nav-item btn" href="/user/orders">
+                <i class="fas fa-box"></i> My Orders
+              </a>
+              <a class="profile-nav-item btn" href="/user/wishlist">
+                <i class="fas fa-heart"></i> Saved items
+              </a>
+              <a class="profile-nav-item btn" href="/user/buy-airtime">
+                <i class="fas fa-mobile-alt"></i> Buy Airtime
+              </a>
+              <a class="profile-nav-item btn" href="/user/user-details">
+                <i class="fas fa-user"></i> Account info
+              </a>
+
+            </div>
+
+       <!-- Carousel Wrapper with Background -->
+          <div class="carousel-container mb-5">
+            <div class="owl-carousel owl-theme text-carousel">
+              <div class="item">
+                <h4>Welcome to Our Service</h4>
+                <p>We offer quality products and amazing deals every day!</p>
+              </div>
+              <div class="item">
+                <h4>Special Discounts</h4>
+                <p>Enjoy exclusive discounts on selected items just for you.</p>
+              </div>
+              <div class="item">
+                <h4>Refer a Friend</h4>
+                <p>Refer a friend and earn rewards! More friends, more bonuses!</p>
+              </div>
+              <div class="item">
+                <h4>Free Delivery</h4>
+                <p>Get free delivery on orders above NGN 10,000.</p>
+              </div>
+            </div>
           </div>
 
-          <!-- main timeline -->
-          <div class="col-lg-8" style="font-size: 12px;">
-
-                  <div class=" card">
-                  <div class="card-header">Billing details</div>
-                  <div class="card-body">
-                    <div class="row mb-4">
-                  
-                 
-                      <div class="col-4">First name:</div>
-                      <div class="col-8"><%= userData.First_name %></div>
-                      <div class="col-4">Last name:</div>
-                      <div class="col-8"><%= userData.Last_name %></div>
-                      <div class="col-4">Email:</div>
-                      <div class="col-8 ">
-                        <div class="row">
-                          <div class="col-9"><%= userData.email %> </div>
-                                
-                          <div class="col-3">
-                              <!-- switch colors -->
-                              <% if ( userData.verify_email  == false) { %>
-    
-                               <!-- 1 -->
-                               <form action="/auth/verify-request" method="post">
-                                <input type="hidden" value="<%=userData.email%>" name="email" >
-                                <button type="submit" style="border: none; background: none;" class="text-warning bg-none"><i class="fas fa-exclamation"></i> </button>                                    
-                              </form>
-                                <% } else { %>
-    
-                            <a class="text-success" >  <i class="fas fa-check"></i> </a>
-    
-                              <% } %>
-                         
-                          </div>
-                        </div>
-                   
-                      </div>
-    
-                      <div class="col-4">Phone Number:</div>
-                      <div class="col-8">
-                        <div class="row">
-    
-                          <div class="col-9">
-                            <%= userData.Phone %> 
-                          </div>
-                                
-                          <div class="col-3">
-                              <!-- switch colors -->
-                              <% if ( userData.Phone  == null) { %>
-
-                                <a href="/user/add-phone"><i class="fas fa-plus"></i> add</a>
-                                <% } else { %>
-    
-                                              <!-- verify -->
-                                              <% if ( userData.verify_phone  == false) { %>
-              
-                                                <form action="/auth/send-code" method="post">
-                                                  <input type="hidden" value="<%=userData.Phone%>" name="phoneNumber" >
-                                                  <button type="submit" style="border: none; background: none;" class="text-warning bg-none"><i class="fas fa-exclamation"></i> </button>                                                  
-                                                </form>
-                                                  <% } else { %>
-                      
-                                                    <a class="text-success" >  <i class="fas fa-check"></i> </a>
-                      
-                                                <% } %>
-        
-                                                <!-- verrify end -->
-    
-                              <% } %>
-                         
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-4">Address:</div>
-                      <div class="col-8"><%= userData.Address %></div>
-    
-    
-    
-                      <div class="col-4">State:</div>
-                      <div class="col-6"><%= userData.state %></div>
-                      <div class="col-4">LGA:</div>
-                      <div class="col-6"><%= userData.lga %></div>
-                      <div class="col-4">Gender:</div>
-                      <div class="col-6"><%= userData.gender %> </div>
-                      <div class="col-4">Land mark:</div>
-                      <div class="col-6"><%= userData.land_mark %></div>
-    
-                    </div>
-                  </div>
+         <!-- invite -->
+            <div class=" invite-card mt-3">
+                <div class="invite-link">
+                  <input id="link" class="form-control" value="<%= referLink %>" readonly />
+                  <br>
+                  <span id="copy-text" class="copy-icon" onclick="copyToClipboard()"> <i class="bi bi-clipboard"></i></span>
                 </div>
-
-                <div class="card mt-3">
-                  <div class="card-body">
-                    
-                    <div class=" mb-3 text-success" ><%= userData.rank %></div>
-                    <div class="progress-container">
-                      <div id="progress-bar" class="progress-bar"></div>
-                      <div id="progress-percent" class="progress-percent"></div>
-                     </div>
-                     <div class="mt-3"> 
-                       <p class="format-number"></p>
-                       <hr>
-                      <div class="row">
-                       <div class="col-auto"> Cash back:</div>
-                       <div class="col-auto text-success"> ₦ <%=cashBack%></div>
-                      </div>
-                       
-                     </div>
-                   </div>
-   
+            
+                <hr class="divider">
+                
+                <div class="referrals">
+                  <h5 class="section-title mb-3">You have <%= referralResult.length %> Referral(s)</h5>
+                  <table class="table table-striped">
+                    <tbody>
+                      <% referralResult.forEach(function(data) { %>
+                      <tr>
+                        <td class="referral-name"><%= data.First_name %> <%= data.Last_name %></td>
+                        <td class="referral-status">
+                          <% if (data.has_earned) { %>
+                          <i class="fas fa-check text-success"></i>
+                          <% } else { %>
+                          <i class="fas fa-times text-danger"></i>
+                          <% } %>
+                        </td>
+                      </tr>
+                      <% }) %>
+                    </tbody>
+                  </table>
                 </div>
+            
+                <hr class="divider">
+                
+                <p class="bonus-text text-success">Refer and earn an extra bonus of NGN 500</p>
+                <p class="condition-text text-warning">Referees must make a purchase for referrals to be vetted.</p>
+            </div>
 
-                <div class="card mt-3">
-                  <div class="card-body">
-                    <h5>My invite link</h5>
-                    <div class="row">
-                      <div class="col-10"><input id="link" class="form-control" value=" <%=referLink%>"/></div>
-                      <div class="col-2">
-                        <i class="bi bi-clipboard" onclick="copyToClipboard()" style="font-size: 20px; color: var(--accent-color);"></i>
+            <div class=" d-flex justify-content-center mt-4">
+              <a href="/logout" class="text-danger">
+                 Sign out
+              </a>
+            </div>
 
-                      </div>
-                    </div>
-                    <hr>
-                    <div class="referrals">
-                      <h5 class="mb-4">You have <%= referralResult.length %> Ref(s)</h5>
-                      <table class="table" width="100%" cellspacing="0">
-                          <tbody>
-                              <% referralResult.forEach(function(data) { %>
-                              <tr>
-                                  <!-- Displaying the name from the users table -->
-                                  <td><%= data.First_name %> <%= data.Last_name %></td>
-                                  <!-- Displaying whether they have earned (based on has_earned) -->
-                                  <td>
-                                      <% if (data.has_earned) { %>
-                                      <i class="fas fa-check text-success"></i>
-                                      <% } else { %>
-                                      <i class="fas fa-times text-danger"></i>
-                                      <% } %>
-                                  </td>
-                              </tr>
-                              <% }) %>
-                          </tbody>
-                      </table>
-                  </div>
-                  
+            <div class=" d-flex justify-content-center mt-4">
 
-                    <hr>
-                    <p class="text-success"> Refer and get extra bonus of NGN 500</p>
-                    <p class="text-warning"> Referrees must purchase an item for referrals to be vetted</p>
-                 
-                   </div>
-   
-                </div>
-
-                <div class="card mt-3">
-                  <div class="card-body">
-                    
+              <p>Stop using parmanently</p>
+            </div>
+            
+            <div class="delete-account d-flex justify-content-center ">
+              <a href="/user/delete-account" class="text-danger">
+                <i class="fas fa-trash-alt"></i> Delete Account
+              </a>
+            </div>
+            
+                <!-- <div class=" mt-3">
                     <div class=" mb-3 text-success" >Your map location</div>
                     <div id="map"></div>
-                   </div>
-   
-                </div>
-
-                <div class="mt-5 card" >
-                  <div class="card-header">Delete account</div>
-                  <div class="card-body">
-                      <h2>We're sorry to see you go</h2>
-                      <p>Please let us know why you're deactivating your account:</p>
-                      <form action="/auth/delete-account" method="post">
-                        <div class="form-group">
-                          <label for="deactivationReason">Reason for Deactivation</label>
-                          <select name="reason" class="form-control" id="deactivationReason" required>
-                            <option value="" disabled selected>Select a reason</option>
-                            <option value="I found the site difficult to use">I found the site difficult to use</option>
-                            <option value="I didn't find what I was looking for">I didn't find what I was looking for</option>
-                            <option value="I had a poor customer service experience">I had a poor customer service experience</option>
-                            <option value="I have privacy or security concerns">I have privacy or security concerns</option>
-                            <option value="I receive too many emails/notifications">I receive too many emails/notifications</option>
-                            <option value="I prefer a competitor's service">I prefer a competitor's service</option>
-                            <option value="Other (please specify below)">Other (please specify below)</option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="additionalComments">Additional Comments</label>
-                          <textarea name="Comments" class="form-control" id="additionalComments" rows="3" placeholder="Please provide any additional feedback here..."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-danger">Deactivate Account</button>
-                      </form>
-
-                  </div>
-    
-                </div>
-    
-
-
-        </div>
-        </div>
-
+                </div> -->
       </div>
 
 <br>
 <br>
-
-
-<%- include ('../partials/openFooter')%>
-
+<br>
 
 
 <script>
@@ -278,15 +155,29 @@
   
     
     const spending = <%= spending %>;
-const ranks = <%- JSON.stringify(ranks) %>;
+      const ranks = <%- JSON.stringify(ranks) %>;  
 
-console.log(ranks);
-let formatedDivs = document.querySelectorAll('.format-number');
-let formattedAmount = spending.toLocaleString("en-US");
 
-formatedDivs.forEach(div => {
-  div.textContent = `Spent ₦${formattedAmount}`;
-});
+      const cashBackElement = document.querySelector('.format');
+      const cashBackValue = cashBackElement.textContent.trim();
+
+      let cashBack = parseFloat(cashBackValue.replace(/,/g, ''));
+
+      cashBackElement.textContent = cashBack.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+
+      let formatedDivs = document.querySelectorAll('.format-number-spent');
+      let formattedAmount = spending.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+      formatedDivs.forEach(div => {
+        div.textContent = `₦${formattedAmount}`;
+      });
 
     // Determine current rank and next threshold
     let currentThreshold = 0;
@@ -318,20 +209,7 @@ formatedDivs.forEach(div => {
 </script>
 
 
-<script>
-  function handleFileInputChange() {
-      const fileInput = document.getElementById('image-upload');
-      const submitButton = document.getElementById('submit-button');
-      const overlay = document.querySelectorAll('.overlay')
 
-      if (fileInput.files.length > 0) {
-          submitButton.style.display = 'block'; // Show submit button
-          // overlay.style.display = 'block'
-      } else {
-          submitButton.style.display = 'none'; // Hide submit button
-      }
-  }
-</script>
 
 
 <!-- <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script> -->
@@ -350,7 +228,7 @@ formatedDivs.forEach(div => {
     .openPopup();
 </script> -->
 
-<script>
+<!-- <script>
   function copyToClipboard() {
     // Get the link input element
     var copyText = document.getElementById("link");
@@ -363,5 +241,24 @@ formatedDivs.forEach(div => {
     navigator.clipboard.writeText(copyText.value)
       .then(() => console.log("Link copied to clipboard!"))
       .catch(err => console.error('Failed to copy: ', err));
+  }
+</script> -->
+
+<script>
+  function copyToClipboard() {
+    const copyText = document.getElementById("link");
+    copyText.select();
+    document.execCommand("copy");
+
+    // Update the text and icon to "Copied" with a checkmark
+    const copyTextElement = document.getElementById("copy-text");
+    copyTextElement.innerHTML = 'Copied <i class="bi bi-check-circle-fill"></i>';
+    copyTextElement.classList.add("copied");
+
+    // Reset back to "Copy" after a delay
+    setTimeout(() => {
+      copyTextElement.innerHTML = '<i class="bi bi-clipboard"></i>';
+      copyTextElement.classList.remove("copied");
+    }, 2000);
   }
 </script>

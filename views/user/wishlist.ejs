@@ -1,62 +1,107 @@
+<%- include('./partials/navbar') %>
 
-                 <%- include('./partials/navbar') %>
-
-          <div class="container">
-            <%- include ('../partials/messages') %>
-
-
-            <div class="row">
-              <div class="col-lg-2  mb-4">
-   
-                <!-- actions nav -->
-                 <div class="profile-nav mt-3 ">
-                   <a class="back-btn"  href="/user"><i class="bi bi-arrow-left-circle"></i> Back</a>
-                 </div>
-             </div>
+  <div class="container">
+    <%- include('../partials/messages') %>
 
 
-              <div class="col-lg-10" style="font-size: 14px;">
-                <div class="table-responsive">
-                <table class="table" width="100%"cellspacing="0">
+      <a class="back-btn" href="/user/profile"><i class="bi bi-arrow-left-circle"></i> Back</a>
 
-                  <tbody>
-                      <% wishlist.forEach(function(data) {%>
-                      <tr>
-                        
-                        <td><img class="img-thumbnail" style="max-width: 40px;" src="/uploads/<%= data['image'] %>" alt="image"></td>
-                        <td class="truncate-container"> <a href="/user/product-details/<%= data.id %>"> <%= data['ProductName'] %>     </a></td>
-                        <td>
-                          <a href="/user/wishlist/<%= data.id %>/remove">   <i class="fas fa-trash"></i>  </a>
-                        </td>
-                      </tr>
-                        <% }) %>
-  
-  
-                
-                  </tbody>
-                </table>
-                </div>
+      <!-- Wishlist Items in Card Layout -->
+      <div class="wishlist-grid mt-4">
+        <% wishlist.forEach(function(data) { %>
+          <div class="wishlist-card">
+            <div class="wishlist-card-content">
+              <div class="wishlist-card-img">
+                <img src="/uploads/<%= data.image %>" alt="<%= data.ProductName %> image">
               </div>
+              <a href="/user/product-details/<%= data.id %>" class="wishlist-product-name">
+                <%= data.ProductName %>
+              </a>
+              <a href="/user/wishlist/<%= data.id %>/remove" class="wishlist-remove-btn">
+                <i class="fas fa-trash"></i> Remove
+              </a>
             </div>
+          </div>
+          <% }) %>
+      </div>
+  </div>
 
-        </div>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-         
-              <!-- Footer -->
-              <%- include ('../partials/openFooter')%>
-              <!-- End of Footer -->
+  <!-- CSS for Wishlist Card Layout -->
+  <style>
+    /* Grid container for wishlist items */
+    .wishlist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+    }
 
-        <!-- End of Content Wrapper -->
+    /* Card styling */
+    .wishlist-card {
+      background-color: #f8f9fa;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+      height: 220px;
+      /* Uniform height for all cards */
+    }
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
+    /* Card hover effect */
+    .wishlist-card:hover {
+      transform: scale(1.03);
+    }
+
+    /* Inner content to center image and text */
+    .wishlist-card-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    /* Image styling */
+    .wishlist-card-img img {
+      width: 80px;
+      height: auto;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    /* Product name link styling */
+    .wishlist-product-name {
+      font-size: 1em;
+      font-weight: bold;
+      color: #333;
+      text-decoration: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100px;
+      /* Limit width to keep cards uniform */
+    }
+
+    /* Remove button styling */
+    .wishlist-remove-btn {
+      color: #dc3545;
+      font-size: 0.9em;
+      text-decoration: none;
+      margin-top: 8px;
+    }
+  </style>
+
+
+  <br>
+  <br>
+
+
+  <!-- End of Content Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>

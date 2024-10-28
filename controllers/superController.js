@@ -941,7 +941,7 @@ exports.getOneCanceledOrder = async (req, res) => {
     const Fullname = `${userMakingTheOrder.First_name} ${userMakingTheOrder.Last_name}`;
 
     // Fetch the ordered items related to the sale from the "Order_products" table
-    const orderedItems = await query(`SELECT * FROM "Order_products" WHERE sale_id = $1`, [canceledOrder[0].sale_id]);
+    const orderedItems = await query(`SELECT * FROM "Order_Products" WHERE sale_id = $1`, [canceledOrder[0].sale_id]);
     const orderedItemsResults = orderedItems.rows;
 
     // Render the view with the fetched data
@@ -1770,7 +1770,7 @@ exports.createNewCategory = async (req, res) => {
 
     if (checkResult.rows.length <= 0) {
       // Insert new category
-      await query(`INSERT INTO "Category" ("Category_name", "details") VALUES ($1, $2)`, [Category_name, Desc]);
+      await query(`INSERT INTO "Category" ( "Category_name", "details") VALUES ($1, $2)`, [Category_name, Desc]);
       req.flash("success_msg", `"${Category_name}" added successfully!`);
       return res.redirect("/super");
     }
@@ -2099,11 +2099,22 @@ exports.editLogisticsComp = async (req, res) => {
       [name, phone, email, address, editID]
     );
 
+
     // Check if the update was successful
     if (updateResult.rowCount === 0) {
       req.flash("error_msg", "No logistics provider found with the given ID.");
       return res.redirect("/super");
     }
+
+        // select all from users with id and change name
+        const checkUsersResult = await query(`SELECT * FROM "Users" WHERE "logistic_id" = $1`,[editID]);
+           if (checkUsersResult.rowCount > 0) {
+             const updateUsersResult = await query(`UPDATE "Users" SET "logistics_company_name" = $1 WHERE "logistic_id" = $2`,[name, editID]);
+       
+           } else {
+            //  console.log("No users found with this logistic_id.");
+           }
+       
 
     req.flash("success_msg", "Logistics provider updated successfully.");
     return res.redirect("/super");

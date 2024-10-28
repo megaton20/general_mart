@@ -85,7 +85,7 @@
                 <% } %>
               </div>
           
-              <nav aria-label="Page navigation mt-4">
+              <nav class=" mt-4">
                 <ul class="pagination">
                   <% if (pagination.page > 1) { %>
                     <a href="/user/pagination?page=<%= pagination.page - 1 %>#product-section" class="my-btn">&laquo;</a>
@@ -104,12 +104,11 @@
     </section><!-- /Service Details Section -->
 
   </main>
-  <%- include ('../partials/clients')%>
   <br>
   <br>
   <br>
   <br>
-  <%- include ('../partials/openFooter')%>
+
 
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

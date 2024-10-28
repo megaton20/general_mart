@@ -71,4 +71,9 @@ router.get('/wishlist/',ensureAuthenticated,isUser,userController.wishlist)
 router.get('/wishlist/:id/add',ensureAuthenticated,isUser,userController.addWishlist)
 router.get('/wishlist/:id/remove',ensureAuthenticated,isUser,userController.removeWishlist)
 
+
+// de
+router.get('/delete-account/',ensureAuthenticated,isUser,userController.deleteAccount)
+router.get('/user-details/',ensureAuthenticated,isUser,userController.shippingDetails)
+
 module.exports = router;

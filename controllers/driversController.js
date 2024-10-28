@@ -75,6 +75,7 @@ exports.getAdminWelcomePage = async (req, res) => {
     return res.render("./drivers/driversDash", {
       pageTitle: "driver",
       name: `${userFirstName} ${userLastName}`,
+      appEmail,
       month: monthName,
       day: dayName,
       date: presentDay,
@@ -108,6 +109,7 @@ exports.newRider = async (req, res) => {
   stateData,
   bank:bankData,
   appName,
+  appEmail,
   userActive,
   totalUnreadNotification,allCategory
   })
@@ -131,6 +133,7 @@ exports.createNewDrivers = async (req, res) => {
     return res.render('./drivers/riderRegisterForm', {
       pageTitle: 'Register again',
       appName: appName,
+      appEmail,
       errors,
       userActive,
       stateData, 
@@ -358,6 +361,7 @@ exports.kyc = async (req, res) => {
     return res.render("./drivers/kyc", {
       pageTitle: "driver kyc",
       name: `${userFirstName} ${userLastName}`,
+      appEmail,
       month: monthName,
       day: dayName,
       date: presentDay,
@@ -390,6 +394,7 @@ exports.allPendingDelivery = async (req, res) => {
     return res.render("./drivers/driversAvailableDelivery", {
       pageTitle: "Open Deliveries",
       name: `${userFirstName} ${userLastName}`,
+      appEmail,
       month: monthName,
       day: dayName,
       date: presentDay,
@@ -433,6 +438,7 @@ exports.myRides = async (req, res) => {
     return res.render("./drivers/driversAsignedDelivery", {
       pageTitle: "Assigned Deliveries",
       name: `${userFirstName} ${userLastName}`,
+      appEmail,
       month: monthName,
       day: dayName,
       date: presentDay,
@@ -483,6 +489,7 @@ exports.oneDelivery = async (req, res) => {
     return res.render("./drivers/driversDeliveryDetails", {
       pageTitle: "Delivery to Make",
       name: `${userFirstName} ${userLastName}`,
+      appEmail,
       month: monthName,
       day: dayName,
       date: presentDay,
@@ -501,6 +508,7 @@ exports.oneDelivery = async (req, res) => {
     return res.render("./drivers/driversDeliveryDetails", {
       pageTitle: "Delivery to Make",
       name: `${userFirstName} ${userLastName}`,
+      appEmail,
       month: monthName,
       day: dayName,
       date: presentDay,

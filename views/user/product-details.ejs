@@ -1,23 +1,17 @@
 
 <%- include('./partials/navbar') %>
 
-<main class="main">
   <div class="container"><%- include('../partials/messages') %></div>
-      <!-- Page adverts -->
-      <div class="container">
-        <%- include('./partials/ads') %>
-      </div>
-  <!-- Service Details Section -->
-  <section id="service-details" class="service-details section">
+
     
-    <a class="back-btn" href="/user"><i class="bi bi-arrow-left-circle"></i> Back</a>
     <div class="container">
+      <a class="back-btn" href="/user"><i class="bi bi-arrow-left-circle"></i> Back</a>
 
       <div class="row gy-5">
 
         <div class="col-lg-4 " >
-                  <div class=" align-items-center" style="border: 1px solid #0000021c; padding: 5px;" >
-                    <img src="/uploads/<%= itemData[0].image %>" class=" card-img-top rounded-4" style="max-width: 290px; max-height: 300px;" alt="<%= itemData[0].ProductName %>">
+                  <div class=" align-items-center"  >
+                    <img src="/uploads/<%= itemData[0].image %>" class=" card-img-top rounded-4"  alt="<%= itemData[0].ProductName %>">
                   </div>
                   <div class="wishlist">
                     <% if (itemData[0].inWishlist) { %>
@@ -52,17 +46,15 @@
 
 
                 <div>
-                  <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user/fetchCart/"> Checkout</a>
+                  <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user/fetchCart/"> Proceed To Checkout</a>
                 <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user"> Back To store</a>
                 </div>
                 
-      </div>
+        </div>
 
           <div class="col-lg-8 p-0 ">
       <p style="font-size: 12px; text-transform: uppercase; margin:0px; color: #00000248;">more product details</p>
-        <div class="card my-box-shadow mb-4">
-          <div class="card-body pt-3">
-
+            <h6 class="text-uppercase">Product Details</h6>
                 <p class="small fst-italic">
                   <% if (itemData[0].details) { %>
                     <p class="small fst-italic">
@@ -89,23 +81,15 @@
                 </p>
 
 
-
-          </div>
-          </div>
-
           <p style="font-size: 12px; text-transform: uppercase; margin:0px; color: #00000248;">verified customer feedback</p>
-          <div class="card my-box-shadow ">
-            <div class="card-body pt-3">
               <p>no reviews available</p>
-            </div>
-            </div>
-        </div>
+
+          </div>
       </div>
-
-
-      <div class="card my-box-shadow mb-4 mt-4">
-        <div class="container p-4">
-          <p>Dear Valued Customer,</p>
+    </div>
+      <hr>
+      <div class=" container mb-4 p-2">
+          <p>Dear <%= firstName %>,</p>
           <p>Thank you for choosing <%- include ('../partials/appName') %> for your grocery and food needs. Our products are carefully selected to ensure quality and satisfaction. We pride ourselves on our credibility and are committed to providing fast response times to all orders.</p>
           <p>Our head office is located at Parliamentary Extension, behind Udiking, Calabar. For any inquiries or assistance, please contact our customer care line at <a href="tel:+2349160209475">+234 916 020 9475</a>.</p>
           <div class="social-links">
@@ -114,16 +98,12 @@
           </div>
           <p>We look forward to serving you!</p>
           <p>Best regards,<br><strong>The <%- include ('../partials/appName') %> Team</strong></p>
-        </div>
       </div>
-      </div>
-    </div>
-    </div>
-  </section><!-- /Service Details  -->
 
-</main>
 
-<%- include ('../partials/openFooter')%>
+<br>
+<br>
+<br>
 
 <!-- Scroll Top -->
 <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

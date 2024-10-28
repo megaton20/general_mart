@@ -10,10 +10,6 @@
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
-            <!-- Main Content -->
-            <div id="content">
-
-                <!-- Topbar -->
                 <%- include ('../partials/topbar') %>
                 <!-- End of Topbar -->
 
@@ -21,7 +17,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Logistics Tables </h1>
+                    <h1 class="h3 mb-2 mt-2 text-gray-800">Logistics Drivers & Shifts   </h1>
 
                     <%- include ('../partials/messages') %>
 
@@ -32,14 +28,12 @@
                                 <h1>No Logistics Drivers Record Found !</h1>  
 
                             <% } else{ %>  
-                                <div class="card-body">
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
-                                                  <th>Id</th>
+
                                                   <th> Name</th>
-                                                  <th>Company id</th>
                                                   <th>Company name</th>
                                                   <th>Actions</th>
                                                 </tr>
@@ -51,7 +45,6 @@
                                                 <% logisticsResults.forEach(function(data) {%>
         
                                                     <tr>
-                                                        <td><%= data['id'] %></td>
                                                         <td><%= data['First_name'] %> <%= data['Last_name'] %> </td>
                                                         <td><%= data['logistic_id'] %></td>
                                                         <td><%= data['logistics_company_name'] %></td>
@@ -71,18 +64,13 @@
                                                 </tbody>
                                         </table>
                                     </div>
-                                </div>
+
                                 <% } %>
                         
                     </div>
 
                 </div>
-                <!-- /.container-fluid -->
 
-            </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
             <%- include ('../partials/footer') %>
             <!-- End of Footer -->
 

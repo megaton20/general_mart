@@ -39,65 +39,61 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 
 
- <style>
-    /* Loader Styles */
-    #loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(255, 255, 255, 0.9); /* Light background */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
+    <style>
+      /* Loader Styles */
+      #loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+    
+      .loader-wrapper {
+        position: relative;
+        width: 150px;
+        height: 150px;
+      }
+    
+      .loader-logo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80px;
+        z-index: 2;
+        animation: bounce 1s ease infinite;
+      }
+    
 
-    .loader-wrapper {
-      position: relative; /* This will contain the circle and the logo */
-      width: 150px; /* Adjust to desired size */
-      height: 150px; /* Adjust to desired size */
-    }
-
-    .loader-logo {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%); /* Centers the logo inside the circle */
-      width: 80px; /* Adjust size if needed */
-      z-index: 2; /* Make sure logo is on top */
-    }
-
-    .loader-circle {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      border-top: 1px solid #3498db; 
-      border-radius: 50%;
-      width: 150px; /* Same size as the wrapper */
-      height: 150px; /* Same size as the wrapper */
-      animation: spin 1s linear infinite;
-      z-index: 1; /* Place the circle behind the logo */
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* Hide page content initially */
-    #page-content {
-      visibility: hidden; /* Keep it hidden until the loader disappears */
-    }
-  </style>
- 
+    
+      /* Bouncing Animation */
+      @keyframes bounce {
+        0%, 100% {
+          transform: translate(-50%, -50%) scale(1);
+        }
+        50% {
+          transform: translate(-50%, -60%) scale(1.1); /* Moves up and grows slightly */
+        }
+      }
+    
+      /* Hide page content initially */
+      #page-content {
+        visibility: hidden;
+      }
+    </style>
+    
 </head>
  
    <!-- Loader -->
    <div id="loader">
     <div class="loader-wrapper">
-      <div class="loader-circle"></div> <!-- Circle is outside the logo -->
+
       <img src="/images/logo.png" alt="Logo" class="loader-logo">
     </div>
   </div>

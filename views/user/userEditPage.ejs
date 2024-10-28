@@ -5,17 +5,8 @@
 <div class="container">
   <%- include ('../partials/messages') %>
 
-  <div class="row">
-    <div class="col-lg-4 container mb-4">
-   
-      <!-- actions nav -->
-       <div class="profile-nav mt-3 ">
-         <a class="back-btn" href="/user/profile"><i class="bi bi-arrow-left-circle"></i> Back</a>
-       </div>
-   </div>
-
-
-  <div class="col-lg-8" style="font-size: 12px;">  
+     <a class="back-btn" href="/user/user-details"><i class="bi bi-arrow-left-circle"></i> Back</a>
+ 
     <h3 class="mb-4">Edit your profile information</h3>
 
     <form class="row g-3 mb-3"  action="/user/update-user-info/<%= userData.id %>" method="post">
@@ -38,16 +29,9 @@
         </select>
       </div>
 
+     
       <div class="col-md-6">
-        <label for="inputAddress" class="form-label">Address</label>
-        <input type="text" name="Address" class="form-control" id="inputAddress" placeholder="1234 Main St" value="<%= userData.Address %>" >
-      </div>
-      <div class="col-12">
-        <label for="land-mark" class="form-label">Land mark</label>
-        <input type="text" name="land_mark" class="form-control" id="land-mark" placeholder="Land mark or closest Bus stop"  value="<%= userData.land_mark %>">
-      </div>
-      <div class="col-md-6">
-        <label for="inputState" class="form-label mt-1" >State</label>
+        <label for="inputState" class="form-label mt-1" >Current State For Shipping</label>
         <select id="state" name="state" class="form-select form-control" onchange="LGAs()">
           <option value="<%= userData.state %>"><%= userData.state %></option>
           <% stateData.forEach(data =>  {%>
@@ -56,10 +40,19 @@
         </select>
       </div>
       <div class="col-md-6">
-        <label for="lga" class="form-label mt-1">lga</label>
+        <label for="lga" class="form-label mt-1">Current LGA For Shipping</label>
         <select id="lga" name="lga" class="form-select form-control">
           <option value="<%= userData.lga %>"><%= userData.lga %></option>
         </select>
+      </div>
+
+      <div class="col-md-6">
+        <label for="inputAddress" class="form-label">Address</label>
+        <input type="text" name="Address" class="form-control" id="inputAddress" placeholder="1234 Main St" value="<%= userData.Address %>" >
+      </div>
+      <div class="col-12">
+        <label for="land-mark" class="form-label">Land mark</label>
+        <input type="text" name="land_mark" class="form-control" id="land-mark" placeholder="Land mark or closest Bus stop"  value="<%= userData.land_mark %>">
       </div>
 
       <div class="col-12 mt-2">
@@ -67,8 +60,6 @@
         <input name="_method" type="submit" value="Update" class=" mt-2 my-btn " style="width: 100%;"/>
       </div>
     </form>
-  </div>
-  </div>
 
 
 </div>

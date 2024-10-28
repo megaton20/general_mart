@@ -65,18 +65,9 @@
                                         </div>
                                     </div>
             
-                                    <!-- Pie Chart -->
-                                    <div class="col-xl-4 col-lg-5">
-                                        <div class="card shadow mb-4">
-                                            <!-- Card Header - Dropdown -->
-
-                                            <!-- Card Body -->
-
-
-                                              <div class="card-body">
-
+                                        <div class=" mb-4">
                                             <form id="profitForm" action="/super/update-price/<%= allInventory[0].id %>" method="post" >
-                                                <input type="number" id="inventoryId" name="inventoryId" hidden value="<%= allInventory[0].id %>">
+                                                <input class="form-control" type="number" id="inventoryId" name="inventoryId" hidden value="<%= allInventory[0].id %>">
                                                 <br>
                                                 <label for="amount">Enter Amount:</label>
                                                 <input type="number" id="amount" name="price" required>
@@ -90,13 +81,7 @@
                                             </form>
 
                                             <div id="result"></div>
-
-
-                                              </div>
-
-
                                         </div>
-                                    </div>
                                 </div>
 
                              

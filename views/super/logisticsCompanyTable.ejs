@@ -21,7 +21,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Logistics company Tables </h1>
+                    <h1 class="h3 mb-2 text-gray-800">Logistics Shifts Tables </h1>
                     <a href="/super/create-logistics" class="btn btn-outline-primary mr-2 mb-1"aria-controls="collapseTwo">Add Logistics Company</a>
 
                     <%- include ('../partials/messages') %>
@@ -33,7 +33,7 @@
                                 <h1>No company Added yet !</h1>  
 
                             <% } else{ %>  
-                                <div class="card-body">
+
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                             <thead>
@@ -61,13 +61,17 @@
                                                         <td><%= data['email'] %></td>
                                                         <td><%= data['phone'] %></td>
                                                         <td><%= data['address'] %></td>
-                                                        <td>
-                                                            <a class="btn btn-secondary" href="/super/edit-logistic-company/<%= data['id'] %>"> edit</a>
+                                                        <td style="display: flex; justify-content: space-between;">
+                                                            <a class="btn" href="/super/edit-logistic-company/<%= data['id'] %>">
+                                                              <i class="fas fa-edit"></i> <!-- Edit Icon -->
+                                                            </a>
                                                             <form action="/super/delete-logistic-company/<%= data['id'] %>" method="POST" style="display: inline;">
-                                                                <input type="hidden" name="_method" value="DELETE" />
-                                                                <button  class="btn btn-danger">Delete</button>
+                                                              <input type="hidden" name="_method" value="DELETE" />
+                                                              <button class="btn ">
+                                                                <i class="fas fa-trash"></i> <!-- Delete Icon -->
+                                                              </button>
                                                             </form>
-                                                        </td>
+                                                          </td>
                                                    </tr> 
                                                    
                                                        <% }) %>
@@ -79,7 +83,7 @@
                                                 </tbody>
                                         </table>
                                     </div>
-                                </div>
+
                                 <% } %>
                         
                     </div>

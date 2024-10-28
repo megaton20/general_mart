@@ -70,8 +70,9 @@
       <!-- Topbar -->
       <%- include('./partials/navbar') %>
 
-        <div class="container mt-4">
+        <div class="container">
           <%- include ('../partials/messages') %>
+          <a class="back-btn mb-2" href="/user/orders"><i class="bi bi-arrow-left-circle"></i> Back</a>
           <div class="row">
             <!-- ordered products table -->
             <div class="col-lg-8  mb-3">
@@ -156,7 +157,7 @@
               <p>We hope you’re as excited about your new items as we are to get them to you! <span class="emoji">🚀</span> Your choice means a lot to us, and we can’t wait to see you back in our store for more amazing finds.</p>
               <p>If you have any questions or need assistance, don’t hesitate to reach out. Until then, enjoy your goodies, and we hope to see you again soon!</p>
               <p class="invoice-footer">Stay awesome and happy shopping! <span class="emoji">🌟</span></p>
-              <p class="invoice-footer">Best wishes,<br><strong>The <%- include ('../partials/appName') %> Team</strong></p>
+              <p class="invoice-footer">Best wishes,<br><strong><%- include ('../partials/appName') %> Team</strong></p>
 
               <br>
 
@@ -202,13 +203,10 @@
 
 <br>
 
-<%- include ('../partials/openFooter')%>
-
-
 
 
 <script>
-  // This status should come from your database
+
   const orderStatus = "<%= newOrder.status %>"; 
 
   const orderStages = [

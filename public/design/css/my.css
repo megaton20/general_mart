@@ -59,7 +59,7 @@
   border: 1px solid var(--accent-color);
   border-radius: 5px;
   padding: 7px 15px;
-  margin: 10px;
+  margin-bottom: 5px;
   display: inline-block;
 }
 .back-btn:hover{
@@ -67,6 +67,286 @@
   background-color: var(--accent-color);
 }
 
+  
+/* Dashboard Container */
+.dash-jumbotron-wrap{
+  margin-bottom: 10px;
+  background-color: var(--accent-color);
+  border-radius: 10px;
+  color: var(--contrast-color);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+
+}
+
+/* User Name */
+.user-name {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+/* Dashboard Info Items */
+.dashboard-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.info-item {
+  padding: 10px;
+}
+
+.info-item p {
+  font-size: 0.85em;
+  margin-bottom: 4px;
+  color: var(--contrast-color);
+}
+
+.info-value {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: var(--contrast-color);
+}
+
+
+
+
+
+
+
+/* Centered Rank Name */
+.rank-name {
+  font-size: 1.1em;
+  color: var(--contrast-color);
+  font-weight: 600;
+  margin-top: 10px;
+  text-align: center;
+}
+/* Responsive Adjustments */
+@media (min-width: 768px) {
+  .wree{
+    max-width: 600px;
+    margin: 40px auto;
+  }
+
+  .user-name {
+    font-size: 1.6em;
+  }
+
+  .info-value {
+    font-size: 1.2em;
+  }
+}
+
+
+/* Profile Nav */
+.profile-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 15px;
+  gap: 10px;
+}
+
+.profile-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: var(--contrast-color);
+  background-color: var(--accent-color);
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profile-nav-item i {
+  font-size: 1.2em;
+}
+
+
+.profile-nav-item:hover {
+  background-color: var(--hover-color);
+}
+
+/* Responsive Sizing */
+@media (min-width: 768px) {
+  .profile-nav-item {
+    font-size: 1.1rem;
+    padding: 12px 20px;
+  }
+}
+
+
+  /* Wrapper with background for carousel */
+  .carousel-container {
+    background-color: #f8f9fa; /* Light blue background */
+    padding: 15px; /* Space around the carousel */
+    border-radius: 10px; /* Rounded corners */
+    text-align: center;
+  }
+
+  /* Carousel item styling */
+  .text-carousel .item {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .text-carousel .item h4 {
+    font-size: 1.2em;
+    color: var(--accent-color);
+    margin-bottom: 10px;
+  }
+
+  .text-carousel .item p {
+    font-size: 0.9em;
+    color: #555;
+  }
+  
+
+
+/* referral and Spacing */
+.user-details {
+  border-radius: 8px;
+  padding: 15px;
+}
+
+/* Detail Item Styling */
+.detail-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.label {
+  font-weight: bold;
+  color: var(--accent-color);
+  flex: 0 0 30%;
+  max-width: 30%;
+}
+
+.value {
+  flex: 1;
+  font-weight: 500;
+  color: var(--default-color);
+  padding: 0 10px;
+}
+
+/* Status Icons and Buttons */
+.status {
+  display: flex;
+  align-items: center;
+}
+
+.btn-status {
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--secondary-color);
+}
+
+.text-warning i, .text-success i {
+  font-size: 1.2em;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .label {
+    flex: 0 0 40%;
+  }
+}
+
+
+
+
+/* invites Styling */
+.invite-card {
+  background-color: var(--background-color-light);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* Section Titles */
+.section-title {
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+/* Invite Link - Hide Input */
+.invite-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.invite-link input {
+  position: absolute;
+  left: -9999px; 
+}
+
+.copy-icon {
+  font-size: 1.1em;
+  cursor: pointer;
+  color: var(--accent-color);
+  display: inline-flex;
+  align-items: center;
+}
+
+.copy-icon.copied {
+  color: var(--success-color);
+}
+
+/* Referral Table Styling */
+.table {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.referral-name {
+  font-weight: 500;
+  color: var(--contrast-color);
+}
+
+.referral-status i {
+  font-size: 1.2em;
+}
+
+/* Divider */
+.divider {
+  border-top: 1px solid #ddd;
+  margin: 15px 0;
+}
+
+/* Bonus and Condition Text */
+.bonus-text, .condition-text {
+  font-size: 0.9em;
+}
+
+.bonus-text {
+  font-weight: bold;
+}
+
+
+/* delete */
+.delete-account a {
+  font-size: 1.1em;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between icon and text */
+}
+
+.delete-account i {
+  font-size: 1.2em;
+}
 /*--------------------------------------------------------------
 # Global Footer
 --------------------------------------------------------------*/
@@ -611,7 +891,7 @@ h6 {
 
 @media (max-width: 480px) {
   .navbar-brand img {
-    max-width: 80px; /* Even smaller size for very small screens */
+    max-width: 40px; /* Even smaller size for very small screens */
   }
 }
 
@@ -1234,15 +1514,7 @@ a {
   }
 }
 
-.profile-nav-items{
-  display: block;
-text-decoration: none; 
 
-background-color: rgba(0, 0, 0, 0.1);
-color: #41afa5;
-padding: 5px;
-margin-bottom: 2px;
-}
 
 
 .form-title {
@@ -1340,17 +1612,20 @@ margin-bottom: 2px;
   .top-cat{
     background-color: var(--accent-color);
     text-transform: uppercase;
-    height: 35px;
-    display: flex;
+    height: 30px;
+    display: inline-block;
     padding: 5px;
     margin-bottom: 10px ;
+    border-radius: 5px;
   }
 
   .top-cat p{
     color: var(--contrast-color);
+    font-size: 13px;
   }
   .top-cat a{
     color: var(--contrast-color);
+    font-size: 13px;
   }
   .formated-prices{
     color: #333;
@@ -1384,7 +1659,6 @@ margin-bottom: 2px;
 }
 
 .card-image {
-  border: 1px solid #0000000f;
   width: 100%;
   height: 150px;
   overflow: hidden;
@@ -1407,7 +1681,6 @@ margin-bottom: 2px;
   box-shadow: 0 2px 3px -5px, 0 2px 15px #0000000f;
 }
 .landing-image {
-  border: 1px solid #0000000f;
   height: 150px;
   width: 100% ;
   overflow: hidden;

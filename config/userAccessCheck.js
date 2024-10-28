@@ -31,7 +31,7 @@ module.exports = {
 
       if (userData.verify_email == 0) {
         req.flash("error_msg", "Please verify your email to complete request!");
-        return res.redirect('/user/profile');
+        return res.redirect('/user/user-details');
       }
       return next();
     } catch (error) {

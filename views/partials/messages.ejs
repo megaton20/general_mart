@@ -2,49 +2,35 @@
 
 
   <div class="alert alert-warning  fade show" role="alert">
-    <strong>oops!</strong> <%= error.msg %>  
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      
-    </button>
+   <%= error.msg %>  
+
   </div>
 
 <% }); %> <% } %><% if(success_msg != ''){ %>
 
 
 <div class="alert alert-success  fade show" role="alert">
-  <strong>Good!</strong>  <%= success_msg %> 
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    
-  </button>
+   <%= success_msg %> 
 </div>
 
 <% } %> <% if(error_msg != ''){ %>
 
 <div class="alert alert-danger  fade show" role="alert">
-  <strong>psss!</strong>  <%= error_msg %>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    
-  </button>
+  <%= error_msg %>
 </div>
 
 
 <% } %> <% if(error != ''){ %>
 
 <div class="alert alert-danger  fade show" role="alert">
-  <strong>Oh no!</strong>   <%= error %> 
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    
-  </button>
+  <%= error %> 
 </div>
 
 
 <% } %>  <% if(warning_msg != ''){ %>
 
   <div class="alert alert-warning  fade show" role="alert">
-    <strong>Watchout!</strong>   <%= warning_msg %>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      
-    </button>
+     <%= warning_msg %>
   </div>
 
 
@@ -52,6 +38,9 @@
 <% } %>
 
 <style>
+  .alert{
+    font-size: 12px;
+  }
   .hide{
     display: none;
   }

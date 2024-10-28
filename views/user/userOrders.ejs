@@ -1,47 +1,75 @@
 
                  <%- include('./partials/navbar') %>
 
-          <div class="container">
-            <%- include ('../partials/messages') %>
-
-
-            <div class="row">
-              <div class="col-lg-4 container mb-4">
-   
-                <!-- actions nav -->
-                 <div class="profile-nav mt-3 ">
-                   <a class="back-btn"href="/user"><i class="bi bi-arrow-left-circle"></i> Back</a>
-                 </div>
-             </div>
-
-
-              <div class="col-lg-8" style="font-size: 12px;">
-                <table class="table" width="100%"cellspacing="0">
-            
-  
-                  <tbody>
-                      <% newOrder.forEach(function(data) {%>
-                      <tr>
-                        <td><%= data['total_amount'] %></td>
-                        <td><%= data['status'] %></td>
-                        <td><a class="btn btn-primary" href="/user/invoice/<%= data['sale_id'] %>"> Details </a></td>
-                      </tr>
-                        <% }) %>
-  
-  
+                 <div class="container">
+                  <%- include('../partials/messages') %>
                 
-                  </tbody>
-                </table>
-              </div>
-            </div>
 
-        </div>
+                        <a class="back-btn" href="/user/profile"><i class="bi bi-arrow-left-circle"></i> Back</a>
+
+                
+                      <!-- Orders List -->
+                      <div class="order-list mt-4">
+                        <% newOrder.forEach(function(data) { %>
+                          <div class="order-card">
+                            <div class="order-info">
+                              <span class="order-amount">₦ <%= data.total_amount %></span>
+                              <span class="order-status"><%= data.status %></span>
+                            </div>
+                            <a class="btn btn-primary details-btn" href="/user/invoice/<%= data.sale_id %>">Details</a>
+                          </div>
+                        <% }) %>
+                      </div>
+                </div>
+                
+                <!-- CSS for Modern Card Layout -->
+                <style>
+
+                
+                  /* Orders List Layout */
+                  .order-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 15px;
+                  }
+                
+                  /* Order Card Styling */
+                  .order-card {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    background-color: #f8f9fa;
+                    padding: 15px;
+                    border-radius: 8px;
+                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+                    font-size: 14px;
+                  }
+                
+                  .order-info {
+                    display: flex;
+                    gap: 10px;
+                  }
+                
+                  .order-amount {
+                    font-weight: bold;
+                    color: var(--accent-color);
+                  }
+                
+                  .order-status {
+                    font-size: 0.9em;
+                    color: #555;
+                  }
+                
+                  /* Details Button */
+                  .details-btn {
+                    font-size: 0.9em;
+                    padding: 5px 10px;
+                  }
+                </style>
             <br>
             <br>
       
-              <!-- Footer -->
-              <%- include ('../partials/openFooter')%>
-              <!-- End of Footer -->
+
 
         <!-- End of Content Wrapper -->
 
