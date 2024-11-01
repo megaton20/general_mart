@@ -17,7 +17,7 @@
   --heading-color: #3e5055;
 
   /* Accent Color - This is the main accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out. */
-  --accent-color: #41afa5;
+  --accent-color: #4192af;
 
   /* Contrast Color - This is a color used for text when the background color is one of the heading, accent, or default colors. Its purpose is to ensure proper contrast and readability when placed over these more dominant colors. */
   --contrast-color: #feffff;
@@ -28,7 +28,7 @@
   --nav-color: #313336;
 
   /* Nav Hover Color - This color is applied to main navmenu links when they are hovered over. */
-  --nav-hover-color: #77b6ca;
+  --nav-hover-color: #4f9cb8e3;
 
   /* Nav Dropdown Background Color - This color is used as the background for dropdown boxes that appear when hovering over primary navigation items. */
   --nav-dropdown-background-color: #feffff;
@@ -48,7 +48,6 @@
 
 @media only screen and (min-width: 1024px) {
   .container-for-large-screens {
-    /* Add your styles for large screens here */
     width: 80%;
     margin: 0 auto;
   }
@@ -706,8 +705,8 @@
 .clients .client-logo img {
   max-width: 20%;
   transition: 0.3s;
-  opacity: 0.5;
-  filter: grayscale(100);
+  /* opacity: 0.5; */
+  /* filter: grayscale(100); */
 }
 
 
@@ -724,7 +723,7 @@
 
 @media (max-width: 768px) {
   .clients .client-logo img {
-    max-width: 60%;
+    max-width: 10%;
   }
 }
 
@@ -783,6 +782,7 @@
 .service-details .services-list a {
   color: color-mix(in srgb, var(--default-color), transparent 20%);
   background-color: color-mix(in srgb, var(--default-color), transparent 96%);
+  box-shadow: 0 3px 3px -5px, 0 2px 5px #0000000f;
   display: flex;
   align-items: center;
   padding: 10px 10px;
@@ -1709,7 +1709,7 @@ a {
   }
 
   .product-details {
-    margin-top: 10px;
+    margin-top: 2px;
     color: var(--default-color);
     height: 30px;
     overflow: hidden;
@@ -1724,7 +1724,7 @@ a {
   height: 40px;
 }
   .item-prices{
-    margin-top: 3px;
+    margin-top: 1px;
     display: flex;
     justify-content: space-between;
     padding: 0;
@@ -1760,7 +1760,7 @@ a {
 
 
 .carousel-item img {
-  padding: 5px;
+  border-radius: 5px;
   max-width: 100%; 
   max-height: 500px; 
   object-fit:fill !important; 

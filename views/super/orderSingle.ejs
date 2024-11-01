@@ -11,10 +11,11 @@
       <!-- Topbar -->
       <%- include ('../partials/topbar') %>
       <!-- End of Topbar -->
+      <%- include ('../partials/messages') %>
 
       <!-- Begin Page Content -->
       <div class="container-fluid">
-        <%- include ('../partials/messages') %>
+        <a class="btn btn-outline-primary mb-1 mr-2 mt-2" href="/super/new-orders">New Orders</a>
 
         <div class="row">
           <!-- Area Chart -->
@@ -41,6 +42,13 @@
               <div class="col-6">Sale id:</div>
               <div class="col-6"><%= orderData[0].sale_id %></div>
             </div>
+            <% transactionID.forEach(function(data) {%>
+              <div class="row">
+                <div class="col-6">transaction id:</div>
+                <div class="col-6"><%= data['transaction_id'] %></div>
+              </div>
+              <% }) %>
+          
             <div class="row">
               <div class="col-6">Delivery:</div>
               <div class="col-6"><%= orderData[0].Delivery %></div>

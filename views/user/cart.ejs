@@ -30,9 +30,9 @@
                 </a>
                   
                   <div class="cart-item-action col-3 ml-0  d-flex justify-content-center align-items-center">
-                    <button class="btn btn-danger" onclick="updateQuantity(<%= item.product_id %>, -1, <%= item.quantity %>, <%= item.max %>)">-</button>
+                    <button class="my-btn-outline" onclick="updateQuantity(<%= item.product_id %>, -1, <%= item.quantity %>, <%= item.max %>)">-</button>
                     <span class="mx-2"><%= item.quantity %></span>
-                    <button class="btn btn-success" onclick="updateQuantity(<%= item.product_id %>, 1, <%= item.quantity %>, <%= item.max %>)">+</button>
+                    <button class=" my-btn-outline" onclick="updateQuantity(<%= item.product_id %>, 1, <%= item.quantity %>, <%= item.max %>)">+</button>
                   </div>
                 </div>
     

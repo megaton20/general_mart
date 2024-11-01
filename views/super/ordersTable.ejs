@@ -16,6 +16,7 @@
                 <!-- Topbar -->
                 <%- include ('../partials/topbar') %>
                 <!-- End of Topbar -->
+                <%- include ('../partials/messages') %>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -23,7 +24,6 @@
                     <div class=" mt-4">
                         <p>orders recieved</p>
                     <!-- Page Heading -->
-                    <%- include ('../partials/messages') %>
 
                     <!-- DataTales Example -->
                         <% if(allOrders.length <= 0){ %>
@@ -58,7 +58,7 @@
                                                         <td><%= data['pick_up_store_name'] %> </td>
                                                         <td><%= data['sale_id'] %> </td>
                                                         <td><%= data['Delivery'] %> </td>
-                                                        <td><%= data['payment_type'] %> </td>
+                                                        <td><%= data['Payment_type'] %> </td>
                                                         <td><%= data['total_amount'] %> </td>
 
                                                             <% if(  data['status']  == "incomplete"){ %>

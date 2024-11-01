@@ -16,14 +16,14 @@
                 <!-- Topbar -->
                 <%- include ('../partials/topbar') %>
                 <!-- End of Topbar -->
+                <%- include ('../partials/messages') %>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <div class=" mt-4">
-                    <%- include ('../partials/messages') %>
                     <a class="btn btn-outline-primary mr-2 mb-1" href="/super/all-regions">All Regions</a>
 
-                    <p>Editing <%=results[0].state%></p>
+                    <p>Changing <%=results[0].state%></p>
 
                             <form action="/super/edit-region/<%=results[0].id %>" method="post" class="form">
                                 <div class="row">

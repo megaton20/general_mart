@@ -1261,6 +1261,10 @@ exports.createInventoryPage = async (req, res) => {
     // Fetch all categories
     const {rows:categoryData} = await query(`SELECT * FROM "Category"`);
 
+    if(categoryData.length <= 0){
+      req.flash("warning_msg", "create in a category first")
+      return res.redirect('/super/create-category')
+    }
 
     // Fetch all brands
     const {rows:brandData} = await query(`SELECT * FROM "Brands"`);
@@ -1274,13 +1278,13 @@ exports.createInventoryPage = async (req, res) => {
       day: dayName,
       date: presentDay,
       year: presentYear,
-      stateData: null, // State data was not fetched in the original code; you might want to fetch this if needed.
       categoryData,
       supplierData,
       superAdmin,
       allStores,
       brandData
     });
+    return 
   } catch (err) {
     req.flash("error_msg", `${err.message}`);
     return res.redirect("/super");
@@ -1772,11 +1776,11 @@ exports.createNewCategory = async (req, res) => {
       // Insert new category
       await query(`INSERT INTO "Category" ( "Category_name", "details") VALUES ($1, $2)`, [Category_name, Desc]);
       req.flash("success_msg", `"${Category_name}" added successfully!`);
-      return res.redirect("/super");
+      return res.redirect("/super/all-categories");
     }
 
     req.flash("error_msg", `"${Category_name}" already exists!`);
-    return res.redirect("/super");
+    return res.redirect("/super/all-categories");
   } catch (error) {
     req.flash("error_msg", `${error.message}`); // Changed to error.message for better error handling
     return res.redirect("/super");
@@ -1806,7 +1810,7 @@ exports.createNewSupplier = async (req, res) => {
     }
 
     req.flash("error_msg", `"${Business_name}" already exists!`);
-    return res.redirect("/super");
+    return res.redirect("/super/all-supplier");
   } catch (error) {
     req.flash("error_msg", `${error.message}`); // Changed to error.message for better error handling
     return res.redirect("/super");
@@ -1833,11 +1837,11 @@ exports.createNewStore = async (req, res) => {
       [Branch_Name, Branch_address, Branch_state, Branch_lga]);
       
       req.flash("success_msg", `"${Branch_Name}" added successfully!`);
-      return res.redirect("/super");
+      return res.redirect("/super/all-stores");
     }
 
     req.flash("error_msg", `"${Branch_Name}" already exists!`);
-    return res.redirect("/super");
+    return res.redirect("/super/all-stores");
   } catch (error) {
     req.flash("error_msg", `${error.message}`); // Changed to error.message for better error handling
     return res.redirect("/super");
@@ -1868,7 +1872,7 @@ exports.createNewDiscount = async (req, res) => {
     }
 
     req.flash("error_msg", `"${Discount_name}" already exists!`);
-    return res.redirect("/super");
+    return res.redirect("/super/all-discounts");
   } catch (error) {
     req.flash("error_msg", `${error.message}`); // Changed to error.message for better error handling
     return res.redirect("/super");
@@ -1881,7 +1885,8 @@ exports.createNewInventory = async (req, res) => {
   let supplierId;
   let filename;
   let brandID;
-
+  let errors = [];
+  
   // Setting the image name from the uploaded file
   if (req.file) {
     filename = req.file.filename;
@@ -1904,8 +1909,50 @@ exports.createNewInventory = async (req, res) => {
       Cost_of_delivery && Total_damaged
     )
   ) {
-    req.flash("error_msg", "Enter all fields before submitting");
-    return res.redirect("/super/create-inventory");
+    errors.push({ msg: 'enter all fields' });
+    const nameA = req.user.First_name;
+    const nameB = req.user.Last_name;
+       // Fetch all suppliers
+       const {rows:supplierData} = await query(`SELECT * FROM "Suppliers"`);
+
+       // Fetch all stores
+       const {rows:allStores} = await query(`SELECT * FROM "Stores"`);
+   
+       // Fetch all super admin users
+       const {rows:superAdmin} = await query(`SELECT * FROM "Users" WHERE "userRole" = 'super' ORDER BY id DESC`);
+   
+       // Fetch all categories
+       const {rows:categoryData} = await query(`SELECT * FROM "Category"`);
+   
+       if(categoryData.length <= 0){
+         req.flash("warning_msg", "create in a category first")
+         return res.redirect('/super/create-category')
+       }
+   
+       // Fetch all brands
+       const {rows:brandData} = await query(`SELECT * FROM "Brands"`);
+       
+
+       return res.render("./super/inventoryCreateForm", {
+         pageTitle: "Welcome",
+         errors,
+         name: `${nameA} ${nameB}`,
+         month: monthName,
+         day: dayName,
+         date: presentDay,
+         year: presentYear,
+         categoryData,
+         supplierData,
+         superAdmin,
+         allStores,
+         brandData,
+        //  availaible fields enteed
+
+        Category_name, Brand_name, Product_name, Purchase_price, Supplier_name, 
+        Payment_method, Reciever_name, Delivery_method, QTY_recieved, total_in_pack, 
+        Manufacture_date, Expire_date, Cost_of_delivery, Total_damaged, details 
+       });
+        
   }
 
   try {
@@ -3582,8 +3629,9 @@ exports.getSingleOrder = async (req, res) => {
 
     // Fetch products associated with the sale
     const {rows:productBought} = await query(`SELECT * FROM "Order_Products" WHERE "sale_id" = $1`, [saleID]);
-
-
+    
+    const {rows:trancactionData} = await query(`SELECT * FROM "Transactions" WHERE "id" = $1`, [orderData[0].transaction_id]);
+    let transactionID = trancactionData
     
     // Fetch logistics and riders data
     const {rows:ridersData} = await query(`SELECT * FROM "drivers" WHERE "verified" = $1`, [true]);
@@ -3603,6 +3651,7 @@ exports.getSingleOrder = async (req, res) => {
       logisticsDrivers,
       ridersData,
       orderData,
+      transactionID,
       productBought,
     });
 

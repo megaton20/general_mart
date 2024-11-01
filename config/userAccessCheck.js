@@ -48,7 +48,7 @@ module.exports = {
 
 
       if (userData.Phone == null) {
-        req.flash("error_msg", "Please Enter a contact phone to chheckout!");
+        req.flash("error_msg", "Please Enter a contact phone to checkout!");
         return res.redirect('/user/add-phone');
       }
       // if (userData.verify_phone == 0) {

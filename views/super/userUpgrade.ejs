@@ -17,6 +17,7 @@
                 <!-- Topbar -->
                 <%- include ('../partials/topbar') %>
                 <!-- End of Topbar -->
+                <%- include ('../partials/messages') %>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -24,7 +25,6 @@
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Registered Users </h1>
 
-                    <%- include ('../partials/messages') %>
                     <!-- DataTales Example -->
                     <div class=" mb-4">
                         <% if(allUsers.length <= 0){ %>

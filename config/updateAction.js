@@ -152,7 +152,7 @@ const shelfAvailableChecker = async () => {
         // console.log('No product IDs to delete.');
       }
     } else {
-      console.log('No products found that match the criteria.');
+      // console.log('No products found that match the criteria.');
     }
   } catch (err) {
     // Catch and log any errors during execution

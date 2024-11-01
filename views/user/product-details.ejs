@@ -4,112 +4,115 @@
   <div class="container"><%- include('../partials/messages') %></div>
 
     
-    <div class="container">
-      <a class="back-btn" href="/user"><i class="bi bi-arrow-left-circle"></i> Back</a>
+  <div class="container">
+    <a class="back-btn" href="/user"><i class="bi bi-arrow-left-circle"></i> Back</a>
 
-      <div class="row gy-5">
+    <div class="row">
 
-        <div class="col-lg-4 " >
-                  <div class=" align-items-center"  >
-                    <img src="/uploads/<%= itemData[0].image %>" class=" card-img-top rounded-4"  alt="<%= itemData[0].ProductName %>">
-                  </div>
-                  <div class="wishlist">
-                    <% if (itemData[0].inWishlist) { %>
-                      <a href="/user/wishlist/<%= itemData[0].id %>/remove" class="wishlist-icon m-1 ">
-                        <i class="fas fa-heart"></i>
-                      </a>
-                      <% } else { %>
-                        <a href="/user/wishlist/<%= itemData[0].id %>/add" class="wishlist-icon m-1 ">
-                            <i class="far fa-heart"></i>
-                          </a>
-                      <% } %>
-                  </div>
-                  <div class="item-text text-dark">
-                    <p style="font-size: 20px; " class="mb-2" ><%= itemData[0].ProductName%> </p>
-                    <p style="font-size: 15px; " class="mb-2" >category:<a href="/user/category/<%= itemData[0].category %>#product-section"> <%= itemData[0].category%></a> </p>
-                  </div> 
-                  <p style="font-size: 19px;" class="m-0"> ₦<small class="item-price"><%= itemData[0].UnitPrice %></small> <span class="old-price text-grey  ml-3">₦ <span class="item-price"> <%= itemData[0].old_price %> </span></p>
-                  <p style="font-size: 12px; margin-top: 5px;">
-                    <% if (itemData[0].total_on_shelf < 10) { %>
-                      <%=itemData[0].total_on_shelf%> items left 
-
-                      <% } else { %>
-
-                        item in stock
-                      <% } %>
-                  </p>
-                  
-                  <div class="p-1 d-flex justify-content-center align-items-center">
-                    
-                    <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= itemData[0].id %>" data-name="<%= itemData[0].ProductName %>" data-price="<%= itemData[0].UnitPrice %>" data-max="<%= itemData[0].total_on_shelf %>" data-image="<%= itemData[0].image %>" onclick="handleButtonClick(this)">Add to cart  </button> 
-                  </div>
-
-
-                <div>
-                  <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user/fetchCart/"> Proceed To Checkout</a>
-                <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user"> Back To store</a>
+      <div class="col-lg-4 order-lg-2" >
+                <div class=" align-items-center"  >
+                  <img src="/uploads/<%= itemData[0].image %>" class=" card-img-top rounded-4"  alt="<%= itemData[0].ProductName %>">
                 </div>
+                <div class="wishlist">
+                  <% if (itemData[0].inWishlist) { %>
+                    <a href="/user/wishlist/<%= itemData[0].id %>/remove" class="wishlist-icon m-1 ">
+                      <i class="fas fa-heart"></i>
+                    </a>
+                    <% } else { %>
+                      <a href="/user/wishlist/<%= itemData[0].id %>/add" class="wishlist-icon m-1 ">
+                          <i class="far fa-heart"></i>
+                        </a>
+                    <% } %>
+                </div>
+                <div class="item-text text-dark">
+                  <p style="font-size: 20px; " class="mb-2" ><%= itemData[0].ProductName%> </p>
+                  <p style="font-size: 15px; " class="mb-2" >category:<a href="/user/category/<%= itemData[0].category %>#product-section"> <%= itemData[0].category%></a> </p>
+                </div> 
+                <p style="font-size: 19px;" class="m-0"> ₦<small class="item-price"><%= itemData[0].UnitPrice %></small> <span class="old-price text-grey  ml-3">₦ <span class="item-price"> <%= itemData[0].old_price %> </span></p>
+                <p style="font-size: 12px; margin-top: 5px;">
+                  <% if (itemData[0].total_on_shelf < 10) { %>
+                    <%=itemData[0].total_on_shelf%> items left 
+
+                    <% } else { %>
+
+                      item in stock
+                    <% } %>
+                </p>
                 
-        </div>
-
-          <div class="col-lg-8 p-0 ">
-      <p style="font-size: 12px; text-transform: uppercase; margin:0px; color: #00000248;">more product details</p>
-            <h6 class="text-uppercase">Product Details</h6>
-                <p class="small fst-italic">
-                  <% if (itemData[0].details) { %>
-                    <p class="small fst-italic">
-                      <%= itemData[0].details %>
-                    </p>
-                  <% } else { %>
-                    <p class="small fst-italic">
-                      No details available for this item
-                    </p>
-                  <% } %>
-                </p>
-
-                <h6 class="text-uppercase">specifications</h6>
-                <p class="small fst-italic">
-                  <% if (itemData[0].specifications) { %>
-                    <p class="small fst-italic">
-                      <%= itemData[0].specifications %>
-                    </p>
-                  <% } else { %>
-                    <p class="small fst-italic">
-                      No specifications available for this item
-                    </p>
-                  <% } %>
-                </p>
+                <div class="p-1 d-flex justify-content-center align-items-center">
+                  
+                  <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= itemData[0].id %>" data-name="<%= itemData[0].ProductName %>" data-price="<%= itemData[0].UnitPrice %>" data-max="<%= itemData[0].total_on_shelf %>" data-image="<%= itemData[0].image %>" onclick="handleButtonClick(this)">Add to cart  </button> 
+                </div>
 
 
-          <p style="font-size: 12px; text-transform: uppercase; margin:0px; color: #00000248;">verified customer feedback</p>
-              <p>no reviews available</p>
-
-          </div>
+              <div>
+                <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user/fetchCart/"> Proceed To Checkout</a>
+              <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user"> Back To store</a>
+              </div>
+              
       </div>
-    </div>
+
       <hr>
-      <div class=" container mb-4 p-2">
-          <p>Dear <%= firstName %>,</p>
-          <p>Thank you for choosing <%- include ('../partials/appName') %> for your grocery and food needs. Our products are carefully selected to ensure quality and satisfaction. We pride ourselves on our credibility and are committed to providing fast response times to all orders.</p>
-          <p>Our head office is located at Parliamentary Extension, behind Udiking, Calabar. For any inquiries or assistance, please contact our customer care line at <a href="tel:+2349160209475">+234 916 020 9475</a>.</p>
-          <div class="social-links">
-              <a target="_blank" href="https://wa.me/09160209475" class="whatsapp-link"><i class="fab fa-whatsapp"></i>Join on WhatsApp</a>
-              <a target="_blank" href="https://instagram.com/general_mart_info" class="instagram-link"><i class="fab fa-instagram"></i>Follow on Instagram</a>
-          </div>
-          <p>We look forward to serving you!</p>
-          <p>Best regards,<br><strong>The <%- include ('../partials/appName') %> Team</strong></p>
-      </div>
+        <div class="col-lg-8 order-1 ">
+         <p style="font-size: 12px; text-transform: uppercase; margin:0px; color: #00000248;">more product details</p>
+          <h6 class="text-uppercase">Product Details</h6>
+              <p class="small fst-italic">
+                <% if (itemData[0].details) { %>
+                  <p class="small fst-italic">
+                    <%= itemData[0].details %>
+                  </p>
+                <% } else { %>
+                  <p class="small fst-italic">
+                    No details available for this item
+                  </p>
+                <% } %>
+              </p>
+              
+              <br>
+        <hr>
+              <h6 class="text-uppercase">specifications</h6>
+              <p class="small fst-italic">
+                <% if (itemData[0].specifications) { %>
+                  <p class="small fst-italic">
+                    <%= itemData[0].specifications %>
+                  </p>
+                <% } else { %>
+                  <p class="small fst-italic">
+                    No specifications available for this item
+                  </p>
+                <% } %>
+              </p>
+
+              <br>
+                <hr>
+        <p style="font-size: 12px; text-transform: uppercase; margin:0px; color: #00000248;">verified customer feedback</p>
+            <p>no reviews available</p>
+
+        </div>
+    </div>
+
+    <hr>
+  </div>
+  <div class="container">
+
+        <p>Dear <%= firstName %>,</p>
+        <p>Thank you for choosing <%- include ('../partials/appName') %> for your grocery and food needs. Our products are carefully selected to ensure quality and satisfaction. We pride ourselves on our credibility and are committed to providing fast response times to all orders.</p>
+        <p>Our head office is located at Parliamentary Extension, behind Udiking, Calabar. For any inquiries or assistance, please contact our customer care line at <a href="tel:+2349160209475">+234 916 020 9475</a>.</p>
+        <div class="social-links">
+            <a target="_blank" href="https://wa.me/09160209475" class="whatsapp-link"><i class="fab fa-whatsapp"></i>Join on WhatsApp</a>
+            <a target="_blank" href="https://instagram.com/general_mart_info" class="instagram-link"><i class="fab fa-instagram"></i>Follow on Instagram</a>
+        </div>
+        <p>We look forward to serving you!</p>
+        <p>Best regards,<br><strong>The <%- include ('../partials/appName') %> Team</strong></p>
+    </div>
 
 
 <br>
 <br>
 <br>
 
-<!-- Scroll Top -->
-<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
 <script>
 
 let formattedPrices = document.querySelectorAll('.item-price');

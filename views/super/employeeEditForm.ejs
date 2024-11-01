@@ -16,6 +16,7 @@
                 <!-- Topbar -->
                 <%- include ('../partials/topbar') %>
                 <!-- End of Topbar -->
+                <%- include ('../partials/messages') %>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -26,7 +27,6 @@
 
                     <!-- DataTales Example -->
                     <div class=" mb-4">
-                        <%- include ('../partials/messages') %>
                         <div class="card-body">
                             <div class="form mt-4 mb-4">
                                 <form action="/super/edit-employee/<%= employeeData[0].id %>" method="post" class="form">

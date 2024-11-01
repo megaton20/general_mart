@@ -16,10 +16,12 @@
                 <!-- Topbar -->
                 <%- include ('../partials/topbar') %>
                 <!-- End of Topbar -->
-
+                <%- include ('../partials/messages') %>
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <a class="btn btn-outline-primary mr-2 mb-1 mt-4" href="/super/all-inventory">All inventory</a>
+                    <a class="btn btn-outline-primary mr-2 mb-1 mt-4" href="/super/all-inventory">Back</a>
+                    <a class="btn btn-outline-primary mr-2 mb-1 mt-4" href="/super/create-category">Add Category</a>
+                    <a class="btn btn-outline-primary mr-2 mb-1 mt-4" href="/super/create-brand">Add Brand</a>
                     <!-- DataTales Example -->
                     <div class=" mb-4">
                            <!-- DataTales Example -->
@@ -30,8 +32,8 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Category Name</label>
-                                        <select name="Category_name" id="" class="form-control">
-                                            <option value="">Select Category</option>
+                                        <select name="Category_name" id="" class="form-control <%= typeof Category_name === 'undefined' || Category_name === '' ? 'is-invalid' : '' %>">
+                                            <option value="<%= typeof Category_name !== 'undefined' && Category_name ? Category_name : '' %>"><%= typeof Category_name !== 'undefined' && Category_name ? Category_name : 'Select Category' %></option>
                                             <% categoryData.forEach(function(data) {%>
                                             <option value="<%= data['Category_name'] %>"> <%= data['Category_name'] %></option>
                                             <% }) %>
@@ -42,19 +44,21 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Brand Name</label>
-                                        <select name="Brand_name" id="" class="form-control">
-                                            <option value="">Select Brand</option>
-                                            <% brandData.forEach(function(data) {%>
-                                            <option value="<%= data['Name'] %> "> <%= data['Name'] %> </option>
+                                        <select name="Brand_name" id="" class="form-control <%= typeof Brand_name === 'undefined' || Brand_name === '' ? 'is-invalid' : '' %>">
+                                            <option value="<%= typeof Brand_name !== 'undefined' && Brand_name ? Brand_name : '' %>" selected><%= typeof Brand_name !== 'undefined' && Brand_name ? Brand_name : '' %></option>
+
+                                            <% brandData.forEach(function(data) { %>
+                                                <option value="<%= data['Name'] %>"> <%= data['Name'] %> </option>
                                             <% }) %>
                                             <option value="unknown"> unknown</option>
                                         </select>
                                     </div>
                                 </div>
+
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Product Name</label>
-                                        <input type="text" name="Product_name" class="form-control" >
+                                        <input type="text" name="Product_name" class="form-control <%= typeof Product_name === 'undefined' || Product_name === '' ? 'is-invalid' : '' %>" value="<%= typeof Product_name !== 'undefined' && Product_name !== '' ? Product_name : '' %>" >
                                     </div>
                                 </div>
 
@@ -62,15 +66,16 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Purchase Price</label>
-                                        <input type="number" name="Purchase_price" class="form-control" >
+                                        <input type="number" name="Purchase_price" class="form-control <%= typeof Purchase_price === 'undefined' || Purchase_price === '' ? 'is-invalid' : '' %>" value="<%= typeof Purchase_price !== 'undefined'  && Purchase_price ? Purchase_price : '' %>">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Supplier Name</label>
-                                        <select name="Supplier_name" id="" class="form-control">
-                                            <option value="">Select Supplier</option>
+                                        <select name="Supplier_name" id="" class="form-control <%= typeof Supplier_name === 'undefined' || Supplier_name === '' ? 'is-invalid' : '' %>">
+                                            <option value="<%= typeof Supplier_name !== 'undefined' && Supplier_name ? Supplier_name : '' %>"><%= typeof Supplier_name !== 'undefined' && Supplier_name ? Supplier_name : 'Select Supplier' %></option>
+
                                             <% supplierData.forEach(function(data) {%>
                                             <option value="<%= data['Business_name'] %> "> <%= data['Business_name'] %> </option>
                                             <% }) %>
@@ -82,8 +87,8 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Payment Method</label>
-                                        <select name="Payment_method" id="" class="form-control">
-                                            <option value="">Select Payment Method</option>
+                                        <select name="Payment_method" id="" class="form-control <%= typeof Payment_method === 'undefined' || Payment_method === '' ? 'is-invalid' : '' %>">
+                                            <option value="<%= typeof Payment_method !== 'undefined' && Payment_method ? Payment_method : '' %>"><%= typeof Payment_method !== 'undefined' && Payment_method ? Delivery_method : ' Payment Method' %></option>
                                             <option value="Cash"> Cash</option>
                                             <option value="Transfer"> Transfer</option>
                                             <option value="Split Payment"> Split Payment</option>
@@ -94,8 +99,8 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Reciever Name</label>
-                                        <select name="Reciever_name" id="" class="form-control">
-                                            <option value="">Select Reciever (only superAdminss)</option>
+                                        <select name="Reciever_name" id="" class="form-control <%= typeof Reciever_name === 'undefined' || Reciever_name === '' ? 'is-invalid' : '' %>">
+                                            <option value="<%= typeof Reciever_name !== 'undefined' && Reciever_name ? Reciever_name : '' %>"><%= typeof Reciever_name !== 'undefined' && Reciever_name ? Reciever_name : 'Select Reciever' %></option>
                                             <% superAdmin.forEach(function(data) {%>
                                             <option value="<%= data['First_name'] %> <%= data['Last_name'] %> "> <%= data['First_name'] %> <%= data['Last_name'] %> </option>
                                             <% }) %>
@@ -106,8 +111,8 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Delivery Method</label>
-                                        <select name="Delivery_method" id="" class="form-control">
-                                            <option value="">Select Delivery Method</option>
+                                        <select name="Delivery_method" id="" class="form-control <%= typeof Delivery_method === 'undefined' || Delivery_method === '' ? 'is-invalid' : '' %>">
+                                            <option value="<%= typeof Delivery_method !== 'undefined' && Delivery_method ? Delivery_method : '' %>"><%= typeof Delivery_method !== 'undefined' && Delivery_method ? Delivery_method : ' Delivery Method' %></option>
                                             <option value="by comapany"> by comapany</option>
                                             <option value="by Supplier"> by Supplier</option>
                                         </select>
@@ -117,21 +122,21 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">QTY Recieved</label>
-                                        <input type="number" name="QTY_recieved" class="form-control" >
+                                        <input type="number" name="QTY_recieved" class="form-control <%= typeof QTY_recieved === 'undefined' || QTY_recieved === '' ? 'is-invalid' : '' %>"  value="<%= typeof QTY_recieved !== 'undefined' && QTY_recieved ? QTY_recieved : '' %>">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Total Product in Pack</label>
-                                        <input type="number" name="total_in_pack" class="form-control" >
+                                        <input type="number" name="total_in_pack" class="form-control <%= typeof total_in_pack === 'undefined' || total_in_pack === '' ? 'is-invalid' : '' %>" value="<%= typeof total_in_pack !== 'undefined' && total_in_pack ? total_in_pack : '' %>">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Manufacture Date</label>
-                                        <input type="date" name="Manufacture_date" class="form-control" >
+                                        <input type="date" name="Manufacture_date" class="form-control <%= typeof Manufacture_date === 'undefined' || Manufacture_date === '' ? 'is-invalid' : '' %>" value="<%= typeof Manufacture_date !== 'undefined' && Manufacture_date ? Manufacture_date : '' %>">
                                     </div>
                                 </div>
 
@@ -139,7 +144,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Expire Date</label>
-                                        <input type="date" name="Expire_date" class="form-control" >
+                                        <input type="date" name="Expire_date" class="form-control <%= typeof Expire_date === 'undefined' || Expire_date === '' ? 'is-invalid' : '' %>" value="<%= typeof Expire_date !== 'undefined' && Expire_date ? Expire_date : '' %>">
                                     </div>
                                 </div>
                              
@@ -147,21 +152,21 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Cost Of Delivery</label>
-                                        <input type="number" name="Cost_of_delivery" class="form-control" >
+                                        <input type="number" name="Cost_of_delivery" class="form-control <%= typeof Cost_of_delivery === 'undefined' || Cost_of_delivery === '' ? 'is-invalid' : '' %>" value="<%= typeof Cost_of_delivery !== 'undefined' && Cost_of_delivery ? Cost_of_delivery : '' %>">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">No. Of Damaged Items</label>
-                                        <input type="number" name="Total_damaged" class="form-control" >
+                                        <input type="number" name="Total_damaged" class="form-control <%= typeof Total_damaged === 'undefined' || Total_damaged === '' ? 'is-invalid' : '' %>" value="<%= typeof Total_damaged !== 'undefined' && Total_damaged ? Total_damaged : '' %>">
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Details and other Description</label>
-                                        <textarea type="text" name="details" class="form-control" rows="5" ></textarea>
+                                        <textarea type="text" name="details" class="form-control <%= typeof details === 'undefined' || details === '' ? 'is-invalid' : '' %>" rows="5" ><%= typeof details !== 'undefined' && details ? details : '' %></textarea>
                                     </div>
                                 </div>
 

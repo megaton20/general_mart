@@ -26,7 +26,6 @@ let presentDay = getDay(systemCalander, "/");
 
 let sqlDate = presentYear + "-" + presentMonth + "-" + presentDay;
 const calculateShippingFee = require("../model/shippingFee");
-
 const calculateCashback = require("../model/cashback");
 
 const appName = "True Essentials Mart";
@@ -65,9 +64,7 @@ exports.profilePage = async (req, res) => {
 
     const referalCode = userData.referral_code || "21xdrd";
 
-    const referLink = `${
-      process.env.LIVE_DIRR || `http://localhost:${process.env.PORT}`
-    }/register/?ref=${referalCode}`;
+    const referLink = `${process.env.LIVE_DIRR || process.env.NGROK_URL ||  `http://localhost:${process.env.PORT}`}/register/?ref=${referalCode}`;
     const usersQuery = `
     SELECT u.id, u.cashback, u."First_name", u."Last_name", r.has_earned
     FROM "Users" u
@@ -486,7 +483,7 @@ exports.userShop = async (req, res) => {
   const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
 
-  const limit = 12;
+  const limit = 24;
   const page = parseInt(req.query.page) || 1;
   const offset = (page - 1) * limit;
 
@@ -566,7 +563,7 @@ exports.userShopQuery = async (req, res) => {
   const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
 
-  const limit = 12;
+  const limit = 24;
   const page = parseInt(req.query.page) || 1;
   const offset = (page - 1) * limit;
 
@@ -590,14 +587,14 @@ exports.userShopQuery = async (req, res) => {
     const totalRows = parseInt(countResult.rows[0].count, 10);
     const totalPages = Math.ceil(totalRows / limit);
 
-    const cartResults = await query(
+    const {rows:presentCart} = await query(
       'SELECT * FROM "Cart" WHERE "user_id" = $1',
       [req.user.id]
     );
-    const presentCart = JSON.parse(JSON.stringify(cartResults.rows));
 
-    const categoryResults = await query('SELECT * FROM "Category"');
-    const allCategory = JSON.parse(JSON.stringify(categoryResults.rows));
+
+    const {rows:allCategory} = await query('SELECT * FROM "Category"');
+
 
     const {
       rows: [result],
@@ -651,7 +648,7 @@ exports.userCategoryQuery = async (req, res) => {
   const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
   const categoryId = req.params.category;
-  const limit = 12;
+  const limit = 24;
   const page = parseInt(req.query.page) || 1;
   const offset = (page - 1) * limit;
 
@@ -1047,335 +1044,6 @@ exports.checkoutScreen = async (req, res) => {
   }
 };
 
-// cart sending for order
-exports.submitCart = async (req, res) => {
-  const transactionPaymentReference = req.params.reference;
-  const email = req.user.email;
-  const userId = req.user.id;
-  const storeId = req.user.store_id;
-  const storeName = req.user.store_name;
-
-  // Generate Invoice Email Function
-  const generateInvoiceEmail = (
-    userData,
-    transactionData,
-    itemsList,
-    privatePin,
-    totalSubtotal,
-    shippingFee,
-    cashbackEarned
-  ) => {
-    const totalAmount = parseFloat(totalSubtotal) + parseFloat(shippingFee);
-
-    return `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd;">
-            <!-- Invoice Heading -->
-            <div style="text-align: center; margin-bottom: 20px;  ">
-              <h1 style="color: #333;">Invoice</h1>
-              <p style="color: #333;">Thank you for your purchase!</p>
-            </div>
-
-            <!-- User Information -->
-            <div style="margin-bottom: 20px;">
-              <p><strong>Customer Name:</strong> ${userData.First_name} ${
-      userData.Last_name
-    }</p>
-              <p><strong>Customer Email:</strong> ${userData.email}</p>
-              <p><strong>Customer Address:</strong> ${userData.Address}</p>
-              <p><strong>Customer State:</strong> ${userData.state}</p>
-              <p><strong>Customer LGA:</strong> ${userData.lga}</p>
-              <p><strong>Customer Phone:</strong> ${userData.Phone}</p>
-            </div>
-
-            <!-- Transaction Details -->
-            <hr>
-            <div style="margin-bottom: 20px;">
-              <p><strong>Transaction ID:</strong> ${transactionPaymentReference}</p>
-              <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
-            </div>
-
-            <!-- Items Purchased -->
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-              <thead>
-                <tr style="background-color: #f7f7f7; text-align: left;">
-                  <th style="padding: 10px; border: 1px solid #ddd;">Item</th>
-                  <th style="padding: 10px; border: 1px solid #ddd;">Quantity</th>
-                  <th style="padding: 10px; border: 1px solid #ddd;">Price</th>
-                  <th style="padding: 10px; border: 1px solid #ddd;">Subtotal</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${itemsList}
-              </tbody>
-            </table>
-
-            <!-- Total and Shipping -->
-            <div style="text-align: right; margin-bottom: 20px;">
-              <p><strong>Subtotal:</strong> NGN ${totalSubtotal.toFixed(2)}</p>
-              <p><strong>Shipping Fee:</strong> NGN ${shippingFee}</p>
-              <p><strong>Total Amount:</strong> NGN ${totalAmount}</p>
-            </div>
-
-            <!-- Cashback Earned -->
-            <div style="text-align: right; margin-bottom: 20px;">
-              <p><strong>Cashback Earned:</strong> NGN ${cashbackEarned.toFixed(
-                2
-              )}</p>
-            </div>
-
-            <!-- Delivery PIN -->
-            <div style="text-align: center; margin-bottom: 20px;">
-              <p style="color:red "><strong>Your Confirmation PIN:</strong> ${privatePin}</p>
-              <p style="color:#41afa5">Please provide this PIN to the delivery personnel to confirm your order.</p>
-            </div>
-
-            <!-- Footer -->
-            <div style="text-align: center; color: #fffff; font-size: 12px;">
-              <p>&copy; ${new Date().getFullYear()} ${appName}. All rights reserved.</p>
-              <p> Cross River State, Calabar | Phone: +234 916 020 9475 | Email: ${appEmail}</p>
-            </div>
-          </div>
-        `;
-  };
-
-  const generateNumericUUID = (length) => {
-    return Array.from({ length }, () => Math.floor(Math.random() * 10)).join(
-      ""
-    );
-  };
-
-  // Example usage:
-  const uuidForEachSale = generateNumericUUID(10);
-
-  const generateSecurePin = (length) => {
-    return crypto
-      .randomInt(0, 10 ** length)
-      .toString()
-      .padStart(length, "0");
-  };
-
-  const privatePin = generateSecurePin(6); // Generates a 6-digit PIN
-
-  try {
-    // Check if the transaction exists
-    const transactionResults = await query(
-      `SELECT * FROM "Transactions" WHERE "reference" = $1`,
-      [transactionPaymentReference]
-    );
-    const transactionData = transactionResults.rows[0];
-
-    if (!transactionData || email !== transactionData.email) {
-      req.flash("error_msg", "Transaction not found or email conflict.");
-      return res.redirect("/user");
-    }
-
-    // Fetch user data
-    const userResults = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [
-      userId,
-    ]);
-    const userData = userResults.rows[0];
-
-    // Fetch cart items
-    const cartItemsResults = await query(
-      `SELECT * FROM "Cart" WHERE "user_id" = $1`,
-      [userId]
-    );
-    const cartItems = cartItemsResults.rows;
-
-    // Calculate the total subtotal
-    const totalSubtotal = cartItems.reduce(
-      (accumulator, item) => accumulator + parseFloat(item.subtotal),
-      0
-    );
-
-    const shippingFee = await calculateShippingFee(userData.lga); // Assuming calculateShippingFee is defined
-    const cashbackEarned = calculateCashback(totalSubtotal); // Assuming calculateCashback is defined
-
-    // Insert data into Orders table
-    const insertOrderQuery = `
-          INSERT INTO "Orders" (
-              "customer_email", "customer_id", "customer_phone", "customer_address",
-              "customer_state", "customer_lga", "delivery_pin", "pick_up_store_id",
-              "pick_up_store_name", "sale_id", "transaction_id", "Delivery",
-              "status", "Payment_type", "created_date", "total_amount", "shipping_fee"
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
-      `;
-    const orderValues = [
-      email,
-      userId,
-      userData.Phone,
-      userData.Address,
-      userData.state,
-      userData.lga,
-      privatePin,
-      storeId,
-      storeName,
-      uuidForEachSale,
-      transactionData.id,
-      "Delivery",
-      "incomplete",
-      "cash",
-      new Date(),
-      totalSubtotal,
-      shippingFee,
-    ];
-    await query(insertOrderQuery, orderValues);
-
-    // Insert data into Order_Products table
-    const insertOrderProductsQuery = `
-          INSERT INTO "Order_Products" (
-              "sale_id", "product_id", "price_per_item", "subTotal",
-              "store_id", "cart_id", "status", "name", "quantity", "image"
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-      `;
-    const orderProductPromises = cartItems.map((cartItem) => {
-      const {
-        product_id,
-        price_per_item,
-        quantity,
-        product_name,
-        subtotal,
-        uuid,
-        image,
-      } = cartItem;
-      return query(insertOrderProductsQuery, [
-        uuidForEachSale,
-        product_id,
-        price_per_item,
-        subtotal,
-        storeId,
-        uuid,
-        "pending",
-        product_name,
-        quantity,
-        image,
-      ]);
-    });
-
-    await Promise.all(orderProductPromises);
-
-    // creating the invoice to send
-    const itemsList = cartItems
-      .map(
-        (item) => `
-      <tr>
-        <td style="padding: 10px; border: 1px solid #ddd;">${item.product_name}</td>
-        <td style="padding: 10px; border: 1px solid #ddd;">${item.quantity}</td>
-        <td style="padding: 10px; border: 1px solid #ddd;">NGN ${item.price_per_item}</td>
-        <td style="padding: 10px; border: 1px solid #ddd;">NGN ${item.subtotal}</td>
-      </tr>
-      `
-      )
-      .join("");
-
-    const emailBody = generateInvoiceEmail(
-      userData,
-      transactionData,
-      itemsList,
-      privatePin,
-      totalSubtotal,
-      shippingFee,
-      cashbackEarned
-    );
-
-    // Configure Nodemailer
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      host: "smtp.gmail.com",
-      secure: false,
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-
-    const mailOptions = {
-      from: {
-        name: appName,
-        address: appEmail,
-      },
-      to: userData.email,
-      subject: `Your Purchase Invoice - Order #${transactionPaymentReference}`,
-      html: emailBody,
-    };
-
-    // Send the invoice email
-    transporter.sendMail(mailOptions, (err, info) => {
-      if (err) {
-        console.log(err);
-        req.flash("error_msg", `Error sending invoice:`);
-      }
-    });
-
-    const emailNotificationOptions = {
-      from: {
-        name: appName,
-        address: appEmail,
-      },
-      to: "adarikumichael@gmail.com", //personal email
-      subject: `New Order `,
-      html: `transaction reference #${transactionPaymentReference} 
-    <br>
-    from: ${email}
-    <br>
-    customer name: ${userData.First_name} ${userData.Last_name}
-    <br>
-    lga: ${userData.lga}
-    <br>
-    state: ${userData.state}
-    <br>
-    address: ${userData.Address}
-    <br>
-    date: ${sqlDate}
-     `,
-    };
-
-    transporter.sendMail(emailNotificationOptions, (err, info) => {
-      if (err) {
-        console.log(err);
-        req.flash("error_msg", `Error sending  ntification to admin email:`);
-      }
-    });
-
-    // Clear the cart after the order is placed
-    await query(`DELETE FROM "Cart" WHERE "user_id" = $1`, [userId]);
-    await query(
-      'INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',
-      [req.user.id, `Your Order was placed.`, "success", false]
-    );
-
-    req.flash("success_msg", `NGN ${cashbackEarned} earned!`);
-
-    // Fetch user data
-    const {
-      rows: [result],
-    } = await query(
-      'SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',
-      [req.user.id, false]
-    );
-
-    let totalUnreadNotification = parseInt(result.totalunread, 10);
-    const { rows: allCategory } = await query('SELECT * FROM "Category"');
-    return res.render("./user/order-success", {
-      pageTitle: "successful",
-      appName: appName,
-      appEmail,
-      month: monthName,
-      day: dayName,
-      date: presentDay,
-      year: presentYear,
-      saleId: uuidForEachSale,
-      cashback: cashbackEarned,
-      PIN: privatePin,
-      totalUnreadNotification,
-      allCategory,
-    });
-  } catch (error) {
-    console.error(`Error during submitCart: ${error}`);
-    req.flash("error_msg", "We are on it!.");
-    return res.redirect("/user");
-  }
-};
 
 // invoice of an order
 exports.invoice = async (req, res) => {

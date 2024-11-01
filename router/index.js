@@ -2,12 +2,33 @@ const express = require('express');
 const crypto = require('crypto');
 const router = express.Router();
 const axios = require('axios');
+const nodemailer = require("nodemailer");
 const { promisify } = require('util');
 const db = require("../model/databaseTable");
 const query = promisify(db.query).bind(db);
 const passport = require('../config/passport');
 const { ensureAuthenticated, forwardAuthenticated } = require('../config/auth');
 const stateData = require("../model/stateAndLGA");
+const calculateShippingFee = require("../model/shippingFee");
+const calculateCashback = require("../model/cashback");
+
+
+const systemCalander = new Date().toLocaleDateString();
+const yearModel = require("../model/getYear");
+let presentYear = yearModel(systemCalander, "/");
+
+const monthNameModel = require("../model/findCurrentMonth");
+let monthName = monthNameModel(systemCalander, "/");
+
+const dayModel = require("../model/dayOfWeek");
+let dayName = dayModel(systemCalander, "/");
+
+const monthModel = require("../model/getMonth");
+let presentMonth = monthModel(systemCalander, "/");
+
+const getDay = require("../model/getDay");
+let presentDay = getDay(systemCalander, "/");
+let sqlDate = presentYear + "-" + presentMonth + "-" + presentDay;
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY ;
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
@@ -588,8 +609,8 @@ router.get('/verify', async (req, res) => {
     });
 
     if (response.data.status && response.data.data.status === 'success') {
-      req.flash('success_msg', 'Payment successful');
-      return res.redirect(`/user/order/${reference}`);
+      req.flash('success_msg', 'Payment successful And Order placed!');
+      return res.redirect(`/user/`);
       
     } else {
       // Handle failed verification
@@ -645,6 +666,15 @@ router.post('/webhook', async (req, res) => {
         const { id, reference, amount, currency, status, customer: { email }, paid_at, metadata } = event.data;
         const { applyCashback, userId, oAmnt, discount } = metadata; // Retrieve discount from metadata
 
+        // Check if transaction already exists in the database to prevent duplication
+        const existingTransactionQuery = `SELECT * FROM "Transactions" WHERE "reference" = $1`;
+        const { rows: existingTransaction } = await query(existingTransactionQuery, [reference]);
+
+        if (existingTransaction.length > 0) {
+          console.log('Transaction already exists, no need to insert.');
+          return res.sendStatus(200); // Acknowledge the webhook and exit
+        }
+
         // Save transaction details to the database
         const insertTransactionQuery = `
           INSERT INTO "Transactions" ("transaction_id", "reference", "amount", "currency", "status", "email", "paid_at", "user_id") 
@@ -655,7 +685,7 @@ router.post('/webhook', async (req, res) => {
         // Fetch the user's current cashback using userId
         const userQuery = `SELECT "cashback" FROM "Users" WHERE "id" = $1`;
         const userResults = await query(userQuery, [userId]);
-        const currentCashback = userResults.rows[0].cashback;
+        const currentCashback = userResults.rows[0].cashback || 0;
 
         // Apply the exact discount if cashback was applied
         if (applyCashback && discount) {
@@ -667,9 +697,256 @@ router.post('/webhook', async (req, res) => {
           await query(updateCashbackQuery, [newCashback, userId]);
         }
 
-        // Transaction successfully handled, respond with 200 OK
-        console.log('Payment successful and transaction recorded:', reference);
-        return res.sendStatus(200);
+        
+          // Generate Invoice Email Function
+
+            const generateInvoiceEmail = (userData,transactionData,itemsList,privatePin,totalSubtotal,shippingFee,cashbackEarned) => {
+              // Parse values to avoid any [object Object] errors in display
+              const parsedSubtotal = parseFloat(totalSubtotal) || 0;
+              const parsedShippingFee = parseFloat(shippingFee) || 0;
+              const parsedCashback = parseFloat(cashbackEarned) || 0;
+              const totalAmount = parsedSubtotal + parsedShippingFee;
+
+              return `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd;">
+                  <div style="text-align: center; margin-bottom: 20px;">
+                      <h1 style="color: #41afa5;">${appName}</h1>
+                      <h2 style="color: #333; margin-top: 5px;">Invoice</h2>
+                      <p style="color: #333;">Thank you for your purchase!</p>
+                  </div>
+                  
+                  <div style="border-top: 2px solid #ddd; padding-top: 15px; margin-bottom: 20px;">
+                      <h3 style="color: #41afa5;">Customer Info</h3>
+                      <p><strong>Name:</strong> ${userData[0]?.First_name || 'N/A'} ${userData[0]?.Last_name || ''}</p>
+                      <p><strong>Email:</strong> ${userData[0]?.email || 'N/A'}</p>
+                      <p><strong>Address:</strong> ${userData[0]?.Address || 'N/A'}</p>
+                      <p><strong>State:</strong> ${userData[0]?.state || 'N/A'}</p>
+                      <p><strong>LGA:</strong> ${userData[0]?.lga || 'N/A'}</p>
+                      <p><strong>Phone:</strong> ${userData[0]?.Phone || 'N/A'}</p>
+                  </div>
+                  
+                  <div style="margin-bottom: 20px;">
+                      <h3 style="color: #41afa5;">Transaction Details</h3>
+                      <p><strong>Transaction ID:</strong> ${reference}</p>
+                      <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+                  </div>
+                  
+                  <div style="margin-bottom: 20px;">
+                      <h3 style="color: #41afa5;">Order Summary</h3>
+                      ${itemsList}
+                  </div>
+                  
+                  <div style="text-align: right; margin-bottom: 20px;">
+                      <p><strong>Subtotal:</strong> NGN ${parsedSubtotal.toFixed(2)}</p>
+                      <p><strong>Shipping Fee:</strong> NGN ${parsedShippingFee.toFixed(2)}</p>
+                      <p><strong>Total Amount:</strong> NGN ${totalAmount.toFixed(2)}</p>
+                      <p style="color: #41afa5;"><strong>Cashback Earned:</strong> NGN ${parsedCashback.toFixed(2)}</p>
+                  </div>
+            
+                  <div style="text-align: center; margin-bottom: 20px;">
+                      <p style="color: red;"><strong>Your Confirmation PIN:</strong> ${privatePin}</p>
+                      <p style="color: #41afa5;">Please provide this PIN to the delivery personnel to confirm your order.</p>
+                  </div>
+                  
+                  <div style="text-align: center; font-size: 12px; color: #666; margin-bottom: 10px;">
+                      <p>&copy; ${new Date().getFullYear()} ${appName}. All rights reserved.</p>
+                      <p>Cross River State, Calabar | Phone: +234 916 020 9475 | Email: ${appEmail}</p>
+                  </div>
+                  
+                  <div style="text-align: center; margin-top: 20px;">
+                      <img src="path/to/your/signature.png" alt="Signature" style="height: 80px; width: auto;">
+                      <p style="margin-top: 5px;">Manager: ${userData[0]?.First_name || 'Your Name'}</p>
+                  </div>
+              </div>
+              `;
+            
+            };
+
+        
+        
+
+        const generateNumericUUID = (length) => {
+          return Array.from({ length }, () => Math.floor(Math.random() * 10)).join("");
+        };
+      
+        // Example usage:
+        const uuidForEachSale = generateNumericUUID(10);
+      
+        // Generates a 6-digit PIN
+        const generateSecurePin = (length) => {
+          return crypto
+            .randomInt(0, 10 ** length)
+            .toString()
+            .padStart(length, "0");
+        };
+        const privatePin = generateSecurePin(6); 
+
+
+    // Check if the transaction exists
+    const transactionResults = await query(`SELECT * FROM "Transactions" WHERE "reference" = $1`,[reference]);
+    const transactionData = transactionResults.rows[0];
+
+    if (!transactionData || email !== transactionData.email) {
+      req.flash("error_msg", "Transaction not found or email conflict.");
+      return res.redirect("/user");
+    }
+
+        // Fetch user data
+        const {rows:userData} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [userId]);
+
+            // Fetch cart items
+    const {rows:cartItems} = await query(`SELECT * FROM "Cart" WHERE "user_id" = $1`,[userId]);
+
+       // Calculate the total subtotal
+       const totalSubtotal = cartItems.reduce(
+        (accumulator, item) => accumulator + parseFloat(item.subtotal),
+        0
+      );
+
+      const shippingFee = await calculateShippingFee(userData[0].lga); 
+      const cashbackEarned = calculateCashback(totalSubtotal); 
+
+          // Insert data into Orders table
+    const insertOrderQuery = `
+    INSERT INTO "Orders" (
+        "customer_email", "customer_id", "customer_phone", "customer_address",
+        "customer_state", "customer_lga", "delivery_pin", "pick_up_store_id",
+        "pick_up_store_name", "sale_id", "transaction_id", "Delivery",
+        "status", "Payment_type", "created_date", "total_amount", "shipping_fee"
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+`;
+const orderValues = [
+          email,
+          userId,
+          userData[0].Phone,
+          userData[0].Address,
+          userData[0].state,
+          userData[0].lga,
+          privatePin,
+          // storeId:"0",\
+          0,
+          // storeName,
+          null,
+          uuidForEachSale,
+          transactionData.id,
+          "Delivery",
+          "incomplete",
+          "transfer",
+          new Date(),
+          totalSubtotal,
+          shippingFee,
+          ];
+          await query(insertOrderQuery, orderValues);
+
+
+              // Insert data into Order_Products table
+    const insertOrderProductsQuery = `
+    INSERT INTO "Order_Products" (
+        "sale_id", "product_id", "price_per_item", "subTotal",
+        "store_id", "cart_id", "status", "name", "quantity", "image"
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+`;
+   const orderProductPromises = cartItems.map((cartItem) => {
+      const {product_id,price_per_item,quantity,product_name,subtotal,uuid,image} = cartItem;
+      return query(insertOrderProductsQuery, [uuidForEachSale,product_id,price_per_item,subtotal,
+        // storeId,
+        0,
+        uuid,"pending",product_name,quantity,image]);
+    });
+
+    await Promise.all(orderProductPromises);
+
+
+        // creating the invoice to send
+const itemsList = cartItems
+.map(
+  (item) => `
+    <div style="border: 1px solid #ddd; border-radius: 8px; padding: 10px; margin-bottom: 10px; background-color: #f9f9f9;">
+      <p><strong>Item:</strong> ${item.product_name}</p>
+      <p><strong>Quantity:</strong> ${item.quantity}</p>
+      <p><strong>Price:</strong> NGN ${item.price_per_item}</p>
+      <p><strong>Subtotal:</strong> NGN ${item.subtotal}</p>
+    </div>
+  `
+)
+.join("");
+
+
+        // send mail
+
+
+    const emailBody = generateInvoiceEmail(userData,transactionData,itemsList,privatePin,totalSubtotal,shippingFee,cashbackEarned);
+
+    
+        // Configure Nodemailer
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          host: "smtp.gmail.com",
+          secure: false,
+          auth: {
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASSWORD,
+          },
+        });
+    
+        const mailOptions = {
+          from: {
+            name: appName,
+            address: appEmail,
+          },
+          to: userData[0].email,
+          subject: `Your Purchase Invoice - Order #${reference}`,
+          html: emailBody,
+        };
+    
+        // Send the invoice email
+        transporter.sendMail(mailOptions, (err, info) => {
+          if (err) {
+            console.log(err);
+            req.flash("error_msg", `Error sending invoice:`);
+          }
+        });
+    
+        const emailNotificationOptions = {
+          from: {
+            name: appName,
+            address: appEmail,
+          },
+          to: "adarikumichael@gmail.com", //personal email
+          subject: `New Order `,
+          html: `transaction reference #${reference} 
+                <br>
+                from: ${email}
+                <br>
+                customer name: ${userData[0].First_name} ${userData[0].Last_name}
+                <br>
+                lga: ${userData[0].lga}
+                <br>
+                state: ${userData[0].state}
+                <br>
+                address: ${userData[0].Address}
+                <br>
+                date: ${sqlDate}
+                `,
+                };
+    
+        transporter.sendMail(emailNotificationOptions, (err, info) => {
+          if (err) {
+            console.log(err);
+            req.flash("error_msg", `Error sending  ntification to admin email:`);
+          }
+        });
+  
+        await query(
+          'INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',
+          [userId, `Your Order was placed.`, "success", false]
+        );
+    
+        
+    // Clear the cart after the order is placed
+        await query(`DELETE FROM "Cart" WHERE "user_id" = $1`, [userId]);
+        return res.sendStatus(200); // Acknowledge the webhook
+
       } else {
         console.log(`Unhandled event type: ${event.event}`);
         return res.sendStatus(200); // Acknowledge other unhandled events
@@ -683,6 +960,7 @@ router.post('/webhook', async (req, res) => {
     return res.sendStatus(400); // Bad request due to invalid signature
   }
 });
+
 
 
 // Logout route

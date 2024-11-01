@@ -16,6 +16,7 @@
                 <!-- Topbar -->
                 <%- include ('../partials/topbar') %>
                 <!-- End of Topbar -->
+                <%- include ('../partials/messages') %>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -24,7 +25,6 @@
                     <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-store">Add Store</a>
 
                     <!-- DataTales Example -->
-                        <%- include ('../partials/messages') %>
 
                         <% if(allStores.length <= 0){ %>
                             <div class="card-body">

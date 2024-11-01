@@ -18,25 +18,31 @@
                  <!-- Topbar -->
                  <%- include ('../partials/topbar') %>
                  <!-- End of Topbar -->
+                 <%- include ('../partials/messages') %>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <a class="btn btn-outline-primary mr-2 mb-1 mt-4" href="/super/all-inventory">Back</a>
+                    <a class="btn btn-outline-success mr-2 mb-1 mt-4" href="/super/create-inventory">Add Inventory</a>
 
 
-                        <%- include ('../partials/messages') %>
+                    <a href="/super/edit-Inventory/<%= allInventory.id %>" class="btn btn-outline-warning mr-2 mb-1 mt-4" title="Edit">
+                        <i class="fas fa-edit"></i>
+                      </a>
 
-                                 <!-- Content Row -->
-                            <p>inventory Preview</p>
-                            <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-inventory">Add Inventory</a>
+                      <form action="/super/delete-inventory/<%= allInventory.id %>" method="POST"
+                        style="display: inline">
+                        <input type="hidden" name="_method" value="DELETE" />
+                        <button class="btn btn-outline-danger mr-2 mb-1 mt-4">Delete</button>
+                      </form>
+
+                      <hr>
+
                                 <div class="row">
 
                                     <!-- Area Chart -->
                                     <div class="col-xl-8 col-lg-7">
                                         <div class=" mb-4">
-                                            <!-- Card Header - Dropdown -->
-                                 
-                                            <!-- Card Body -->
-                                            <div class="card-body">
 
                                                 <div class="row">
                                                     <div class="col-6">Product Name: </div>
@@ -78,9 +84,6 @@
                                                     <div class="col-6">Store Presence: </div>
                                                     <div class="col-6"><%= allInventory.activate %></div>
                                                 </div>
-
-
-                                            </div>
                                         </div>
                                     </div>
             

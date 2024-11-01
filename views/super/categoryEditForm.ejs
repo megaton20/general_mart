@@ -16,6 +16,7 @@
                 <!-- Topbar -->
                 <%- include ('../partials/topbar') %>
                 <!-- End of Topbar -->
+                <%- include ('../partials/messages') %>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -26,7 +27,6 @@
 
                     <!-- DataTales Example -->
                     <div class=" mb-4">
-                        <%- include ('../partials/messages') %>
 
                                 <form action="/super/edit-category/<%= categoryData[0].CategoryID %>" method="post" class="form  container">
                                    <div class="row ">

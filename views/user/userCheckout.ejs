@@ -4,48 +4,10 @@
 
 <div class="container">
   <div class="row gy-5">
-    <div class="col-lg-8">
-      <a href="/user/fetchCart" style="font-size: 12px; text-transform: uppercase;">Modify Cart</a>
-      <div class="card my-box-shadow mb-4">
-        <div class="card-body">
-          <% cartItems.forEach(item => { %>
-            <div class="cart-item row pt-2 ">
-              <div class="col-auto mr-1">
-                <img src="/uploads/<%= item.image %>" class="img-fluid rounded" alt="<%= item.product_name %>">
-              </div>
-              <div class="cart-item-details col-auto">
-                <p class="m-0" style="font-size: 14px;"><%= item.product_name %></p>
-                <p class="m-0" style="font-size: 8px;"><%= item.quantity %> (x)</p>
-              </div>
-            </div>
-          <% }); %>
-        </div>
-      </div>
+   
+    
 
-      <a href="/user/edit-user/<%=userData.id %>" style="font-size: 12px; text-transform: uppercase;">Edit shipping Info</a>
-      <div class="card my-box-shadow mb-3">
-        <div class="card-body" style="font-size: 13px;">
-            <p class=" m-0">Location:</p>
-            <p class=" m-0"><%= userData.state %>, <%= userData.lga %>, <%= userData.Address %></p>
-            <p class=" mt-2 m-0">Land Mark:</p>
-            <p class=" m-0"><%= userData.land_mark %></p>
-        </div>
-      </div>
-
-      <a href="/user/change-phone" style="font-size: 12px; text-transform: uppercase;">Edit contact Info</a>
-      <div class="card my-box-shadow">
-        <div class="card-body" style="font-size: 13px;">
-          <div class="row">
-            <p class="col-3 m-0">Phone</p>
-            <p class="col-8 m-0"><%= userData.Phone %></p>
-            <p class="col-3 m-0">Email</p>
-            <p class="col-8 m-0"><%= userData.email %></p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-4" data-aos="" data-aos-delay="0">
+    <div class="col-lg-4 order-lg-1" data-aos="" data-aos-delay="0">
       <div class="card my-box-shadow">
         <div class="card-body" style="font-size: 12px; margin-top: 5px;">
           <div class="row mb-4">
@@ -65,13 +27,17 @@
               <input type="email" class="form-control" id="email" required value="<%= userData.email %>" hidden>
               <input type="number" class="form-control" id="amount" value="<%= customerToPay %>" hidden>
             
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="applyCashback" id="applyCashback">
-                <label class="form-check-label" for="applyCashback" id="cashbackLabel">
-                  Apply discount (₦<%= userCashback %>)
-                </label>
-              </div>
-            
+              <% if (customerToPay > 1000) { %>
+                <!-- Show "Apply Cashback" checkbox -->
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="applyCashback" id="applyCashback">
+                  <label class="form-check-label" for="applyCashback" id="cashbackLabel">
+                    Apply discount (₦<%= userCashback %>)
+                  </label>
+                </div>
+              <% } else { %>
+                <p>Cashback not available</p>
+              <% } %>
               <!-- Display cashback details -->
               <div id="cashbackDetails" style="margin-top: 10px;">
                 <p id="removedCashback" style="display: none;">
@@ -96,6 +62,21 @@
           
           <hr>
           <p class="text-warning rounded" style="font-size: 12px; margin-top: 5px; border: 1px solid; padding: 5px;">Item will be delivered in 1 hour(s) after confirmation.</p>
+          <hr>
+
+            <p class=" m-0">Phone</p>
+            <p class=" m-0"><%= userData.Phone %></p>
+            <p class=" m-0">Email</p>
+            <p class=" m-0"><%= userData.email %></p>
+
+          <hr>
+          <p class=" m-0">Location:</p>
+          <p class=" m-0"><%= userData.state %>, <%= userData.lga %>, <%= userData.Address %></p>
+          <p class=" mt-2 m-0">Land Mark:</p>
+          <p class=" m-0"><%= userData.land_mark %></p>
+            <hr>
+          <a href="/user/edit-user/<%=userData.id %>" style="font-size: 12px; text-transform: uppercase; display: block;">Change shipping Info</a>
+          <a href="/user/change-phone" style="font-size: 12px; text-transform: uppercase; margin-top: 3px; display: block;">Change contact Info</a>
           <% } else { %>
 
           <div class="mt-3">
@@ -107,6 +88,26 @@
 
         </div>
       </div>
+    </div>
+
+    <div class="col-lg-8">
+      <a href="/user/fetchCart" style="font-size: 12px; text-transform: uppercase;">Modify Cart</a>
+      <div class="card my-box-shadow mb-4">
+        <div class="card-body">
+          <% cartItems.forEach(item => { %>
+            <div class="cart-item row pt-2 ">
+              <div class="col-auto mr-1">
+                <img src="/uploads/<%= item.image %>" class="img-fluid rounded" alt="<%= item.product_name %>">
+              </div>
+              <div class="cart-item-details col-auto">
+                <p class="m-0" style="font-size: 14px;"><%= item.product_name %></p>
+                <p class="m-0" style="font-size: 8px;"><%= item.quantity %> (x)</p>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
     </div>
   </div>
 

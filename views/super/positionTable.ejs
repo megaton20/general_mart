@@ -11,8 +11,9 @@
             <!-- Main Content -->
             <div id="content">
                 <%- include ('../partials/topbar') %>
+                <!-- Topbar -->
+                <%- include ('../partials/messages') %>
 
-                    <!-- Topbar -->
                     <!-- End of Topbar -->
 
                     <!-- Begin Page Content -->
@@ -22,11 +23,10 @@
                         <a class="btn btn-outline-primary mr-2 mb-1" href="/super/create-position">Add Position</a>
 
                         <!-- DataTales Example -->
-                            <%- include ('../partials/messages') %>
 
                                 <% if(allPosition.length <=0){ %>
 
-                                    <h1>No Category Record Found !</h1>
+                                    <h1>No Record Found !</h1>
                                     <% } else{ %>
 
 

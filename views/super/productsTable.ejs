@@ -14,14 +14,13 @@
         <!-- Topbar -->
         <%- include ('../partials/topbar') %>
           <!-- End of Topbar -->
+          <%- include ('../partials/messages') %>
 
           <!-- Begin Page Content -->
           <div class="container-fluid">
 
             <!-- Page Heading -->
-            <%- include ('../partials/messages') %>
             <a class="btn btn-outline-primary mr-2 mb-1 mt-4" href="/super/all-inventory"> See All Inventory</a>
-            <h1 class="h3 mb-2 text-gray-800">Store Shelf </h1>
 
               <!-- DataTales Example -->
               <div class=" mb-4">
@@ -41,9 +40,8 @@
                               <th>Brand Name</th>
                               <th>Category</th>
                               <th>Unit Price</th>
-                              <th>Stock QTY</th>
                               <th>Shelf Item</th>
-                              <th>Activated ?</th>
+                              <th>Activated</th>
                               <th>Actions</th>
                               <th>on showcase</th>
                               <th>showcase</th>
@@ -57,13 +55,15 @@
                             <% allProducts.forEach(function(data) {%>
                               <tr>
                                 <td>
+                                  <%= data['id'] %>
+                                </a>
+                              </td>
+                              <td>
                                   <a href="/super/inventory/<%= data['inventory_id'] %>">
-                                    <%= data['id'] %>
-                                  </a>
-                                </td>
-                                <td>
                                   <img class="img-thumbnail" style="max-width: 40px;"
-                                    src="/uploads/<%= data['image'] %>" alt="image"></td>
+                                    src="/uploads/<%= data['image'] %>" alt="image">
+                                  </a>
+                                  </td>
                                 <td>
                                   <%= data['ProductName'] %>
                                 </td>
@@ -77,40 +77,27 @@
                                   <%= data['UnitPrice'] %>
                                 </td>
                                 <td>
-                                  <%= data['StockQuantity'] %>
+                                  <span class="badge <%= data['total_on_shelf'] >= 10 ? 'badge-success' : 'badge-danger' %>">
+                                    <%= data['total_on_shelf'] %>
+                                  </span>
                                 </td>
                                 <td>
-
-                                  <% if ( data.total_on_shelf>= 10) { %>
-
-                                    <div class="text-success ">
-                                      <%= data['total_on_shelf'] %>
-                                    </div>
-                                    <% } else { %>
-
-                                      <div class="text-danger ">
-                                        <%= data['total_on_shelf'] %>
-                                      </div>
-
-                                      <% } %>
-
-
-                                </td>
-                                <td>
-                                  <%= data['activate'] %>
+                                  <span class="badge <%= data['activate'] >= true ? 'badge-success' : 'badge-warning' %>">
+                                    <%= data['activate'] %>
+                                  </span>
                                 </td>
 
                                 <td class="" style="display: flex;">
                                     <div class="col-3">
                                       <form action="/super/unflag-product/<%= data['inventory_id'] %>" method="POST">
                                         <input type="hidden" name="_method" value="PUT" />
-                                        <button class="btn btn-success"><i class="fas fw fa-plus"></i></button>
+                                        <button class="btn "><i class="fas fw fa-plus"></i></button>
                                       </form>
                                     </div>
                                     <div class="col-3">
                                       <form action="/super/flag-product/<%= data['inventory_id'] %>" method="POST">
                                         <input type="hidden" name="_method" value="PUT" />
-                                        <button class="btn btn-warning"><i class="fas fw fa-times"></i> </button>
+                                        <button class="btn "><i class="fas fw fa-times"></i> </button>
                                       </form>
                                     </div>
 
@@ -118,7 +105,7 @@
 
                                     <div class="col-3">
                                       <a href="/super/update-price/<%= data['inventory_id'] %>"
-                                        class="btn btn-primary">new price </a>
+                                        class="btn"><i class="fas fw fa-shop"></i> </a>
                                     </div>
 
 
@@ -126,7 +113,9 @@
                                 </td>
 
                                 <td>
-                                  <%= data['showcase'] %>
+                                  <span class="badge <%= data['showcase'] === 'yes' ? 'badge-success' : 'badge-danger' %>">
+                                    <%= data['showcase'] %>
+                                  </span>
                                 </td>
                                 <td>
 
