@@ -3,17 +3,17 @@
 
 
   <%- include('./partials/navbar') %>
-
-
-      <div class="container"><%- include('../partials/messages') %></div>
-
-      <!-- Page adverts -->
-    <div class="container">
-      <%- include('./partials/ads') %>
+  <div class="page-header">
+    <div class=" text-center ">
+        <h5 class="text-uppercase">items on show glass</h5>
     </div>
-    <!-- Service Details Section -->
-    <section id="service-details" class="service-details section">
-      <div class="container">
+</div>
+
+
+        
+        <section id="service-details" class="service-details section">
+          <div class="container">
+        <%- include('../partials/messages') %>
         <div class="row">
           <div class="col-lg-4 fixed-col"  >
 
@@ -21,7 +21,7 @@
               <h6>Category List</h6>
               <div class="services-list">
                 <% allCategory.forEach(data => { %>
-                <a href="/user/category/<%= data.Category_name %>#product-section" class=" categoryButton" data-category="<%= data.Category_name %>" >
+                <a href="/user/category/<%= data.Category_name %>#" class=" categoryButton" data-category="<%= data.Category_name %>" >
                   <i class="fa fa-list"></i><span > <%= data.Category_name %></span>
                 </a>
                
@@ -33,12 +33,7 @@
           </div>
           <div class="col-lg-8 ml-0" id="product-section">
             <div class="service-box scrolling-col">
-              <div class="top-cat">
-                <div class=""><p>
-                  items on showcase
-                </p></div>
-             
-            </div>
+
           
               <% if (showcaseItem.length === 0) { %>
                 <div class="no-items text-center">
@@ -102,16 +97,6 @@
   <br>
   <br>
   <br>
-
-
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Preloader -->
-  <!-- <div id="preloader"></div> -->
-
-  <!-- Vendor JS Files -->
-
 
 
 

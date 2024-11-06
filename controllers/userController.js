@@ -7,6 +7,7 @@ const { promisify } = require("util");
 const query = promisify(db.query).bind(db);
 const stateData = require("../model/stateAndLGA");
 const airtimeData = require("../model/airtimeData");
+const quoteService = require("../model/dialyQuote");
 
 const systemCalander = new Date().toLocaleDateString();
 const yearModel = require("../model/getYear");
@@ -73,7 +74,7 @@ exports.profilePage = async (req, res) => {
 `;
     const { rows: referees } = await query(usersQuery, [req.user.id]);
     const { rows: allCategory } = await query('SELECT * FROM "Category"');
-
+    const dailyQuote = quoteService.getCurrentDailyQuote()
     // Render the profile page
     return res.render("./user/userSingleView", {
       pageTitle: "User Profile",
@@ -86,7 +87,7 @@ exports.profilePage = async (req, res) => {
       totalUnreadNotification,
       referLink,
       referralResult: referees,
-      allCategory,
+      allCategory,dailyQuote
     });
   } catch (error) {
     req.flash("error_msg", `Error from server: ${error.message}`);
@@ -665,6 +666,8 @@ exports.userCategoryQuery = async (req, res) => {
   queryParams.push(limit, offset);
 
   try {
+    const {rows:categoryDetails} = await query(`SELECT * FROM "Category" WHERE "Category_name" = $1`, [categoryId]);
+
     const { rows: productsResults } = await query(productQuery, queryParams);
 
     // Adjust count query and parameters
@@ -725,7 +728,7 @@ exports.userCategoryQuery = async (req, res) => {
         page,
         totalPages,
       },
-      activeCategory: categoryId,
+      activeCategory: categoryId,categoryDetails
     });
   } catch (error) {
     console.error(`Server error: ${error}`);
@@ -937,7 +940,8 @@ exports.fetchCart = async (req, res) => {
     }
     const { rows: allCategory } = await query('SELECT * FROM "Category"');
 
-    // Render the cart page
+    const dailyQuote = quoteService.getCurrentDailyQuote()
+
     res.render("./user/cart", {
       pageTitle: "Cart items",
       appName: appName,
@@ -947,7 +951,7 @@ exports.fetchCart = async (req, res) => {
       totalSum: formattedCustomerToPay,
       userData,
       totalUnreadNotification,
-      allCategory,
+      allCategory,dailyQuote
     });
   } catch (error) {
     console.error(`Error fetching cart: ${error}`);
@@ -1019,7 +1023,9 @@ exports.checkoutScreen = async (req, res) => {
     }
 
     const { rows: allCategory } = await query('SELECT * FROM "Category"');
-    // Render the checkout page
+    
+    const dailyQuote = quoteService.getCurrentDailyQuote()
+
     res.render("./user/userCheckout", {
       pageTitle: "Payment Section",
       appName: appName,
@@ -1032,7 +1038,7 @@ exports.checkoutScreen = async (req, res) => {
       userCashback,
       totalUnreadNotification,
       userData,
-      allCategory,
+      allCategory,dailyQuote
     });
   } catch (error) {
     console.error(`Error during checkout: ${error}`);

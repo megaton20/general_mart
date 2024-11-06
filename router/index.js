@@ -11,6 +11,7 @@ const { ensureAuthenticated, forwardAuthenticated } = require('../config/auth');
 const stateData = require("../model/stateAndLGA");
 const calculateShippingFee = require("../model/shippingFee");
 const calculateCashback = require("../model/cashback");
+const quoteService = require("../model/dialyQuote");
 
 
 const systemCalander = new Date().toLocaleDateString();
@@ -35,6 +36,33 @@ const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
 const appName = "True Essentials Mart"
 const appEmail = "Trueessentialsmart@gmail.com" 
+
+
+
+
+
+const customers = [
+  { name: "Victor", email: "victor1234@gmail.com", points: Math.floor(Math.random() * 100) },
+  { name: "John", email: "john5678@gmail.com", points: Math.floor(Math.random() * 100) },
+  { name: "Sarah", email: "sarah9123@gmail.com", points: Math.floor(Math.random() * 100) },
+  { name: "Emily", email: "emily3456@gmail.com", points: Math.floor(Math.random() * 100) },
+  { name: "Victor", email: "victor5678@gmail.com", points: Math.floor(Math.random() * 100) }
+];
+
+// Function to mask email
+function maskEmail(email) {
+  const [name, domain] = email.split("@");
+  const maskedName = name.slice(0, 4) + "*".repeat(name.length - 4);
+  return `${maskedName}@${domain}`;
+}
+
+// Filter recent customers with masked emails outside of the route
+const recentCustomers = customers
+  .filter(customer => customer.points > 0)
+  .map(customer => ({
+      ...customer,
+      maskedEmail: maskEmail(customer.email)
+  }));
 
 
 
@@ -121,20 +149,18 @@ router.get('/', async (req, res) => {
           AND "total_on_shelf" > $2 
           AND "status" = $3 
           AND "activate" = $4
-        LIMIT 6`,
+        LIMIT 8`,
         [category.CategoryID, 0, 'not-expired', true]);
 
-  // Format prices for each product
-products.forEach(product => {
-  // Ensure the price is a number and then format it
-  product.price = parseFloat(product.UnitPrice).toLocaleString("en-US");
-});
+      // Format prices for each product
+      products.forEach(product => {
+        product.price = parseFloat(product.UnitPrice).toLocaleString("en-US");
+      });
 
       firstHalfCategoriesWithProducts.push({
         categoryName: category.Category_name,
         products: products
       });
-
     }
 
     // Fetch products for the second half of categories
@@ -146,23 +172,21 @@ products.forEach(product => {
           AND "total_on_shelf" > $2 
           AND "status" = $3 
           AND "activate" = $4
-        LIMIT 6`,
+        LIMIT 8`,
         [category.CategoryID, 0, 'not-expired', true]);
 
-  // Format prices for each product
-products.forEach(product => {
-  // Ensure the price is a number and then format it
-  product.price = parseFloat(product.UnitPrice).toLocaleString("en-US");
-});
+      // Format prices for each product
+      products.forEach(product => {
+        product.price = parseFloat(product.UnitPrice).toLocaleString("en-US");
+      });
 
       secondHalfCategoriesWithProducts.push({
         categoryName: category.Category_name,
         products: products
       });
-
     }
 
-
+    const dailyQuote = quoteService.getCurrentDailyQuote()
     // Render the landing page
     res.render('landing', {
       pageTitle: `Welcome to ${appName}`,
@@ -172,7 +196,9 @@ products.forEach(product => {
       allCategory,
       showcaseItem,
       firstHalf: firstHalfCategoriesWithProducts,
-      secondHalf: secondHalfCategoriesWithProducts
+      secondHalf: secondHalfCategoriesWithProducts,
+      recentCustomers,
+      dailyQuote 
     });
 
   } catch (error) {
@@ -329,11 +355,15 @@ router.get('/abouts', async (req, res) => {
     userActive = true
   }
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
+
+  const dailyQuote = quoteService.getCurrentDailyQuote()
+
   res.render('abouts',{
     pageTitle:` ${appName} | Abouts`,
     appName,appEmail,
     userActive,
-    allCategory
+    allCategory,
+    dailyQuote
   });
 }
 )

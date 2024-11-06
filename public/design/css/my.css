@@ -53,6 +53,43 @@
   }
 }
 
+
+.quote-card {
+  max-width: 600px;
+  margin: auto;
+  background: #f7f9fc;
+  border-radius: 10px;
+  border: none;
+}
+.quote-text {
+  font-size: 1.5rem;
+  color: var(--accent-color);
+  font-style: italic;
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Add decorative quotes */
+.quote-text::before {
+  content: "“";
+  font-size: 3rem;
+  position: absolute;
+  left: 0;
+  color: #6c757d;
+}
+
+/* Author styling */
+.quote-author {
+  font-size: 10px;
+  font-style: italic;
+  color: #495057;
+  text-align: right;
+}
+
+.main{
+  margin-top: 100px;
+}
 .back-btn{
   color: var(--accent-color);
   border: 1px solid var(--accent-color);
@@ -703,8 +740,9 @@
 }
 
 .clients .client-logo img {
-  max-width: 20%;
+  max-width: 40%;
   transition: 0.3s;
+  padding-bottom: 20px;
   /* opacity: 0.5; */
   /* filter: grayscale(100); */
 }
@@ -715,21 +753,23 @@
   opacity: 1;
 }
 
+
+
 @media (max-width: 640px) {
   .clients .client-logo img {
-    padding: 20px;
+    /* padding: 20px; */
   }
 }
 
 @media (max-width: 768px) {
   .clients .client-logo img {
-    max-width: 10%;
+    max-width: 100%;
   }
 }
 
 @media (max-width: 480px) {
   .clients .client-logo img {
-    max-width: 80%;
+    max-width: 100%;
   }
 }
 
@@ -751,7 +791,7 @@
 
 }
 
-@media (max-width: 900px) {
+@media (max-width: 758px) {
   .service-details .services-list {
     gap: 8px; /* Space between items */
     grid-template-columns: repeat(2, 1fr);
@@ -770,12 +810,14 @@
   margin-top: 30px;
 }
 
-.service-details .service-box h4 {
+.service-details .service-box h6 {
   
   font-size: 20px;
-  font-weight: 700;
-  border-bottom: 2px solid color-mix(in srgb, var(--default-color), transparent 92%);
-  padding-bottom: 15px;
+  font-weight: 400;
+  background-color: var(--accent-color);
+  color: var(--background-color);
+  border-radius: 5px;
+  padding: 5px;
   margin-bottom: 15px;
 }
 
@@ -823,6 +865,10 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
+
+.light-toggle{
+  color: #ffff;
+}
 body {
   color: var(--default-color);
   background-color: var(--background-color);
@@ -861,14 +907,14 @@ h6 {
   margin: 0;
 }
 #navbar   {
-  background: #3333; 
+  background: #7da0c049; 
   color: #fff !important;
   transition: background-color 0.3s ease-in-out;
 }
 #navbar.scrolled  {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.352);
   color: #292727 !important;
-  background: #969595; 
+  background: var(--accent-color); 
 }
 .navbar-toggler{
   padding: 0 !important;
@@ -1067,7 +1113,7 @@ h6 {
   background: var(--accent-color);
   border: none;
   font-size: 14px;
-  padding: 8px 25px;
+  padding: 12px 25px;
   border-radius: 5px;
   transition: 0.3s;
   margin: 0;
@@ -1627,6 +1673,47 @@ a {
     color: var(--contrast-color);
     font-size: 13px;
   }
+
+  .page-header{
+    height: 35vh;
+    padding: 10px;
+    background: var(--accent-color);
+    /* background-image: url('/images/homepage-banner-1v.jpg'); */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    margin-bottom: 15px;
+  } 
+  
+  .page-header p{
+    font-size: 14px;
+    margin: 0 40px;
+    
+  }
+  .page-header h5{
+    text-transform: uppercase;
+    font-size: 20px;
+    color: #fff;
+  }
+
+  .page-header p a{
+    color: var(--background-color) !important;
+    text-decoration: none;
+    transition: .2s ease-in-out;
+  }
+  .page-header p a:hover{
+    color: var(--accent-color) !important;
+    text-decoration: none;
+  }
+
+
+
+
+
   .formated-prices{
     color: #333;
   }
@@ -1666,7 +1753,7 @@ a {
 
 .product-item img{
   max-width: 100%;
-  padding: 8px;
+  /* padding: 8px; */
 }
 
 .landing-item {

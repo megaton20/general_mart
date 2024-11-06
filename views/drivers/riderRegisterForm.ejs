@@ -5,12 +5,16 @@
     <% } else{ %> 
       <%- include('../user/partials/navbar') %>
       <% } %>
+      <div class="page-header">
+        <div class=" text-center ">
+            <h5 class="text-uppercase">Register Your Logistics Company</h5>
+        </div>
+      </div>
 
 
-      <div class="container"><%- include ('../partials/messages') %></div>
-      <div class="container mt-4">
+    <div class="container mt-4">
+          <%- include ('../partials/messages') %>
     <div class="d-flex flex-column justify-content-center align-items-center">
-        <h2>Register Your Logistics Company</h2>
 
         <div class="container">
             <form action="/drivers/register" method="post">

@@ -1,5 +1,6 @@
 <%- include('./partials/navbar') %>
 
+<main class="main">
 <div class="container"><%- include('../partials/messages') %></div>
 
 <div class="container">
@@ -17,7 +18,8 @@
 
           <div class="row">
             <p class="text-success">Based on your Registered state (<%= userData.state %>) and Local Government Area (<%= userData.lga %>), our shipping fee is</p>
-            <p class="m-0 text-warning">₦ <span class="item-price" style="font-size: 14px;"><%= shippingFee %></span></p>
+            <p class="m-0 text-warning"> <i class="fas fa-truck text-warning" ></i>  ₦ <span class="item-price" style="font-size: 14px;"> <%= shippingFee %></span></p>
+            <p class="m-0 pt-2">click <a href="/valid-location" >Here</a> To see Valid States and LGAs we ship across</p>
           </div>
 
           <hr>
@@ -29,30 +31,43 @@
             
               <% if (customerToPay > 1000) { %>
                 <!-- Show "Apply Cashback" checkbox -->
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="applyCashback" id="applyCashback">
-                  <label class="form-check-label" for="applyCashback" id="cashbackLabel">
-                    Apply discount (₦<%= userCashback %>)
-                  </label>
-                </div>
+                <% if (userCashback > 0) { %>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="applyCashback" id="applyCashback">
+                    <label class="form-check-label" for="applyCashback" id="cashbackLabel">
+                      Apply discount (use 60% of ₦<%= userCashback %> cashback) 
+                    </label>
+                  </div>
+                  <% } else { %>
+                    <p><i class="fas fa-exclamation-circle" style="color: red;"></i> You do not have any cashback in your wallet</p>
+                    <p class="m-0"><i class="fas fa-exclamation-circle text-warning" ></i> Get make purchase or refer to earn cashback</p>
+
+                  <% } %>
+             
               <% } else { %>
                 <p>Cashback not available</p>
               <% } %>
-              <!-- Display cashback details -->
-              <div id="cashbackDetails" style="margin-top: 10px;">
-                <p id="removedCashback" style="display: none;">
-                  <i class="fas fa-times-circle" style="color: red;"></i> <!-- Red icon for removed cashback -->
-                  Removed Cashback: ₦<span id="removedAmount">0.00</span>
-                </p>
-                <p id="remainingCashback" style="display: none;">
-                  <i class="fas fa-check-circle" style="color: green;"></i> <!-- Green icon for remaining cashback -->
-                  Remaining Cashback: ₦<span id="remainingAmount"><%= userCashback %></span>
-                </p>
-              </div>
+
             
               <button type="submit" class="mt-2 my-btn-outline" style="width: 100%;">
                 Pay ₦<span id="sumTotal" class="item-price"><%= customerToPay %></span>
               </button>
+
+                   <!-- Display cashback details -->
+                   <div id="cashbackDetails" style="margin-top: 10px;">
+                    <p id="removedCashback" style="display: none;">
+                      <i class="fas fa-times-circle" style="color: red;"></i> <!-- Red icon for removed cashback -->
+                      Removed Cash back: ₦<span id="removedAmount">0.00</span>
+                    </p>
+                    <p id="remainingCashback" style="display: none;">
+                      <i class="fas fa-check-circle" style="color: green;"></i> <!-- Green icon for remaining cashback -->
+                      Remaining Cash back: ₦<span id="remainingAmount"><%= userCashback %></span>
+                    </p>
+                  </div>
+
+              <p id="messageArea" style="display: none;">
+                <i class="fas fa-check-circle" style="color: green;"></i> <span id="message"></span>
+              </p>
             
               <hr>
               <p class="m-0">You are paying through <a href="https://paystack.com" target="_blank">Paystack</a> payment gateway</p>
@@ -111,17 +126,11 @@
     </div>
   </div>
 
+  <%- include ('../partials/quote') %>
+  
   <%- include('./partials/info') %>
 </div>
-
-
-
-<!-- Scroll Top -->
-<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-<!-- Preloader -->
-<!-- <div id="preloader"></div> -->
-
+</main>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 <script>
@@ -147,30 +156,26 @@ document.getElementById("applyCashback").addEventListener("change", function() {
 
   // Determine the discount and amount after cashback application
   if (this.checked) {
-    if (cashback > originalAmount) {
-      // Calculate 60% of the cashback
-      discount = Math.min(cashback * 0.6, originalAmount);
-    } else {
-      // Use the entire cashback
-      discount = cashback;
-    }
+  // Calculate 60% of cashback or up to the original amount, whichever is lower
+  discount = Math.min(cashback * 0.6, originalAmount);
 
-    amount -= discount;  // Subtract the applicable discount from the cart value
+  // Apply the discount, but only enough to bring the amount down to ₦1000 if necessary
+  if (originalAmount - discount < 1000) {
+    discount = originalAmount - 1000;  // Only use enough cashback to bring it to ₦1000
+    document.getElementById("messageArea").style.display = "block";
+    document.getElementById("message").textContent = "limit of 1000 must be paid"
+  }
 
-    // Ensure the amount to pay does not go below 1000
-    amount = Math.max(amount, 1000);
+  amount -= discount;  // Subtract the applicable discount from the cart value
 
-    // Show removed cashback and remaining cashback
-    document.getElementById("removedCashback").style.display = "block";
-    document.getElementById("remainingCashback").style.display = "block";
-    document.getElementById("removedAmount").textContent = discount.toLocaleString("en-NG", { minimumFractionDigits: 2 });
-    document.getElementById("remainingAmount").textContent = (cashback - discount).toLocaleString("en-NG", { minimumFractionDigits: 2 });
-    
-    // Update the label to reflect the amount of cashback applied
-  
-  } else {
+  // Update removed and remaining cashback amounts
+  document.getElementById("removedCashback").style.display = "block";
+  document.getElementById("remainingCashback").style.display = "block";
+  document.getElementById("removedAmount").textContent = discount.toLocaleString("en-NG", { minimumFractionDigits: 2 });
+  document.getElementById("remainingAmount").textContent = (cashback - discount).toLocaleString("en-NG", { minimumFractionDigits: 2 });
+} else {
     // Reset the label and cashback details when cashback is not applied
-    document.getElementById("cashbackLabel").textContent = `Apply Cashback (₦<%= userCashback %>) ? (save up to 60%)`;
+    document.getElementById("cashbackLabel").textContent = `Apply discount (use 60% of ₦<%= userCashback %> cashback) `;
   }
 
   // Update the displayed amount
@@ -191,12 +196,12 @@ document.getElementById("paymentForm").addEventListener("submit", function(e) {
   // Calculate discount to send to the server for verification
   let discount = 0;
   if (applyCashback) {
-    if (cashback > oAmnt) {
-      // If cashback is greater than cart value, apply 60% of the cashback or up to the cart value
-      discount = Math.min(cashback * 0.6, oAmnt);
-    } else {
-      // Use entire cashback if it's less than or equal to cart value
-      discount = cashback;
+    // Calculate 60% of cashback or up to the original amount, whichever is lower
+    discount = Math.min(cashback * 0.6, oAmnt);
+
+    // Ensure discount does not bring the amount below ₦1000
+    if (oAmnt - discount < 1000) {
+      discount = oAmnt - 1000;
     }
   }
 
@@ -224,6 +229,5 @@ document.getElementById("paymentForm").addEventListener("submit", function(e) {
     alert('An error occurred. Please try again');
   });
 });
-
 
 </script>

@@ -1,5 +1,6 @@
 <%- include('./partials/navbar') %>
 
+<main class="main">
   <div class="container">
     <%- include('../partials/messages') %>
 
@@ -12,7 +13,9 @@
           <div class="wishlist-card">
             <div class="wishlist-card-content">
               <div class="wishlist-card-img">
-                <img src="/uploads/<%= data.image %>" alt="<%= data.ProductName %> image">
+                <a href="/user/product-details/<%= data.id %>" class="wishlist-product-name">
+                  <img src="/uploads/<%= data.image %>" alt="<%= data.ProductName %> image">
+                </a>
               </div>
               <a href="/user/product-details/<%= data.id %>" class="wishlist-product-name">
                 <%= data.ProductName %>
@@ -98,7 +101,7 @@
   <br>
   <br>
 
-
+</main>
   <!-- End of Content Wrapper -->
 
   <!-- Scroll to Top Button-->

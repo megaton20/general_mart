@@ -4,21 +4,18 @@
 
   <%- include('./partials/navbar') %>
 
-  <main class="main">
-    
-  
-      <div class="container"><%- include('../partials/messages') %></div>
+  <div class="page-header">
+    <div class=" text-center ">
+      <h5 class="text-uppercase">items on show glass</h5>
+  </div>
+</div>
 
-      <!-- Page adverts -->
-    <div class="container">
-      <%- include('./partials/ads') %>
-    </div>
-    <!-- Service Details Section -->
-    <section id="service-details" class="service-details section">
-
-      
-      
-      <div class="container">
+        <section id="service-details" class="service-details section">
+          
+          
+          
+          <div class="container">
+        <%- include('../partials/messages') %>
 
         <div class="row">
 
@@ -28,7 +25,7 @@
               <h6>Category List</h6>
               <div class="services-list">
                 <% allCategory.forEach(data => { %>
-                  <a href="/user/category/<%= data.Category_name %>#product-section" class=" categoryButton" data-category="<%= data.Category_name %>">
+                  <a href="/user/category/<%= data.Category_name %>#" class=" categoryButton" data-category="<%= data.Category_name %>">
                   <i class="fa fa-list"></i><span> <%= data.Category_name %></span>
                 </a>
                
@@ -39,12 +36,7 @@
           </div>
           <div class="col-lg-8 ml-0" id="product-section">
             <div class="service-box scrolling-col">
-              <div class="top-cat">
-                <div class=""><p>
-                  items on showcase
-                </p></div>
-             
-            </div>
+       
               <% if (products.length === 0) { %>
                 <div class="no-items text-center">
                   <p>No items available in showcase check other categories</p>
@@ -103,18 +95,11 @@
 
     </section><!-- /Service Details Section -->
 
-  </main>
   <br>
   <br>
   <br>
   <br>
 
-
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Preloader -->
-  <!-- <div id="preloader"></div> -->
 
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>

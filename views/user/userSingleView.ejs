@@ -10,7 +10,7 @@
       <!-- Topbar -->
       <%- include('./partials/navbar') %>
       <!-- End of Topbar -->
-        
+      <main class="main">
       <div class="container">
         <%- include ('../partials/messages') %>
  
@@ -85,6 +85,8 @@
             </div>
           </div>
 
+          <%- include ('../partials/quote') %>
+
          <!-- invite -->
             <div class=" invite-card mt-3">
                 <div class="invite-link">
@@ -121,6 +123,8 @@
                 <p class="condition-text text-warning">Referees must make a purchase for referrals to be vetted.</p>
             </div>
 
+            <%- include('./partials/info') %>
+
             <div class=" d-flex justify-content-center mt-4">
               <a href="/logout" class="text-danger">
                  Sign out
@@ -148,6 +152,7 @@
 <br>
 <br>
 
+</main>
 
 <script>
   

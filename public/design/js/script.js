@@ -4,7 +4,7 @@ window.addEventListener('scroll', function() {
   const navbar = document.getElementById('navbar');
   const navLinks = document.querySelectorAll('.nav-link');
   
-  if (window.scrollY > 350) { // Adjust threshold as needed
+  if (window.scrollY > 200) { // Adjust threshold as needed
       navbar.classList.add('scrolled');
       navLinks.forEach(navLink => {
         navLink.classList.add('text-light');
@@ -67,7 +67,7 @@ window.addEventListener('scroll', function() {
           autoplay: true,
           autoplayTimeout: 5000, // Auto-scroll after 4 seconds
           autoplayHoverPause: true, // Pause on hover
-          dots: true, // Enable dots for navigation
+          dots: false, // Enable dots for navigation
           nav: false // Disable default navigation buttons
       });
   }

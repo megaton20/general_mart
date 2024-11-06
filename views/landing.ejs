@@ -1,180 +1,192 @@
+
 <%- include('./partials/openNav') %>
 
+<main class="main">
 
-    <div class="container">
-      <%- include ('./partials/messages') %>
-    </div>
+  <div class="container">
+    <%- include ('./partials/messages') %>
+  </div>
 
 
 
 
-    <div class="container mt-4">
-      <div class="row">
+  <div class="container mt-4">
+    <div class="row">
 
-        <div class="col-12 col-md-8 order-1 order-md-2">
-          
-          <div id="carouselExample" class="carousel slide carousel-fade shadow" data-bs-ride="carousel">
-            <div class="carousel-inner">
-              <div class="carousel-item">
-                <img src="/landing-imgs/free.jpg" class="d-block w-100" alt="Slide 5">
-              </div>
-              <div class="carousel-item active">
-                <img src="/landing-imgs/vvvvv.png" class="d-block w-100" alt="Slide 6">
-              </div>
+      <div class="col-12 col-md-8 order-1 order-md-2">
+        
+        <div id="carouselExample" class="carousel slide carousel-fade shadow" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item">
+              <img src="/landing-imgs/free.jpg" class="d-block w-100" alt="Slide 5">
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
+            <div class="carousel-item active">
+              <img src="/landing-imgs/vvvvv.png" class="d-block w-100" alt="Slide 6">
+            </div>
           </div>
-
-          <%- include ('./partials/clients') %>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
         </div>
 
-        <!-- Category Cards (Appears second on mobile) -->
-        <div class="col-md-4 order-2 order-md-1 d-md-block">
-          <div id="service-details" class="service-details section">
-            <div class="service-box mb-4">
-              <div class="services-list">
-                <% allCategory.forEach(data=> { %>
-                  <a href="/user/category/<%= data.Category_name %>#product-section" class="categoryButton"
-                    data-category="<%= data.Category_name %>" 
-                    title="<%= data.details %>">
-                   <i class="fa fa-list"></i>
-                   <span><%= data.Category_name %></span>
-                 </a>
-                  <% }); %>
+        <div class="mt-4">
+          <div class="row">
+            <div class="col-4"><%- include ('./partials/clients') %></div>
+            <div class="col-4"> 
+              <div class=" card shadow border-1 rounded" style="overflow: hidden;">
+                <img src="/landing-imgs/1.GIF" class="d-block w-100"  alt="Slide">
+              </div>
+            </div>
+            <div class="col-4"> 
+              <div class=" card shadow border-1 rounded" style="overflow: hidden;">
+                <img src="/landing-imgs/short.GIF" class="d-block w-100"  alt="Slid">
               </div>
             </div>
           </div>
-          <!-- Add more category cards as needed -->
         </div>
       </div>
 
-    </div>
-
-    <div class="container-for-large-screens">
-
-    
-
-    <!-- Part 1: Products -->
-    <% if (firstHalf && firstHalf.length> 0) { %>
-      <% firstHalf.forEach(category=> { %>
-        <% if (category.products && category.products.length> 0) { %> <!-- Only render card if products are present -->
-          <div class="category-card ">
-            <div class="top-cat">
-                  <p><%= category.categoryName %></p>
-              <div class="">
-                <a href="/user/category/<%= category.categoryName %>#product-section">See all</a>
-              </div>
-            </div>
-
-            <div class="scroll-items">
-              <div class="products-grid my-box-shadow">
-                <% category.products.forEach(product=> { %>
-                  <div class="landing-item my-box-shadow" style="height: 250px; margin-bottom: 20px;">
-                    <a href="/user/product-details/<%= product.id %>" class="home-card">
-
-                      <div class="landing-image">
-                        <img src="/uploads/<%= product.image %>" alt="<%= product.ProductName %>">
-                      </div>
-                      <div class="landing-details">
-                        <p class="text-truncate">
-                          <%= product.ProductName %>
-                        </p>
-                      </div>
-                      <div class="item-prices">
-                        <p>₦<span class="formated-prices"><%= product.price %></span>
-                        </p>
-                        <p class="old-price text-grey">₦ <%= product.old_price %>
-                        </p>
-                      </div>
-                    </a>
-                  </div>
-                  <% }) %>
-              </div>
+      <!-- Category Cards (Appears second on mobile) -->
+      <div class="col-md-4 order-2 order-md-1 d-md-block">
+        <div id="service-details" class="service-details section">
+          <div class="service-box mb-4">
+            <h6>Category List</h6>
+            <div class="services-list">
+              <% allCategory.forEach(data=> { %>
+                <a href="/user/category/<%= data.Category_name %>#" class="categoryButton"
+                  data-category="<%= data.Category_name %>" 
+                  title="<%= data.details %>">
+                 <i class="fa fa-list"></i>
+                 <span><%= data.Category_name %></span>
+               </a>
+                <% }); %>
             </div>
           </div>
-          <% } %> <!-- End of condition to render only if products exist -->
-            <% }) %>
-              <% } %>
-
-                <!-- Advertisement or other content -->
-                <div class="advertisement">
-                  <p>Advertisement Area</p>
-                </div>
-
-
-                <!-- <div class="wide mt-2">
-        <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/wide-1.jpg" alt="" style="max-width: 100%;"></a>
+        </div>
+        <!-- Add more category cards as needed -->
       </div>
+    </div>
 
-      <div class="wide mt-2 mb-4">
-        <a href="/user/category/#" class=" categoryButton" data-category=""><img src="/landing-imgs/wide-2.jpg" alt="" style="max-width: 100%;"></a>
-      </div> -->
+  </div>
 
+  <div class="container-for-large-screens">
 
+  
 
+  <!-- Part 1: Products -->
+  <% if (firstHalf && firstHalf.length> 0) { %>
+    <% firstHalf.forEach(category=> { %>
+      <% if (category.products && category.products.length> 0) { %> <!-- Only render card if products are present -->
+        <div class="category-card ">
+          <div class="top-cat">
+                <p><%= category.categoryName %></p>
+            <div class="">
+              <a href="/user/category/<%= category.categoryName %>#product-section">See all</a>
+            </div>
+          </div>
 
-                <!-- Part 2: Products -->
-                <% if (secondHalf && secondHalf.length> 0) { %>
-                  <% secondHalf.forEach(category=> { %>
-                    <% if (category.products && category.products.length> 0) { %>
-                      <!-- Only render card if products are present -->
-                      <div class="category-card ">
-                        <div class="top-cat">
-                          <div class=""><p>
-                            <%= category.categoryName %>
-                          </p></div>
-                        <div class="">
-                          <a href="/user/category/<%= category.categoryName %>#product-section">See all</a>
-                        </div>
-                      </div>
+          <div class="scroll-items">
+            <div class="products-grid my-box-shadow">
+              <% category.products.forEach(product=> { %>
+                <div class="landing-item my-box-shadow" style="height: 250px; margin-bottom: 20px;">
+                  <a href="/user/product-details/<%= product.id %>" class="home-card">
 
-                        <div class="scroll-items">
-                          <div class="products-grid my-box-shadow">
-                            <% category.products.forEach(product=> { %>
-                              <div class="landing-item my-box-shadow" style="height: 250px; margin-bottom: 20px;">
-                                <a href="/user/product-details/<%= product.id %>" class="home-card">
-
-                                  <div class="landing-image">
-                                    <img src="/uploads/<%= product.image %>" alt="<%= product.ProductName %>">
-                                  </div>
-
-                                  <div class="landing-details">
-                                    <p class="text-truncate">
-                                      <%= product.ProductName %>
-                                    </p>
-                                  </div>
-                                  <div class="item-prices">
-                                    <p>₦<span class="formated-prices"><%= product.price %></span>
-                                    </p>
-                                    <p class="old-price text-grey">₦ <%= product.old_price %>
-                                    </p>
-                                  </div>
-                                </a>
-                              </div>
-                              <% }) %>
-                          </div>
-                        </div>
-                      </div>
-                      <% } %> <!-- End of condition to render only if products exist -->
-                        <% }) %>
-                          <% } %>
-
-
-                          
+                    <div class="landing-image">
+                      <img src="/uploads/<%= product.image %>" alt="<%= product.ProductName %>">
+                    </div>
+                    <div class="landing-details">
+                      <p class="text-truncate">
+                        <%= product.ProductName %>
+                      </p>
+                    </div>
+                    <div class="item-prices">
+                      <p>₦<span class="formated-prices"><%= product.price %></span>
+                      </p>
+                      <p class="old-price text-grey">₦ <%= product.old_price %>
+                      </p>
+                    </div>
+                  </a>
                 </div>
+                <% }) %>
+            </div>
+          </div>
+        </div>
+        <% } %> <!-- End of condition to render only if products exist -->
+          <% }) %>
+            <% } %>
 
-                            <br>
-                            <br>
+            <%- include ('./partials/quote') %>
+
+              <!-- Advertisement or other content -->
+              <div class="advertisement">
+                <p>Advertisement Area</p>
+              </div>
 
 
-  <%- include ('./partials/openFooter')%>
 
+
+
+              <!-- Part 2: Products -->
+              <% if (secondHalf && secondHalf.length> 0) { %>
+                <% secondHalf.forEach(category=> { %>
+                  <% if (category.products && category.products.length> 0) { %>
+                    <!-- Only render card if products are present -->
+                    <div class="category-card ">
+                      <div class="top-cat">
+                        <div class=""><p>
+                          <%= category.categoryName %>
+                        </p></div>
+                      <div class="">
+                        <a href="/user/category/<%= category.categoryName %>#product-section">See all</a>
+                      </div>
+                    </div>
+
+                      <div class="scroll-items">
+                        <div class="products-grid my-box-shadow">
+                          <% category.products.forEach(product=> { %>
+                            <div class="landing-item my-box-shadow" style="height: 250px; margin-bottom: 20px;">
+                              <a href="/user/product-details/<%= product.id %>" class="home-card">
+
+                                <div class="landing-image">
+                                  <img src="/uploads/<%= product.image %>" alt="<%= product.ProductName %>">
+                                </div>
+
+                                <div class="landing-details">
+                                  <p class="text-truncate">
+                                    <%= product.ProductName %>
+                                  </p>
+                                </div>
+                                <div class="item-prices">
+                                  <p>₦<span class="formated-prices"><%= product.price %></span>
+                                  </p>
+                                  <p class="old-price text-grey">₦ <%= product.old_price %>
+                                  </p>
+                                </div>
+                              </a>
+                            </div>
+                            <% }) %>
+                        </div>
+                      </div>
+                    </div>
+                    <% } %> <!-- End of condition to render only if products exist -->
+                      <% }) %>
+                        <% } %>
+
+
+                        
+              </div>
+
+                          <br>
+                          <br>
+
+
+<%- include ('./partials/openFooter')%>
+
+</main>
     <!-- <div id="preloader"></div> -->
 

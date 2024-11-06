@@ -1498,7 +1498,7 @@ const values = [rankName, threshold, req.params.id];
 const updateResult = await query(updateQuery, values);
 
   req.flash("success_msg", `"${rankName}" added successfully!`);
-  return res.redirect("/super");
+  return res.redirect("/super/all-ranks");
 }
   } catch (error) {
     req.flash("error_msg", `${error.message}`); // Use error.message instead of error.sqlMessage
@@ -2806,7 +2806,7 @@ exports.editNewStore = async (req, res) => {
   try {
     // Check if the store exists
     const storeResult = await query(
-      `SELECT * FROM Stores WHERE id = $1`,
+      `SELECT * FROM "Stores" WHERE id = $1`,
       [updateID]
     );
 
@@ -2817,7 +2817,7 @@ exports.editNewStore = async (req, res) => {
 
     // Update store details
     await query(
-      `UPDATE Stores SET store_name = $1, store_address = $2, state = $3, lga = $4 WHERE id = $5`,
+      `UPDATE "Stores" SET "store_name" = $1, "store_address" = $2, "state" = $3, "lga" = $4 WHERE "id" = $5`,
       [Branch_Name, Branch_address, Branch_state, Branch_lga, updateID]
     );
 

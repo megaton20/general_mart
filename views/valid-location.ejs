@@ -1,12 +1,16 @@
 
 
 <%- include('./partials/openNav') %>
+<div class="page-header">
+    <div class=" text-center ">
+        <h5 class="text-uppercase">All Shipping Regions</h5>
+    </div>
+  </div>
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-12">
             <div class="location-card p-2 rounded ">
-                <h3 class="card-title text-center mb-4">All Shipping Regions</h3>
 
                     <% for (const state in shippingData) { %>
                         <div class="location-state mb-4">

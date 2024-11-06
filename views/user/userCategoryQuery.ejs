@@ -3,23 +3,24 @@
 
 
   <%- include('./partials/navbar') %>
+  
+      <div class="page-header">
+        <div class=" text-center ">
+            <h5><%= products.length > 0 ? products[0].category : categoryDetails[0].Category_name %></h5>
+              <p class=""> <%= products.length > 0 ? categoryDetails[0].details : categoryDetails[0].details %></p>
+              <br>
+              <a class="text-light mt-4 my-btn-outline" href="/user">All Categories</a>
+        </div>
+    </div>
 
-  <main class="main">
-    
   
       <div class="container"><%- include('../partials/messages') %></div>
 
       <!-- Page adverts -->
-    <div class="container">
-      <%- include('./partials/ads') %>
-    </div>
-    <!-- Service Details Section -->
+
+
     <section id="service-details" class="service-details section">
-
-      
-      
       <div class="container">
-
         <div class="row">
 
           <div class="col-lg-4 fixed-col">
@@ -27,11 +28,9 @@
             <div class="service-box mb-4">
               <h6>Category List</h6>
               <div class="services-list">
-                <a href="/user/" class=" categoryButton">
-                  <i class="bi bi-arrow-left-circle"></i><span> All on showcase</span>
-                </a>
+
                 <% allCategory.forEach(data => { %>
-                  <a href="/user/category/<%= data.Category_name %>#product-section" class=" categoryButton" data-category="<%= data.Category_name %>">
+                  <a href="/user/category/<%= data.Category_name %>#" class=" categoryButton" data-category="<%= data.Category_name %>">
                   <i class="fa fa-list"></i><span> <%= data.Category_name %></span>
                 </a>
                
@@ -45,12 +44,7 @@
           <div class="col-lg-8 ml-0" id="product-section">
             <div class="service-box scrolling-col">
               
-              <div class="top-cat">
-                <div class=""><p>
-                  <%= products.length > 0 ? products[0].category : "empty shelf category" %>
-                </p></div>
-             
-            </div>
+         
               <% if (products.length === 0) { %>
                 <div class="no-items text-center">
                   <p>No items available in this category </p>
@@ -108,21 +102,13 @@
 
       </div>
 
-    </section><!-- /Service Details Section -->
-
-  </main>
+    </section>
   <br>
   <br>
   <br>
   <br>
 
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <!-- Preloader -->
-  <!-- <div id="preloader"></div> -->
-
-  <!-- Vendor JS Files -->
 
 
 

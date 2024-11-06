@@ -2,47 +2,37 @@
 <%- include('./partials/navbar') %>
 
 
+<main class="main">
       <div class="container">
     <%- include('./partials/ads') %>
       <div class="container"><%- include('../partials/messages') %></div>
-      <a class="" href="/user"><i class="bi bi-arrow-left-circle"></i> Back</a>
+      <a class="back-btn" href="/user/search"><i class="bi bi-arrow-left-circle"></i> Back</a>
         
         <% if (products.length > 0) { %>
           <div class="row">
-            <div class="col-lg-12 ml-0 scrolling-col" id="product-section">
-              <div class="card">
-                <div class="card-header">Results </div>
-                <div class="card-body">
-                  <div class="row">
   
-                    <% products.forEach(item => { %>
-                      <div class="col-6 mt-4' col-md-4 col-lg-3">
-                        <div class="card mt-4 border-1">
-                          <a href="/user/product-details/<%=item.id%>"> 
-                          <div class="card-body">
-                              <div class="item-image-container">
-                              <img src="/uploads/<%=item.image%>" class="card-img-top rounded-4" alt="<%=item.ProductName%>">
-                            </div>
-                            <div class="item-text  text-dark truncate-container">
-                              <p class="text-truncate"> <%=item.ProductName %></p>
-                            </div>
-                            </div>
-                      
-                            </a> 
-                            <div class="card-footer p-1">
-                              <button style="width:100%" class="my-btn add-to-cart p-1 m-0" data-id="<%=item.id%>"  data-name="<%=item.ProductName %>" data-price="<%=item.UnitPrice %>" data-max="<%=item.total_on_shelf %>" data-image="<%=item.image%>" onclick="handleButtonClick(this)">Buy   ₦<small class="item-price"><%=item.UnitPrice%>.00</small></button>
-                            </div>
-                          </div>
-                      </div>
-                      
-                  <% }) %>
+            <% products.forEach(item => { %>
+              <div class="col-6 mt-4' col-md-4 col-lg-3">
+                <div class="card mt-4 border-1">
+                  <a href="/user/product-details/<%=item.id%>"> 
+                  <div class="card-body">
+                      <div class="item-image-container">
+                      <img src="/uploads/<%=item.image%>" class="card-img-top rounded-4" alt="<%=item.ProductName%>">
+                    </div>
+                    <div class="item-text  text-dark truncate-container">
+                      <p class="text-truncate"> <%=item.ProductName %></p>
+                    </div>
+                    </div>
+              
+                    </a> 
+                    <div class="card-footer p-1">
+                      <button style="width:100%" class="my-btn add-to-cart p-1 m-0" data-id="<%=item.id%>"  data-name="<%=item.ProductName %>" data-price="<%=item.UnitPrice %>" data-max="<%=item.total_on_shelf %>" data-image="<%=item.image%>" onclick="handleButtonClick(this)">Buy   ₦<small class="item-price"><%=item.UnitPrice%>.00</small></button>
+                    </div>
                   </div>
-                </div>
+              </div>
+              
+          <% }) %>
           </div>
-  
-         
-        </div>
-        </div>
       <% } else { %>
         <p >0 items found!</p>
 
@@ -50,14 +40,7 @@
        
     
     <%- include('./partials/info') %>
-    
-
-<!-- Scroll Top -->
-<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-
-
-
+</main>
 
 <script>
 

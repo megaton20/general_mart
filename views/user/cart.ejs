@@ -1,16 +1,11 @@
 
 <%- include('./partials/navbar') %>
-
-  <div class="container"><%- include('../partials/messages') %></div>
-
-      <!-- Page adverts -->
-      <div class="container">
+<main class="main">
+  
+  <!-- Page adverts -->
+  <div class="container">
+        <%- include('../partials/messages') %>
         <%- include('./partials/ads') %>
-      </div>
-  <!-- Service Details Section -->
-
-    
-    <div class="container">
 
       <div class="row gy-5">
 
@@ -64,9 +59,11 @@
     
       <%- include('./partials/info') %>
 
+      <%- include ('../partials/quote') %>
+
     </div>
 
-  </div>
+      </div>
 </div>
 
 
@@ -74,13 +71,7 @@
 <br>
 <br>
 
-
-<!-- Scroll Top -->
-<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-<!-- Preloader -->
-<!-- <div id="preloader"></div> -->
-
-
+</main>
 
 
 <script>
