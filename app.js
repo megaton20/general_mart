@@ -79,6 +79,15 @@ app.use((req, res, next) => {
   next();
 });
 
+
+app.use(methodOverride((req, res) => {
+  if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+      let method = req.body._method;
+      delete req.body._method;
+      return method;
+  }
+}));
+
 // Routes
 app.use('/', openRoutes); // open less secure routes
 app.use('/auth', authRouter); // authentication
