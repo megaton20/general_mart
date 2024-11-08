@@ -35,7 +35,7 @@
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="applyCashback" id="applyCashback">
                     <label class="form-check-label" for="applyCashback" id="cashbackLabel">
-                      Apply discount (use 60% of ₦<%= userCashback %> cashback) 
+                      Apply discount (use 60% of <img src="/images/coin.png" style="max-width: 20px;" alt="coin">  <%= userCashback %> cashback) 
                     </label>
                   </div>
                   <% } else { %>
@@ -175,7 +175,11 @@ document.getElementById("applyCashback").addEventListener("change", function() {
   document.getElementById("remainingAmount").textContent = (cashback - discount).toLocaleString("en-NG", { minimumFractionDigits: 2 });
 } else {
     // Reset the label and cashback details when cashback is not applied
-    document.getElementById("cashbackLabel").textContent = `Apply discount (use 60% of ₦<%= userCashback %> cashback) `;
+    
+    document.getElementById("cashbackLabel").innerHTML = `
+    
+      Apply discount (use 60% of <img src="/images/coin.png" style="max-width: 20px;" alt="coin"> <%= userCashback %> cashback) 
+      `;
   }
 
   // Update the displayed amount

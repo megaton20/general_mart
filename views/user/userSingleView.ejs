@@ -5,6 +5,9 @@
     border: 1px solid #333;
     border-radius: 5px;
   }
+
+
+
 </style>
     <!-- Main Content -->
       <!-- Topbar -->
@@ -14,6 +17,8 @@
       <div class="container">
         <%- include ('../partials/messages') %>
  
+        <%- include ('../partials/points') %>
+
         <div class="dash-jumbotron-wrap">
             <div class="dashboard-info">
               <div class="info-item">
@@ -23,7 +28,7 @@
 
             <div class="dashboard-info">
               <div class="info-item">
-                <p>Cashback</p>
+                <p>Cashback <img src="/images/coin.png" style="max-width: 20px;" alt="coin"> </p>
                 <div class="info-value ">₦ <span class="format"><%= cashBack %></span></div>
               </div>
 
@@ -62,6 +67,10 @@
               </a>
 
             </div>
+
+
+        
+
 
        <!-- Carousel Wrapper with Background -->
           <div class="carousel-container mb-5">
@@ -266,4 +275,7 @@
       copyTextElement.classList.remove("copied");
     }, 2000);
   }
+
+
+
 </script>

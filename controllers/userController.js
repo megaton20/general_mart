@@ -8,6 +8,7 @@ const query = promisify(db.query).bind(db);
 const stateData = require("../model/stateAndLGA");
 const airtimeData = require("../model/airtimeData");
 const quoteService = require("../model/dialyQuote");
+const getRecentCustomers = require("../model/recentCustomers");
 
 const systemCalander = new Date().toLocaleDateString();
 const yearModel = require("../model/getYear");
@@ -31,6 +32,10 @@ const calculateCashback = require("../model/cashback");
 
 const appName = "True Essentials Mart";
 const appEmail = "Trueessentialsmart@gmail.com";
+
+
+
+
 
 //profile for user
 exports.profilePage = async (req, res) => {
@@ -75,6 +80,7 @@ exports.profilePage = async (req, res) => {
     const { rows: referees } = await query(usersQuery, [req.user.id]);
     const { rows: allCategory } = await query('SELECT * FROM "Category"');
     const dailyQuote = quoteService.getCurrentDailyQuote()
+    const recentCustomers = getRecentCustomers()
     // Render the profile page
     return res.render("./user/userSingleView", {
       pageTitle: "User Profile",
@@ -87,7 +93,8 @@ exports.profilePage = async (req, res) => {
       totalUnreadNotification,
       referLink,
       referralResult: referees,
-      allCategory,dailyQuote
+      allCategory,dailyQuote,
+      recentCustomers
     });
   } catch (error) {
     req.flash("error_msg", `Error from server: ${error.message}`);

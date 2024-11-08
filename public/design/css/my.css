@@ -53,39 +53,34 @@
   }
 }
 
-
-.quote-card {
-  max-width: 600px;
-  margin: auto;
-  background: #f7f9fc;
-  border-radius: 10px;
-  border: none;
-}
-.quote-text {
-  font-size: 1.5rem;
-  color: var(--accent-color);
-  font-style: italic;
+.points {
+  overflow: hidden;
+  height: 50px; /* Adjust to fit one item */
   position: relative;
-  padding-left: 1.5rem;
-  margin-bottom: 0.75rem;
 }
 
-/* Add decorative quotes */
-.quote-text::before {
-  content: "“";
-  font-size: 3rem;
-  position: absolute;
-  left: 0;
-  color: #6c757d;
+.email-list {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.5s ease-in-out; /* Smooth scroll transition */
 }
 
-/* Author styling */
-.quote-author {
-  font-size: 10px;
-  font-style: italic;
-  color: #495057;
-  text-align: right;
+.email-item {
+  height: 50px; /* Match the container height */
+  opacity: 0; /* Hidden by default */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  filter: blur(2px);
+  transition: opacity 0.5s ease, filter 0.5s ease;
 }
+
+.email-item.focused {
+  opacity: 1; /* Show the focused item */
+  filter: blur(0); /* Remove blur from the focused item */
+}
+
 
 .main{
   margin-top: 100px;

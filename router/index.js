@@ -12,6 +12,7 @@ const stateData = require("../model/stateAndLGA");
 const calculateShippingFee = require("../model/shippingFee");
 const calculateCashback = require("../model/cashback");
 const quoteService = require("../model/dialyQuote");
+const getRecentCustomers = require("../model/recentCustomers");
 
 
 const systemCalander = new Date().toLocaleDateString();
@@ -40,29 +41,6 @@ const appEmail = "Trueessentialsmart@gmail.com"
 
 
 
-
-const customers = [
-  { name: "Victor", email: "victor1234@gmail.com", points: Math.floor(Math.random() * 100) },
-  { name: "John", email: "john5678@gmail.com", points: Math.floor(Math.random() * 100) },
-  { name: "Sarah", email: "sarah9123@gmail.com", points: Math.floor(Math.random() * 100) },
-  { name: "Emily", email: "emily3456@gmail.com", points: Math.floor(Math.random() * 100) },
-  { name: "Victor", email: "victor5678@gmail.com", points: Math.floor(Math.random() * 100) }
-];
-
-// Function to mask email
-function maskEmail(email) {
-  const [name, domain] = email.split("@");
-  const maskedName = name.slice(0, 4) + "*".repeat(name.length - 4);
-  return `${maskedName}@${domain}`;
-}
-
-// Filter recent customers with masked emails outside of the route
-const recentCustomers = customers
-  .filter(customer => customer.points > 0)
-  .map(customer => ({
-      ...customer,
-      maskedEmail: maskEmail(customer.email)
-  }));
 
 
 
@@ -187,6 +165,7 @@ router.get('/', async (req, res) => {
     }
 
     const dailyQuote = quoteService.getCurrentDailyQuote()
+    const recentCustomers = getRecentCustomers()
     // Render the landing page
     res.render('landing', {
       pageTitle: `Welcome to ${appName}`,

@@ -118,6 +118,37 @@
           loader.style.display = "none"; // Hide the loader
           body.style.visibility = "visible"; // Show the content
         });
+
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+  const emailList = document.querySelector(".email-list");
+  const emailItems = document.querySelectorAll(".email-item");
+  let currentIndex = 0;
+
+  function updateFocus() {
+    // Reset opacity and blur on all items
+    emailItems.forEach(item => item.classList.remove("focused"));
+    
+    // Add focus to the current item
+    emailItems[currentIndex].classList.add("focused");
+
+    // Move the list up to show the current item in focus
+    const offset = -currentIndex * 50; // Adjust based on item height
+    emailList.style.transform = `translateY(${offset}px)`;
+
+    // Update the index, looping back to start
+    currentIndex = (currentIndex + 1) % emailItems.length;
+  }
+
+  // Initialize the first focus
+  updateFocus();
+
+  // Set interval to change focus every 4 seconds
+  setInterval(updateFocus, 4000);
+});
+
+
       </script>
 
     
