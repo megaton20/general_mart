@@ -6,37 +6,31 @@
       <a class="back-btn" href="/user/profile"><i class="bi bi-arrow-left-circle"></i> Back</a>
 
 
-      <div class=" card">
-        <div class="card-body">
-          <div class="row mb-4">
-            <h5 class="mb-3">Purchase Airtime</h5>
+      <div class=" m-card mt-2">
+        <form action="/user/buy-airtime" method="POST">
+          <label for="network">Select Network:</label>
+          <select name="network" id="network" class="form-control">
+            <% airtimeData.forEach(function(provider) { %>
+              <option value="<%= provider.network %>">
+                <%= provider.network %>
+              </option>
+              <% }); %>
+          </select>
 
-            <form action="/user/buy-airtime" method="POST">
-              <label for="network">Select Network:</label>
-              <select name="network" id="network" class="form-control">
-                <% airtimeData.forEach(function(provider) { %>
-                  <option value="<%= provider.network %>">
-                    <%= provider.network %>
-                  </option>
-                  <% }); %>
-              </select>
+          <label for="amount">Select Amount:</label>
+          <select name="amount" id="amount" class="form-control">
+            <% airtimeData[0].airtime.forEach(function(amount) { %>
+              <option value="<%= amount %>">
+                <%= amount %> Naira
+              </option>
+              <% }); %>
+          </select>
 
-              <label for="amount">Select Amount:</label>
-              <select name="amount" id="amount" class="form-control">
-                <% airtimeData[0].airtime.forEach(function(amount) { %>
-                  <option value="<%= amount %>">
-                    <%= amount %> Naira
-                  </option>
-                  <% }); %>
-              </select>
+          <label for="phoneNumber">Phone Number:</label>
+          <input type="text" name="phoneNumber" id="phoneNumber" required class="form-control">
 
-              <label for="phoneNumber">Phone Number:</label>
-              <input type="text" name="phoneNumber" id="phoneNumber" required class="form-control">
-
-              <button type="submit" class="mt-2 my-btn-outline">Buy Airtime</button>
-            </form>
-          </div>
-        </div>
+          <button type="submit" class="mt-2 my-btn-outline">Buy Airtime</button>
+        </form>
       </div>
 
 

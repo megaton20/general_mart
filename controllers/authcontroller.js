@@ -228,6 +228,13 @@ if (!(phone && email && password && confirm_password && first_name && last_name)
   errors.push({ msg: 'Enter all details' });
 }
 
+
+const minLength = 5;
+
+if (password.length <= minLength) {
+  errors.push({ msg: 'Passwords should be more than 5' });
+}
+
 if (password !== confirm_password) {
   errors.push({ msg: 'Passwords do not match' });
 }

@@ -66,7 +66,7 @@
                   </div>
 
               <p id="messageArea" style="display: none;">
-                <i class="fas fa-check-circle" style="color: green;"></i> <span id="message"></span>
+                <i class="fas fa-bell" style="color: green;"></i> <span id="message"></span>
               </p>
             
               <hr>
@@ -144,94 +144,112 @@ function formatPrice() {
 }
 formatPrice();
 
-document.getElementById("applyCashback").addEventListener("change", function() {
-  let originalAmount = parseFloat(document.getElementById("amount").value);  // Cart value
-  let cashback = <%= userCashback %>;  // Cashback amount
-  let amount = originalAmount;
-  let discount = 0; // Initialize discount
+document.addEventListener("DOMContentLoaded", function() {
+  // Ensure the checkbox exists before adding event listeners
+  let applyCashbackCheckbox = document.getElementById("applyCashback");
 
-  // Reset the cashback details initially
-  document.getElementById("removedCashback").style.display = "none";
-  document.getElementById("remainingCashback").style.display = "none";
+  if (applyCashbackCheckbox) {
+    applyCashbackCheckbox.addEventListener("change", function() {
+      let originalAmount = parseFloat(document.getElementById("amount").value);  // Cart value
+      let cashback = <%= userCashback %>;  // Cashback amount
+      let amount = originalAmount;
+      let discount = 0; // Initialize discount
 
-  // Determine the discount and amount after cashback application
-  if (this.checked) {
-  // Calculate 60% of cashback or up to the original amount, whichever is lower
-  discount = Math.min(cashback * 0.6, originalAmount);
+      // Reset the cashback details initially
+      document.getElementById("removedCashback").style.display = "none";
+      document.getElementById("remainingCashback").style.display = "none";
 
-  // Apply the discount, but only enough to bring the amount down to ₦1000 if necessary
-  if (originalAmount - discount < 1000) {
-    discount = originalAmount - 1000;  // Only use enough cashback to bring it to ₦1000
-    document.getElementById("messageArea").style.display = "block";
-    document.getElementById("message").textContent = "limit of 1000 must be paid"
+      // Determine the discount and amount after cashback application
+      if (this.checked && cashback > 0) {  // Only apply cashback if it's available
+        // Calculate 60% of cashback or up to the original amount, whichever is lower
+        discount = Math.min(cashback * 0.6, originalAmount);
+
+        // Apply the discount, but only enough to bring the amount down to ₦1000 if necessary
+        if (originalAmount - discount < 1000) {
+          discount = originalAmount - 1000;  // Only use enough cashback to bring it to ₦1000
+          document.getElementById("messageArea").style.display = "block";
+          document.getElementById("message").textContent = "limit of 1000 must be paid";
+        }
+
+        amount -= discount;  // Subtract the applicable discount from the cart value
+
+        // Update removed and remaining cashback amounts
+        document.getElementById("removedCashback").style.display = "block";
+        document.getElementById("remainingCashback").style.display = "block";
+        document.getElementById("removedAmount").textContent = discount.toLocaleString("en-NG", { minimumFractionDigits: 2 });
+        document.getElementById("remainingAmount").textContent = (cashback - discount).toLocaleString("en-NG", { minimumFractionDigits: 2 });
+      } else {
+        // Reset the label and cashback details when cashback is not applied or available
+        document.getElementById("messageArea").style.display = "none";
+        document.getElementById("cashbackLabel").innerHTML = `
+          Apply discount (use 60% of <img src="/images/coin.png" style="max-width: 20px;" alt="coin"> <%= userCashback %> cashback)
+        `;
+      }
+
+      // Update the displayed amount
+      document.getElementById("sumTotal").textContent = amount.toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    });
   }
 
-  amount -= discount;  // Subtract the applicable discount from the cart value
+  // Ensure that the payment form submission is handled correctly
+  let paymentForm = document.getElementById("paymentForm");
 
-  // Update removed and remaining cashback amounts
-  document.getElementById("removedCashback").style.display = "block";
-  document.getElementById("remainingCashback").style.display = "block";
-  document.getElementById("removedAmount").textContent = discount.toLocaleString("en-NG", { minimumFractionDigits: 2 });
-  document.getElementById("remainingAmount").textContent = (cashback - discount).toLocaleString("en-NG", { minimumFractionDigits: 2 });
-} else {
-    // Reset the label and cashback details when cashback is not applied
-    
-    document.getElementById("cashbackLabel").innerHTML = `
-    
-      Apply discount (use 60% of <img src="/images/coin.png" style="max-width: 20px;" alt="coin"> <%= userCashback %> cashback) 
-      `;
+  if (paymentForm) {
+    paymentForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      
+      let email = document.getElementById("email").value;
+      let originalAmount = parseFloat(document.getElementById("amount").value); // Original amount
+      let finalAmount = parseFloat(document.getElementById("sumTotal").textContent.replace(/[^0-9.-]+/g, "")); // Get the displayed amount
+      let applyCashback = applyCashbackCheckbox ? applyCashbackCheckbox.checked : false; // Get checkbox state
+      let cashback = <%= userCashback %>;  // Cashback amount
+
+      // Initialize discount
+      let discount = 0;
+
+      // Apply cashback logic only if the checkbox is checked
+      if (applyCashback && cashback > 0) {
+        // Calculate 60% of cashback or up to the original amount, whichever is lower
+        discount = Math.min(cashback * 0.6, originalAmount);
+
+        // Ensure discount does not bring the amount below ₦1000
+        if (originalAmount - discount < 1000) {
+          discount = originalAmount - 1000;  // Use enough cashback to bring it down to ₦1000
+        }
+      }
+
+      // Ensure that discount is never negative and the final amount doesn't go below ₦1000
+      let amountAfterDiscount = Math.max(originalAmount - discount, 1000);
+
+      // Make Paystack payment request
+      fetch('/pay', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          oAmnt: originalAmount, 
+          applyCashback, 
+          email, 
+          amount: Math.floor(amountAfterDiscount), // Send the final amount after discount
+          discount 
+        }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status) {
+          window.location.href = data.data.authorization_url;
+        } else {
+          alert(data.message);
+          alert('Payment failed. Please refresh and try again.');
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again');
+      });
+    });
   }
-
-  // Update the displayed amount
-  document.getElementById("sumTotal").textContent = amount.toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-});
-
-
-
-document.getElementById("paymentForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  
-  let email = document.getElementById("email").value;
-  let finalAmount = parseFloat(document.getElementById("sumTotal").textContent.replace(/[^0-9.-]+/g, "")); // Get the displayed amount
-  let applyCashback = document.getElementById("applyCashback").checked; // Get checkbox state
-  let oAmnt = parseFloat(document.getElementById("amount").value); // Original amount
-  let cashback = <%= userCashback %>;  // Cashback amount
-
-  // Calculate discount to send to the server for verification
-  let discount = 0;
-  if (applyCashback) {
-    // Calculate 60% of cashback or up to the original amount, whichever is lower
-    discount = Math.min(cashback * 0.6, oAmnt);
-
-    // Ensure discount does not bring the amount below ₦1000
-    if (oAmnt - discount < 1000) {
-      discount = oAmnt - 1000;
-    }
-  }
-
-  // Make Paystack payment request
-  fetch('/pay', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ oAmnt, applyCashback, email, amount: Math.floor(finalAmount), discount }), // Send discount for verification
-  })
-  .then(response => response.json())
-  .then(data => {
-
-    if (data.status) {
-      window.location.href = data.data.authorization_url;
-    } else {
-      alert(data.message);
-      alert('Payment failed. Please refresh and try again.');
-    }
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-
-    alert('An error occurred. Please try again');
-  });
 });
 
 </script>

@@ -1553,7 +1553,7 @@ exports.getAirtimePage = async (req, res) => {
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   // Render the checkout page
   res.render("./user/airtime", {
-    pageTitle: "map",
+    pageTitle: " airtime",
     appName: appName,
     appEmail,
     totalUnreadNotification,

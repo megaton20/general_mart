@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path')
 const crypto = require('crypto');
 const router = express.Router();
 const axios = require('axios');
@@ -866,21 +867,29 @@ const orderValues = [
     await Promise.all(orderProductPromises);
 
 
-        // creating the invoice to send
+// Generate the itemsList with unique CID values for images
 const itemsList = cartItems
-.map(
-  (item) => `
-    <div style="border: 1px solid #ddd; border-radius: 8px; padding: 10px; margin-bottom: 10px; background-color: #f9f9f9;">
-      <p><strong>Item:</strong> ${item.product_name}</p>
-      <p><strong>Quantity:</strong> ${item.quantity}</p>
-      <p><strong>Price:</strong> NGN ${item.price_per_item}</p>
-      <p><strong>Subtotal:</strong> NGN ${item.subtotal}</p>
+  .map(
+    (item, index) => `
+      <div style="display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; padding: 10px; margin-bottom: 10px; background-color: #f9f9f9;">
+      <img style="max-height: 150px; max-width: 150px; margin-right: 10px;" src="cid:itemImage${index}" class="card-img-top rounded-4" alt="${item.product_name}">
+      <div>
+        <p><strong>Item:</strong> ${item.product_name}</p>
+        <p><strong>Quantity:</strong> ${item.quantity}</p>
+        <p><strong>Price:</strong> NGN ${item.price_per_item}</p>
+        <p><strong>Subtotal:</strong> NGN ${item.subtotal}</p>
+      </div>
     </div>
-  `
-)
-.join("");
+    `
+  )
+  .join("");
 
-
+        // Prepare the list of attachments with unique CID values
+      const attachments = cartItems.map((item, index) => ({
+        filename: item.image,
+        path: path.join(__dirname,"..", "public", "uploads", item.image), // Adjusted for public/uploads path
+        cid: `itemImage${index}`, // Unique CID for each item
+      }));
         // send mail
 
 
@@ -906,6 +915,7 @@ const itemsList = cartItems
           to: userData[0].email,
           subject: `Your Purchase Invoice - Order #${reference}`,
           html: emailBody,
+          attachments
         };
     
         // Send the invoice email
@@ -946,10 +956,7 @@ const itemsList = cartItems
           }
         });
   
-        await query(
-          'INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',
-          [userId, `Your Order was placed.`, "success", false]
-        );
+        await query('INSERT INTO "notifications" ("user_id", "message", "type", "is_read") VALUES ($1, $2, $3, $4)',[userId, `Your Order was placed.`, "success", false]);
     
         
     // Clear the cart after the order is placed

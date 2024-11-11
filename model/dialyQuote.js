@@ -12,7 +12,10 @@ async function getDailyQuote() {
     dailyQuote = quote;  // Update the stored daily quote
   } catch (error) {
     console.error("Error fetching the quote:", error.message);
-    dailyQuote = null;  // Reset to null if there's an error
+    dailyQuote = {
+      quoteText:"",
+      quoteAuthor:""
+    };  // Reset to null if there's an error
   }
 }
 

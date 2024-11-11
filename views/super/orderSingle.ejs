@@ -180,7 +180,15 @@
         
 
 
-          <!-- shhipping actions -->
+
+          <!-- shipping action area -->
+          <% if( orderData[0].status == "canceled" ){ %>
+            <div class="col-lg-6 mt-4">
+
+              <p class="text-danger"><i class="fas fa-times"></i> order has been canceled!</p>
+            </div>
+            <% } else { %>
+                 <!-- shhipping actions -->
           <div class="col-lg-6 mt-4">
             <% if( orderData[0].status == "incomplete" ){ %>
             <a href="/super/confirm-order/<%= orderData[0].id %>">
@@ -194,7 +202,7 @@
 
             <% } else{ %> <% if( orderData[0].status == "waiting" ){ %>
 
-            <br />
+            <br/>
               <div class="card-body pt-3">
                 <!-- Bordered Tabs -->
                 <ul class="nav nav-tabs nav-tabs-bordered">
@@ -254,8 +262,6 @@
                 </div><!-- End Bordered Tabs -->
     
               </div>
-
-
             <% } else{ %>
 
               <div class="card-body pt-3">
@@ -320,6 +326,9 @@
 
             <% } %> <% } %>
           </div>
+              <% } %>
+
+       
         </div>
         <!-- /.container-fluid -->
       </div>

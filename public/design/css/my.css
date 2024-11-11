@@ -53,6 +53,17 @@
   }
 }
 
+
+.form-ctrl {
+  margin-bottom: 15px;
+}
+.m-card {
+  max-width: 400px; /* Set max width for the card */
+  margin: auto; /* Center the card */
+  margin-top: 100px; /* Add top margin for spacing */
+}
+
+
 .points {
   overflow: hidden;
   height: 50px; /* Adjust to fit one item */
@@ -83,7 +94,7 @@
 
 
 .main{
-  margin-top: 100px;
+  margin-top: 70px;
 }
 .back-btn{
   color: var(--accent-color);
@@ -809,8 +820,8 @@
   
   font-size: 20px;
   font-weight: 400;
-  background-color: var(--accent-color);
-  color: var(--background-color);
+
+  color: var(--accent-color);
   border-radius: 5px;
   padding: 5px;
   margin-bottom: 15px;
@@ -902,7 +913,7 @@ h6 {
   margin: 0;
 }
 #navbar   {
-  background: #7da0c049; 
+  background: #7da0c0f4; 
   color: #fff !important;
   transition: background-color 0.3s ease-in-out;
 }

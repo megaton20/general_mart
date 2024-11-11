@@ -86,6 +86,21 @@
       #page-content {
         visibility: hidden;
       }
+
+
+        /* Initially hide the status div */
+        #connectionStatus {
+            display: none;
+            position: fixed;
+            width: 100%;
+            top: 50px;
+            z-index: 1000;
+            color: red;
+            padding: 10px;
+            background-color: lightcoral;
+            border: 1px solid darkred;
+        }
+
     </style>
     
 </head>
@@ -101,6 +116,7 @@
     
    <!-- Dynamic content -->
    <div id="page-content">
+    <div id="connectionStatus">Internet is not connected</div>
     <%- body %>
   </div>
     
@@ -147,6 +163,35 @@
   // Set interval to change focus every 4 seconds
   setInterval(updateFocus, 4000);
 });
+
+
+
+// i ternet
+function checkInternetConnection() {
+    const connectionStatusElement = document.getElementById('connectionStatus');
+
+    // Use navigator.onLine to check if the browser is online
+    if (!navigator.onLine) {
+        // Hide the status div if online
+        connectionStatusElement.style.display = 'block';
+        connectionStatusElement.innerHTML = 'Internet is not connected';
+      } else {
+        // Show the status div if offline
+        connectionStatusElement.style.display = 'none';
+    }
+}
+
+// Check the connection every 5 seconds (5000 milliseconds)
+setInterval(checkInternetConnection, 5000);
+
+// Initial check on page load
+checkInternetConnection();
+
+// Optional: Listen for 'online' and 'offline' events to dynamically update status
+window.addEventListener('online', checkInternetConnection);
+window.addEventListener('offline', checkInternetConnection);
+
+
 
 
       </script>
