@@ -6,23 +6,27 @@
  
       <div class="container">
           <%- include ('../partials/messages') %>
-            <div class=" mb-4">
+          <% if (driverWithIDResult[0].status === 'pending') { %>
+            <!-- Blank Page with Information for Pending Status -->
+            <div class="container text-center mt-5">
+              <h1>Account Pending Approval</h1>
+              <p>Your account is currently under review. Please check back later or contact support for more information.</p>
+            </div>
+          <% } else if (driverWithIDResult[0].status === 'approved') { %>
+            <!-- Main Dashboard for Approved Drivers -->
+            <div class="container mb-4">
               <div class="row mt-4">
-            
-
+                <!-- Available pickups -->
                 <div class="col-xl-3 col-md-6 mb-3">
-
-                  <div class="card  h-100 py-2">
+                  <div class="card h-100 py-2">
                     <div class="card-body">
                       <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                          <div
-                            class="text-xs font-weight-bold text-warning text-uppercase mb-1"
-                          >
-                            Available pickups
+                          <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Available Pickups
                           </div>
                           <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            <%=availableDeliveries%>
+                            <%= availableDeliveries %>
                           </div>
                         </div>
                         <div class="col-auto">
@@ -31,70 +35,61 @@
                       </div>
                     </div>
                   </div>
-
                 </div>
-
-               <a href="/drivers/my-deliveries" class="col-xl-3 col-md-6 mb-3">
-
-                <div class="card  h-100 py-2">
-                  <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                      <div class="col mr-2">
-                        <div
-                          class="text-xs font-weight-bold text-warning text-uppercase mb-1"
-                        >
-                          My Active Rides
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">
-                          <%=activeRides%>
-                        </div>
-                      </div>
-                      <div class="col-auto">
-                        <i class="fas fa-truck fa-2x text-gray-300"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-             </a>
-      
-             <div class="col-xl-3 col-md-6 mb-3">
-
-              <div class="card  h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div
-                        class="text-xs font-weight-bold text-success text-uppercase mb-1"
-                      >
-                      RIDES COMPLETED
-                      </div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        <%=completedRides%>
-                      </div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-                <div  class="col-xl-3 col-md-6 mb-3">
-
-                  <div class="card  h-100 py-2">
+          
+                <!-- My Active Rides -->
+                <div class="col-xl-3 col-md-6 mb-3">
+                  <a href="/drivers/my-deliveries" class="card h-100 py-2 text-decoration-none">
                     <div class="card-body">
                       <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                          <div
-                            class="text-xs font-weight-bold text-danger text-uppercase mb-1"
-                          >
+                          <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            My Active Rides
+                          </div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            <%= activeRides %>
+                          </div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-truck fa-2x text-gray-300"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+          
+                <!-- Rides Completed -->
+                <div class="col-xl-3 col-md-6 mb-3">
+                  <div class="card h-100 py-2">
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Rides Completed
+                          </div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            <%= completedRides %>
+                          </div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+          
+                <!-- Canceled Rides -->
+                <div class="col-xl-3 col-md-6 mb-3">
+                  <div class="card h-100 py-2">
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                             Canceled Rides
                           </div>
                           <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            <%=canceledRides%>
+                            <%= canceledRides %>
                           </div>
                         </div>
                         <div class="col-auto">
@@ -103,16 +98,21 @@
                       </div>
                     </div>
                   </div>
-
                 </div>
-
-               
-                
               </div>
             </div>
+          <% } %>
+          
 
-            <%- include ('../partials/clients')%>
         </div>
+        <br>
+        <br>
+        <%- include ('../partials/clients')%>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
     <%- include ('../partials/openFooter')%>
 
 

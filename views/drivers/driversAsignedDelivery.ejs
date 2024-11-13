@@ -5,8 +5,6 @@
   <!-- Offcanvas Menu for Mobile -->
   <%- include ('./driverSidebar') %>
   <div class="container">
-        <hr>
-
         <!-- Page Heading -->
         <%- include ('../partials/messages') %>
 
@@ -26,70 +24,18 @@
                           <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                             Your assigned deliveries
                           </div>
+                          <div class="order-list mt-4">
                           <% availableDeliveries.forEach(function(data) {%> 
-                          <div class=" mb-3">
-                              <div class="card">
-                                <div class="card-body">
-                                <div class="row align-items-center">
-                                  <div class="col-md-8">
-                                    <div class="row no-gutters align-items-center">
-                                      <!-- <div class="col mr-5 mb-4">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                          Pick up
-                                        </div>
-                                        <div class="text-gray-500">
-                                          Store A
-                                        </div>
-                                      </div> -->
 
-                                      <div class="col-auto mr-5 mb-4">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                            Destination
-                                          </div>
-                                          <div class="text-gray-500">
-                                            <%= data.customer_address%>. <%= data.customer_state%>, <%= data.customer_lga%>
-                                          </div>
-                                      </div>
-            
-                                      <div class="col-auto mr-5 mb-4">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                          Reciever Email
-                                        </div>
-                                        <div class="text-gray-500">
-                                          <%= data.customer_email%>, 
-                                        </div>
-                                      </div>
-
-                                      <div class="col-auto mr-5 mb-4">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                            Tracking ID
-                                          </div>
-                                          <div class="text-gray-500">
-                                            <%= data.sale_id %> 
-                                          </div>
-                                      </div>
-            
-                             
-            
-                                
-            
-                                
-                                    </div>
-                                  </div>
-                                  <div class="col-md-4">
-
-                                  <div class="">
-                                      <a class="m-btn my-btn-outline" style="width: 100%;" href="/drivers/deliveries/<%= data['id'] %>"> See Details</a>
-                                  </div>
+                                <div class="order-card">
+                                  <div class="order-info">
+                                    <span class="order-amount"><%= data.sale_id %></span>
 
                                   </div>
+                                  <a class="btn btn-primary details-btn" href="/drivers/deliveries/<%= data['id'] %>">Details</a>
                                 </div>
-                                </div>
-
-                                
-                              </div>
+                              <% }) %>
                             </div>
-                            <% }) %>
                          
          
                             <% } %>
@@ -98,6 +44,12 @@
 
 
 
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
             <br>
             <br>
             <br>

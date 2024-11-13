@@ -1,13 +1,15 @@
 
 
 <%- include('./partials/authNav') %>
+
 <div class="container">
-    <p class="text-center m-0"> <i class="bi bi-exclamation-bell"></i> Welcome to our store! let us be your personal shopper!</p> 
-    <div class="m-card m-0">
-        <!-- <a class="d-flex align-items-center mb-3" href="/">
-            <img src="/images/logo.png" alt="logo" style="height: 50px;">
-        </a> -->
     <%- include('./partials/messages') %>
+</div>
+
+<div class="m-card mt-2">
+    
+    <p class="text-center m-0"> <i class="bi bi-exclamation-bell"></i> Welcome to our store! let us be your personal shopper!</p> 
+
     <div class="p-2">
         <form id="registrationForm" action="/auth/register" method="post" onsubmit="return validateForm()">
             <div class="row">
@@ -49,14 +51,16 @@
     </div>
     
    
-    
+    <div class="mt-2 footer-details">
+        <div class="col-a">
+            <p class="m-2">Click <a href="/login">Here</a> to sign in</p>
+        </div>
+    </div>
     </div>
 
 
     <br>
     <br>
-</div>
-
 
 
 <script>

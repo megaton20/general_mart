@@ -95,27 +95,28 @@
                             </div>    
                         </div>
                     </div>
-                    </div>
-                 
-                          
+
                     <div class="col-lg-5 col-md-12 col-sm-12 mb-3">
                       <div class=" mb-3">
 
                             <div class="row no-gutters align-items-center">
                               
                               <% orderedProducts.forEach(function(data) {%> 
+                                <div class="col-6 align-items-center">
 
-                             <div class="row align-items-center">
-                              <div class="col-lg-4 text-gray-500">
-                                <img style="max-width: 70px; max-height: 70px;" src="/uploads/<%=data.image%>" alt="product image">
-                             </div>
-                              <div class="col-auto text-gray-500">
-                                 <%=data.name%>
-                              </div>
-                             </div>
-                             
-
-                            <% }) %>
+                                  <div class="row align-items-center">
+                                   <div class="col-md-4 text-gray-500">
+                                     <img style="max-width: 70px; max-height: 70px;" src="/uploads/<%=data.image%>" alt="product image">
+                                  </div>
+                                   <div class="col-8 text-gray-500">
+                                      <%=data.name%>
+                                   </div>
+                                  </div>
+                                  
+     
+                                </div>
+                                 <% }) %>
+                         
     
     
 

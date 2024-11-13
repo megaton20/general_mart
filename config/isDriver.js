@@ -1,5 +1,9 @@
+const db = require("../model/databaseTable");
+const { promisify } = require('util');
+const query = promisify(db.query).bind(db);
+
 module.exports = {
-  isDriver: function(req, res, next) {
+  isDriver:async function(req, res, next) {
     const userPosition = req.user.position;
     const userRole = req.user.userRole;
 
@@ -13,9 +17,15 @@ module.exports = {
       return res.redirect('/employee');
       
     } else if (userRole === "user") {
-      req.flash('warning_msg', 'That is not your role');
-      return res.redirect('/user');
+      const fetchDriverQuery = 'SELECT * FROM "drivers" WHERE "user_id" = $1'; 
+      const { rows:results } = await query(fetchDriverQuery, [req.user.id]);
 
+      if (results.length >0) {
+        return next()
+      }
+
+      req.flash('warning_msg', 'you can not access here');
+      return res.redirect('/user');
 
     }else if (userRole === "vendor") {
       req.flash('warning_msg', 'vendor That is not your role');
@@ -28,9 +38,16 @@ module.exports = {
       return next()
     }
   },
-  alreadyDriver:(req,res,next)=>{
-    const userRole = req.user.userRole;
-    if (userRole === "driver") {
+
+  alreadyDriver: async(req,res,next)=>{
+    const userId = req.user.id;
+
+    const fetchDriverQuery = 'SELECT * FROM "drivers" WHERE "user_id" = $1'; 
+    const { rows:driverData } = await query(fetchDriverQuery, [userId]);
+
+
+    if (driverData.length > 0) {
+
       req.flash('warning_msg', 'already registered as a rider');
       return res.redirect('/drivers');
     }

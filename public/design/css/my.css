@@ -45,6 +45,78 @@
   scroll-behavior: smooth;
 }
 
+a{
+  text-decoration: none !important;
+}
+
+
+                   /* Orders List Layout */
+                   .order-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 15px;
+                  }
+                
+                  /* Order Card Styling */
+                  .order-card {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    background-color: #f8f9fa;
+                    padding: 15px;
+                    border-radius: 8px;
+                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+                    font-size: 14px;
+                  }
+                
+                  .order-info {
+                    display: flex;
+                    gap: 10px;
+                  }
+                
+                  .order-amount {
+                    font-weight: bold;
+                    color: var(--accent-color);
+                  }
+                
+                  .order-status {
+                    font-size: 0.9em;
+                    color: #555;
+                  }
+                
+                  /* Details Button */
+                  .details-btn {
+                    font-size: 0.9em;
+                    padding: 5px 10px;
+                  }
+.container {
+  width: 80% !important;
+  margin: 0 auto;
+}
+
+/* Medium screens (tablets, 768px and up) */
+@media (max-width: 992px) {
+  .container {
+      width: 90% !important;
+  }
+}
+
+/* Small screens (landscape phones, 576px and up) */
+@media (max-width: 768px) {
+  .container {
+      width: 95% !important;
+  }
+}
+
+/* Extra small screens (portrait phones, less than 576px) */
+@media (max-width: 576px) {
+  .container {
+      width: 97% !important;
+      padding: 0 15px; /* Optional padding for smaller screens */
+  }
+}
+
+
 
 @media only screen and (min-width: 1024px) {
   .container-for-large-screens {
@@ -983,13 +1055,25 @@ h6 {
   font-size: 20px !important;
 }
 
-.navbar-icons {
-  display: flex;
+.navbar-icons-home {
+  display: flex !important;
   align-items: center;
+  justify-content: space-between;
+}
+
+
+.navbar-icons {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar-icons .user-icon {
+  margin-left: 10px !important;
 }
 
 .navbar-icons a {
-  margin-left: 1px;
+  margin-left: 10px;
   color: #fff;
   text-decoration: none;
 }

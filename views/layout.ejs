@@ -3,222 +3,246 @@
 
 <head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="online grocery store, e-commerce , Lagos, Abuja, Cross River,Nigeria">
-    <meta name="author" content="Strobe tech">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="online grocery store, e-commerce , Lagos, Abuja, Cross River,Nigeria">
+  <meta name="author" content="Strobe tech">
 
-    <title><%= pageTitle%></title>
- <!-- Vendor CSS Files -->
+  <title>
+    <%= pageTitle%>
+  </title>
+  <!-- Vendor CSS Files -->
 
- 
- <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
- 
- <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script> -->
- <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" /> -->
- 
- <link href="/bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet">
- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
- <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+  <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script> -->
+  <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" /> -->
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  
-
- <link href="/design/css/my.css" rel="stylesheet" />
- <link href="/assets/css/sb-admin-2.css" rel="stylesheet">
-
- <!-- AOS Library CSS -->
- <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-
-    <!-- Owl Carousel CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 
 
-    <style>
-      /* Loader Styles */
-      #loader {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.9);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-      }
-    
-      .loader-wrapper {
-        position: relative;
-        width: 150px;
-        height: 150px;
-      }
-    
-      .loader-logo {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 80px;
-        z-index: 2;
-        animation: bounce 1s ease infinite;
-      }
-    
+  <link href="/design/css/my.css" rel="stylesheet" />
+  <link href="/assets/css/sb-admin-2.css" rel="stylesheet">
 
-    
-      /* Bouncing Animation */
-      @keyframes bounce {
-        0%, 100% {
-          transform: translate(-50%, -50%) scale(1);
-        }
-        50% {
-          transform: translate(-50%, -60%) scale(1.1); /* Moves up and grows slightly */
-        }
-      }
-    
-      /* Hide page content initially */
-      #page-content {
-        visibility: hidden;
+  <!-- AOS Library CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Owl Carousel CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+
+
+  <style>
+    /* Loader Styles */
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .loader-wrapper {
+      position: relative;
+      width: 150px;
+      height: 150px;
+    }
+
+    .loader-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      z-index: 2;
+      animation: bounce 1s ease infinite;
+    }
+
+
+
+    /* Bouncing Animation */
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translate(-50%, -50%) scale(1);
       }
 
+      50% {
+        transform: translate(-50%, -60%) scale(1.1);
+        /* Moves up and grows slightly */
+      }
+    }
 
-        /* Initially hide the status div */
-        #connectionStatus {
-            display: none;
-            position: fixed;
-            width: 100%;
-            top: 50px;
-            z-index: 1000;
-            color: red;
-            padding: 10px;
-            background-color: lightcoral;
-            border: 1px solid darkred;
-        }
+    /* Hide page content initially */
+    #page-content {
+      visibility: hidden;
+    }
 
-    </style>
-    
+
+    /* Initially hide the status div */
+    #connectionStatus {
+      display: none;
+      position: fixed;
+      width: 100%;
+      top: 50px;
+      z-index: 1000;
+      color: rgba(255, 0, 0, 0.987);
+      padding: 10px;
+      background-color: rgba(240, 128, 128, 0.542);
+    }
+  </style>
+
 </head>
- 
-   <!-- Loader -->
-   <div id="loader">
-    <div class="loader-wrapper">
 
-      <img src="/images/logo.png" alt="Logo" class="loader-logo">
-    </div>
+<!-- Loader -->
+<div id="loader">
+  <div class="loader-wrapper">
+
+    <img src="/images/logo.png" alt="Logo" class="loader-logo">
   </div>
- 
-    
-   <!-- Dynamic content -->
-   <div id="page-content">
-    <div id="connectionStatus">Internet is not connected</div>
-    <%- body %>
-  </div>
-    
+</div>
 
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
-    <i class="bi bi-arrow-up-short"></i>
-  </a>
 
-    <!-- Loader JavaScript -->
-    <script>
-        window.addEventListener("load", function() {
-          const loader = document.getElementById("loader");
-          const body = document.getElementById("page-content");
-    
-          loader.style.display = "none"; // Hide the loader
-          body.style.visibility = "visible"; // Show the content
-        });
+<!-- Dynamic content -->
+<div id="page-content">
+  <div id="connectionStatus">Internet is not connected</div>
+  <%- body %>
+</div>
+
+
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+  <i class="bi bi-arrow-up-short"></i>
+</a>
+
+<!-- Loader JavaScript -->
+<script>
+  window.addEventListener("load", function () {
+    const loader = document.getElementById("loader");
+    const body = document.getElementById("page-content");
+
+    loader.style.display = "none"; // Hide the loader
+    body.style.visibility = "visible"; // Show the content
+  });
 
 
 
   document.addEventListener("DOMContentLoaded", () => {
-  const emailList = document.querySelector(".email-list");
-  const emailItems = document.querySelectorAll(".email-item");
-  let currentIndex = 0;
+    const emailList = document.querySelector(".email-list");
+    const emailItems = document.querySelectorAll(".email-item");
+    let currentIndex = 0;
 
-  function updateFocus() {
-    // Reset opacity and blur on all items
-    emailItems.forEach(item => item.classList.remove("focused"));
-    
-    // Add focus to the current item
-    emailItems[currentIndex].classList.add("focused");
+    function updateFocus() {
+      // Reset opacity and blur on all items
+      emailItems.forEach(item => item.classList.remove("focused"));
 
-    // Move the list up to show the current item in focus
-    const offset = -currentIndex * 50; // Adjust based on item height
-    emailList.style.transform = `translateY(${offset}px)`;
+      // Add focus to the current item
+      emailItems[currentIndex].classList.add("focused");
 
-    // Update the index, looping back to start
-    currentIndex = (currentIndex + 1) % emailItems.length;
-  }
+      // Move the list up to show the current item in focus
+      const offset = -currentIndex * 50; // Adjust based on item height
+      emailList.style.transform = `translateY(${offset}px)`;
 
-  // Initialize the first focus
-  updateFocus();
+      // Update the index, looping back to start
+      currentIndex = (currentIndex + 1) % emailItems.length;
+    }
 
-  // Set interval to change focus every 4 seconds
-  setInterval(updateFocus, 4000);
-});
+    // Initialize the first focus
+    updateFocus();
+
+    // Set interval to change focus every 4 seconds
+    setInterval(updateFocus, 4000);
+  });
 
 
 
-// i ternet
-function checkInternetConnection() {
+  // i ternet
+  function checkInternetConnection() {
     const connectionStatusElement = document.getElementById('connectionStatus');
 
     // Use navigator.onLine to check if the browser is online
     if (!navigator.onLine) {
-        // Hide the status div if online
-        connectionStatusElement.style.display = 'block';
-        connectionStatusElement.innerHTML = 'Internet is not connected';
-      } else {
-        // Show the status div if offline
-        connectionStatusElement.style.display = 'none';
+      // Hide the status div if online
+      connectionStatusElement.style.display = 'block';
+      connectionStatusElement.innerHTML = 'Internet is not connected';
+    } else {
+      // Show the status div if offline
+      connectionStatusElement.style.display = 'none';
     }
-}
+  }
 
-// Check the connection every 5 seconds (5000 milliseconds)
-setInterval(checkInternetConnection, 5000);
+  // Check the connection every 5 seconds (5000 milliseconds)
+  setInterval(checkInternetConnection, 5000);
 
-// Initial check on page load
-checkInternetConnection();
+  // Initial check on page load
+  checkInternetConnection();
 
-// Optional: Listen for 'online' and 'offline' events to dynamically update status
-window.addEventListener('online', checkInternetConnection);
-window.addEventListener('offline', checkInternetConnection);
-
-
+  // Optional: Listen for 'online' and 'offline' events to dynamically update status
+  window.addEventListener('online', checkInternetConnection);
+  window.addEventListener('offline', checkInternetConnection);
 
 
-      </script>
-
-    
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-        <script src="/assets/vendor/jquery/jquery.min.js"></script>
-        <script src="/assets/vendor/jquery-easing/jquery.easing.min.js"></script>
-        
-        <script src="/design/js/script.js"></script>
-        <script src="/design/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 
-        <script src="/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+</script>
+
+<script>
+
+  // Fallback to an empty array if presentCart is not defined
+  const presentCart = <%- typeof presentCart !== 'undefined' && presentCart !== null ? JSON.stringify(presentCart) : '[]' %>;
+
+  // Initialize cart with data from the server-side template
+
+    function initializeCart(presentCart) {
+
+    updateCartBadge();
+  }
+  initializeCart(presentCart);
+
+  function updateCartBadge() {
+    const cartBadges = document.querySelectorAll('#cart-badge');
+    cartBadges.forEach(cartBadge => {
+      cartBadge.textContent = presentCart.length;
+    });
+  }
+</script>
 
 
-        <script src="/script.js"></script>
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/jquery-easing/jquery.easing.min.js"></script>
 
+<script src="/design/js/script.js"></script>
 
-          <!-- Include jQuery -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+<!-- Include jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <!-- AOS Library JS -->
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<!-- AOS Library JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 
-  <!-- Include Owl Carousel CSS and JS -->
+<!-- Include Owl Carousel CSS and JS -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
 
 </html>

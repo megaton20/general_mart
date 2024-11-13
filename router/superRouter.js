@@ -50,8 +50,8 @@ router.get("/all-external-riders", ensureAuthenticated,isSuper, superController.
 router.get("/view-rider/:id", ensureAuthenticated,isSuper, superController.getOneExternalRider);
 
 // todo
-router.put("/approve-rider/:id", ensureAuthenticated,isSuper, superController.getAllRanks);
-router.put("/disable-rider/:id", ensureAuthenticated,isSuper, superController.getAllRanks);
+router.put("/approve-rider/:id", ensureAuthenticated,isSuper, superController.approveRiderApplication);
+router.put("/disable-rider/:id", ensureAuthenticated,isSuper, superController.disapproveRiderApplication);
 // modify drivers to follow verified = true
 
 router.get("/upgrade-users", ensureAuthenticated,isSuper, superController.getAllUsersToUpgrade);

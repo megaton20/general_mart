@@ -19,74 +19,108 @@
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
 
-                        <a class="btn btn-outline-primary mr-2 mb-1" href="/super/all-external-riders">all external drivers</a>
+                        <a class="btn btn-outline-primary mr-2 mb-1 mt-3" href="/super/all-external-riders">all external drivers</a>
 
                         <!-- allExterrnalRiders[0].lesxample -->
-                        <div class=" mb-4">
-
-                                <div class="container">
-
-                                   <div class="mt-5">
-                                    <div class="row">
-
-                                        <div class="col-6">Company Name</div>
-                                        <div class="col-6"> <%= allExterrnalRiders[0].companyName %></div>
-                                        <div class="col-6"> company Phone</div>
-                                        <div class="col-6"><%= allExterrnalRiders[0].companyPhone %></div>
-                                        <div class="col-6">Headquaters State </div>
-                                        <div class="col-6"><%= allExterrnalRiders[0].HQ_state %></div>
-                                        <div class="col-6">LGA </div>
-                                        <div class="col-6"><%= allExterrnalRiders[0].HQ_lga %></div>
-                                        <div class="col-6">Company Address </div>
-                                        <div class="col-6"><%= allExterrnalRiders[0].companyAddress %></div>
-                                        
-                                        <hr>
-                                        
-                                        <div class="col-6">Bank Name</div>
-                                        <div class="col-6"> <%= allExterrnalRiders[0].Bank_name %></div>
-                                        <div class="col-6"> coporate Account number</div>
-                                        <div class="col-6"><%= allExterrnalRiders[0].bankAccount %></div>
-                                        <div class="col-6">Bearer name </div>
-                                        <div class="col-6"><%= allExterrnalRiders[0].accountName %></div>
-                                        <div class="col-6">verified </div>
-                                        <div class="col-6"><%= allExterrnalRiders[0].verified %></div>
-                                        <div class="col-6">status </div>
-                                        <div class="col-6"><%= allExterrnalRiders[0].status %></div>
-                                        <div class="col-6">NIN number </div>
-                                        <div class="col-6"><%= allExterrnalRiders[0].nation_id_number %></div>
-                                        <div class="col-6">CAC number </div>
-                                        <div class="col-6"><%= allExterrnalRiders[0].CAC_number %></div>
-
-                                        <hr>
-                                        <div class="col-6">goods Handled </div>
-                                        <div class="col-6"><%= allExterrnalRiders[0].goodsHandled %></div>
-                                        <div class="col-6">hours </div>
-                                        <div class="col-6"><%= allExterrnalRiders[0].hours %></div>
-                                        <div class="col-6">days </div>
-                                        <div class="col-6"><%= allExterrnalRiders[0].days %></div>
-                                        <div class="col-6">service </div>
-                                        <div class="col-6"><%= allExterrnalRiders[0].service %></div>
-                                    </div>
-                                   </div>
-                                    
-                               <div class="mt-5">
-                                <form action="/super/approve-rider/<%= allExterrnalRiders[0].id %>" method="POST"
-                                    style="display: inline;">
-                                    <input type="hidden" name="_method" value="PUT" />
-                                    <button class="btn btn-outline-success">approve</button>
-                                </form>
-                                
-                                <form action="/super/disable-rider/<%= allExterrnalRiders[0].id %>" method="POST"
-                                    style="display: inline;">
-                                    <input type="hidden" name="_method" value="PUT" />
-                                    <button class="btn btn-danger">Disable</button>
-                                </form>
-                               </div>
-                                    
-                                    
-                                    
-                                </div>
-                        </div>
+                        <div class="mb-4">
+                          <div class="container">
+                              <!-- Rider's Basic Information -->
+                              <div class="mt-5">
+                                  <div class="row">
+                                      <div class="col-6">Company Name</div>
+                                      <div class="col-6"><%= driverDetails[0].companyName %></div>
+                                      <div class="col-6">Company Phone</div>
+                                      <div class="col-6"><%= driverDetails[0].companyPhone %></div>
+                                      <div class="col-6">Headquarters State</div>
+                                      <div class="col-6"><%= driverDetails[0].HQ_state %></div>
+                                      <div class="col-6">LGA</div>
+                                      <div class="col-6"><%= driverDetails[0].HQ_lga %></div>
+                                      <div class="col-6">Company Address</div>
+                                      <div class="col-6"><%= driverDetails[0].companyAddress %></div>
+                                      
+                                      <hr>
+                                      
+                                      <div class="col-6">Bank Name</div>
+                                      <div class="col-6"><%= driverDetails[0].Bank_name %></div>
+                                      <div class="col-6">Corporate Account Number</div>
+                                      <div class="col-6"><%= driverDetails[0].bankAccount %></div>
+                                      <div class="col-6">Account Holder Name</div>
+                                      <div class="col-6"><%= driverDetails[0].accountName %></div>
+                                      <div class="col-6">Verified</div>
+                                      <div class="col-6"><%= driverDetails[0].verified %></div>
+                                      <div class="col-6">Status</div>
+                                      <div class="col-6"><%= driverDetails[0].status %></div>
+                                      <div class="col-6">NIN Number</div>
+                                      <div class="col-6"><%= driverDetails[0].nation_id_number %></div>
+                                      <div class="col-6">CAC Number</div>
+                                      <div class="col-6"><%= driverDetails[0].CAC_number %></div>
+                      
+                                      <hr>
+                      
+                                      <div class="col-6">Goods Handled</div>
+                                      <div class="col-6"><%= driverDetails[0].goodsHandled %></div>
+                                      <div class="col-6">Hours</div>
+                                      <div class="col-6"><%= driverDetails[0].hours %></div>
+                                      <div class="col-6">Days</div>
+                                      <div class="col-6"><%= driverDetails[0].days %></div>
+                                      <div class="col-6">Service</div>
+                                      <div class="col-6"><%= driverDetails[0].service %></div>
+                                  </div>
+                              </div>
+                      
+                              <!-- Approval and Disable Buttons -->
+                              <div class="mt-5">
+                                  <% if (driverDetails[0].status === 'pending') { %>
+                                      <form action="/super/approve-rider/<%= driverDetails[0].user_id %>" method="POST" style="display: inline;">
+                                          <input type="hidden" name="_method" value="PUT" />
+                                          <button class="btn btn-outline-success">Approve</button>
+                                      </form>
+                      
+                                      <form action="/super/disable-rider/<%= driverDetails[0].user_id %>" method="POST" style="display: inline;">
+                                          <input type="hidden" name="_method" value="PUT" />
+                                          <button class="btn btn-danger">Disable</button>
+                                      </form>
+                                  <% } else if (driverDetails[0].status === 'approved') { %>
+                                      <form action="/super/disable-rider/<%= driverDetails[0].user_id %>" method="POST" style="display: inline;">
+                                          <input type="hidden" name="_method" value="PUT" />
+                                          <button class="btn btn-danger">Disable</button>
+                                      </form>
+                                  <% } %>
+                              </div>
+                      
+                              <!-- Shipped Orders Table -->
+                              <div class="mt-5">
+                                  <h3>Shipped Orders</h3>
+                                  <table class="table table-bordered">
+                                      <thead>
+                                          <tr>
+                                              <th>Order ID</th>
+                                              <th>tracking id</th>
+                                              <th>Action</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          <% if (shippedOrders.length > 0) { %>
+                                              <% shippedOrders.forEach(order => { %>
+                                                  <tr>
+                                                      <td><%= order.id %></td>
+                                                      <td><%= order.sale_id %></td>
+                                                      <td>
+                                                          <a class="btn btn-primary" href="/super/view-order/<%= order.id %>">View Order</a>
+                                                      </td>
+                                                  </tr>
+                                              <% }) %>
+                                          <% } else { %>
+                                              <tr>
+                                                  <td colspan="5" class="text-center">No shipped orders found for this driver.</td>
+                                              </tr>
+                                          <% } %>
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                      </div>
+                      
 
                     </div>
                     <!-- /.container-fluid -->

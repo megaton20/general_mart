@@ -83,7 +83,8 @@ exports.getAdminWelcomePage = async (req, res) => {
       availableDeliveries,
       activeRides,
       completedRides,
-      canceledRides
+      canceledRides,
+      driverWithIDResult
     });
 
   } catch (error) {
@@ -161,7 +162,7 @@ exports.createNewDrivers = async (req, res) => {
     
     if (results.rows.length > 0) {
       req.flash('error_msg', 'Account details are being repeated');
-      return res.redirect('/drivers');
+      return res.redirect('back');
     }
     
     const insertQuery = `
@@ -190,11 +191,11 @@ exports.createNewDrivers = async (req, res) => {
   
   await query(insertQuery, insertValues);
 
-    const updateQuery = `UPDATE "Users" SET "userRole" = $1 WHERE "id" = $2`;
-    await query(updateQuery, ['driver', req.user.id]);
+  
+  
 
-    req.flash('success_msg', "You're now a driver with us");
-    res.redirect('/drivers');
+    req.flash('success_msg', "step completed, finish up from here");
+    res.redirect('/drivers/KYC');
   
   } catch (error) {
     req.flash('error_msg', `Error occurred: ${error.message}`);
@@ -303,7 +304,7 @@ exports.kycSubmit = async (req, res) => {
     await db.query(query, values);
 
     req.flash('success_msg', 'Submitted, under review');
-    return res.redirect('/drivers');
+    return res.redirect('/');
 
   } catch (error) {
     console.error('Error updating driver info:', error);

@@ -98,6 +98,16 @@ app.use('/logistics', logisticsRouter); // logistic shifts
 app.use('/drivers', driversRouter); // external riders
 app.use('/user', userRouter); // customer order platform
 
+
+// Handle when the user clicks "Later" or visits the Black Friday page
+app.post('/dismiss-modal', (req, res) => {
+  // Set the session flag to indicate the modal has been dismissed
+  req.session.blackFridayShown = true;
+  res.redirect('/');
+});
+
+
+
 // 404 Error handler for undefined routes
 app.use((req, res) => {
   let userActive = req.user ? true : false;

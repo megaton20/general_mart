@@ -25,54 +25,45 @@
                     <div class=" mb-4">
 
 
-                            <% if(allExterrnalRiders.length <= 0){ %>
+                            <% if(allExternalRiders.length <= 0){ %>
                             
                                 <h1>No External driver Record Found !</h1>  
                                 <% } else{ %>  
 
 
                                 
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                                <thead>
-                                                    <tr>
-
-                                                      <th>Id</th>
-                                                      <th>company name</th>
-                                                      <th>phone</th>
-                                                      <th>status</th>
-                                                      <th>
-                                                        action
-                                                      </th>
-                                                    </tr>
-                                                </thead>
-                                                
-                                                <tbody>
-                                              
-            
-            
-                                                    <% allExterrnalRiders.forEach(function(data) {%>
-                                                        <tr>
-                                                            <td><%= data['id'] %></td>
-                                                            <td><%= data['companyName'] %></td>
-                                                            <td><%= data['companyPhone'] %> </td>
-                                                            <td><%= data['status'] %> </td>
-                                                            <td>
-                                                                <a class="btn btn-primary" href="/super/view-rider/<%= data['id'] %>"> View</a>
-
-                                                            </td>
-
-                                                            
-                                                       </tr> 
-                                                       
-                                                           <% }) %>
-                                             
-                                               
-                                                
-            
-                                                    </tbody>
-                                            </table>
-                                        </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                          <thead>
+                                            <tr>
+                                              <th>Id</th>
+                                              <th>Company Name</th>
+                                              <th>Phone</th>
+                                              <th>Status</th>
+                                              <th> Rides</th>
+                                              <th>Action</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <% allExternalRiders.forEach(function(data) { %>
+                                              <tr>
+                                                <td><%= data['id'] %></td>
+                                                <td><%= data['companyName'] %></td>
+                                                <td><%= data['companyPhone'] %></td>
+                                                <td><%= data['status'] %></td>
+                                                <td>
+                                                  <!-- Display active rides count as a badge pill -->
+                                                  <span class="badge rounded-pill bg-warning"><%= data.shippedOrders || 0 %></span>
+                                                </td>
+                                                <td>
+                                                  <a class="btn btn-primary" href="/super/view-rider/<%= data['id'] %>">View</a>
+                                                </td>
+                                              </tr>
+                                            <% }) %>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                      
 
                                     <% } %>
                            

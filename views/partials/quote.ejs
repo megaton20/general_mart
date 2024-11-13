@@ -1,6 +1,16 @@
 
 
   <div class="help-box d-flex flex-column justify-content-center align-items-center my-box-shadow">
-    <p class="d-flex align-items-center mt-2 mb-0"> &ldquo;<%= dailyQuote.quoteText%>&rdquo;</p>
-    <p class="d-flex align-items-center mt-1 mb-0">— <%= dailyQuote.quoteAuthor%></p>
+    <p class="d-flex align-items-center mt-2 mb-0"> &ldquo;<% if (dailyQuote && dailyQuote.quoteText) { %>
+      <p><%= dailyQuote.quoteText %></p>
+  <% } else { %>
+      <p>No quote available for today.</p>
+  <% } %>&rdquo;</p>
+    <p class="d-flex align-items-center mt-1 mb-0">
+      <% if (dailyQuote && dailyQuote.quoteAuthor) { %>
+      <p>— <%= dailyQuote.quoteAuthor%></p>
+  <% } else { %>
+      <p>No author to ginger.</p>
+  <% } %>
+   </p>
   </div> 

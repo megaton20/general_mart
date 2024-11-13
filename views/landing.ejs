@@ -1,4 +1,15 @@
 
+<style>
+  .overlay-buttons {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+}
+
+</style>
 <%- include('./partials/openNav') %>
 
 <main class="main">
@@ -59,7 +70,6 @@
       <div class="col-md-4 order-2 order-md-1 d-md-block">
         <div id="service-details" class="service-details section">
           <div class="service-box mb-4">
-            <h6>Category List</h6>
             <div class="services-list">
               <% allCategory.forEach(data=> { %>
                 <a href="/user/category/<%= data.Category_name %>#" class="categoryButton"
@@ -77,6 +87,7 @@
     </div>
 
 <!-- points -->
+
 
 
   </div>
@@ -130,9 +141,9 @@
             <%- include ('./partials/quote') %>
 
               <!-- Advertisement or other content -->
-              <div class="advertisement">
+              <!-- <div class="advertisement">
                 <p>Advertisement Area</p>
-              </div>
+              </div> -->
 
 
 
@@ -186,7 +197,32 @@
 
 
                         
+  </div>
+
+
+  <div class="container">
+ <!-- Modal -->
+<% if (showModal) { %>
+  <div class="modal fade" id="blackFridayModal" tabindex="-1" role="dialog" aria-labelledby="blackFridayModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-body p-0">
+                  <div class="position-relative">
+                      <img src="/images/shelf.jpg" class="img-fluid" alt="Black Friday Sale">
+                      <!-- Buttons on top of the image -->
+                      <div class="overlay-buttons">
+                          <a href="/handler" class="btn btn-primary m-2"> Friday Sales</a>
+                          <form action="/dismiss-modal" method="POST">
+                              <button type="submit" class="btn btn-secondary m-2">Later</button>
+                          </form>
+                      </div>
+                  </div>
               </div>
+          </div>
+      </div>
+  </div>
+<% } %>
+  </div>
 
                           <br>
                           <br>
@@ -195,5 +231,33 @@
 <%- include ('./partials/openFooter')%>
 
 </main>
-    <!-- <div id="preloader"></div> -->
+    
+
+<script>
+  // Show the modal only if the session variable is not set
+    // Wait for the DOM to be fully loaded before executing
+    document.addEventListener('DOMContentLoaded', function () {
+        // Only show the modal if the session variable is not set
+        <% if (showModal) { %>
+            var modal = new bootstrap.Modal(document.getElementById('blackFridayModal'));
+            modal.show();
+        <% } %>
+
+        // "Later" button click handling
+        var laterButton = document.getElementById('laterButton');
+        if (laterButton) {
+            laterButton.addEventListener('click', function () {
+                // Set session variable to hide the modal on reload
+                sessionStorage.setItem('blackFridayShown', 'true');
+            });
+        }
+    });
+
+
+
+
+</script>
+
+
+
 

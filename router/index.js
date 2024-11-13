@@ -91,9 +91,17 @@ router.get('/auth/google/callback',
 // Welcome Page
 router.get('/', async (req, res) => {
   let userActive = false;
+  let presentCart
   if (req.user) {
     userActive = true;
+
+    const { rows: result } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+    presentCart = result
+
   }
+   // Check if the "blackFridayShown" session variable is set
+ const showModal = !req.session.blackFridayShown;
+
 
   const limit = 16;
   const page = parseInt(req.query.page) || 1;
@@ -178,7 +186,8 @@ router.get('/', async (req, res) => {
       firstHalf: firstHalfCategoriesWithProducts,
       secondHalf: secondHalfCategoriesWithProducts,
       recentCustomers,
-      dailyQuote 
+      dailyQuote,showModal:false,
+      presentCart
     });
 
   } catch (error) {
@@ -190,10 +199,16 @@ router.get('/', async (req, res) => {
 
 // policy Page
 router.get('/policy', async(req, res) => {
-  let userActive= false
+  let userActive = false;
+  let presentCart
   if (req.user) {
-    userActive = true
+    userActive = true;
+
+    const { rows: result } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+    presentCart = result
+
   }
+
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('policy',{
     pageTitle:` ${appName} policy`,
@@ -205,76 +220,110 @@ router.get('/policy', async(req, res) => {
 )
 
 router.get('/faq', async(req, res) => {
-  let userActive= false
+  let userActive = false;
+  let presentCart
   if (req.user) {
-    userActive = true
+    userActive = true;
+
+    const { rows: result } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+    presentCart = result
+
   }
+
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('faq',{
     pageTitle:` ${appName} faq`,
     appName,appEmail,
     userActive,
-    allCategory
+    allCategory,
+    presentCart
   });
 }
 )
 router.get('/featured-services', async(req, res) => {
-  let userActive= false
+  let userActive = false;
+  let presentCart
   if (req.user) {
-    userActive = true
+    userActive = true;
+
+    const { rows: result } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+    presentCart = result
+
   }
+
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('featured-services',{
     pageTitle:` ${appName} featured-services`,
     appName,appEmail,
     userActive,
-    allCategory
+    allCategory,
+    presentCart
   });
 }
 )
 router.get('/contact', async (req, res) => {
-  let userActive= false
+  let userActive = false;
+  let presentCart
   if (req.user) {
-    userActive = true
+    userActive = true;
+
+    const { rows: result } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+    presentCart = result
+
   }
+
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('contact',{
     pageTitle:` ${appName} contact`,
     appName,appEmail,
     userActive,
-    allCategory
+    allCategory,
+    presentCart
   });
 }
 )
 
 // driver Page
 router.get('/new-rider', async(req, res) => {
-  let userActive= false
+  let userActive = false;
+  let presentCart
   if (req.user) {
-    userActive = true
+    userActive = true;
+
+    const { rows: result } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+    presentCart = result
+
   }
+
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('./drivers/about-riders',{
     pageTitle:` ${appName} drivers`,
     appName,appEmail,
     userActive,
-    allCategory
+    allCategory,
+    presentCart
   });
 }
 )
 
 // vendor Page
 router.get('/new-vendor',async (req, res) => {
-  let userActive= false
+  let userActive = false;
+  let presentCart
   if (req.user) {
-    userActive = true
+    userActive = true;
+
+    const { rows: result } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+    presentCart = result
+
   }
+
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('./vendor/about-vendor',{
     pageTitle:` ${appName} vendor`,
     appName,appEmail,
     userActive,
-    allCategory
+    allCategory,presentCart
   });
 }
 )
@@ -314,26 +363,39 @@ router.post('/forms/newsletter', async (req, res) => {
 
 // terms Page
 router.get('/terms', async(req, res) => {
-  let userActive= false
+  let userActive = false;
+  let presentCart
   if (req.user) {
-    userActive = true
+    userActive = true;
+
+    const { rows: result } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+    presentCart = result
+
   }
+
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   res.render('terms',{
     pageTitle:` ${appName} terms`,
     appName,appEmail,
     userActive,
-    allCategory
+    allCategory,
+    presentCart
   });
 }
 )
 
 // terms Page
 router.get('/abouts', async (req, res) => {
-  let userActive= false
+  let userActive = false;
+  let presentCart
   if (req.user) {
-    userActive = true
+    userActive = true;
+
+    const { rows: result } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+    presentCart = result
+
   }
+
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
 
   const dailyQuote = quoteService.getCurrentDailyQuote()
@@ -343,16 +405,23 @@ router.get('/abouts', async (req, res) => {
     appName,appEmail,
     userActive,
     allCategory,
-    dailyQuote
+    dailyQuote,
+    presentCart
   });
 }
 )
 
 router.get('/valid-location', async(req, res) => {
-  let userActive= false
+  let userActive = false;
+  let presentCart
   if (req.user) {
-    userActive = true
+    userActive = true;
+
+    const { rows: result } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+    presentCart = result
+
   }
+  
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   const { rows: shippingRegions } = await query(`SELECT state, lga, fee FROM "shipping_regions"`);
 
@@ -374,7 +443,8 @@ router.get('/valid-location', async(req, res) => {
     appName,appEmail,
     userActive,
     shippingData,
-    allCategory
+    allCategory,
+    presentCart
   });
 }
 )

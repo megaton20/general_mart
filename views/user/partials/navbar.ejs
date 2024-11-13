@@ -9,7 +9,6 @@
 		  <span class="navbar-toggler-icon light-toggle "></span>
 		</button>
 		<!-- Brand/Logo -->
-
 		<a class="navbar-brand text-light" href="/"><img src="/images/logo.png" alt="logo"></a>
 	  </div>
   
@@ -19,22 +18,39 @@
 		  <!-- Additional links can be added here if needed -->
 		</ul>
 	  </div>
-
-	  <!-- Navbar icons for search, cart, and profile (always visible) -->
-	  <div class="navbar-icons ">
-		<a href="/user/search" class="nav-link ">
-			<i class="fas fa-search icon-size"></i>
+  
+	  <!-- Navbar icons visible only on large screens -->
+	  <div class="navbar-icons d-none d-lg-flex"> <!-- Visible only on large screens -->
+		<a href="/user/search" class="nav-link user-icon">
+		  <i class="fas fa-search icon-size"></i>
 		</a>
-		<a href="/user/fetchCart" class="nav-link position-relative">
-			<i class="fas fa-shopping-cart icon-size"></i>
-			<span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning cart-badge"></span>
+		<a href="/user/fetchCart" class="nav-link user-icon position-relative">
+		  <i class="fas fa-shopping-cart icon-size"></i>
+		  <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning cart-badge"></span>
 		</a>
-		<a href="/user/profile" class="nav-link">
-			<i class="fas fa-user icon-size"></i>
+		<a href="/user/profile" class="mr-4 nav-link user-icon">
+		  <i class="fas fa-user icon-size"></i>
 		</a>
 	  </div>
+  
+	  <!-- Navbar icons visible only on mobile -->
+	  <div class="d-block d-lg-none"> <!-- Mobile only visible -->
+		<div class="navbar-icons-home">
+		  <a href="/user/search" class="nav-link user-icon">
+			<i class="fas fa-search icon-size"></i>
+		  </a>
+		  <a href="/user/fetchCart" class="ml-3 nav-link user-icon position-relative">
+			<i class="fas fa-shopping-cart icon-size"></i>
+			<span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning cart-badge"></span>
+		  </a>
+		  <a href="/user/profile" class="ml-3 mr-4 nav-link user-icon">
+			<i class="fas fa-user icon-size"></i>
+		  </a>
+		</div>
+	  </div>
 	</div>
-</nav>
+  </nav>
+  
 
 <!-- Offcanvas Navbar for smaller screens -->
 <div class="offcanvas offcanvas-start offcanvas-fullscreen" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">

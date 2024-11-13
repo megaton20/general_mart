@@ -1485,11 +1485,7 @@ if (nameResults.length > 0) {
   return res.redirect("back");
 } else {
   
-  const updateQuery = `
-  UPDATE "ranks" 
-  SET "name" = $1, "threshold" = $2
-  WHERE "id" = $3;
-`;
+  const updateQuery = `UPDATE "ranks" SET "name" = $1, "threshold" = $2 WHERE "id" = $3`;
 
 const values = [rankName, threshold, req.params.id];
 
@@ -1507,56 +1503,141 @@ const updateResult = await query(updateQuery, values);
 };
 
 
-
-exports.getExternalRiders= async (req, res) => {
+exports.getExternalRiders = async (req, res) => {
   const nameA = req.user.First_name;
   const nameB = req.user.Last_name;
 
   try {
-    // Fetch all brands from the Brands table
-    const {rows:allExterrnalRiders} = await query(`SELECT * FROM "drivers"`);
+    // Fetch all riders from the drivers table
+    const { rows: allExternalRiders } = await query(`SELECT * FROM "drivers"`);
+
+    // Process each driver to add the total of relevant orders
+    const updatedRiders = await Promise.all(
+      allExternalRiders.map(async (rider) => {
+        const { rows: orderCount } = await query(
+          `SELECT COUNT(*) AS "shippedOrders"
+           FROM "Orders"
+           WHERE "rider_id" = $1 AND "pickup" = 'closed' AND "status" = 'shipped'`,
+          [rider.id]
+        );
 
 
-    // Render the brandTable view
+        // Add the shipped order count to the rider object
+        return {
+          ...rider,
+          shippedOrders: parseInt(orderCount[0].shippedOrders, 10) || 0,
+        };
+      })
+    );
+
+    // Render the driversTable view with updated rider data
     res.render("./super/driversTable", {
-      pageTitle: "Welcome",
+      pageTitle: "External Riders",
       name: `${nameA} ${nameB}`,
       month: monthName,
       day: dayName,
       date: presentDay,
       year: presentYear,
-      allExterrnalRiders: allExterrnalRiders
+      allExternalRiders: updatedRiders,
     });
   } catch (error) {
-    req.flash("error_msg", `${error.message}`); // Use error.message instead of error.sqlMessage
+    req.flash("error_msg", `${error.message}`);
     return res.redirect("/super");
   }
 };
 
-exports.getOneExternalRider= async (req, res) => {
+
+exports.getOneExternalRider = async (req, res) => {
   const nameA = req.user.First_name;
   const nameB = req.user.Last_name;
 
   try {
-    // Fetch all brands from the Brands table
-    const {rows:allExterrnalRiders} = await query(`SELECT * FROM "drivers" WHERE id = $1`,[req.params.id]);
+    // Fetch driver details by ID
+    const { rows: driverDetails } = await query(`SELECT * FROM "drivers" WHERE id = $1`, [req.params.id]);
+    
+    // Fetch shipped orders for the driver
+    const { rows: shippedOrders } = await query(
+      `SELECT * FROM "Orders" WHERE "rider_id" = $1 AND "status" = $2`,
+      [req.params.id, "shipped"]
+    );
 
-
-    // Render the brandTable view
+    // Render the driver view with fetched data
     res.render("./super/driversView", {
-      pageTitle: "Welcome",
+      pageTitle: "Driver Details",
       name: `${nameA} ${nameB}`,
       month: monthName,
       day: dayName,
       date: presentDay,
       year: presentYear,
-      allExterrnalRiders: allExterrnalRiders
+      driverDetails,  // Simplified variable names
+      shippedOrders
     });
   } catch (error) {
-    req.flash("error_msg", `${error.message}`); // Use error.message instead of error.sqlMessage
+    req.flash("error_msg", `Error loading driver data: ${error.message}`);
     return res.redirect("/super");
   }
 };
+
+
+
+exports.approveRiderApplication = async (req, res) => {
+
+  const newRiderId = +req.params.id
+  try {
+    // Fetch all users with the role 'user'
+    const {rows:results} = await query(`SELECT * FROM "drivers" WHERE "user_id" = $1`, [newRiderId]);
+    const newRider = results[0] 
+
+
+    const updateQuery = `UPDATE "drivers" SET "verified" = $1, "status" = $2 WHERE "user_id" = $3`;
+
+    const values = [true, "approved", newRiderId];
+
+          // Execute the query
+      const updateResult = await query(updateQuery, values);
+
+      const updateUserRoleQuery = `UPDATE "Users" SET "userRole" = $1 WHERE "id" = $2`;
+      await query(updateUserRoleQuery, ['driver', newRiderId]);
+
+      req.flash("success_msg", `"rider approved!`);
+      return res.redirect("back");
+
+
+
+  } catch (error) {
+    req.flash("error_msg", `Error: ${error.message}`);
+    return res.redirect("/super");
+  }
+};
+
+exports.disapproveRiderApplication = async (req, res) => {
+
+  const newRiderId = +req.params.id
+  try {
+    // Fetch all users with the role 'user'
+    const {rows:results} = await query(`SELECT * FROM "drivers" WHERE "user_id" = $1`, [newRiderId]);
+    const newRider = results[0] // Extract data using .rows
+
+
+    const updateQuery = `UPDATE "drivers" SET "verified" = $1, "status" = $2 WHERE "user_id" = $3`;
+    const values = [false, "removed", newRiderId];
+
+          // Execute the query
+      const updateResult = await query(updateQuery, values);
+
+      const updateUserRoleQuery = `UPDATE "Users" SET "userRole" = $1 WHERE "id" = $2`;
+      await query(updateUserRoleQuery, ['user', newRiderId]);
+
+      req.flash("success_msg", `"rider removed!`);
+      return res.redirect("back");
+
+
+  } catch (error) {
+    req.flash("error_msg", `Error: ${error.message}`);
+    return res.redirect("/super");
+  }
+};
+
 // createReturn
 
 exports.createReturn = (req, res) => {
@@ -3948,7 +4029,7 @@ exports.shipWithNewRider = async (req, res) => {
 
     if (orderResults[0].rider_company_name === rider) {
       req.flash("error_msg", "can not reassign to same rider twice");
-      return res.redirect("/super");
+      return res.redirect("back");
     }
 
     if (thatOrderCustomerId == dispatchUserId) {
