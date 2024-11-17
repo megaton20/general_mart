@@ -9,6 +9,7 @@ const stateData = require("../model/stateAndLGA");
 const airtimeData = require("../model/airtimeData");
 const quoteService = require("../model/dialyQuote");
 const getRecentCustomers = require("../model/recentCustomers");
+const addRecentlyViewedItem = require("../model/recentlyViewed");
 
 const systemCalander = new Date().toLocaleDateString();
 const yearModel = require("../model/getYear");
@@ -93,8 +94,10 @@ exports.profilePage = async (req, res) => {
       totalUnreadNotification,
       referLink,
       referralResult: referees,
-      allCategory,dailyQuote,
-      recentCustomers
+      allCategory,
+      recentCustomers,
+      recentlyViewed: req.session.recentlyViewed || [],
+      dailyQuote,
     });
   } catch (error) {
     req.flash("error_msg", `Error from server: ${error.message}`);
@@ -132,6 +135,7 @@ exports.addPhonePage = async (req, res) => {
       userData,
       totalUnreadNotification,
       allCategory,
+      recentlyViewed: req.session.recentlyViewed || [],
     });
   } catch (error) {
     console.log(error);
@@ -192,6 +196,7 @@ exports.changePhonePage = async (req, res) => {
     appEmail,
     totalUnreadNotification,
     allCategory,
+    recentlyViewed: req.session.recentlyViewed || [],
   });
 };
 
@@ -283,6 +288,7 @@ exports.changePasswordPage = async (req, res) => {
     appEmail,
     totalUnreadNotification,
     allCategory,
+    recentlyViewed: req.session.recentlyViewed || [],
   });
 };
 
@@ -367,6 +373,7 @@ exports.editProfilePage = async (req, res) => {
       stateData,
       totalUnreadNotification,
       allCategory,
+      recentlyViewed: req.session.recentlyViewed || [],
     });
   } catch (error) {
     req.flash("error_msg", `Error from server: ${error.message}`);
@@ -455,6 +462,7 @@ exports.updateUserInfo = async (req, res) => {
         stateData, // Ensure `stateData` is defined or fetched properly
         errors,
         allCategory,
+        recentlyViewed: req.session.recentlyViewed || [],
       });
     }
 
@@ -490,15 +498,13 @@ exports.updateUserInfo = async (req, res) => {
 exports.userShop = async (req, res) => {
   const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
-
+  let msg = []
   const limit = 24;
   const page = parseInt(req.query.page) || 1;
   const offset = (page - 1) * limit;
 
   const countSql = 'SELECT COUNT(*) as count FROM "Products"';
-  const showcaseQuery = `
-    SELECT * FROM "Products" 
-    WHERE "showcase" = $1 AND "total_on_shelf" > $2 AND "status" = $3 AND "activate" != $4 ORDER BY "id" ASC LIMIT $5 OFFSET $6 `;
+  const showcaseQuery = `SELECT * FROM "Products" WHERE "showcase" = $1 AND "total_on_shelf" > $2 AND "status" = $3 AND "activate" != $4 ORDER BY "id" ASC LIMIT $5 OFFSET $6 `;
   const queryParams = ["yes", 0, "not-expired", false, limit, offset];
 
   try {
@@ -510,10 +516,7 @@ exports.userShop = async (req, res) => {
     const totalRows = parseInt(countResult.rows[0].count, 10);
     const totalPages = Math.ceil(totalRows / limit);
 
-    const { rows: presentCart } = await query(
-      'SELECT * FROM "Cart" WHERE "user_id" = $1',
-      [req.user.id]
-    );
+    const { rows: presentCart } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
 
     const { rows: allCategory } = await query('SELECT * FROM "Category"');
 
@@ -540,6 +543,8 @@ exports.userShop = async (req, res) => {
       };
     });
 
+    msg.push( { type: 'warning', text:`${req.flash('success_msg')}` })
+
     return res.render("./user/userCounter", {
       pageTitle: "At the counter",
       appName: appName,
@@ -550,11 +555,12 @@ exports.userShop = async (req, res) => {
       showcaseItem,
       moreItemsAvailable,
       totalUnreadNotification,
-
+      
       pagination: {
         page,
         totalPages,
       },
+      recentlyViewed: req.session.recentlyViewed || [],
     });
   } catch (error) {
     console.error(`Error fetching user shop data: ${error.message}`);
@@ -640,6 +646,7 @@ exports.userShopQuery = async (req, res) => {
         page,
         totalPages,
       },
+      recentlyViewed: req.session.recentlyViewed || [],
     });
   } catch (error) {
     console.error(`Server error: ${error.message}`);
@@ -735,7 +742,8 @@ exports.userCategoryQuery = async (req, res) => {
         page,
         totalPages,
       },
-      activeCategory: categoryId,categoryDetails
+      activeCategory: categoryId,categoryDetails,
+      recentlyViewed: req.session.recentlyViewed || [],
     });
   } catch (error) {
     console.error(`Server error: ${error}`);
@@ -750,30 +758,38 @@ exports.userCategoryQuery = async (req, res) => {
 exports.productDetails = async (req, res) => {
   const itemId = req.params.id;
 
+
+
+  
+  
   try {
-    const { rows: presentCart } = await query(
-      'SELECT * FROM "Cart" WHERE "user_id" = $1',
-      [req.user.id]
-    );
+    const { rows: presentCart } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+      
+      const { rows: itemData } = await query('SELECT * FROM "Products" WHERE "id" = $1',[itemId]);
 
-    const { rows: itemData } = await query(
-      'SELECT * FROM "Products" WHERE "id" = $1',
-      [itemId]
-    );
+      const {rows:relatedProducts} = await query('SELECT * FROM "Products" WHERE "category" = $1 AND id != $2 LIMIT 10',[itemData[0].category, itemId]);
 
-    const {
-      rows: [result],
-    } = await query(
-      'SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',
-      [req.user.id, false]
-    );
+
+
+      if (itemData.length < 0) {
+        req.flash('error_msg','item is missing')
+        return res.redirect("back")
+      }
+
+      if (itemData[0].total_on_shelf < 0) {
+        
+        req.flash('error_msg','the last item was just bought!')
+        return res.redirect("back")
+      }
+
+      // Add product to recently viewed items
+        addRecentlyViewedItem(req, itemData);
+
+    const {rows: [result]} = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
 
     let totalUnreadNotification = parseInt(result.totalunread, 10);
 
-    const { rows: wishlistItems } = await query(
-      `SELECT "product_id" FROM "wishlists" WHERE "user_id" = $1`,
-      [req.user.id]
-    );
+    const { rows: wishlistItems } = await query(`SELECT "product_id" FROM "wishlists" WHERE "user_id" = $1`,[req.user.id]);
 
     const wishlistProductIDs = wishlistItems.map((item) => item.product_id);
 
@@ -794,6 +810,8 @@ exports.productDetails = async (req, res) => {
       presentCart,
       allCategory,
       firstName: req.user.First_name,
+      recentlyViewed: req.session.recentlyViewed || [],
+      relatedProducts,
     });
   } catch (error) {
     console.error(`Error fetching product details: ${error.message}`);
@@ -829,6 +847,7 @@ exports.searchPage = async (req, res) => {
     totalUnreadNotification,
     year: presentYear,
     allCategory,
+    recentlyViewed: req.session.recentlyViewed || []
   }); // for admin only
   // not user
 };
@@ -889,6 +908,7 @@ exports.searchPost = async (req, res) => {
       date: presentDay,
       year: presentYear,
       allCategory,
+      recentlyViewed: req.session.recentlyViewed || [],
     });
   } catch (error) {
     console.error(`Error during search: ${error.message}`);
@@ -912,19 +932,12 @@ exports.fetchCart = async (req, res) => {
     const userData = userResults.rows[0];
 
     // Fetch cart items
-    const fetchCartQuery = `
-    SELECT * FROM "Cart" 
-    WHERE "user_id" = $1 
-      AND "user_email" = $2 
-    ORDER BY "id" ASC`;
+    const fetchCartQuery = `SELECT * FROM "Cart" WHERE "user_id" = $1 AND "user_email" = $2 ORDER BY "id" ASC`;
     const fetchResult = await query(fetchCartQuery, [userId, userEmail]);
 
     // Check if the cart is empty
     if (fetchResult.rows.length <= 0) {
-      req.flash(
-        "warning_msg",
-        "No items in the cart. Please select items to buy."
-      );
+      req.flash("warning_msg","No items in the cart. Please select items to buy.");
       return res.redirect("/user");
     }
 
@@ -936,10 +949,7 @@ exports.fetchCart = async (req, res) => {
     // Format the total amount to be paid
     const formattedCustomerToPay = totalSubtotal.toLocaleString("en-US");
 
-    const { rows: statusResults } = await query(
-      'SELECT * FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',
-      [userId, false]
-    );
+    const { rows: statusResults } = await query('SELECT * FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[userId, false]);
 
     let totalUnreadNotification = 0;
     if (statusResults.length > 0) {
@@ -958,7 +968,9 @@ exports.fetchCart = async (req, res) => {
       totalSum: formattedCustomerToPay,
       userData,
       totalUnreadNotification,
-      allCategory,dailyQuote
+      allCategory,
+      dailyQuote,
+      recentlyViewed: req.session.recentlyViewed || [],
     });
   } catch (error) {
     console.error(`Error fetching cart: ${error}`);
@@ -1045,7 +1057,8 @@ exports.checkoutScreen = async (req, res) => {
       userCashback,
       totalUnreadNotification,
       userData,
-      allCategory,dailyQuote
+      allCategory,
+      dailyQuote
     });
   } catch (error) {
     console.error(`Error during checkout: ${error}`);
@@ -1130,6 +1143,7 @@ exports.invoice = async (req, res) => {
       totalSum,
       totalUnreadNotification,
       allCategory,
+      recentlyViewed: req.session.recentlyViewed || [],
     });
   } catch (error) {
     console.error(`Error during invoice generation: ${error.message}`);
@@ -1178,6 +1192,7 @@ exports.allUserOrder = async (req, res) => {
       newOrder,
       totalUnreadNotification,
       allCategory,
+      recentlyViewed: req.session.recentlyViewed || [],
     });
   } catch (err) {
     console.error(`Error fetching orders: ${err.message}`);
@@ -1310,6 +1325,7 @@ exports.notificationScreen = async (req, res) => {
       userNotifications,
       totalUnreadNotification,
       allCategory,
+      recentlyViewed: req.session.recentlyViewed || [],
     });
   } catch (error) {
     console.error(`Error during checkout: ${error}`);
@@ -1354,6 +1370,7 @@ exports.readNotification = async (req, res) => {
       userNotifications,
       totalUnreadNotification,
       allCategory,
+      recentlyViewed: req.session.recentlyViewed || [],
     });
   } catch (error) {
     console.error(`Error during checkout: ${error}`);
@@ -1412,6 +1429,7 @@ exports.getMap = async (req, res) => {
     appEmail,
     totalUnreadNotification,
     allCategory,
+    recentlyViewed: req.session.recentlyViewed || [],
   });
 };
 
@@ -1560,6 +1578,7 @@ exports.getAirtimePage = async (req, res) => {
     userData,
     airtimeData,
     allCategory,
+    recentlyViewed: req.session.recentlyViewed || [],
   });
 };
 
@@ -1594,6 +1613,7 @@ exports.wishlist = async (req, res) => {
       wishlist: wishlistItems,
       totalUnreadNotification,
       allCategory,
+      recentlyViewed: req.session.recentlyViewed || [],
     });
   } catch (err) {
     console.error(err);
@@ -1683,6 +1703,7 @@ exports.deleteAccount = async (req, res) => {
       appEmail,
       totalUnreadNotification,
       allCategory,
+      recentlyViewed: req.session.recentlyViewed || [],
     });
   } catch (err) {
     console.error(err);
@@ -1717,6 +1738,7 @@ exports.shippingDetails = async (req, res) => {
       appEmail,
       totalUnreadNotification,
       allCategory,
+      recentlyViewed: req.session.recentlyViewed || [],
       userData
     });
   } catch (err) {

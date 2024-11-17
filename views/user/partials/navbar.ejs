@@ -53,41 +53,51 @@
   
 
 <!-- Offcanvas Navbar for smaller screens -->
-<div class="offcanvas offcanvas-start offcanvas-fullscreen" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+<div class="offcanvas offcanvas-start offcanvas-fullscreen bg-dark text-white" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
 	<div class="offcanvas-header">
-	  <button type="button" class="btn-close text-light" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	  <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+	  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 	</div>
+	
 	<div class="offcanvas-body">
-		<ul class="my-nav-links my-nav-links-mobile" id="my-navLinks">
-			
-			<p>Categories</p>
-			<% allCategory.forEach(data => { %>
-				<li>
-				  <a href="/user/category/<%= data.Category_name %>#product-section" class="categoryButton nav-link text-dark" data-category="<%= data.Category_name %>">
-					<i class="bi bi-arrow-right-circle"></i><span> <%= data.Category_name %></span>
-				  </a>
-				</li>
-			<% }); %>
-
-			<hr>
-			
-			<p>User Links</p>
-			<li><a class="nav-link text-dark" href="/user" >Store Items</a></li>
-			<li><a class="nav-link text-dark" href="/user/orders">My Orders</a></li>
-			<li><a class="nav-link text-dark" href="/user/wishlist">My Wishlist</a></li>
-			<li><a class="nav-link text-dark" href="/user/profile">Profile</a></li>
-			
-			<hr>
-			<p>Useful Links</p>
-			<li><a class="nav-link text-dark" href="/featured-services">Services</a></li>
-			<li><a class="nav-link text-dark" href="/faq">FAQs</a></li>
-			<li><a class="nav-link text-dark" href="/contact">Contacts</a></li>
-
-			<hr>
-			<p>Actions</p>
-			<li><a class="nav-link text-dark" href="/logout">Logout</a></li>
-		</ul>
+	  <ul class="my-nav-links my-nav-links-mobile list-unstyled" id="my-navLinks">
+		
+		<!-- Categories Section -->
+		<p class="fs-5 fw-bold text-light">Categories</p>
+		<% allCategory.forEach(data => { %>
+		  <li class="mb-3">
+			<a href="/user/category/<%= data.Category_name %>#product-section" class="categoryButton nav-link text-white d-flex align-items-center" data-category="<%= data.Category_name %>">
+			  <i class="bi bi-arrow-right-circle me-2"></i>
+			  <span><%= data.Category_name %></span>
+			</a>
+		  </li>
+		<% }); %>
+		
+		<hr class="text-secondary">
+		
+		<!-- User Links Section -->
+		<p class="fs-5 fw-bold text-light">User Links</p>
+		<li class="mb-2"><a class="nav-link text-white d-flex align-items-center" href="/user"><i class="bi bi-shop me-2"></i>Store Items</a></li>
+		<li class="mb-2"><a class="nav-link text-white d-flex align-items-center" href="/user/orders"><i class="bi bi-card-list me-2"></i>My Orders</a></li>
+		<li class="mb-2"><a class="nav-link text-white d-flex align-items-center" href="/user/wishlist"><i class="bi bi-heart me-2"></i>My Wishlist</a></li>
+		<li class="mb-2"><a class="nav-link text-white d-flex align-items-center" href="/user/profile"><i class="bi bi-person-circle me-2"></i>Profile</a></li>
+		
+		<hr class="text-secondary">
+		
+		<!-- Useful Links Section -->
+		<p class="fs-5 fw-bold text-light">Useful Links</p>
+		<li class="mb-2"><a class="nav-link text-white d-flex align-items-center" href="/featured-services"><i class="bi bi-tools me-2"></i>Services</a></li>
+		<li class="mb-2"><a class="nav-link text-white d-flex align-items-center" href="/faq"><i class="bi bi-question-circle me-2"></i>FAQs</a></li>
+		<li class="mb-2"><a class="nav-link text-white d-flex align-items-center" href="/contact"><i class="bi bi-envelope me-2"></i>Contacts</a></li>
+		
+		<hr class="text-secondary">
+		
+		<!-- Actions Section -->
+		<p class="fs-5 fw-bold text-light">Actions</p>
+		<li><a class="nav-link text-danger d-flex align-items-center" href="/logout"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+	  </ul>
 	</div>
-</div>
+  </div>
+  
 
 <!-- <br><br><br><br> -->

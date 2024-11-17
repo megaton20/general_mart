@@ -36,7 +36,7 @@
                     </div>
                   </div>
                 </div>
-          
+                
                 <!-- My Active Rides -->
                 <div class="col-xl-3 col-md-6 mb-3">
                   <a href="/drivers/my-deliveries" class="card h-100 py-2 text-decoration-none">
@@ -57,7 +57,7 @@
                     </div>
                   </a>
                 </div>
-          
+                
                 <!-- Rides Completed -->
                 <div class="col-xl-3 col-md-6 mb-3">
                   <div class="card h-100 py-2">
@@ -78,7 +78,7 @@
                     </div>
                   </div>
                 </div>
-          
+                
                 <!-- Canceled Rides -->
                 <div class="col-xl-3 col-md-6 mb-3">
                   <div class="card h-100 py-2">
@@ -101,18 +101,32 @@
                 </div>
               </div>
             </div>
+            
+          <% } else if (driverWithIDResult[0].status === 'removed') { %>
+            <!-- Page for Suspended Account -->
+            <div class="container text-center mt-5">
+              <div class="card shadow-lg p-4">
+                <h1 class="text-danger">Account Suspended</h1>
+                <p>Your account has been suspended due to a violation of our policies or other concerns.</p>
+                <p>Please contact support if you believe this is a mistake or if you’d like to discuss the matter further.</p>
+                <div class="mt-4">
+                  <a href="mailto:support@example.com" class="btn btn-outline-danger mb-1">Contact Support</a>
+                  <a href="/user" class="btn btn-outline-success">continue shopping</a>
+                </div>
+              </div>
+            </div>
           <% } %>
+          
           
 
         </div>
         <br>
         <br>
-        <%- include ('../partials/clients')%>
+
         <br>
         <br>
         <br>
         <br>
         <br>
-    <%- include ('../partials/openFooter')%>
 
 

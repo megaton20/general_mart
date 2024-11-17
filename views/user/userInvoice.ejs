@@ -1,23 +1,60 @@
 <style>
-  .complete-container {
+
+  .order-info{
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     text-align: center;
     padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 30px;
     border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+     
+  }
+  .complete-container {
     background-color: #e6ffe6; /* Light green background */
     color: #28a745; /* Green text */
     font-family: Arial, sans-serif;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
   }
 
-  .complete-icon {
-    font-size: 50px;
-    margin-bottom: 10px;
+  .shipped-container {
+ 
+    background-color: #11cfe0; /* Light green background */
+    color: #f1ede5; /* Green text */
+    font-family: Arial, sans-serif;
+
   }
+  .incomplete-container {
+
+    background-color: yellow; /* Light green background */
+    color: #0be2bb; /* Green text */
+    font-family: Arial, sans-serif;
+
+  }
+
+  .canceled-container {
+
+    background-color:  #dc3545;
+    color: #e2eceb; /* Green text */
+    font-family: Arial, sans-serif;
+
+  }
+
+  .incomplete-container {
+    background-color: #ffd900; /* Light green background */
+    color: #0be2bb; /* Green text */
+    font-family: Arial, sans-serif;
+
+  }
+  .waiting-container {
+    background-color: #736b76; /* Light green background */
+    color: #f1f2f2; /* Green text */
+    font-family: Arial, sans-serif;
+
+  }
+
 
   .complete-message {
     font-size: 24px;
@@ -31,7 +68,6 @@
   }
   
   .track-order-container {
-      padding: 30px;
       max-width: 600px;
       margin: auto;
   }
@@ -73,30 +109,63 @@
         <div class="container">
           <%- include ('../partials/messages') %>
           <a class="back-btn mb-2" href="/user/orders"><i class="bi bi-arrow-left-circle"></i> Back</a>
-          <div class="row">
-            <!-- ordered products table -->
-            <div class="col-lg-8  mb-3">
-              <div class="card">
-                <div class="card-header">ordered item</div>
-                    <div class="card-body">
+
+         <div class="row">
+          <div class="col-md-8">
+              <div class=" track-order-container">
+                <div id="order-status">
+                    <!-- Status stages will be injected here -->
+                </div>
+            </div>
+
+          </div>
+
+          <div class="col-md-4">
+            <p class="text-grey">Shipping details</p>
+            <div class="row mb-4">
+           
+
+              <div class="col-6">My cell:</div>
+              <div class="col-6"><%= newOrder.customer_phone %></div>
+              <div class="col-6">Order Type:</div>
+              <div class="col-6"><%= newOrder.Delivery %></div>
+              <div class="col-6">Address:</div>
+              <div class="col-6"><%= newOrder.customer_address %></div>
+              
+              <div class="col-6 text-primary" > confirmation code:</div>
+              <div class="col-6"><%= newOrder.delivery_pin %></div>
+              <div class="col-6 text-primary" > sale id:</div>
+              <div class="col-6"><%= newOrder.sale_id %></div>
+
+              <p class="text-warning p-0"></p>
+            </div>
+
+
+          </div>
+         </div>
+
+
+         <hr>
+            <div class="mt-3">
 
                       <% newOrderProducts.forEach(item => { %>
                         <div class="cart-item row">
                           
-                          <div class="col-2 mr-1">
+                          <div class="col-2">
                             <img src="/uploads/<%= item.image %>" class="img-fluid rounded" alt="<%= item.product_name %>">
                           </div>
                           
                           <div class="cart-item-details col-8 ">
-                            <h5 class="m-0"><%= item.name %></h5>
+                            <p class="m-0"><%= item.name %></p>
                             <p class="m-0"><%= item.quantity %> (x)</p>
                           </div>
                         </div>
+                        <hr>
                         <% }); %>
                         
-                      </div>
-                        <div class="card-footer">
-                          
+
+
+                        <hr>
                           <div class="row" style="font-size: 12px;">
                             <div class="col-6 text-primary">Applied Discount:</div>
                             <div class="col-6 text-warning">0 %</div>
@@ -105,95 +174,59 @@
                             <div class="col-6 text-primary">Total Paid:</div>
                             <div class="col-6 text-success">NGN <%= totalSum %> </div>
                           </div>
-                          
-                        </div>
-              </div>
+                          <hr>
+
             </div>
-            
-            <!-- shping details -->
-            <div class="col-lg-4" style="font-size: 12px;">
-              <div class="card">
-                <div class="card-header">Shipping details</div>
-                <div class="card-body">
 
-                  <div class="row mb-4">
-                 
-  
-                    <div class="col-6">My cell:</div>
-                    <div class="col-6"><%= newOrder.customer_phone %></div>
-                    <div class="col-6">Order Type:</div>
-                    <div class="col-6"><%= newOrder.Delivery %></div>
-                    <div class="col-6">Address:</div>
-                    <div class="col-6"><%= newOrder.customer_address %></div>
-                    
-                    <div class="col-6 text-primary" > confirmation code:</div>
-                    <div class="col-6"><%= newOrder.delivery_pin %></div>
 
-                    <p class="text-warning p-0"></p>
-                  </div>
-
-                </div>
-                <div class="card-footer">
-
-                  <a  href="/user/edit-user/<%= userData.id%>" style="width: 100%; display: block;" class="my-btn-outline">Change shipping info</a >
-                    <a  href="/user/" style="width: 100%; display: block;" class="my-btn-outline mt-2">Continue Shoping</a >
-                    </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card mt-4">
-            <div class="container track-order-container">
-              <div id="order-status">
-                  <!-- Status stages will be injected here -->
-              </div>
-          </div>
-          </div>
+            <br>
          
-          <div class="card mt-4" style="font-size: 14px;">
-            <div class="container p-4">
-              <p>Thank you so much for shopping with us at <%- include ('../partials/appName') %>! <span class="emoji">🎉</span></p>
-              <p>Your order has been successfully placed, and we’re absolutely thrilled to have you as a customer.</p>
-              <p>We hope you’re as excited about your new items as we are to get them to you! <span class="emoji">🚀</span> Your choice means a lot to us, and we can’t wait to see you back in our store for more amazing finds.</p>
-              <p>If you have any questions or need assistance, don’t hesitate to reach out. Until then, enjoy your goodies, and we hope to see you again soon!</p>
-              <p class="invoice-footer">Stay awesome and happy shopping! <span class="emoji">🌟</span></p>
-              <p class="invoice-footer">Best wishes,<br><strong><%- include ('../partials/appName') %> Team</strong></p>
-
+         
+          <div class=" mt-4" style="font-size: 14px;">
+            <div class="">
+              <% if (newOrder.status === 'complete') { %>
+                <p>Thank you so much for shopping with us at <%- include('../partials/appName') %>! <span class="emoji">🎉</span></p>
+                <p>Your order has been successfully delivered, and we’re thrilled that you chose us. We hope you love your items!</p>
+                <p>We appreciate your business and can’t wait to welcome you back for more amazing finds. If you have any feedback, we’d love to hear it!</p>
+                <p class="invoice-footer">Stay awesome and happy shopping! <span class="emoji">🌟</span></p>
+                <p class="invoice-footer">Best wishes,<br><strong><%- include('../partials/appName') %> Team</strong></p>
+              <% } else { %>
+                <p>Thank you so much for shopping with us at <%- include('../partials/appName') %>! <span class="emoji">🎉</span></p>
+                <p>Your order has been successfully placed, and we’re absolutely thrilled to have you as a customer.</p>
+                <p>We hope you’re as excited about your new items as we are to get them to you! <span class="emoji">🚀</span> Your choice means a lot to us, and we can’t wait to see you back in our store for more amazing finds.</p>
+                <p>If you have any questions or need assistance, don’t hesitate to reach out. Until then, enjoy your goodies, and we hope to see you again soon!</p>
+                <p class="invoice-footer">Stay awesome and happy shopping! <span class="emoji">🌟</span></p>
+                <p class="invoice-footer">Best wishes,<br><strong><%- include('../partials/appName') %> Team</strong></p>
+              <% } %>
+            
               <br>
-
               <hr>
-
+            
               <div class="row no-gutters align-items-center">
-
                 <div class="col-lg-6">
                   <div class="card-body">
                     <h5>Notice</h5>
-                        <ul>
-                          <li>Ensure your phone lines are active</li>
-                          <li>Do not pay fee to the delivery agent</li>
-                          <li>Provide your order 6-digit pin to the delivery agent for confirmation</li>
-                        </ul>
+                    <ul>
+                      <li>Ensure your phone lines are active</li>
+                      <li>Do not pay any fee to the delivery agent</li>
+                      <li>Provide your order 6-digit pin to the delivery agent for confirmation</li>
+                    </ul>
                   </div>
-                 
-                 </div>
-
-                 <div class="col-lg-6">
-                  <% if( newOrder.status == "incomplete" ){ %>
+                </div>
+            
+                <div class="col-lg-6">
+                  <% if (newOrder.status === 'incomplete') { %>
                     <form action="/user/cancel-order/<%= newOrder.sale_id %>" method="post">
-
-                  <input type="hidden" name="_method" value="PUT">
-                  <input name="_method" type="submit" value="cancel order" style="width: 100%;" class="btn btn-primary "/>
-                  </form>
-      
-                  <% } else{ %>
-      
-                  <button type="submit" class="btn btn-danger mt-4" style="width: 100%" disabled >no action avaliable</button>
-      
+                      <input type="hidden" name="_method" value="PUT">
+                      <input name="_method" type="submit" value="Cancel Order" style="width: 100%;" class="btn btn-danger"/>
+                    </form>
+                  <% } else { %>
+                    <button type="submit" class="btn btn-danger mt-4" style="width: 100%" disabled>No action available</button>
                   <% } %>
-                 </div>
-
+                </div>
               </div>
-          </div>
+            </div>
+            
           </div>
 
 
@@ -218,18 +251,56 @@
       statusContainer.innerHTML = ''; // Clear the container
       
       if (orderStatus === "canceled") {
-          // If order is canceled, show the canceled message and return
-          statusContainer.innerHTML = `<div class="cancelled">Order Canceled</div>`;
+        statusContainer.innerHTML = `
+          <div class="canceled-container order-info">
+            <img src="/images/delivery-cancelled.png" alt="" class="mt-2 img-fluid w-100" style="max-width :50%">
+              <div class="complete-message">Order cancelled!</div>
+            </div>
+          `;
+          return;
+      }
+      if (orderStatus === "waiting") {
+        statusContainer.innerHTML = `
+          <div class="waiting-container order-info">
+            <img src="/images/order-processed.png" alt="" class="mt-2 img-fluid w-100" style="max-width :50%">
+              <div class="complete-message">Order waiting!</div>
+              <div class="text-light"> Your order has been confirmed searching for available rider.</div>
+
+            </div>
+          `;
           return;
       }
 
       if (orderStatus === "complete") {
-          // If order is canceled, show the canceled message and return
+
           statusContainer.innerHTML = `
-          <div class="complete-container">
-              <div class="complete-icon">🎉</div>
+          <div class="complete-container order-info">
+            <img src="/images/shipped.png" alt="" class="mt-2 img-fluid w-100" style="max-width :50%">
               <div class="complete-message">Order Complete!</div>
               <div class="complete-subtext">Thank you for shopping with us. Your order has been successfully delivered.</div>
+            </div>
+          `;
+          return;
+      }
+      if (orderStatus === "shipped") {
+          // If order is canceled, show the canceled message and return
+          statusContainer.innerHTML = `
+          <div class="shipped-container order-info">
+            <img src="/images/delivery-truck.png" alt="" class="mt-2 img-fluid w-100" style="max-width :50%">
+              <div class="complete-message">Order Shipped!</div>
+              <div class="complete-subtext">Thank you for shopping with us. Your order has been successfully Shipped.</div>
+            </div>
+          `;
+          return;
+      }
+
+      if (orderStatus === "incomplete") {
+          // If order is canceled, show the canceled message and return
+          statusContainer.innerHTML = `
+          <div class="incomplete-container order-info">
+            <img src="/images/received.png" alt="" class="mt-2 img-fluid w-100" style="max-width :50%">
+              <div class="complete-message">Order Recieved...</div>
+              <div class="complete-subtext">Thank you for shopping with us. Your order has been Recieved, awaiting confirmation.</div>
             </div>
           `;
           return;

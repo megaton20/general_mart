@@ -45,9 +45,7 @@ exports.getAdminWelcomePage = async (req, res) => {
 
   try {
     // Fetch canceled orders
-    const canceledOrdersResult = await query(
-      `SELECT * FROM "Orders" WHERE "status" = 'canceled'`
-    );
+    const canceledOrdersResult = await query(`SELECT * FROM "Orders" WHERE "status" = 'canceled'`);
     const totalCanceledOrder = canceledOrdersResult.rows;
 
     // Fetch shipping fees from resolved sales
@@ -718,9 +716,10 @@ exports.getAllShelfItems = async (req, res) => {
 
   try {
     // Fetch all products from the Products table, ordered by id in descending order
-    const results = await query(`SELECT * FROM "Products" ORDER BY id DESC`);
-    const allProducts = results.rows; // PostgreSQL returns rows directly
+    const {rows:allProducts} = await query(`SELECT * FROM "Products" ORDER BY id DESC`);
+  
 
+  
     // Render the productsTable view with the fetched data
     res.render("./super/productsTable", {
       pageTitle: "All products",
@@ -1302,7 +1301,7 @@ exports.getAllBrand = async (req, res) => {
 
     // Render the brandTable view
     res.render("./super/brandTable", {
-      pageTitle: "Welcome",
+      pageTitle: "All brad",
       name: `${nameA} ${nameB}`,
       month: monthName,
       day: dayName,
@@ -1670,6 +1669,14 @@ exports.getInventoryById = async (req, res) => {
     }
 
     let allInventory = results.rows;
+    const {rows:tags} = await query('SELECT * FROM tags');
+
+    // const {rows:productTags} = await query('SELECT * FROM inventory_tags');
+    const { rows: productTags } = await query(
+      'SELECT tag_id FROM inventory_tags WHERE inventory_id = $1',
+      [singleId]
+  )
+    const tagIds = productTags.map(tag => tag.tag_id);
 
     // Reformat the dates for display
     allInventory.forEach((inventory) => {
@@ -1686,6 +1693,10 @@ exports.getInventoryById = async (req, res) => {
       date: presentDay,
       year: presentYear,
       allInventory:allInventory[0],
+      tags,
+      productTags,
+      productId:singleId,
+      tagIds
     });
 
   } catch (error) {
@@ -2488,10 +2499,7 @@ exports.storeEdit = async (req, res) => {
   const userLastName = req.user.Last_name;
 
   try {
-    const results = await query(
-      `SELECT * FROM "Stores" WHERE "id" = $1`,
-      [editID]
-    );
+    const results = await query(`SELECT * FROM "Stores" WHERE "id" = $1`,[editID]);
 
     if (results.rows.length <= 0) {
       req.flash("warning_msg", `No store found with ID ${editID}`);

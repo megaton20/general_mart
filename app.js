@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const csurf = require('csurf');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
@@ -47,6 +48,11 @@ app.set('view engine', 'ejs');
 app.use(ejsLayouts);
 app.use(express.static(path.join(__dirname, './', 'public')));
 
+// const csrfProtection = csurf({ cookie: true });
+// // Use csrfProtection for all routes that need CSRF protection
+// app.use(csrfProtection);
+
+
 // Configure session middleware with Redis store (only in production)
 if (redisClient) {
   app.use(session({
@@ -76,6 +82,7 @@ app.use((req, res, next) => {
   res.locals.warning_msg = req.flash('warning_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
+  // res.locals.msg = req.flash('msg');
   next();
 });
 

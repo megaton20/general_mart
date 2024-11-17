@@ -78,14 +78,21 @@
                       
                                       <form action="/super/disable-rider/<%= driverDetails[0].user_id %>" method="POST" style="display: inline;">
                                           <input type="hidden" name="_method" value="PUT" />
-                                          <button class="btn btn-danger">Disable</button>
+                                          <button class="btn btn-danger">suspend account</button>
                                       </form>
                                   <% } else if (driverDetails[0].status === 'approved') { %>
                                       <form action="/super/disable-rider/<%= driverDetails[0].user_id %>" method="POST" style="display: inline;">
                                           <input type="hidden" name="_method" value="PUT" />
-                                          <button class="btn btn-danger">Disable</button>
+                                          <button class="btn btn-danger">suspend account</button>
                                       </form>
+
+                                      <% } else if (driverDetails[0].status === 'removed') { %>
+                                        <form action="/super/approve-rider/<%= driverDetails[0].user_id %>" method="POST" style="display: inline;">
+                                            <input type="hidden" name="_method" value="PUT" />
+                                            <button class="btn btn-outline-success">Approve again</button>
+                                        </form>
                                   <% } %>
+
                               </div>
                       
                               <!-- Shipped Orders Table -->

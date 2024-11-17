@@ -1,0 +1,32 @@
+
+<div class="container">
+    <% if (recentlyViewed && recentlyViewed.length> 0) { %>
+      <div class="top-cat">
+        <p>recently viewed items</p>
+
+      </div>
+
+      <div class="scroll-items">
+        <div class="products-grid ">
+          <% recentlyViewed.forEach(item=> { %>
+            <div class="landing-item my-box-shadow" style="height: 200px; margin-bottom: 20px;">
+              <a href="/user/product-details/<%= item.id %>" class="home-card">
+
+                <div class="landing-image">
+                  <img src="/uploads/<%= item.image %>" alt="<%= item.ProductName %>">
+                </div>
+                <div class="landing-details">
+                  <p class="text-truncate">
+                    <%= item.ProductName %>
+                  </p>
+                </div>
+              
+              </a>
+            </div>
+            <% }) %>
+        </div>
+      </div>
+      <% } else { %>
+
+        <% } %>
+  </div>

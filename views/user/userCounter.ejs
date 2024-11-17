@@ -44,7 +44,7 @@
                     <div class="product-item my-box-shadow" >
                       <div class="card-image">
                         <a href="/user/product-details/<%= data.id %>">
-                          <img src="/uploads/<%= data.image %>" alt="<%= data.ProductName %>">
+                          <img src="/uploads/<%= data.image %>" class="img-fluid" alt="<%= data.ProductName %>">
                         </a>
                       </div>
                       <div class="wishlist">
@@ -74,7 +74,7 @@
                 <% } %>
               </div>
           
-              <hr>
+
               <nav class=" mt-4">
                 <ul class="pagination">
                   <% if (pagination.page > 1) { %>
@@ -95,13 +95,12 @@
   <br>
   <br>
   <br>
+  <%- include('../partials/recentlyViewed') %>
   <br>
 
 
 
 
-
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
 
 let formattedPrices = document.querySelectorAll('.item-price');

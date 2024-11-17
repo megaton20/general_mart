@@ -31,7 +31,6 @@
                   </div>
                 </div>
     
-                <hr>
     
             <% }); %>
 
@@ -40,14 +39,12 @@
 
       <div class="col-lg-4" >
     
-            <div class="card my-box-shadow">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-6 m-0">Subtotal</div>
-                  <div class="col-6 m-0">NGN <span class="item-price"><%= totalSubtotal%></span></div>
-                </div>
+
+              <div class="p-1">
+                  <p class="text-grey text-uppercase m-0">Total </p>
+                  <p class="text-success m-0">NGN <span class="item-price"><%= totalSubtotal%></span></p>
               </div>
-            </div>
+
 
             <br>
             <br>
@@ -69,7 +66,9 @@
 
 <br>
 <br>
+<%- include('../partials/recentlyViewed') %>
 <br>
+
 
 </main>
 

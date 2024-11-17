@@ -14,8 +14,25 @@
                         <% newOrder.forEach(function(data) { %>
                           <div class="order-card">
                             <div class="order-info">
-                              <span class="order-amount">₦ <%= data.total_amount %></span>
-                              <span class="order-status"><%= data.status %></span>
+
+                              <span class="order-status badge 
+                              <%= data.status === 'incomplete' ? 'bg-warning' : 
+                                  data.status === 'shipped' ? 'bg-info' : 
+                                  data.status === 'complete' ? 'bg-success' : 
+                                  data.status === 'waiting' ? 'bg-secondary' : 
+                                  data.status === 'canceled' ? 'bg-danger' : '' %>">
+                              <!-- Add the icons for each status -->
+                              <i class="fas 
+                                  <%= data.status === 'incomplete' ? 'fa-hourglass-half' : 
+                                      data.status === 'shipped' ? 'fa-truck' : 
+                                      data.status === 'complete' ? 'fa-check-circle' : 
+                                      data.status === 'waiting' ? 'fa-clock' : 
+                                      data.status === 'canceled' ? 'fa-times-circle' : '' %>"></i>
+
+                          </span>
+                          
+
+                              <span class="order-status"><%= data.sale_id %></span>
                             </div>
                             <a class="btn btn-primary details-btn" href="/user/invoice/<%= data.sale_id %>">Details</a>
                           </div>

@@ -14,6 +14,7 @@ const calculateShippingFee = require("../model/shippingFee");
 const calculateCashback = require("../model/cashback");
 const quoteService = require("../model/dialyQuote");
 const getRecentCustomers = require("../model/recentCustomers");
+const addRecentlyViewedItem = require("../model/recentlyViewed");
 
 
 const systemCalander = new Date().toLocaleDateString();
@@ -187,7 +188,9 @@ router.get('/', async (req, res) => {
       secondHalf: secondHalfCategoriesWithProducts,
       recentCustomers,
       dailyQuote,showModal:false,
-      presentCart
+      presentCart,
+      recentlyViewed: req.session.recentlyViewed || [],
+      
     });
 
   } catch (error) {
@@ -214,7 +217,9 @@ router.get('/policy', async(req, res) => {
     pageTitle:` ${appName} policy`,
     appName,appEmail,
     userActive,
-    allCategory
+    allCategory,
+    presentCart,
+    recentlyViewed: req.session.recentlyViewed || [],
   });
 }
 )
@@ -236,7 +241,8 @@ router.get('/faq', async(req, res) => {
     appName,appEmail,
     userActive,
     allCategory,
-    presentCart
+    presentCart,
+    recentlyViewed: req.session.recentlyViewed || [],
   });
 }
 )
@@ -257,7 +263,8 @@ router.get('/featured-services', async(req, res) => {
     appName,appEmail,
     userActive,
     allCategory,
-    presentCart
+    presentCart,
+    recentlyViewed: req.session.recentlyViewed || [],
   });
 }
 )
@@ -278,7 +285,8 @@ router.get('/contact', async (req, res) => {
     appName,appEmail,
     userActive,
     allCategory,
-    presentCart
+    presentCart,
+    recentlyViewed: req.session.recentlyViewed || [],
   });
 }
 )
@@ -301,7 +309,8 @@ router.get('/new-rider', async(req, res) => {
     appName,appEmail,
     userActive,
     allCategory,
-    presentCart
+    presentCart,
+    recentlyViewed: req.session.recentlyViewed || [],
   });
 }
 )
@@ -323,7 +332,9 @@ router.get('/new-vendor',async (req, res) => {
     pageTitle:` ${appName} vendor`,
     appName,appEmail,
     userActive,
-    allCategory,presentCart
+    allCategory,
+    presentCart,
+    recentlyViewed: req.session.recentlyViewed || [],
   });
 }
 )
@@ -379,7 +390,8 @@ router.get('/terms', async(req, res) => {
     appName,appEmail,
     userActive,
     allCategory,
-    presentCart
+    presentCart,
+    recentlyViewed: req.session.recentlyViewed || [],
   });
 }
 )
@@ -406,7 +418,8 @@ router.get('/abouts', async (req, res) => {
     userActive,
     allCategory,
     dailyQuote,
-    presentCart
+    presentCart,
+    recentlyViewed: req.session.recentlyViewed || [],
   });
 }
 )
@@ -421,6 +434,8 @@ router.get('/valid-location', async(req, res) => {
     presentCart = result
 
   }
+
+  let msg = []
   
   const { rows: allCategory } = await query('SELECT * FROM "Category"');
   const { rows: shippingRegions } = await query(`SELECT state, lga, fee FROM "shipping_regions"`);
@@ -437,14 +452,16 @@ router.get('/valid-location', async(req, res) => {
       shippingData[state].push({ lga, fee }); // Store both LGA and fee
   });
 
-
+  msg.push( { type: 'warning', text:`more areas will be added` })
   res.render('valid-location',{
     pageTitle:` ${appName} | valid-location`,
     appName,appEmail,
     userActive,
     shippingData,
     allCategory,
-    presentCart
+    presentCart,
+    recentlyViewed: req.session.recentlyViewed || [],
+    msg
   });
 }
 )
@@ -690,7 +707,9 @@ router.get('/verify', async (req, res) => {
 
     if (response.data.status && response.data.data.status === 'success') {
       req.flash('success_msg', 'Payment successful And Order placed!');
+
       return res.redirect(`/user/`);
+
       
     } else {
       // Handle failed verification
@@ -833,10 +852,7 @@ router.post('/webhook', async (req, res) => {
                       <p>Cross River State, Calabar | Phone: +234 916 020 9475 | Email: ${appEmail}</p>
                   </div>
                   
-                  <div style="text-align: center; margin-top: 20px;">
-                      <img src="path/to/your/signature.png" alt="Signature" style="height: 80px; width: auto;">
-                      <p style="margin-top: 5px;">Manager: ${userData[0]?.First_name || 'Your Name'}</p>
-                  </div>
+                 
               </div>
               `;
             

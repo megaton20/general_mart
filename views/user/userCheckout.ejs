@@ -45,12 +45,12 @@
                   <% } %>
              
               <% } else { %>
-                <p>Cashback not available</p>
+                <p>Cashback not available refer a friend to earn more</p>
               <% } %>
 
             
               <button type="submit" class="mt-2 my-btn-outline" style="width: 100%;">
-                Pay ₦<span id="sumTotal" class="item-price"><%= customerToPay %></span>
+                Checkout ₦<span id="sumTotal" class="item-price"><%= customerToPay %></span>
               </button>
 
                    <!-- Display cashback details -->
@@ -68,6 +68,7 @@
               <p id="messageArea" style="display: none;">
                 <i class="fas fa-bell" style="color: green;"></i> <span id="message"></span>
               </p>
+              <img src="/images/payments.png" alt="" class="mt-2 img-fluid w-100">
             
               <hr>
               <p class="m-0">You are paying through <a href="https://paystack.com" target="_blank">Paystack</a> payment gateway</p>

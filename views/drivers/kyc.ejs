@@ -7,8 +7,10 @@
       <% } %>
 
 
-      <div class="container"><%- include ('../partials/messages') %></div>
-      <div class="container mt-4">
+      <main class="main">
+    
+    <div class="container mt-4">
+          <%- include ('../partials/messages') %>
     <div class="d-flex flex-column justify-content-center align-items-center">
         <h2>KYC form</h2>
 
@@ -35,67 +37,67 @@
 <hr>
 
 <!-- Dropdown to select other types of identification -->
-<div class="row">
-    <div class="col-lg-6">
-        <div class="form-group">
-            <label for="idType">Select Identification Type</label>
-            <select class="form-control" id="idType" name="idType" onchange="showIDFields()">
-                <option value="">Select ID Type</option>
-                <option value="nin">NIN Number</option>
-                <option value="passport">International Passport</option>
-                <option value="voter">Voter's Card Number</option>
-            </select>
-        </div>
-    </div>
-</div>
-
-<!-- NIN Number Field (Hidden by Default) -->
-<div class="row" id="ninField" style="display:none;">
-    <div class="col-lg-6">
-        <div class="form-group">
-            <input type="text" class="form-control" id="ninNumber" name="ninNumber" placeholder="Enter NIN Number">
-        </div>
-    </div>
-    <!-- Upload for NIN Document -->
-    <div class="col-lg-6">
-        <div class="form-group">
-            <label for="ninDocument">Upload NIN Document</label>
-            <input type="file" class="form-control-file" id="ninDocument" name="ninDocument">
-        </div>
-    </div>
-</div>
-
-<!-- International Passport Field (Hidden by Default) -->
-<div class="row" id="passportField" style="display:none;">
-    <div class="col-lg-6">
-        <div class="form-group">
-            <input type="text" class="form-control" id="passportNumber" name="passportNumber" placeholder="Enter Passport Number">
-        </div>
-    </div>
-    <!-- Upload for Passport -->
-    <div class="col-lg-6">
-        <div class="form-group">
-            <label for="passportDocument">Upload Passport Document</label>
-            <input type="file" class="form-control-file" id="passportDocument" name="passportDocument">
-        </div>
-    </div>
-</div>
-
-<!-- Voter's Card Field (Hidden by Default) -->
-            <div class="row" id="voterField" style="display:none;">
+            <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <input type="text" class="form-control" id="voterNumber" name="voterNumber" placeholder="Enter Voter's Card Number">
-                    </div>
-                </div>
-                <!-- Upload for Voter's Card -->
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="voterDocument">Upload Voter's Card</label>
-                        <input type="file" class="form-control-file" id="voterDocument" name="voterDocument">
+                        <label for="idType">Select Identification Type</label>
+                        <select class="form-control" id="idType" name="idType" onchange="showIDFields()">
+                            <option value="">Select ID Type</option>
+                            <option value="nin">NIN Number</option>
+                            <option value="passport">International Passport</option>
+                            <option value="voter">Voter's Card Number</option>
+                        </select>
                     </div>
                 </div>
             </div>
+
+            <!-- NIN Number Field (Hidden by Default) -->
+            <div class="row" id="ninField" style="display:none;">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="ninNumber" name="ninNumber" placeholder="Enter NIN Number">
+                    </div>
+                </div>
+                <!-- Upload for NIN Document -->
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="ninDocument">Upload NIN Document</label>
+                        <input type="file" class="form-control-file" id="ninDocument" name="ninDocument">
+                    </div>
+                </div>
+            </div>
+
+<!-- International Passport Field (Hidden by Default) -->
+                    <div class="row" id="passportField" style="display:none;">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="passportNumber" name="passportNumber" placeholder="Enter Passport Number">
+                            </div>
+                        </div>
+                        <!-- Upload for Passport -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="passportDocument">Upload Passport Document</label>
+                                <input type="file" class="form-control-file" id="passportDocument" name="passportDocument">
+                            </div>
+                        </div>
+                    </div>
+
+<!-- Voter's Card Field (Hidden by Default) -->
+                    <div class="row" id="voterField" style="display:none;">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="voterNumber" name="voterNumber" placeholder="Enter Voter's Card Number">
+                            </div>
+                        </div>
+                        <!-- Upload for Voter's Card -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="voterDocument">Upload Voter's Card</label>
+                                <input type="file" class="form-control-file" id="voterDocument" name="voterDocument">
+                            </div>
+                        </div>
+                    </div>
 
 
 
@@ -117,6 +119,8 @@
 <br>
 
 <%- include ('../partials/openFooter')%>
+
+</main>
 
 <script>
     function showIDFields() {

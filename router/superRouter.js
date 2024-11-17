@@ -1,5 +1,10 @@
 const express = require("express");
 const router = express.Router();
+
+const db = require("../model/databaseTable");
+const { promisify } = require('util');
+const query = promisify(db.query).bind(db);
+
 const superController = require('../controllers/superController')
 const upload = require('../config/multerConfig'); // Import the Multer config
 const { isSuper } = require("../config/isSuper");
@@ -174,5 +179,205 @@ router.delete("/delete-rank/:id", ensureAuthenticated,isSuper, superController.d
 router.get("/getItems/:id", ensureAuthenticated,isSuper,superController.superStore);
 
 
+
+// Toggle the tag association between a product and a tag
+router.post('/products/:productId/tags/:tagId/toggle', ensureAuthenticated, isSuper, async (req, res) => {
+    const { productId, tagId } = req.params;
+
+    try {
+        // Check if product exists
+        const {rows: productExists} = await query('SELECT 1 FROM "inventory" WHERE id = $1', [productId]);
+
+
+        if (productExists.length === 0) {
+            return res.status(404).send('inventory not found');
+        }
+
+        // Check if tag exists
+        const tagExists = await query('SELECT 1 FROM Tags WHERE id = $1', [tagId]);
+
+        if (tagExists.rows.length === 0) {
+            return res.status(404).send('Tag not found');
+        }
+
+        // Check if the relationship already exists
+        const {rows:existing} = await query('SELECT * FROM inventory_tags WHERE "inventory_id" = $1 AND "tag_id" = $2', [productId, tagId]);
+
+        if (existing.length > 0) {
+            // If the association exists, delete it (toggle off)
+            await query('DELETE FROM inventory_tags WHERE inventory_id = $1 AND tag_id = $2', [productId, tagId]);
+            req.flash("success_msg", `Tag removed from inventory`);
+        } else {
+            // If the association doesn't exist, add it (toggle on)
+            await query('INSERT INTO inventory_tags (inventory_id, tag_id) VALUES ($1, $2)', [productId, tagId]);
+            req.flash("success_msg", `Tag added to inventory`);
+        }
+
+        // Redirect back to the product page or appropriate view
+        res.redirect('back');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error toggling tag association');
+    }
+});
+
+
+router.get('/tags', ensureAuthenticated,isSuper, async (req, res) => {
+    const nameA = req.user.First_name;
+    const nameB = req.user.Last_name;
+  
+
+    try {
+        const {rows:tags} = await query('SELECT * FROM tags');
+
+        res.render("./super/tagsTable", {
+            pageTitle: "All tags",
+            name: `${nameA} ${nameB}`,
+            month: "monthName",
+            day: "dayName",
+            date: "presentDay",
+            year: "presentYear",
+            tags
+          });
+    } catch (error) {
+        console.error(error);
+        res.redirect('/')
+    }
+});
+
+router.get('/create-tags', ensureAuthenticated,isSuper, async (req, res) => {
+    const nameA = req.user.First_name;
+    const nameB = req.user.Last_name;
+  
+
+    try {
+
+        res.render("./super/tagsCreateForm",{
+            pageTitle:"create tag",
+            name: `${nameA} ${nameB}`,
+            month:"monthName",
+            day: "dayName",
+            date: "presentDay",
+            year: "presentYear",
+          }
+        );
+    } catch (error) {
+        console.error(error);
+        res.redirect('/')
+    }
+});
+router.post('/tags', ensureAuthenticated,isSuper, async (req, res) => {
+    const { tagName } = req.body;
+
+    try {
+        const result = await query('INSERT INTO Tags (tag_name) VALUES ($1) RETURNING *',[tagName]);
+        req.flash('success_msg','tag added')
+        res.redirect('/super/tags')
+    } catch (error) {
+        console.error(error);
+        req.flash('error_msg','error adding tag')
+        res.redirect('/super')
+    }
+});
+
+router.get('/update-tags/:id', ensureAuthenticated,isSuper, async (req, res) => {
+    const nameA = req.user.First_name;
+    const nameB = req.user.Last_name;
+  
+
+    try {
+        const results = await query(`SELECT * FROM tags WHERE "id" = $1`,[req.params.id]);
+
+        if (results.rows.length <= 0) {
+          req.flash("warning_msg", `No tag found with ID ${req.params.id}`);
+          return res.redirect("/super");
+        }
+    
+        const tagData = results.rows;
+        // If you need to fetch stateData, do so here and include it in the render options
+    
+
+        res.render("./super/tagsEditForm",{
+            pageTitle:"edit tag",
+            name: `${nameA} ${nameB}`,
+            month:"monthName",
+            day: "dayName",
+            date: "presentDay",
+            year: "presentYear",
+            tagData
+          }
+        );
+    } catch (error) {
+        console.error(error);
+        res.redirect('/')
+    }
+});
+
+
+router.put('/tags/:tagId', ensureAuthenticated,isSuper, async (req, res) => {
+    const { tagId } = req.params;
+    const { tagName } = req.body;
+
+
+    try {
+        const result = await query('UPDATE Tags SET tag_name = $1 WHERE id = $2 RETURNING *',[tagName, tagId]);
+        if (result.rows.length === 0) {
+            req.flash('error_msg','tag not found')
+            return res.redirect('/super')
+        }
+        req.flash('success_msg','tag name changed ')
+        return res.redirect('/super/tags')
+    } catch (error) {
+        console.error(error);
+        req.flash('error_msg','Error updating tag')
+        res.redirect('/super')
+    }
+});
+
+router.delete('/tags/:tagId', ensureAuthenticated,isSuper, async (req, res) => {
+    const { tagId } = req.params;
+
+    try {
+        await query('DELETE FROM Tags WHERE id = $1', [tagId]);
+        req.flash('success_msg','tag deleted ')
+        return res.redirect('/super/tags')
+    } catch (error) {
+        console.error(error);
+        req.flash('error_msg','Error deleting tag')
+        return res.redirect('/super/tags')
+    }
+});
+
+
+
+router.get('/tags/:tagId/products', ensureAuthenticated,isSuper, async (req, res) => {
+    const { tagId } = req.params;
+    const userFirstName = req.user.First_name;
+    const userLastName = req.user.Last_name;
+    let msg = []
+
+    try {
+        const {rows:allInventory} = await query('SELECT "inventory".* FROM "inventory" ' + 'JOIN inventory_Tags ON "inventory".id = inventory_Tags.inventory_id ' +'WHERE inventory_Tags.tag_id = $1',[tagId]);
+        const {rows:results} = await query(`SELECT * FROM tags WHERE "id" = $1`,[tagId]);
+        
+
+        msg.push( { type: 'warning', text:`${allInventory.length} inventory item in this tag` })
+        msg.push( { type: 'success', text:`${results[0].tag_name}` })
+    return res.render("./super/inventoryTable", {
+        pageTitle: "All Inventory",
+        name: `${userFirstName} ${userLastName}`,
+        month: "monthName",
+        day: "dayName",
+        date: "presentDay",
+        year: "presentYear",
+        allInventory,
+        msg
+      });
+    } catch (error) {
+        console.error(error);
+        req.flash('error_msg','Error getting inventory')
+        return res.redirect('/super/tags')
+    }
+});
 
 module.exports = router;

@@ -1,12 +1,9 @@
+<!-- Page Wrapper -->
+<div id="wrapper">
 
 
-
-    <!-- Page Wrapper -->
-    <div id="wrapper">
-
-      
-        <!-- Sidebar -->
-        <%- include ('../partials/superSidebar') %>
+    <!-- Sidebar -->
+    <%- include ('../partials/superSidebar') %>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -15,152 +12,224 @@
             <!-- Main Content -->
             <div id="content">
 
-                 <!-- Topbar -->
-                 <%- include ('../partials/topbar') %>
-                 <!-- End of Topbar -->
-                 <%- include ('../partials/messages') %>
+                <!-- Topbar -->
+                <%- include ('../partials/topbar') %>
+                    <!-- End of Topbar -->
+                    <%- include ('../partials/messages') %>
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    <a class="btn btn-outline-primary mr-2 mb-1 mt-4" href="/super/all-inventory">Back</a>
-                    <a class="btn btn-outline-success mr-2 mb-1 mt-4" href="/super/create-inventory">Add Inventory</a>
-
-
-                    <a href="/super/edit-Inventory/<%= allInventory.id %>" class="btn btn-outline-warning mr-2 mb-1 mt-4" title="Edit">
-                        <i class="fas fa-edit"></i>
-                      </a>
-
-                      <form action="/super/delete-inventory/<%= allInventory.id %>" method="POST"
-                        style="display: inline">
-                        <input type="hidden" name="_method" value="DELETE" />
-                        <button class="btn btn-outline-danger mr-2 mb-1 mt-4">Delete</button>
-                      </form>
-
-                      <hr>
-
-                                <div class="row">
-
-                                    <!-- Area Chart -->
-                                    <div class="col-xl-8 col-lg-7">
-                                        <div class=" mb-4">
-
-                                                <div class="row">
-                                                    <div class="col-6">Product Name: </div>
-                                                    <div class="col-6"><%= allInventory.Product_name %></div>
-                                                    <div class="col-6">Brand  Name: </div>
-                                                    <div class="col-6"> <%= allInventory.Brand_name %></div>
-                                                    <div class="col-6">Category: </div>
-                                                    <div class="col-6"> <%= allInventory.Category_name %></div>
-                                                    <div class="col-6">Purchase: </div>
-                                                    <div class="col-6"> <%= allInventory.Purchase_price %></div>
-                                                    <div class="col-6">QTY: </div>
-                                                    <div class="col-6"> <%= allInventory.QTY_recieved %></div>
-                                                    <div class="col-6">Total in Pack: </div>
-                                                    <div class="col-6"> <%= allInventory.total_in_pack %></div>
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid">
+                            <a class="btn btn-outline-primary mr-2 mb-1 mt-4" href="/super/all-inventory"><i class="fas fa-home"></i></a>
+                            <a class="btn btn-outline-success mr-2 mb-1 mt-4" href="/super/create-inventory"><i class="fas fa-plus"></i></a>
+                            <a class="btn btn-outline-success mr-2 mb-1 mt-4" href="/super/tags"><i class="fas fa-tag"></i></a>
 
 
-                                                    <div class="col-6">Reciever Name: </div>
-                                                    <div class="col-6"> <%= allInventory.Reciever_name %></div>
-                                                    <div class="col-6">Supplier Name: </div>
-                                                    <div class="col-6"> <%= allInventory.Supplier_name %></div>
-                                                    <div class="col-6">Date Recieved: </div>
-                                                    <div class="col-6"> <%= allInventory.created_date %></div>
-                                                    <div class="col-6">Delivery Method: </div>
-                                                    <div class="col-6"> <%= allInventory.Delivery_method %></div>
-                                                    <div class="col-6">Cost of Delivery: </div>
-                                                    <div class="col-6"> <%= allInventory.Cost_of_delivery %></div>
-                                                    <div class="col-6">Barcode information: </div>
-                                                    <div class="col-6"> <%= allInventory.barcode %></div>
+                            <a href="/super/edit-Inventory/<%= allInventory.id %>"
+                                class="btn btn-outline-warning mr-2 mb-1 mt-4" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
 
-                                                    <div class="col-6">Manufacture Date: </div>
-                                                    <div class="col-6"> <%= allInventory.Manufacture_date %></div>
-                                                    <div class="col-6">EXP Date: </div>
-                                                    <div class="col-6"> <%= allInventory.Expire_date %></div>
-                                                </div>
+                            <form action="/super/delete-inventory/<%= allInventory.id %>" method="POST"
+                                style="display: inline">
+                                <input type="hidden" name="_method" value="DELETE" />
+                                <button class="btn btn-outline-danger mr-2 mb-1 mt-4"><i class="fas fa-trash"></i></button>
+                            </form>
 
-                                                <div class="row mt-4">
-                                                    <div class="col-6">Total Damage from deleivery: </div>
-                                                    <div class="col-6"><%= allInventory.Total_damaged %></div>
-                                                    <div class="col-6">Store Presence: </div>
-                                                    <div class="col-6"><%= allInventory.activate %></div>
-                                                </div>
+                            <hr>
+
+                            <div class="row">
+
+                                <!-- Area Chart -->
+                                <div class="col-xl-8 col-lg-7">
+                                    <div class=" mb-4">
+
+                                        <div class="row">
+                                            <div class="col-6">Product Name: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.Product_name %>
+                                            </div>
+                                            <div class="col-6">Brand Name: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.Brand_name %>
+                                            </div>
+                                            <div class="col-6">Category: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.Category_name %>
+                                            </div>
+                                            <div class="col-6">Purchase: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.Purchase_price %>
+                                            </div>
+                                            <div class="col-6">QTY: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.QTY_recieved %>
+                                            </div>
+                                            <div class="col-6">Total in Pack: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.total_in_pack %>
+                                            </div>
+
+
+                                            <div class="col-6">Reciever Name: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.Reciever_name %>
+                                            </div>
+                                            <div class="col-6">Supplier Name: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.Supplier_name %>
+                                            </div>
+                                            <div class="col-6">Date Recieved: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.created_date %>
+                                            </div>
+                                            <div class="col-6">Delivery Method: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.Delivery_method %>
+                                            </div>
+                                            <div class="col-6">Cost of Delivery: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.Cost_of_delivery %>
+                                            </div>
+                                            <div class="col-6">Barcode information: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.barcode %>
+                                            </div>
+
+                                            <div class="col-6">Manufacture Date: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.Manufacture_date %>
+                                            </div>
+                                            <div class="col-6">EXP Date: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.Expire_date %>
+                                            </div>
                                         </div>
-                                    </div>
-            
-                                    <!-- Pie Chart -->
-                                    <div class="col-xl-4 col-lg-5">
-                                        <div class="card shadow mb-4">
-                                            <!-- Card Header - Dropdown -->
 
-                                            <!-- Card Body -->
-
-
-                                                  
-                                                    <div class="card-body">
-                                                        
-
-                                    <img class="img-thumbnail" src="/uploads/<%= allInventory.image %>" alt="image">
-
-
-                                    <% if ( allInventory.image == "default.jpg" ) { %>
-                                        <form class="user" action="/super/add-image/<%= allInventory.id %>" method="post" enctype="multipart/form-data">
-
-                                            <div class="form-group">
-                                                <input type="file" name="image">
+                                        <div class="row mt-4">
+                                            <div class="col-6">Total Damage from deleivery: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.Total_damaged %>
                                             </div>
-                                            
-                                            <input type="submit" value="Upload image"  class="btn btn-primary btn-user btn-block">
-                                                
-
-                                    
-                                        </form>
-                                      <% } else { %>
-                                        <form class="user" action="/super/add-image/<%= allInventory.id %>" method="post" enctype="multipart/form-data">
-
-                                            <div class="form-group">
-                                                <input type="file" name="image">
+                                            <div class="col-6">Store Presence: </div>
+                                            <div class="col-6">
+                                                <%= allInventory.activate %>
                                             </div>
-                                            
-                                            <input type="submit" value="Upload new image"  class="btn btn-primary btn-user btn-block">
-                                                
-
-                                    
-                                        </form>
-                                        
-                                        <!-- HTML to render if the condition is false -->
-                                      <% } %>
-
-
-                                        
-
-
-                                                    </div>
-
-
                                         </div>
                                     </div>
                                 </div>
 
-                             
+                                <!-- Pie Chart -->
+                                <div class="col-xl-4 col-lg-5">
+                                    <div class="card shadow mb-4">
+                                        <!-- Card Header - Dropdown -->
+
+                                        <!-- Card Body -->
 
 
-                </div>
-                <!-- /.container-fluid -->
+
+                                        <div class="card-body">
+
+
+                                            <img class="img-thumbnail" src="/uploads/<%= allInventory.image %>"
+                                                alt="image">
+
+
+                                            <% if ( allInventory.image=="default.jpg" ) { %>
+                                                <form class="user" action="/super/add-image/<%= allInventory.id %>"
+                                                    method="post" enctype="multipart/form-data">
+
+                                                    <div class="form-group">
+                                                        <input type="file" name="image">
+                                                    </div>
+
+                                                    <input type="submit" value="Upload image"
+                                                        class="btn btn-primary btn-user btn-block">
+
+
+
+                                                </form>
+                                                <% } else { %>
+                                                    <form class="user" action="/super/add-image/<%= allInventory.id %>"
+                                                        method="post" enctype="multipart/form-data">
+
+                                                        <div class="form-group">
+                                                            <input type="file" name="image">
+                                                        </div>
+
+                                                        <input type="submit" value="Upload new image"
+                                                            class="btn btn-primary btn-user btn-block">
+
+
+
+                                                    </form>
+
+                                                    <!-- HTML to render if the condition is false -->
+                                                    <% } %>
+
+
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+
+                                <% tags.forEach(tag => { %>
+                                    <div class="tag-toggle">
+                                        <label for="tag-<%= tag.id %>" class="switch">
+                                            <input type="checkbox" id="tag-<%= tag.id %>" name="tag-<%= tag.id %>"
+                                                <%= tagIds.includes(tag.id) ? 'checked' : '' %>
+                                                onchange="toggleTag(<%= productId %>, <%= tag.id %>)">
+                                            <span class="slider round"></span>
+                                        </label>
+                                        <span class="tag-name"><%= tag.tag_name %></span>
+                                    </div>
+                                <% }); %>
+
+                    </div>
+
+
+                        </div>
+                        <!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
 
-              <!-- Footer -->
-              <%- include ('../partials/footer') %>
-              <!-- End of Footer -->
+            <!-- Footer -->
+            <%- include ('../partials/footer') %>
+                <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->
 
-    </div>
-    <!-- End of Page Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
+
+
+<script>
+    // Function to toggle the tag association
+    function toggleTag(productId, tagId) {
+        // Send a POST request to toggle the tag
+        fetch(`/super/products/${productId}/tags/${tagId}/toggle`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                productId: productId,
+                tagId: tagId
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload(); // Reload to reflect the updated state
+            } else {
+                alert('Error toggling tag');
+            }
+        });
+    }
+</script>

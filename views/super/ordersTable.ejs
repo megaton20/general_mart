@@ -22,7 +22,7 @@
                 <div class="container-fluid">
 
                     <div class=" mt-4">
-                        <p>orders recieved</p>
+                        <p>orders Pending</p>
                     <!-- Page Heading -->
 
                     <!-- DataTales Example -->
@@ -34,75 +34,47 @@
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
-                                                  <th>Id</th>
-                                                  <th>customer email</th>
-                                                  <th>Pick up Store</th>
-                                                  <th>Sale Id</th>
-                                                  <th>Delivery</th>
-                                                  <th>Payment Type</th>
-                                                  <th>Total</th>
-                                                  <th>Status</th>
-                                                  <th>Date</th>
-                                                  <th>Actions</th>
+                                                    <th>Id</th>
+                                                    <th>Customer Email</th>
+                                                    <th>Pick Up Store</th>
+                                                    <th>Sale Id</th>
+                                                    <th>Delivery</th>
+                                                    <th>Payment Type</th>
+                                                    <th>Total</th>
+                                                    <th>Status</th>
+                                                    <th>Date</th>
+                                                    <th>Actions</th>
                                                 </tr>
                                             </thead>
-                                          
                                             <tbody>
-                                          
-        
-        
-                                                <% allOrders.forEach(function(data) {%>
+                                                <% allOrders.forEach(function(data) { %>
                                                     <tr>
                                                         <td><%= data['id'] %></td>
-                                                        <td><%= data['customer_email'] %> </td>
-                                                        <td><%= data['pick_up_store_name'] %> </td>
-                                                        <td><%= data['sale_id'] %> </td>
-                                                        <td><%= data['Delivery'] %> </td>
-                                                        <td><%= data['Payment_type'] %> </td>
-                                                        <td><%= data['total_amount'] %> </td>
-
-                                                            <% if(  data['status']  == "incomplete"){ %>
-
-                                                                        <td class="text-danger ">
-                                                                            <%= data['status'] %> 
-                                                                        </td>
-                                                                        
-                                                                    <% } else if ( data['status']  == "shipped") { %>  
-                                                                        <td class="text-warning">
-                                                                            <%= data['status'] %> 
-                                                                        </td>   
-                                                                        
-                                                                        <%} else {%>
-
-                                                                        <td class="text-success">
-                                                                            <%= data['status'] %> 
-                                                                        </td>   
-                                                             <% } %>
-
-
-                                                           
-
-                                                        <td><%= data['created_date'] %> </td>
-
-
-                                                            <td>
-                                                                
-                                                                <a href="/super/view-order/<%= data['id'] %>"  class="btn btn-primary">View</a>
-                                                            </td>
-                                                            
-                                                            
-
-        
-                                                  
-                                                   </tr> 
-                                                   
-                                                       <% }) %>
-                                         
-                                                   
-                                            
-        
-                                                </tbody>
+                                                        <td><%= data['customer_email'] %></td>
+                                                        <td><%= data['pick_up_store_name'] %></td>
+                                                        <td><%= data['sale_id'] %></td>
+                                                        <td><%= data['Delivery'] %></td>
+                                                        <td><%= data['Payment_type'] %></td>
+                                                        <td><%= data['total_amount'] %></td>
+                                                        <td>
+                                                            <span class="badge 
+                                                                <%= data['status'] === 'incomplete' ? 'bg-warning' : 
+                                                                    data['status'] === 'shipped' ? 'bg-info' : 
+                                                                    data['status'] === 'complete' ? 'bg-success' : 
+                                                                    data['status'] === 'canceled' ? 'bg-danger' : 
+                                                                    data['status'] === 'waiting' ? 'bg-secondary' : '' %>">
+                                                                <%= data['status'] %>
+                                                            </span>
+                                                        </td>
+                                                        <td><%= data['created_date'] %></td>
+                                                        <td>
+                                                            <a href="/super/view-order/<%= data['id'] %>" class="btn btn-primary">View</a>
+                                                        </td>
+                                                    </tr>
+                                                <% }) %>
+                                            </tbody>
                                         </table>
+                                        
                                     </div>
                                 <% } %>
                        

@@ -29,28 +29,47 @@
 </nav>
 
 <!-- Offcanvas Navbar for smaller screens -->
-<div class="offcanvas offcanvas-start offcanvas-fullscreen" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+<div class="offcanvas offcanvas-start offcanvas-fullscreen bg-dark" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
   <div class="offcanvas-header">
-    <button type="button" class="btn-close text-light" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
+	  <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+	  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	</div>
+
   <div class="offcanvas-body">
-    <ul class="my-nav-links my-nav-links-mobile" id="my-navLinks">
-			
-      <li class="nav-item">
-        <a class="nav-link text-dark" aria-current="page" href="/">Home</a>
+    <ul class="my-nav-links my-nav-links-mobile list-unstyled" id="my-navLinks">
+      
+      <!-- Home Link -->
+      <li class="nav-item mb-3">
+        <a class="nav-link text-light d-flex align-items-center" href="/" aria-current="page">
+          <i class="bi bi-house-door me-2"></i> <span>Home</span>
+        </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/faq">FAQs</a>
+      
+      <!-- FAQs Link -->
+      <li class="nav-item mb-3">
+        <a class="nav-link text-light d-flex align-items-center" href="/faq">
+          <i class="bi bi-question-circle me-2"></i> <span>FAQs</span>
+        </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/featured-services">Services</a>
+      
+      <!-- Services Link -->
+      <li class="nav-item mb-3">
+        <a class="nav-link text-light d-flex align-items-center" href="/featured-services">
+          <i class="bi bi-tools me-2"></i> <span>Services</span>
+        </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/contact">Contact us</a>
+      
+      <!-- Contact Us Link -->
+      <li class="nav-item mb-3">
+        <a class="nav-link text-light d-flex align-items-center" href="/contact">
+          <i class="bi bi-envelope me-2"></i> <span>Contact Us</span>
+        </a>
       </li>
+      
     </ul>
   </div>
 </div>
+
 
 <!-- Extra spacing for page content -->
 <br><br><br>

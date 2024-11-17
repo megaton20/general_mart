@@ -8,6 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="online grocery store, e-commerce , Lagos, Abuja, Cross River,Nigeria">
   <meta name="author" content="Strobe tech">
+  
 
   <title>
     <%= pageTitle%>
@@ -97,18 +98,89 @@
     }
 
 
-    /* Initially hide the status div */
+
     #connectionStatus {
       display: none;
+
       position: fixed;
       width: 100%;
       top: 50px;
       z-index: 1000;
       color: rgba(255, 0, 0, 0.987);
       padding: 10px;
-      background-color: rgba(240, 128, 128, 0.542);
+      background-color: #f0808029;
     }
+    #online {
+      display: none;
+      position: fixed;
+      width: 100%;
+      top: 50px;
+      z-index: 1000;
+      color: #48d246;
+      padding: 10px;
+      background-color: #80f0a729;
+    }
+
+
+ 
+
+
+
   </style>
+
+<style>
+  #message-container {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 300px;
+      z-index: 9999;
+      padding: 10px;
+  }
+  
+  .message {
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 5px;
+      color: #fff;
+      opacity: 0;
+      transform: translateX(100%); /* Start off-screen */
+      transition: transform 0.5s ease, opacity 0.5s ease; /* For smooth animations */
+  }
+  
+  /* Error messages */
+  .message.error {
+      background-color: #ff4d4f;
+      font-size: 1rem;
+      width: 100%;
+  }
+  
+  /* Warning messages */
+  .message.warning {
+      background-color: #ffa500;
+      font-size: 1rem;
+  }
+  
+  /* Success messages */
+  .message.success {
+      background-color: #4caf50;
+      font-size: 1rem;
+  }
+  
+  /* Slide-in effect */
+  .message.show {
+      opacity: 1;
+      transform: translateX(0); /* Slide into view */
+  }
+  
+  /* Slide-out effect */
+  .message.remove {
+      opacity: 0 !important;
+      transform: translateX(100%) !important; /* Slide out of view */
+  }
+  
+  </style>
+
 
 </head>
 
@@ -123,7 +195,9 @@
 
 <!-- Dynamic content -->
 <div id="page-content">
-  <div id="connectionStatus">Internet is not connected</div>
+  <%- include ('./partials/pop') %>
+  <div id="connectionStatus">Internet disconnected</div>
+  <div id="online">Internet disconnected</div>
   <%- body %>
 </div>
 
@@ -174,17 +248,28 @@
 
 
   // i ternet
+
+  const connectionStatusElement = document.getElementById('connectionStatus');
+    const onlineElement = document.getElementById('online');
+    let wasOffline = false
   function checkInternetConnection() {
-    const connectionStatusElement = document.getElementById('connectionStatus');
+    
 
     // Use navigator.onLine to check if the browser is online
     if (!navigator.onLine) {
       // Hide the status div if online
       connectionStatusElement.style.display = 'block';
-      connectionStatusElement.innerHTML = 'Internet is not connected';
+      connectionStatusElement.innerHTML = 'Connection lost';
+      wasOffline = true
+
     } else {
-      // Show the status div if offline
       connectionStatusElement.style.display = 'none';
+
+      if (wasOffline) {
+        online()
+        wasOffline = false
+      }
+  
     }
   }
 
@@ -193,6 +278,17 @@
 
   // Initial check on page load
   checkInternetConnection();
+
+  function online(){
+    
+      onlineElement.style.display = 'block';
+      onlineElement.innerHTML = 'Connection restored';
+
+      // Hide the message after 3 seconds (3000ms)
+    setTimeout(() => {
+        onlineElement.style.display = 'none';
+    }, 3000);
+  }
 
   // Optional: Listen for 'online' and 'offline' events to dynamically update status
   window.addEventListener('online', checkInternetConnection);
@@ -222,7 +318,33 @@
       cartBadge.textContent = presentCart.length;
     });
   }
+
+
+
 </script>
+
+
+
+
+<script>
+  const messages = document.querySelectorAll('.message');
+  messages.forEach((message, index) => {
+      // Delay each message based on its index
+      setTimeout(() => {
+          message.classList.add('show'); // Add 'show' class for animation
+  
+          // Remove the message after a few seconds
+          setTimeout(() => {
+              message.classList.add('remove'); // Add 'remove' class for sliding out
+              setTimeout(() => {
+                  message.remove(); // Completely remove the message after animation
+              }, 500); // Match the duration of the 'remove' animation
+          }, 2000); // Display duration for each message
+      }, index * 1000); // Stagger messages by 1 second
+  });
+  
+    </script>
+    
 
 
 <script src="/assets/vendor/jquery/jquery.min.js"></script>

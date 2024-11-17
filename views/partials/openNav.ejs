@@ -64,60 +64,81 @@
 
 
 <!-- Offcanvas Navbar for smaller screens -->
-<div class="offcanvas offcanvas-start offcanvas-fullscreen" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+<div class="offcanvas offcanvas-start offcanvas-fullscreen bg-dark text-white" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
 	<div class="offcanvas-header">
-	  <button type="button" class="btn-close text-light" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	  <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+	  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 	</div>
+	
 	<div class="offcanvas-body d-flex flex-column justify-content-between">
-		<!-- Navigation Links -->
-		<ul class="my-nav-links my-nav-links-mobile" id="my-navLinks">
-			
-			<% if(userActive == false){ %>
-			  <p>Categories</p>
-			  <% allCategory.forEach(data => { %>
-				<li>
-				  <a class="nav-link text-dark" href="/user/category/<%= data.Category_name %>#product-section" class="categoryButton" data-category="<%= data.Category_name %>">
-					<i class="bi bi-arrow-right-circle"></i><span> <%= data.Category_name %></span>
-				  </a>
-				</li>
-			  <% }); %>
-
-			  <hr>
-			  <p>Useful Links</p>
-			  <li><a class="nav-link text-dark" href="/featured-services">Services</a></li>
-			  <li><a class="nav-link text-dark" href="/faq">FAQs</a></li>
-			  <li><a class="nav-link text-dark" href="/contact">Contact</a></li>
-			  <hr>
-			  <p>Actions</p>
-			  <li><a class="nav-link text-dark" href="/login">Login</a></li>
-			<% } else { %> 
-			  <p>Categories</p>
-			  <% allCategory.forEach(data => { %>
-				<li>
-				  <a class="nav-link text-dark" href="/user/category/<%= data.Category_name %>#product-section" class="categoryButton" data-category="<%= data.Category_name %>">
-					<i class="bi bi-arrow-right-circle"></i><span> <%= data.Category_name %></span>
-				  </a>
-				</li>
-			  <% }); %>
-
-			  <hr>
-			  <p>User Links</p>
-			  <li><a class="nav-link text-dark" href="/user" class="">Store Items</a></li>
-			  <li><a class="nav-link text-dark" href="/user/orders">My Orders</a></li>
-			  <li><a class="nav-link text-dark" href="/user/wishlist">My Wishlist</a></li>
-			  <li><a class="nav-link text-dark" href="/user/profile">Profile</a></li>
-			  
-			  <hr>
-			  <p>Useful Links</p>
-			  <li><a class="nav-link text-dark" href="/featured-services">Services</a></li>
-			  <li><a class="nav-link text-dark" href="/faq">FAQs</a></li>
-			  <li><a class="nav-link text-dark" href="/contact">Contact</a></li>
-
-			  <hr>
-			  <p>Actions</p>
-			  <li><a class="nav-link text-dark" href="/logout">Logout</a></li>
-			  <% } %>
-			 
-		</ul>
+	  <!-- Navigation Links -->
+	  <ul class="my-nav-links my-nav-links-mobile list-unstyled" id="my-navLinks">
+  
+		<% if (userActive == false) { %>
+		  <!-- Non-logged-in view -->
+		  
+		  <!-- Categories -->
+		  <p class="fs-5 fw-bold text-light">Categories</p>
+		  <% allCategory.forEach(data => { %>
+			<li class="mb-3">
+			  <a class="nav-link text-white d-flex align-items-center" href="/user/category/<%= data.Category_name %>#product-section" data-category="<%= data.Category_name %>">
+				<i class="bi bi-arrow-right-circle me-2"></i> <span><%= data.Category_name %></span>
+			  </a>
+			</li>
+		  <% }); %>
+		  
+		  <hr class="text-secondary">
+		  
+		  <!-- Useful Links -->
+		  <p class="fs-5 fw-bold text-light">Useful Links</p>
+		  <li><a class="nav-link text-white d-flex align-items-center" href="/featured-services"><i class="bi bi-tools me-2"></i>Services</a></li>
+		  <li><a class="nav-link text-white d-flex align-items-center" href="/faq"><i class="bi bi-question-circle me-2"></i>FAQs</a></li>
+		  <li><a class="nav-link text-white d-flex align-items-center" href="/contact"><i class="bi bi-envelope me-2"></i>Contact</a></li>
+  
+		  <hr class="text-secondary">
+		  
+		  <!-- Actions -->
+		  <p class="fs-5 fw-bold text-light">Actions</p>
+		  <li><a class="nav-link text-warning d-flex align-items-center" href="/login"><i class="bi bi-box-arrow-in-right me-2"></i>Login</a></li>
+		
+		<% } else { %> 
+		  <!-- Logged-in view -->
+		  
+		  <!-- Categories -->
+		  <p class="fs-5 fw-bold text-light">Categories</p>
+		  <% allCategory.forEach(data => { %>
+			<li class="mb-3">
+			  <a class="nav-link text-white d-flex align-items-center" href="/user/category/<%= data.Category_name %>#product-section" data-category="<%= data.Category_name %>">
+				<i class="bi bi-arrow-right-circle me-2"></i> <span><%= data.Category_name %></span>
+			  </a>
+			</li>
+		  <% }); %>
+  
+		  <hr class="text-secondary">
+		  
+		  <!-- User Links -->
+		  <p class="fs-5 fw-bold text-light">User Links</p>
+		  <li><a class="nav-link text-white d-flex align-items-center" href="/user"><i class="bi bi-shop me-2"></i>Store Items</a></li>
+		  <li><a class="nav-link text-white d-flex align-items-center" href="/user/orders"><i class="bi bi-card-list me-2"></i>My Orders</a></li>
+		  <li><a class="nav-link text-white d-flex align-items-center" href="/user/wishlist"><i class="bi bi-heart me-2"></i>My Wishlist</a></li>
+		  <li><a class="nav-link text-white d-flex align-items-center" href="/user/profile"><i class="bi bi-person-circle me-2"></i>Profile</a></li>
+		  
+		  <hr class="text-secondary">
+		  
+		  <!-- Useful Links -->
+		  <p class="fs-5 fw-bold text-light">Useful Links</p>
+		  <li><a class="nav-link text-white d-flex align-items-center" href="/featured-services"><i class="bi bi-tools me-2"></i>Services</a></li>
+		  <li><a class="nav-link text-white d-flex align-items-center" href="/faq"><i class="bi bi-question-circle me-2"></i>FAQs</a></li>
+		  <li><a class="nav-link text-white d-flex align-items-center" href="/contact"><i class="bi bi-envelope me-2"></i>Contact</a></li>
+  
+		  <hr class="text-secondary">
+		  
+		  <!-- Actions -->
+		  <p class="fs-5 fw-bold text-light">Actions</p>
+		  <li><a class="nav-link text-danger d-flex align-items-center" href="/logout"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+		
+		<% } %>
+	  </ul>
 	</div>
-</div>
+  </div>
+  
