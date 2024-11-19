@@ -49,6 +49,57 @@ a{
   text-decoration: none !important;
 }
 
+
+    #message-container {
+    position: fixed;
+    top: 10px;  /* Add a small gap from the top */
+    right: 5px; /* Add a small gap from the right */
+    width: 300px;
+    z-index: 9999;
+    padding: 10px;
+
+}
+
+.message {
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+    color: #fff; /* Ensure text color is white */
+    opacity: 0;
+    transform: translateX(100%); /* Start off-screen */
+    transition: transform 0.5s ease, opacity 0.5s ease; /* For smooth animations */
+    font-size: 13px;
+}
+
+/* Error messages */
+.message.error {
+    background-color: #ff4d4f !important;
+}
+
+/* Warning messages */
+.message.warning {
+    background-color: #ffa500 !important;
+}
+
+/* Success messages */
+.message.success {
+    background-color: #6dc870 !important;
+}
+
+/* Slide-in effect */
+.message.show {
+    opacity: 1;
+    transform: translateX(0); /* Slide into view */
+}
+
+/* Slide-out effect */
+.message.remove {
+    opacity: 0 !important;
+    transform: translateX(100%) !important; /* Slide out of view */
+}
+
+
+
 /* Styling for the switch */
 .switch {
   position: relative;
@@ -959,42 +1010,73 @@ input:checked + .slider:before {
 
 
 .service-details .service-box+.service-box {
-  
   margin-top: 30px;
 }
 
-.service-details .service-box h6 {
-  
-  font-size: 20px;
-  font-weight: 400;
 
-  color: var(--accent-color);
-  border-radius: 5px;
-  padding: 5px;
-  margin-bottom: 15px;
-}
 
-.service-details .services-list a {
-  color: color-mix(in srgb, var(--default-color), transparent 20%);
-  background-color: color-mix(in srgb, var(--default-color), transparent 96%);
-  box-shadow: 0 3px 3px -5px, 0 2px 5px #0000000f;
-  display: flex;
-  align-items: center;
-  padding: 10px 10px;
-  margin-top: 5px;
-  transition: 0.3s;
-  height: 50px;
-}
 
 .service-details .services-list a:first-child {
   margin-top: 0;
 }
 
-.service-details .services-list a i {
+.category-details {
+  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  background-color: color-mix(in srgb, var(--default-color), transparent 96%);
+  box-shadow: 0 3px 3px -5px, 0 2px 5px #0000000f;
+  height: auto; 
+  margin-top: 5px;
+  transition: 0.3s;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Mobile View Adjustments */
+@media (max-width: 768px) {
+  .category-details {
+    display: grid;
+    grid-template-columns: auto 1fr; 
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+.category-img {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  overflow: hidden;
+}
+
+.category-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.category-name {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.category-name p {
+  margin: 0;
+  font-size: 12px;
+  color: #333;
+  word-wrap: break-word; /* Ensure text wraps within the container */
+}
+
+/* .service-details .services-list a i {
   font-size: 16px;
   margin-right: 8px;
   color: var(--accent-color);
-}
+} */
 
 .service-details .services-list a.active {
   color: var(--contrast-color);
@@ -1179,7 +1261,7 @@ h6 {
 }
 
 .cart-badge{
-  font-size: 10px;
+  font-size: 8px;
 }
 
 .my-toggle-container {

@@ -1,0 +1,13 @@
+<% allTags.forEach(data => { %>
+    <a href="/user/tags/<%= data.id %>/products" class=" categoryButton" data-category="<%= data.Category_name %>" title="<%= data.details %>">
+     <div class="category-details">
+      <div class="category-img">
+        <img src="/images/price-tag.png" alt="" class="">
+      </div>
+      <div class="category-name">
+        <p> <%= data.tag_name %> </p>
+      </div>
+     </div>
+  </a>
+ 
+  <% }); %>

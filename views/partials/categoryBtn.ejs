@@ -1,0 +1,13 @@
+<% allCategory.forEach(data => { %>
+    <a href="/user/category/<%= data.Category_name %>#" class=" categoryButton" data-category="<%= data.Category_name %>" title="<%= data.details %>">
+     <div class="category-details">
+      <div class="category-img">
+        <img src="/images/stand.png" alt="" class="">
+      </div>
+      <div class="category-name">
+        <p> <%= data.Category_name %> </p>
+      </div>
+     </div>
+  </a>
+ 
+  <% }); %>

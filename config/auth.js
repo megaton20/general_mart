@@ -7,7 +7,7 @@ module.exports = {
     if (openSession) {
       return next();
     }
-    req.flash("error_msg", "Please sign in to Continue")
+    req.flash("error_msg", "Please sign in to view our store")
     res.redirect('/login')
     return
   },
@@ -20,8 +20,8 @@ module.exports = {
       return next()
     }
 
-    req.flash("warning_msg", `Already loged in!`)
-    return res.redirect('/handler')
+    req.flash("warning_msg", `You are already signed in!`)
+    return res.redirect('back')
      
     }
 };

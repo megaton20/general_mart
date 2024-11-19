@@ -545,6 +545,8 @@ exports.userShop = async (req, res) => {
 
     msg.push( { type: 'warning', text:`${req.flash('success_msg')}` })
 
+    const { rows: allTags } = await query(`SELECT * FROM tags`);
+
     return res.render("./user/userCounter", {
       pageTitle: "At the counter",
       appName: appName,
@@ -561,6 +563,7 @@ exports.userShop = async (req, res) => {
         totalPages,
       },
       recentlyViewed: req.session.recentlyViewed || [],
+      allTags
     });
   } catch (error) {
     console.error(`Error fetching user shop data: ${error.message}`);
@@ -619,10 +622,7 @@ exports.userShopQuery = async (req, res) => {
 
     let totalUnreadNotification = parseInt(result.totalunread, 10);
 
-    const { rows: wishlistItems } = await query(
-      `SELECT "product_id" FROM "wishlists" WHERE "user_id" = $1`,
-      [req.user.id]
-    );
+    const { rows: wishlistItems } = await query(`SELECT "product_id" FROM "wishlists" WHERE "user_id" = $1`,[req.user.id]);
 
     const wishlistProductIDs = wishlistItems.map((item) => item.product_id);
 
@@ -632,6 +632,8 @@ exports.userShopQuery = async (req, res) => {
         inWishlist: wishlistProductIDs.includes(item.id),
       };
     });
+
+    const { rows: allTags } = await query(`SELECT * FROM tags`);
 
     res.render("./user/userCounterQuery", {
       pageTitle: "At the counter",
@@ -647,6 +649,7 @@ exports.userShopQuery = async (req, res) => {
         totalPages,
       },
       recentlyViewed: req.session.recentlyViewed || [],
+      allTags
     });
   } catch (error) {
     console.error(`Server error: ${error.message}`);
@@ -729,6 +732,8 @@ exports.userCategoryQuery = async (req, res) => {
       };
     });
 
+    const { rows: allTags } = await query(`SELECT * FROM tags`);
+
     res.render("./user/userCategoryQuery", {
       pageTitle: "Products by Category",
       appName: appName,
@@ -744,6 +749,7 @@ exports.userCategoryQuery = async (req, res) => {
       },
       activeCategory: categoryId,categoryDetails,
       recentlyViewed: req.session.recentlyViewed || [],
+      allTags
     });
   } catch (error) {
     console.error(`Server error: ${error}`);
@@ -801,6 +807,9 @@ exports.productDetails = async (req, res) => {
     });
 
     const { rows: allCategory } = await query('SELECT * FROM "Category"');
+    const { rows: allTags } = await query(`SELECT * FROM tags`);
+
+
     return res.render("./user/product-details", {
       pageTitle: "Details",
       appName: appName,
@@ -812,6 +821,7 @@ exports.productDetails = async (req, res) => {
       firstName: req.user.First_name,
       recentlyViewed: req.session.recentlyViewed || [],
       relatedProducts,
+      allTags
     });
   } catch (error) {
     console.error(`Error fetching product details: ${error.message}`);
@@ -1165,17 +1175,14 @@ exports.allUserOrder = async (req, res) => {
 
   try {
     // Fetch the last 5 orders for the logged-in user
-    const ordersQuery = `SELECT * FROM "Orders" WHERE "customer_email" = $1 ORDER BY "id" DESC LIMIT 5`;
+    const ordersQuery = `SELECT * FROM "Orders" WHERE "customer_email" = $1 ORDER BY "id" DESC`;
     const ordersResult = await query(ordersQuery, [sessionEmail]);
     const newOrder = ordersResult.rows;
 
     // Fetch user data
     const {
       rows: [result],
-    } = await query(
-      'SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',
-      [req.user.id, false]
-    );
+    } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
 
     let totalUnreadNotification = parseInt(result.totalunread, 10);
     const { rows: allCategory } = await query('SELECT * FROM "Category"');
@@ -1586,10 +1593,7 @@ exports.wishlist = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const { rows: wishlistItems } = await query(
-      `SELECT "Products".* FROM "Products"  INNER JOIN "wishlists" ON "Products".id = wishlists.product_id WHERE wishlists.user_id = $1`,
-      [userId]
-    );
+    const { rows: wishlistItems } = await query(`SELECT "Products".* FROM "Products"  INNER JOIN "wishlists" ON "Products".id = wishlists.product_id WHERE wishlists.user_id = $1`,[userId]);
 
     if (wishlistItems.length <= 0) {
       req.flash("warning_msg", "nothing in wishlist!");
@@ -1598,13 +1602,12 @@ exports.wishlist = async (req, res) => {
 
     const {
       rows: [result],
-    } = await query(
-      'SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',
-      [req.user.id, false]
-    );
+    } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
 
     let totalUnreadNotification = parseInt(result.totalunread, 10);
     const { rows: allCategory } = await query('SELECT * FROM "Category"');
+    const { rows: allTags } = await query(`SELECT * FROM tags`);
+
 
     res.render("./user/wishlist", {
       pageTitle: "wishlist",
@@ -1614,6 +1617,7 @@ exports.wishlist = async (req, res) => {
       totalUnreadNotification,
       allCategory,
       recentlyViewed: req.session.recentlyViewed || [],
+      allTags
     });
   } catch (err) {
     console.error(err);
@@ -1628,10 +1632,7 @@ exports.addWishlist = async (req, res) => {
 
   try {
     // Check if the user already has a wishlist
-    let { rows: wishlist } = await db.query(
-      'SELECT * FROM "wishlists" WHERE "user_id" = $1 AND "product_id" = $2',
-      [userId, id]
-    );
+    let { rows: wishlist } = await db.query('SELECT * FROM "wishlists" WHERE "user_id" = $1 AND "product_id" = $2',[userId, id]);
 
     if (wishlist.length != 0) {
       if (wishlist[0].product_id == id) {
@@ -1640,12 +1641,9 @@ exports.addWishlist = async (req, res) => {
       }
     }
     // Add item to wishlist
-    await query("INSERT INTO wishlists (user_id, product_id) VALUES ($1, $2)", [
-      userId,
-      id,
-    ]);
+    await query("INSERT INTO wishlists (user_id, product_id) VALUES ($1, $2)", [userId,id,]);
 
-    req.flash("success_msg", "added to wishlist");
+    req.flash("success_msg", "item has been added to wishlist");
     return res.redirect("back");
   } catch (err) {
     console.error(err.message);
@@ -1660,21 +1658,16 @@ exports.removeWishlist = async (req, res) => {
 
   try {
     // Check if the user already has a wishlist
-    let { rows: wishlist } = await db.query(
-      'SELECT * FROM "wishlists" WHERE "user_id" = $1 AND "product_id" = $2',
-      [userId, id]
-    );
+    let { rows: wishlist } = await db.query('SELECT * FROM "wishlists" WHERE "user_id" = $1 AND "product_id" = $2',[userId, id]);
 
     if (wishlist.length == 0) {
       req.flash("error_msg", "not found");
       return res.redirect("back");
     }
     // remv item to wishlist
-    await query(
-      `DELETE FROM "wishlists" WHERE "product_id" = $1 AND "user_id" = $2`,
-      [id, userId]
-    );
+    await query(`DELETE FROM "wishlists" WHERE "product_id" = $1 AND "user_id" = $2`,[id, userId]);
 
+    req.flash("warning_msg", "Item removed from saved list");
     return res.redirect("back");
   } catch (err) {
     console.error(err.message);
@@ -1687,12 +1680,7 @@ exports.deleteAccount = async (req, res) => {
 
 
   try {
-    const {
-      rows: [result],
-    } = await query(
-      'SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',
-      [req.user.id, false]
-    );
+    const {rows: [result]} = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
 
     let totalUnreadNotification = parseInt(result.totalunread, 10);
     const { rows: allCategory } = await query('SELECT * FROM "Category"');
@@ -1745,5 +1733,103 @@ exports.shippingDetails = async (req, res) => {
     console.error(err);
     req.flash("warning_msg", "Server Error!");
     return res.redirect("back");
+  }
+};
+
+
+
+exports.tagItems = async (req, res) => {
+  const { tagId } = req.params;
+  const userFirstName = req.user.First_name;
+  const userLastName = req.user.Last_name;
+  let msg = [];
+
+  try {
+
+    const {rows: [result]} = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+
+    let totalUnreadNotification = parseInt(result.totalunread, 10);
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
+
+      const { rows: allInventory } = await query(
+          `SELECT "inventory".* 
+           FROM "inventory"
+           JOIN inventory_Tags ON "inventory".id = inventory_Tags.inventory_id
+           WHERE inventory_Tags.tag_id = $1`,
+          [tagId]
+      );
+
+
+      // Extract inventory IDs from the first query
+      const inventoryIds = allInventory.map(item => item.id);
+
+
+      let activeItemsOnShelf = [];
+      if (inventoryIds.length > 0) {
+          // Use the inventory IDs to fetch matching rows from the Products table
+
+          const { rows } = await query(
+              `SELECT * 
+               FROM "Products"
+               WHERE inventory_id = ANY($1)
+                 AND status = 'not-expired'
+                 AND activate = $2
+                 AND total_on_shelf > 0`,
+              [inventoryIds, true]
+          );
+          activeItemsOnShelf = rows;
+
+
+      } else {
+          console.log("No matching inventory items found.");
+          req.flash('error_msg', 'Error: No matching inventory items found.');
+          return res.redirect('/user');
+      }
+
+      const { rows: tagResults } = await query(`SELECT * FROM tags WHERE "id" = $1`,[tagId]);
+      const { rows: allTags } = await query(`SELECT * FROM tags`);
+
+      msg.push({ type: 'warning', text: `${allInventory.length} product item(s) in this tag` });
+      if (tagResults.length > 0) {
+          msg.push({ type: 'success', text: `${tagResults[0].tag_name}` });
+      }
+
+
+    const { rows: wishlistItems } = await query(`SELECT "product_id" FROM "wishlists" WHERE "user_id" = $1`,[req.user.id]);
+
+    const wishlistProductIDs = wishlistItems.map((item) => item.product_id);
+
+    const products = activeItemsOnShelf.map((item) => {
+      return {
+        ...item,
+        inWishlist: wishlistProductIDs.includes(item.id),
+      };
+    });
+
+    const {rows:presentCart} = await query(
+      'SELECT * FROM "Cart" WHERE "user_id" = $1',
+      [req.user.id]
+    );
+
+      
+      return res.render("./user/tagView", {
+          pageTitle: `Tags- ${tagResults[0].tag_name}`,
+          appName: appName,
+          appEmail,
+          name: `${userFirstName} ${userLastName}`,
+          totalUnreadNotification,
+          allCategory,
+          recentlyViewed: req.session.recentlyViewed || [],
+          allInventory,
+          msg,
+          products,
+          presentCart,
+          tag:tagResults[0].tag_name,
+          allTags
+      });
+  } catch (error) {
+      console.error(error);
+      req.flash('error_msg', 'Error getting tag items');
+      return res.redirect('/user');
   }
 };

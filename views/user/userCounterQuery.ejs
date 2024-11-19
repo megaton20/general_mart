@@ -14,8 +14,8 @@
           
           
           
+          <%- include('../partials/messages') %>
           <div class="container">
-        <%- include('../partials/messages') %>
 
         <div class="row">
 
@@ -23,12 +23,7 @@
 
             <div class="service-box mb-4">
               <div class="services-list">
-                <% allCategory.forEach(data => { %>
-                  <a href="/user/category/<%= data.Category_name %>#" class=" categoryButton" data-category="<%= data.Category_name %>">
-                  <i class="fa fa-list"></i><span> <%= data.Category_name %></span>
-                </a>
-               
-                <% }); %>
+                <%- include('../partials/categoryBtn') %>
               </div>
             </div><!-- End Services List -->
 
@@ -95,6 +90,25 @@
     </section><!-- /Service Details Section -->
 
   <br>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div id="service-details" class="service-details section">
+          <div class="service-box mb-4">
+            <div class="services-list">
+              <%- include('../partials/tagBtn') %>
+            </div>
+          </div>
+        </div>
+        
+
+      </div>
+      <div class="col-md-6">
+
+
+      </div>
+    </div>
+   </div>
   <br>
   <%- include('../partials/recentlyViewed') %>
   <br>

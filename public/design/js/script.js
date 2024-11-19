@@ -77,3 +77,52 @@ window.addEventListener('scroll', function() {
   window.addEventListener('load', function() {
       initializeCarousel();
   });
+
+
+
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const emailList = document.querySelector(".email-list");
+    const emailItems = document.querySelectorAll(".email-item");
+    let currentIndex = 0;
+
+    function updateFocus() {
+      // Reset opacity and blur on all items
+      emailItems.forEach(item => item.classList.remove("focused"));
+
+      // Add focus to the current item
+      emailItems[currentIndex].classList.add("focused");
+
+      // Move the list up to show the current item in focus
+      const offset = -currentIndex * 50; // Adjust based on item height
+      emailList.style.transform = `translateY(${offset}px)`;
+
+      // Update the index, looping back to start
+      currentIndex = (currentIndex + 1) % emailItems.length;
+    }
+
+    // Initialize the first focus
+    updateFocus();
+
+    // Set interval to change focus every 4 seconds
+    setInterval(updateFocus, 4000);
+  });
+
+
+
+  document.querySelectorAll('.message').forEach((message, index) => {
+    // Delay each message based on its index
+    setTimeout(() => {
+        message.classList.add('show'); // Add 'show' class for animation
+
+        // Remove the message after a few seconds
+        setTimeout(() => {
+            message.classList.add('remove'); // Add 'remove' class for sliding out
+            // Wait for the animation to finish before hiding the element
+            setTimeout(() => {
+                message.style.display = 'none'; // Completely hide the message after animation
+            }, 500); // Match the duration of the 'remove' animation (500ms)
+        }, 3000); // Display duration for each message 
+    }, index * 1000); // Stagger messages by 1 second
+});

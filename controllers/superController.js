@@ -43,6 +43,7 @@ exports.getAdminWelcomePage = async (req, res) => {
   const nameA = req.user.First_name;
   const nameB = req.user.Last_name;
 
+  let msg = []
   try {
     // Fetch canceled orders
     const canceledOrdersResult = await query(`SELECT * FROM "Orders" WHERE "status" = 'canceled'`);
@@ -87,36 +88,33 @@ exports.getAdminWelcomePage = async (req, res) => {
     );
     const counterSaleData = counterSaleDataResults.rows;
 
-    const shippedDataResult = await query(
-      `SELECT * FROM "Orders" WHERE "status" = 'shipped'`
-    );
+    const shippedDataResult = await query(`SELECT * FROM "Orders" WHERE "status" = 'shipped'`);
     const shippedData = shippedDataResult.rows;
-
-    const orderDataResult = await query(
-      `SELECT * FROM "Orders" WHERE "status" = 'complete'`
-    );
+    if (shippedData.length >0) {
+    msg.push( { type: 'warning', text:`${shippedData.length} On route` })
+    }
+    const orderDataResult = await query(`SELECT * FROM "Orders" WHERE "status" = 'complete'`);
     const orderData = orderDataResult.rows;
     const completedOrders = orderData.length;
 
-    const pendingOrderDataResult = await query(
-      `SELECT * FROM "Orders" WHERE "status" IN ('incomplete', 'waiting')`
-    );
+    const pendingOrderDataResult = await query(`SELECT * FROM "Orders" WHERE "status" IN ('incomplete', 'waiting')`);
     const pendingOrderData = pendingOrderDataResult.rows;
     const pendingOrders = pendingOrderData.length;
+    if (pendingOrders >0) {
+      msg.push( { type: 'error', text:`${pendingOrders} order(s) waiting for your attention` })
+    }
 
-    const unresolvedSalesResult = await query(
-      `SELECT * FROM "Sales" WHERE "status" = 'unresolved'`
-    );
+    const unresolvedSalesResult = await query(`SELECT * FROM "Sales" WHERE "status" = 'unresolved'`);
     const unresolvedSales = unresolvedSalesResult.rows;
+    if (unresolvedSales.length >0) {
+      msg.push( { type: 'error', text:`${unresolvedSales.length} waiting to be resolved!` })
+      
+    }
 
-    const allReturnsOrdersResult = await query(
-      `SELECT * FROM "Order_Products" WHERE "status" = 'returned'`
-    );
+    const allReturnsOrdersResult = await query(`SELECT * FROM "Order_Products" WHERE "status" = 'returned'`);
     const allReturnsOrders = allReturnsOrdersResult.rows;
 
-    const allSalesResult = await query(
-      `SELECT * FROM "Sales" WHERE "status" = 'resolved'`
-    );
+    const allSalesResult = await query(`SELECT * FROM "Sales" WHERE "status" = 'resolved'`);
     const allSales = allSalesResult.rows;
     const totalNumberOfSales = allSales.length;
 
@@ -124,10 +122,7 @@ exports.getAdminWelcomePage = async (req, res) => {
       sales.created_date = formatDate(sales.created_date);
     });
 
-    const totalVerifiedUsersResult = await query(
-      `SELECT * FROM "Users" WHERE "userRole" = $1 ORDER BY "spending" DESC`,
-      ["user"]
-    );
+    const totalVerifiedUsersResult = await query(`SELECT * FROM "Users" WHERE "userRole" = $1 ORDER BY "spending" DESC`,["user"]);
     const totalVerifiedUsers = totalVerifiedUsersResult.rows;
 
     totalVerifiedUsers.forEach(resultz => {
@@ -162,6 +157,7 @@ exports.getAdminWelcomePage = async (req, res) => {
       completedOrders,
       totalCanceledOrder,
       unresolvedSales,
+      msg
     });
 
   } catch (error) {
@@ -3770,8 +3766,17 @@ exports.confirmOrder = async (req, res) => {
     
     const saleID = thatOrder[0].sale_id;
     const customerId = thatOrder[0].customer_id;
+    // fetchhh userr rank
+    const {rows:thatUserWithOrder} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [customerId]);
+    if (thatUserWithOrder.length === 0) {
+      req.flash("error_msg", "No Customer found with that order");
+      return res.redirect("/super");
+    }
+
     const totalSpentOnThisOrder = parseFloat(thatOrder[0].total_amount) + parseFloat(thatOrder[0].shipping_fee);
-    const cashBack = calculateCashback(parseFloat(thatOrder[0].total_amount)); // Assuming this is a function you have defined
+    const rank = thatUserWithOrder[0].rank
+
+    const cashBack = calculateCashback(parseFloat(thatOrder[0].total_amount),rank); 
     
     // Fetch order products
     const {rows:orderResults} = await query(`SELECT * FROM "Order_Products" WHERE "sale_id" = $1`, [saleID]);
@@ -3788,7 +3793,9 @@ exports.confirmOrder = async (req, res) => {
       
       const currentShelfQuantity = shelfResults[0].total_on_shelf;
       if (currentShelfQuantity <= 0) {
-        throw new Error(`Product "${productBought.product_name}" is out of stock`);
+        throw new Error(`Product "${productBought.name}" is out of stock`);
+
+        // set product to refund
       }
     });
     
@@ -3805,31 +3812,8 @@ exports.confirmOrder = async (req, res) => {
       
       // Insert into Sales table
       await query(`
-      INSERT INTO "Sales" (
-        "store_name", 
-        "store_id", 
-        "sale_type", 
-        "sale_id", 
-        "created_date", 
-        "Discount_applied", 
-        "attendant_id", 
-        "total_amount", 
-        "Payment_type", 
-        "shipping_fee", 
-        "status"
-      ) VALUES (
-        $1, 
-        $2, 
-        $3, 
-        $4, 
-        $5, 
-        $6, 
-        $7, 
-        $8, 
-        $9, 
-        $10, 
-        $11
-      )
+      INSERT INTO "Sales" ("store_name", "store_id", "sale_type", "sale_id", "created_date", "Discount_applied", "attendant_id", "total_amount", "Payment_type", "shipping_fee", "status") 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
     `, [
       null, 
       null, 

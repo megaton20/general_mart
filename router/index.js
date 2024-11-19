@@ -174,8 +174,11 @@ router.get('/', async (req, res) => {
       });
     }
 
+
     const dailyQuote = quoteService.getCurrentDailyQuote()
     const recentCustomers = getRecentCustomers()
+
+    const { rows: allTags } = await query(`SELECT * FROM tags`);
     // Render the landing page
     res.render('landing', {
       pageTitle: `Welcome to ${appName}`,
@@ -190,6 +193,7 @@ router.get('/', async (req, res) => {
       dailyQuote,showModal:false,
       presentCart,
       recentlyViewed: req.session.recentlyViewed || [],
+      allTags
       
     });
 
@@ -492,7 +496,7 @@ router.get('/handler', (req, res)=>{
 
           // admins  ends here
         } else if(role == "user"){
-
+          req.flash("success_msg", `welcome back ${user}`);
          return res.redirect("/user");
         }else if(role == "driver"){
 
@@ -900,18 +904,27 @@ router.post('/webhook', async (req, res) => {
       );
 
       const shippingFee = await calculateShippingFee(userData[0].lga); 
-      const cashbackEarned = calculateCashback(totalSubtotal); 
+
+      // fetchhh userr rank
+      const {rows:thatUserWithOrder} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [userId]);
+      if (thatUserWithOrder.length === 0) {
+        req.flash("error_msg", "No Users found with that order");
+        return res.redirect("/user");
+      }
+
+      
+      const cashbackEarned = calculateCashback(totalSubtotal,thatUserWithOrder[0].rank); 
 
           // Insert data into Orders table
-    const insertOrderQuery = `
-    INSERT INTO "Orders" (
-        "customer_email", "customer_id", "customer_phone", "customer_address",
-        "customer_state", "customer_lga", "delivery_pin", "pick_up_store_id",
-        "pick_up_store_name", "sale_id", "transaction_id", "Delivery",
-        "status", "Payment_type", "created_date", "total_amount", "shipping_fee"
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
-`;
-const orderValues = [
+        const insertOrderQuery = `
+            INSERT INTO "Orders" (
+                "customer_email", "customer_id", "customer_phone", "customer_address",
+                "customer_state", "customer_lga", "delivery_pin", "pick_up_store_id",
+                "pick_up_store_name", "sale_id", "transaction_id", "Delivery",
+                "status", "Payment_type", "created_date", "total_amount", "shipping_fee"
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+        `;
+          const orderValues = [
           email,
           userId,
           userData[0].Phone,
@@ -953,22 +966,22 @@ const orderValues = [
     await Promise.all(orderProductPromises);
 
 
-// Generate the itemsList with unique CID values for images
-const itemsList = cartItems
-  .map(
-    (item, index) => `
-      <div style="display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; padding: 10px; margin-bottom: 10px; background-color: #f9f9f9;">
-      <img style="max-height: 150px; max-width: 150px; margin-right: 10px;" src="cid:itemImage${index}" class="card-img-top rounded-4" alt="${item.product_name}">
-      <div>
-        <p><strong>Item:</strong> ${item.product_name}</p>
-        <p><strong>Quantity:</strong> ${item.quantity}</p>
-        <p><strong>Price:</strong> NGN ${item.price_per_item}</p>
-        <p><strong>Subtotal:</strong> NGN ${item.subtotal}</p>
-      </div>
-    </div>
-    `
-  )
-  .join("");
+        // Generate the itemsList with unique CID values for images
+        const itemsList = cartItems
+          .map(
+            (item, index) => `
+              <div style="display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; padding: 10px; margin-bottom: 10px; background-color: #f9f9f9;">
+              <img style="max-height: 150px; max-width: 150px; margin-right: 10px;" src="cid:itemImage${index}" class="card-img-top rounded-4" alt="${item.product_name}">
+              <div>
+                <p><strong>Item:</strong> ${item.product_name}</p>
+                <p><strong>Quantity:</strong> ${item.quantity}</p>
+                <p><strong>Price:</strong> NGN ${item.price_per_item}</p>
+                <p><strong>Subtotal:</strong> NGN ${item.subtotal}</p>
+              </div>
+            </div>
+            `
+          )
+          .join("");
 
         // Prepare the list of attachments with unique CID values
       const attachments = cartItems.map((item, index) => ({

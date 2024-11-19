@@ -1,123 +1,42 @@
-<style>
-  #message-container {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 300px;
-      z-index: 9999;
-      padding: 10px;
-  }
-  
-  .message {
-      margin: 10px 0;
-      padding: 15px;
-      border-radius: 5px;
-      color: #fff;
-      opacity: 0;
-      transform: translateX(100%); /* Start off-screen */
-      transition: transform 0.5s ease, opacity 0.5s ease; /* For smooth animations */
-  }
-  
-  /* Error messages */
-  .message.error {
-      background-color: #ff4d4f;
-      font-size: 1rem;
-      width: 100%;
-  }
-  
-  /* Warning messages */
-  .message.warning {
-      background-color: #ffa500;
-      font-size: 1rem;
-  }
-  
-  /* Success messages */
-  .message.success {
-      background-color: #4caf50;
-      font-size: 1rem;
-  }
-  
-  /* Slide-in effect */
-  .message.show {
-      opacity: 1;
-      transform: translateX(0); /* Slide into view */
-  }
-  
-  /* Slide-out effect */
-  .message.remove {
-      opacity: 0 !important;
-      transform: translateX(100%) !important; /* Slide out of view */
-  }
-  
-  </style>
-
-
 
 
 
 <div id="message-container">
-<% if(locals.errors){ %> <% errors.forEach(function(error) { %>
-
-
-  <div class="message warning  fade show" role="message">
-   <%= error.msg %>  
-
-  </div>
-
-<% }); %> <% } %><% if(success_msg != ''){ %>
-
-
-<div class="message success  fade show" role="message">
-   <%= success_msg %> 
-</div>
-
-<% } %> <% if(error_msg != ''){ %>
-
-<div class="message danger  fade show" role="message">
-  <%= error_msg %>
-</div>
-
-
-<% } %> <% if(error != ''){ %>
-
-<div class="message danger  fade show" role="message">
-  <%= error %> 
-</div>
-
-
-<% } %>  <% if(warning_msg != ''){ %>
-
-  <div class="message warning  fade show" role="message">
-     <%= warning_msg %>
-  </div>
-
-
-
-<% } %>
-
-</div>
-
-
-
-
-<script>
-document.querySelectorAll('.message').forEach((message, index) => {
-    // Delay each message based on its index
-    setTimeout(() => {
-        message.classList.add('show'); // Add 'show' class for animation
-
-        // Remove the message after a few seconds
-        setTimeout(() => {
-            message.classList.add('remove'); // Add 'remove' class for sliding out
-            // Wait for the animation to finish before hiding the element
-            setTimeout(() => {
-                message.style.display = 'none'; // Completely hide the message after animation
-            }, 500); // Match the duration of the 'remove' animation (500ms)
-        }, 3000); // Display duration for each message 
-    }, index * 1000); // Stagger messages by 1 second
-});
-
-    </script>
+    <% if(locals.errors && locals.errors.length > 0){ %>
+        <% locals.errors.forEach(function(error) { %>
+            <div class="message warning show" role="alert">
+                <i class="fas fa-times-circle"></i>  <%= error.msg %>  
+            </div>
+        <% }); %>
+    <% } %>
     
+    <% if(success_msg && success_msg != ''){ %>
+        <div class="message success show" role="alert">
+            <i class="fas fa-check-circle"></i> <%= success_msg %> 
+        </div>
+    <% } %>
+
+    <% if(error_msg && error_msg != ''){ %>
+        <div class="message error show" role="alert">
+            <i class="fas fa-times-circle"></i> <%= error_msg %>
+        </div>
+    <% } %>
+
+    <% if(error && error != ''){ %>
+        <div class="message error show" role="alert">
+            <i class="fas fa-times-circle"></i> <%= error %> 
+        </div>
+    <% } %>
+
+    <% if(warning_msg && warning_msg != ''){ %>
+        <div class="message warning show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> <%= warning_msg %>
+        </div>
+    <% } %>
+</div>
+
+
+
+
 
 

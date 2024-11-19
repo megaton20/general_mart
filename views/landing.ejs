@@ -11,12 +11,12 @@
 
 </style>
 <%- include('./partials/openNav') %>
+<%- include ('./partials/messages') %>
 
 <main class="main">
 
-  <div class="container">
-    <%- include ('./partials/messages') %>
-  </div>
+
+
 
 
 
@@ -71,14 +71,7 @@
         <div id="service-details" class="service-details section">
           <div class="service-box mb-4">
             <div class="services-list">
-              <% allCategory.forEach(data=> { %>
-                <a href="/user/category/<%= data.Category_name %>#" class="categoryButton"
-                  data-category="<%= data.Category_name %>" 
-                  title="<%= data.details %>">
-                 <i class="fa fa-list"></i>
-                 <span><%= data.Category_name %></span>
-               </a>
-                <% }); %>
+              <%- include('./partials/categoryBtn') %>
             </div>
           </div>
         </div>
@@ -138,7 +131,27 @@
           <% }) %>
             <% } %>
 
-            <%- include ('./partials/quote') %>
+
+         <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              <div id="service-details" class="service-details section">
+                <div class="service-box mb-4">
+                  <div class="services-list">
+                    <%- include('./partials/tagBtn') %>
+                  </div>
+                </div>
+              </div>
+              
+
+            </div>
+            <div class="col-md-6">
+              <%- include ('./partials/quote') %>
+
+            </div>
+          </div>
+         </div>
+
 
               <!-- Advertisement or other content -->
               <!-- <div class="advertisement">

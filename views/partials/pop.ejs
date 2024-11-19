@@ -1,57 +1,4 @@
 
-<style>
-#message-container {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 300px;
-    z-index: 9999;
-    padding: 10px;
-}
-
-.message {
-    margin: 10px 0;
-    padding: 15px;
-    border-radius: 5px;
-    color: #fff;
-    opacity: 0;
-    transform: translateX(100%); /* Start off-screen */
-    transition: transform 0.5s ease, opacity 0.5s ease; /* For smooth animations */
-}
-
-/* Error messages */
-.message.error {
-    background-color: #ff4d4f;
-    font-size: 1rem;
-    width: 100%;
-}
-
-/* Warning messages */
-.message.warning {
-    background-color: #ffa500;
-    font-size: 1rem;
-}
-
-/* Success messages */
-.message.success {
-    background-color: #4caf50;
-    font-size: 1rem;
-}
-
-/* Slide-in effect */
-.message.show {
-    opacity: 1;
-    transform: translateX(0); /* Slide into view */
-}
-
-/* Slide-out effect */
-.message.remove {
-    opacity: 0;
-    transform: translateX(100%); /* Slide out of view */
-}
-
-</style>
-
 <div id="message-container">
     <% if (typeof msg !== 'undefined' && msg.length > 0) { %>
         <% msg.forEach(function (message) { %>
@@ -64,7 +11,7 @@
 
 
 
-
+<!-- 
 <script>
 const messages = document.querySelectorAll('.message');
 messages.forEach((message, index) => {
@@ -78,9 +25,9 @@ messages.forEach((message, index) => {
             setTimeout(() => {
                 message.remove(); // Completely remove the message after animation
             }, 500); // Match the duration of the 'remove' animation
-        }, 2000); // Display duration for each message
-    }, index * 1000); // Stagger messages by 1 second
+        }, 4000); // Display duration for each message
+    }, index * 4000); // Stagger messages by 1 second
 });
 
-  </script>
+  </script> -->
   

@@ -2,10 +2,10 @@
 <%- include('./partials/navbar') %>
 
 
+  <%- include('../partials/messages') %>
 <main class="main">
       <div class="container">
     <%- include('./partials/ads') %>
-      <div class="container"><%- include('../partials/messages') %></div>
       <a class="back-btn" href="/user/search"><i class="bi bi-arrow-left-circle"></i> Back</a>
         
         <% if (products.length > 0) { %>

@@ -348,7 +348,6 @@ exports.loginHandler = async (req, res, next) => {
         }
 
 
-        req.flash('success_msg', `Welcome ${user.First_name}`);
         return res.redirect('/handler');
       });
     } catch (error) {

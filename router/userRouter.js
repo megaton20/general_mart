@@ -76,4 +76,8 @@ router.get('/wishlist/:id/remove',ensureAuthenticated,isUser,userController.remo
 router.get('/delete-account/',ensureAuthenticated,isUser,userController.deleteAccount)
 router.get('/user-details/',ensureAuthenticated,isUser,userController.shippingDetails)
 
+
+
+router.get('/tags/:tagId/products', ensureAuthenticated,isUser,userController.tagItems);
+
 module.exports = router;

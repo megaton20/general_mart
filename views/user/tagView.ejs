@@ -3,55 +3,43 @@
 
 
   <%- include('./partials/navbar') %>
-  <%- include('../partials/messages') %>
-  
-      <div class="page-header">
-        <div class=" text-center ">
-            <h5><%= products.length > 0 ? products[0].category : categoryDetails[0].Category_name %></h5>
-              <p class=""> <%= products.length > 0 ? categoryDetails[0].details : categoryDetails[0].details %></p>
-              <br>
-              <a class="text-light mt-4 my-btn-outline" href="/user">All Categories</a>
-        </div>
+  <div class="page-header">
+    <div class=" text-center ">
+        <h5 class="text-uppercase"><%= tag %></h5>
     </div>
-
-  
-      <div class="container"><%- include('../partials/messages') %></div>
-
-      <!-- Page adverts -->
+</div>
 
 
-    <section id="service-details" class="service-details section">
-      <div class="container">
+<%- include('../partials/messages') %>
+        
+        <section id="service-details" class="service-details section">
+          <div class="container">
         <div class="row">
-
-          <div class="col-lg-4 fixed-col">
+          <div class="col-lg-4 fixed-col"  >
 
             <div class="service-box mb-4">
               <div class="services-list">
-
                 <%- include('../partials/categoryBtn') %>
               </div>
-            </div><!-- End Services List -->
+            </div>
+            
 
           </div>
-
-
           <div class="col-lg-8 ml-0" id="product-section">
             <div class="service-box scrolling-col">
-              
-         
+
+          
               <% if (products.length === 0) { %>
                 <div class="no-items text-center">
-                  <p>No items available in this shelf </p>
-                  <img src="/images/shelves.png" alt="" class="img-fluid" style="max-width: 40%;">
+                  <p>No items available</p>
                 </div>
                 <% } else { %>
                   <div class="store-grid">
                   <% products.forEach(data => { %>
-                    <div class="product-item">
+                    <div class="product-item my-box-shadow" >
                       <div class="card-image">
                         <a href="/user/product-details/<%= data.id %>">
-                          <img src="/uploads/<%= data.image %>" alt="<%= data.ProductName %>">
+                          <img src="/uploads/<%= data.image %>" class="img-fluid" alt="<%= data.ProductName %>">
                         </a>
                       </div>
                       <div class="wishlist">
@@ -77,34 +65,23 @@
                         <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>" onclick="handleButtonClick(this)">Add to cart</button>
                       </div>
                     </div>
-                  <% }) %>
+                  <% }); %>
                 <% } %>
               </div>
-              
-              <nav class="mt-4">
-                <ul class="pagination">
-                  <% if (pagination.page > 1) { %>
-                    <a href="/user/category/<%= activeCategory %>?page=<%= pagination.page - 1 %>#product-section" class="my-btn">&laquo;</a>
-                  <% } %>
-                  <% if (pagination.page < pagination.totalPages) { %>
-                    <a href="/user/category/<%= activeCategory %>?page=<%= pagination.page + 1 %>#product-section" class="my-btn ">&raquo;</a>
-                  <% } %>
-                </ul>
-              </nav>
+          
+
+         
             </div>
           </div>
           
-
       </div>
-
-    </section>
-
-
+      </div>
+    </section><!-- /Service Details Section -->
+    
   <br>
   <br>
-
+  <br>
   <%- include('../partials/recentlyViewed') %>
-  <br>
   <br>
 
   <div class="container">
@@ -132,12 +109,6 @@
    <br>
 
 
-
-
-
-
-
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
 
 let formattedPrices = document.querySelectorAll('.item-price');
@@ -200,7 +171,7 @@ let formattedPrices = document.querySelectorAll('.item-price');
     if (cartItem) {
       if (itemButton) {
         itemButton.outerHTML = `
-        <div style="width:100%; height:30px "  class="m-0 btn-group p-0 my-box-shadow border-1" role="group" data-id="${itemId}">
+          <div style="width:100%; height:30px "  class="m-0 btn-group p-0 my-box-shadow border-1" role="group" data-id="${itemId}">
             <button class="btn p-0" style="border:1px solid #333; color:var(--accent-color)" onclick="removeFromCart(${itemId})">-</button>
             <button class="btn btn-secondary p-1" disabled style="background-color:var(--accent-color)" ">${cartItem.quantity}</button>
             <button class="btn p-0" style="border:1px solid #333; color:var(--accent-color)" onclick="increaseQuantity(${itemId})">+</button>
@@ -211,7 +182,7 @@ let formattedPrices = document.querySelectorAll('.item-price');
       const parentDiv = document.querySelector(`.btn-group[data-id='${itemId}']`);
       if (parentDiv) {
         parentDiv.outerHTML = `
-        <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="${itemId}" data-name="${itemName}" data-price="${itemPrice}" data-max="${itemMax}" data-image="${itemImage}" onclick="handleButtonClick(this)">Add to cart</button> 
+      <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="${itemId}" data-name="${itemName}" data-price="${itemPrice}" data-max="${itemMax}" data-image="${itemImage}" onclick="handleButtonClick(this)">Add to cart</button> 
         `;
       }
     }
@@ -266,6 +237,7 @@ let formattedPrices = document.querySelectorAll('.item-price');
         data: JSON.stringify({ cart: cart }),
         contentType: 'application/json',
         success: function(response) {
+          location.reload();
         },
         error: function(error) {
           console.error('Error updating cart:', error);
@@ -294,6 +266,7 @@ let formattedPrices = document.querySelectorAll('.item-price');
         data: JSON.stringify({ cart: cart }),
         contentType: 'application/json',
         success: function(response) {
+          location.reload();
         },
         error: function(error) {
           console.log(error);
@@ -314,8 +287,7 @@ let formattedPrices = document.querySelectorAll('.item-price');
     addToCart(item);
   }
 
-  </script> 
+</script> 
   
-
 
 
