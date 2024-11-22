@@ -79,5 +79,6 @@ router.get('/user-details/',ensureAuthenticated,isUser,userController.shippingDe
 
 
 router.get('/tags/:tagId/products', ensureAuthenticated,isUser,userController.tagItems);
+router.get('/combo/products', ensureAuthenticated,isUser,userController.comboItems);
 
 module.exports = router;

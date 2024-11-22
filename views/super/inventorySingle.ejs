@@ -35,6 +35,19 @@
                                 <button class="btn btn-outline-danger mr-2 mb-1 mt-4"><i class="fas fa-trash"></i></button>
                             </form>
 
+                            <div class="tag-toggle">
+                                <label for="tag-<%= allInventory.id %>" class="switch">
+                                    <!-- Dynamically set the checked state based on inventory.us_combo -->
+                                    <input type="checkbox" 
+                                           id="tag-<%= allInventory.id %>" 
+                                           name="tag-<%= allInventory.id %>"  
+                                           <% if (allInventory.is_combo) { %> checked <% } %> 
+                                           onchange="toggleCombo(<%= allInventory.id %>)">
+                                    <span class="slider round"></span>
+                                </label>
+                                <span class="tag-name">combo item</span>
+                            </div>
+
                             <hr>
 
                             <div class="row">
@@ -233,3 +246,33 @@
         });
     }
 </script>
+
+<script>
+    // Function to toggle the tag association
+    function toggleCombo(productId) {
+        fetch(`/super/products/${productId}/combo/toggle`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                //'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // Ensure CSRF token is included
+            },
+            body: JSON.stringify({
+                productId: productId,
+            })
+        })
+        .then(response=> {
+            if (response.ok) {
+                
+                window.location.reload(); 
+            } else {
+                alert('Error toggling combo'); 
+            }
+        })
+        .catch(error => {
+            console.error('Request failed:', error);
+            alert('An error occurred while toggling the combo.');
+        });
+    }
+</script>
+
+

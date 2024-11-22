@@ -34,12 +34,17 @@
           <% }) %>
           </div>
       <% } else { %>
-        <p >0 items found!</p>
+        <div class="no-items text-center">
+          <p>No items fuond </p>
+          <img src="/images/empty.png" alt="" class="img-fluid" style="max-width: 40%;">
+        </div>
 
       <% } %>
        
     
-    <%- include('./partials/info') %>
+<br>
+<br>
+<br>
 </main>
 
 <script>

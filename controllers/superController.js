@@ -1854,7 +1854,7 @@ exports.invoice = async (req, res) => {
 // post req
 
 exports.createNewCategory = async (req, res) => {
-  const { Category_name, Desc } = req.body;
+  const { Category_name, Desc,image_name } = req.body;
 
   try {
     // Check if the category already exists
@@ -1862,7 +1862,7 @@ exports.createNewCategory = async (req, res) => {
 
     if (checkResult.rows.length <= 0) {
       // Insert new category
-      await query(`INSERT INTO "Category" ( "Category_name", "details") VALUES ($1, $2)`, [Category_name, Desc]);
+      await query(`INSERT INTO "Category" ( "Category_name", "details", "image") VALUES ($1, $2,$3)`, [Category_name, Desc,image_name]);
       req.flash("success_msg", `"${Category_name}" added successfully!`);
       return res.redirect("/super/all-categories");
     }
@@ -2435,15 +2435,17 @@ exports.updatePrice = async (req, res) => {
       `SELECT * FROM "Products" WHERE "inventory_id" = $1`,
       [editID]
     );
-    
     // Ensure there's a product result to avoid errors
     if (productResult.length > 0) {
       const oldPrice = productResult[0].UnitPrice;
-    
-      // Update the price in the Products table
+      
+      const percentageChange = ((price - oldPrice) / oldPrice) * 100;
+      
+  
+
       await query(
-        `UPDATE "Products" SET "UnitPrice" = $1, "old_price" = $2 WHERE "inventory_id" = $3`,
-        [price, oldPrice, editID]
+        `UPDATE "Products" SET "UnitPrice" = $1, "old_price" = $2, percentage = $3 WHERE "inventory_id" = $4`,
+        [price, oldPrice,percentageChange, editID]
       );
 
       // check in cart
@@ -3003,7 +3005,7 @@ exports.editNewSupplier = async (req, res) => {
 
 exports.editNewCategory = async (req, res) => {
   const editID = req.params.id;
-  const { Category_name, Desc } = req.body;
+  const { Category_name, Desc,image_name } = req.body;
 
   if (!(Category_name && Desc)) {
     req.flash("error_msg", `Enter all fields before submitting`);
@@ -3029,8 +3031,8 @@ exports.editNewCategory = async (req, res) => {
 
     // Update category
     await query(
-      `UPDATE "Category" SET "Category_name" = $1, "details" = $2 WHERE "CategoryID" = $3`,
-      [Category_name, Desc, editID]
+      `UPDATE "Category" SET "Category_name" = $1, "details" = $2, "image" = $3 WHERE "CategoryID" = $4`,
+      [Category_name, Desc,image_name, editID]
     );
 
     // Update inventory if category is in use

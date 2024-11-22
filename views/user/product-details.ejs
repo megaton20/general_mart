@@ -7,7 +7,6 @@
 
     
   <div class="container">
-    <a class="back-btn" href="/user"><i class="bi bi-arrow-left-circle"></i> Back</a>
 
     <div class="row">
         <div class="col-md-8 mb-5">
@@ -61,8 +60,7 @@
                           <% } %>
                       </p>
                       
-                      <div class="p-1 d-flex justify-content-center align-items-center">
-                        
+                      <div class="p-1 d-flex justify-content-center align-items-center">                   
                         <button  class="my-btn add-to-cart m-0 p-1 w-100" data-id="<%= itemData[0].id %>" data-name="<%= itemData[0].ProductName %>" data-price="<%= itemData[0].UnitPrice %>" data-max="<%= itemData[0].total_on_shelf %>" data-image="<%= itemData[0].image %>" onclick="handleButtonClick(this)">Add to cart  </button> 
                       </div>
         
@@ -73,6 +71,13 @@
 
         
         <div class="col-md-4  ">
+
+          <div class="mt-4 mb-4">
+            <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user/fetchCart/"> Proceed To Checkout</a>
+          <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user"> Back To store</a>
+          </div>
+
+
           <h6 class="text-uppercase">Product Details</h6>
               <p class="small fst-italic">
                 <% if (itemData[0].details) { %>
@@ -107,10 +112,7 @@
             <p>no reviews available</p>
 
 
-            <div class="mt-4">
-              <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user/fetchCart/"> Proceed To Checkout</a>
-            <a class="mt-2 my-btn-outline "  style="width: 100%; display: block;" href="/user"> Back To store</a>
-            </div>
+        
 
         </div>
     </div>
@@ -131,24 +133,9 @@
   <br>
   <br>
 
-
   <div class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <div id="service-details" class="service-details section">
-          <div class="service-box mb-4">
-            <div class="services-list">
-              <%- include('../partials/tagBtn') %>
-            </div>
-          </div>
-        </div>
-        
-
-      </div>
-      <div class="col-md-6">
-
-
-      </div>
+    <div class="d-flex justify-content-center">
+      <%- include('../partials/tagBtn') %>
     </div>
    </div>
 

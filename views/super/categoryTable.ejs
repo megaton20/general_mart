@@ -33,6 +33,7 @@
                                                 <thead>
                                                     <tr>
 
+                                                      <th>image Name</th>
                                                       <th>Category Name</th>
                                                       <th>Discription</th>
                                                       <th>
@@ -47,6 +48,7 @@
             
                                                     <% allCategory.forEach(function(data) {%>
                                                         <tr>
+                                                            <td><%= data['image'] %></td>
                                                             <td><%= data['Category_name'] %></td>
                                                             <td><%= data['details'] %> </td>
                                                             <td>

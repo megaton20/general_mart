@@ -28,13 +28,19 @@
                     <!-- DataTales Example -->
                     <div class=" mb-4">
 
-                                <form action="/super/edit-category/<%= categoryData[0].CategoryID %>" method="post" class="form  container">
+                                <form action="/super/edit-category/<%= categoryData[0].CategoryID %>" method="post" >
                                    <div class="row ">
 
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="">Enter Category Name</label>
                                             <input type="text" name="Category_name" class="form-control" value="<%= categoryData[0].Category_name %>" >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for=""> Category image Name</label>
+                                            <input type="text" name="image_name" class="form-control" value="<%= categoryData[0].image %>">
                                         </div>
                                     </div>
 

@@ -2,7 +2,7 @@
     <a href="/user/category/<%= data.Category_name %>#" class=" categoryButton" data-category="<%= data.Category_name %>" title="<%= data.details %>">
      <div class="category-details">
       <div class="category-img">
-        <img src="/images/stand.png" alt="" class="">
+        <img src="/images/cat/<%= data.image %>" alt="" class="">
       </div>
       <div class="category-name">
         <p> <%= data.Category_name %> </p>
@@ -11,3 +11,14 @@
   </a>
  
   <% }); %>
+
+  <a href="/user/combo/products" class=" categoryButton" data-category="" title="combo items">
+    <div class="category-details">
+     <div class="category-img">
+       <img src="/images/cat/special-offer.png" alt="special-offer" class="">
+     </div>
+     <div class="category-name">
+       <p> Combo items </p>
+     </div>
+    </div>
+ </a>

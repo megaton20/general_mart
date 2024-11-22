@@ -1782,8 +1782,7 @@ exports.tagItems = async (req, res) => {
 
       } else {
           console.log("No matching inventory items found.");
-          req.flash('error_msg', 'Error: No matching inventory items found.');
-          return res.redirect('/user');
+          msg.push({ type: 'warning', text: `No matching inventory items found.` });
       }
 
       const { rows: tagResults } = await query(`SELECT * FROM tags WHERE "id" = $1`,[tagId]);
@@ -1825,6 +1824,92 @@ exports.tagItems = async (req, res) => {
           products,
           presentCart,
           tag:tagResults[0].tag_name,
+          allTags
+      });
+  } catch (error) {
+      console.error(error);
+      req.flash('error_msg', 'Error getting tag items');
+      return res.redirect('/user');
+  }
+};
+
+
+exports.comboItems = async (req, res) => {
+  const userFirstName = req.user.First_name;
+  const userLastName = req.user.Last_name;
+  let msg = [];
+
+  try {
+
+    const {rows: [result]} = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+
+    let totalUnreadNotification = parseInt(result.totalunread, 10);
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
+
+      const { rows: allInventory } = await query(
+          `SELECT * 
+           FROM "inventory"
+           WHERE is_combo = $1`,
+          [true]
+      );
+
+
+      // Extract inventory IDs from the first query
+      const inventoryIds = allInventory.map(item => item.id);
+
+
+      let activeItemsOnShelf = [];
+      if (inventoryIds.length > 0) {
+          // Use the inventory IDs to fetch matching rows from the Products table
+
+          const { rows } = await query(
+              `SELECT * 
+               FROM "Products"
+               WHERE inventory_id = ANY($1)
+                 AND status = 'not-expired'
+                 AND activate = $2
+                 AND total_on_shelf > 0`,
+              [inventoryIds, true]
+          );
+          activeItemsOnShelf = rows;
+
+
+      } else {
+          console.log("No matching inventory items found.");
+          msg.push({ type: 'warning', text: `No matching inventory items found.` });
+      }
+
+      const { rows: allTags } = await query(`SELECT * FROM tags`);
+
+    const { rows: wishlistItems } = await query(`SELECT "product_id" FROM "wishlists" WHERE "user_id" = $1`,[req.user.id]);
+
+    const wishlistProductIDs = wishlistItems.map((item) => item.product_id);
+
+    const products = activeItemsOnShelf.map((item) => {
+      return {
+        ...item,
+        inWishlist: wishlistProductIDs.includes(item.id),
+      };
+    });
+
+    const {rows:presentCart} = await query(
+      'SELECT * FROM "Cart" WHERE "user_id" = $1',
+      [req.user.id]
+    );
+
+      
+      return res.render("./user/comboView", {
+          pageTitle: `combo items`,
+          appName: appName,
+          appEmail,
+          name: `${userFirstName} ${userLastName}`,
+          totalUnreadNotification,
+          allCategory,
+          recentlyViewed: req.session.recentlyViewed || [],
+          allInventory,
+          msg,
+          products,
+          presentCart,
           allTags
       });
   } catch (error) {

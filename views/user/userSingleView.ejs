@@ -1,11 +1,34 @@
 <style>
   #map {
-    height: 500px; /* Adjust height as needed */
+    height: 500px; 
     width: 100%;
     border: 1px solid #333;
     border-radius: 5px;
   }
+  .rank-details {
+  display: flex;
+  align-items: center; 
+  gap: 10px; 
+}
 
+.rank-img {
+  flex-shrink: 0; 
+  width: 30px; 
+  height: 30px; 
+  overflow: hidden; 
+}
+
+.rank-img img {
+  margin-top: 5px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+}
+
+.rank-name {
+  font-size: 1rem; 
+  font-weight: bold; 
+}
 
 
 </style>
@@ -46,7 +69,16 @@
                     <div id="progress-percent" class="progress-percent"></div>
                   </div>
                   <!-- center  of the  -->
-                  <div class="rank-name"><%= userData.rank %> </div>
+                  <div class="d-flex align-items-center justify-content-center">
+                    <div class="rank-details">
+                      <% if (['diamond', 'gold', 'silver', 'elite', 'bronze'].includes(userData.rank.toLowerCase())) { %>
+                        <div class="rank-img">
+                          <img src="/images/rank/<%= userData.rank.toLowerCase() %>.png" alt="<%= userData.rank %>">
+                        </div>
+                      <% } %>
+                      <div class="rank-name"><%= userData.rank %></div>
+                    </div>
+                  </div>
                 </div>
               </div>
         </div>

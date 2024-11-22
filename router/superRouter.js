@@ -213,8 +213,7 @@ router.post('/products/:productId/tags/:tagId/toggle', ensureAuthenticated, isSu
             req.flash("success_msg", `Tag added to inventory`);
         }
 
-        // Redirect back to the product page or appropriate view
-        res.redirect('back');
+      
     } catch (error) {
         console.error(error);
         res.status(500).send('Error toggling tag association');
@@ -379,5 +378,40 @@ router.get('/tags/:tagId/products', ensureAuthenticated,isSuper, async (req, res
         return res.redirect('/super/tags')
     }
 });
+
+
+
+
+router.post('/products/:productId/combo/toggle', ensureAuthenticated, isSuper, async (req, res) => {
+    const { productId } = req.params;
+
+    try {
+
+    // Check the current combo state for the product
+        const { rows: existing } = await query('SELECT "is_combo" FROM inventory WHERE "id" = $1', [productId]);
+
+        if (existing.length > 0) {
+            const currentState = existing[0].is_combo;
+
+            if (currentState) {
+                // If the current state is true, set it to false (toggle off)
+                await query('UPDATE inventory SET "is_combo" = false WHERE "id" = $1', [productId]);
+            } else {
+                // If the current state is false, set it to true (toggle on)
+                await query('UPDATE inventory SET "is_combo" = true WHERE "id" = $1', [productId]);
+            }
+        } else {
+            return res.status(404).send('inventory not found');
+        }
+
+        res.status(200)
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error toggling tag association');
+    }
+});
+
+
+
 
 module.exports = router;
