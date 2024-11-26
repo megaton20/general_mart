@@ -137,6 +137,25 @@ exports.getAdminWelcomePage = async (req, res) => {
       }).replace(',', '');
     });
 
+
+    const { rows: topSelling } = await query(`
+    SELECT 
+      p.id AS product_id,
+      p."ProductName",
+      p.details,
+      p."UnitPrice",
+      p."inventory_id",
+      p."image",
+      SUM(po.quantity) AS total_sold
+    FROM "Order_Products" po
+    JOIN "Products" p ON po.product_id = p.id
+    WHERE po.status NOT IN ('canceled', 'pending')
+    GROUP BY p.id, p."ProductName", p.details, p."UnitPrice", p."inventory_id", p."image"
+    ORDER BY total_sold DESC
+    LIMIT 10;
+  `);
+
+
     res.render("./super/superHome", {
       pageTitle: "Welcome",
       name: `${nameA} ${nameB}`,
@@ -157,7 +176,8 @@ exports.getAdminWelcomePage = async (req, res) => {
       completedOrders,
       totalCanceledOrder,
       unresolvedSales,
-      msg
+      msg,
+      topSelling
     });
 
   } catch (error) {

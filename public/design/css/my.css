@@ -1986,7 +1986,7 @@ a {
 }
 
 .top-cat {
-  background-color: var(--accent-color);
+  background-color: var(--background-color);
   text-transform: uppercase;
   height: 30px;
   display: inline-block;
@@ -1995,12 +1995,12 @@ a {
 }
 
 .top-cat p {
-  color: var(--contrast-color);
+  color: var(--accent-color);
   font-size: 13px;
 }
 
 .top-cat a {
-  color: var(--contrast-color);
+  color: var(--accent-color);
   font-size: 13px;
 }
 

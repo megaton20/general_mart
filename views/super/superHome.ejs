@@ -220,66 +220,7 @@
         </div>
 
         <div class="row">
-          <!-- Area Chart -->
-          <div class="col-xl-9 col-lg-7">
-            <div class="mb-4">
-              <!-- Card Header - Dropdown -->
 
-              <div class="card">
-                <div class="card-header">Top 50 Customers</div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table " id="dataTable" width="100%" cellspacing="0">
-                      <thead>
-                        <tr>
-                          <th>Name</th>
-                          <th>email</th>
-                          <th>phone</th>
-                          <th>Spending</th>
-                          <th>Last seen</th>
-
-                        </tr>
-                      </thead>
-
-                      <tbody>
-
-                        <tr>
-
-
-                          <% totalVerifiedUsers.forEach(function(data) {%>
-
-                        <tr>
-                          <td>
-                            <%= data['First_name'] %>
-                              <%= data['Last_name'] %>
-                          </td>
-                          <td>
-                            <%= data['email'] %>
-                          </td>
-                          <td>
-                            <%= data['Phone'] %>
-                          </td>
-                          <td><span class="item-price">
-                              <%= data['spending'] %>
-                            </span></td>
-                          <td>
-                            <%= data['previous_visit'] %>
-                          </td>
-                        </tr>
-
-                        <% }) %>
-
-
-                          </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Pie Chart -->
           <div class="col-xl-3 col-lg-5">
             <div class=" card mb-4">
 
@@ -303,13 +244,103 @@
               </div>
             </div>
           </div>
+
+          <div class="col-xl-3 col-lg-5">
+            <div class=" card mb-4">
+
+              <div class="card-header">Top selling products</div>
+              <!-- Card Body -->
+
+              <div class="card-body">
+
+                
+                <table class="table  table-responsive">
+                    <thead class="table-dark">
+                      <tr>
+                        <th>#</th>
+                        <th>image</th>
+                        <th>Product Name</th>
+                        <th> Sold</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% topSelling.forEach((product, index) => { %>
+                        <tr>
+                          <td><%= index + 1 %></td>
+                          <td>
+                            <a href="/super/inventory/<%= product.inventory_id %>">
+                            <img class="img-thumbnail" style="max-width: 40px;"
+                              src="/uploads/<%= product.image %>" alt="image">
+                            </a>
+                            </td>
+                          <td><%= product.ProductName %></td>
+                          <td><%= product.total_sold %></td>
+                        </tr>
+                      <% }) %>
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+          </div>
+          <!-- Area Chart -->
+          <div class="col-xl-6 col-lg-6">
+            <div class="mb-4">
+              <!-- Card Header - Dropdown -->
+
+              <div class="card">
+                <div class="card-header">Top 50 Customers</div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table " id="dataTable" width="100%" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Spending</th>
+                          <th>Last seen</th>
+
+                        </tr>
+                      </thead>
+
+                      <tbody>
+
+                        <tr>
+
+
+                          <% totalVerifiedUsers.forEach(function(data) {%>
+
+                        <tr>
+                          <td>
+                            <%= data['First_name'] %>
+                              <%= data['Last_name'] %>
+                          </td>
+                          <td><span class="item-price">
+                              <%= data['spending'] %>
+                            </span></td>
+                          <td>
+                            <%= data['previous_visit'] %>
+                          </td>
+                        </tr>
+
+                        <% }) %>
+
+
+                          </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pie Chart -->
+      
         </div>
 
 
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
       // Display current date
       document.getElementById('currentDate').innerText = new Date().toLocaleDateString();

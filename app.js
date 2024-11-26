@@ -15,7 +15,7 @@ const { createClient } = require('redis');
 
 // Create and connect Redis client only in production
 let redisClient = null;
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'productionq') {
   redisClient = createClient();
   redisClient.on('error', (err) => console.log('Redis Client Error', err));
 

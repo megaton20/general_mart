@@ -37,13 +37,11 @@
                               <th>Id</th>
                               <th>Picture</th>
                               <th>Product name</th>
-                              <th>Brand Name</th>
                               <th>Category</th>
                               <th>Unit Price</th>
                               <th>Shelf Item</th>
                               <th>Activated</th>
                               <th>Actions</th>
-                              <th>on showcase</th>
                               <th>showcase</th>
                             </tr>
                           </thead>
@@ -67,9 +65,7 @@
                                 <td>
                                   <%= data['ProductName'] %>
                                 </td>
-                                <td>
-                                  <%= data['Brand_name'] %>
-                                </td>
+                              
                                 <td>
                                   <%= data['category'] %>
                                 </td>
@@ -112,25 +108,21 @@
                                   </div>
                                 </td>
 
-                                <td>
-                                  <span class="badge <%= data['showcase'] === 'yes' ? 'badge-success' : 'badge-danger' %>">
-                                    <%= data['showcase'] %>
-                                  </span>
-                                </td>
+                              
                                 <td>
 
                                   <% if ( data.showcase=="yes" ) { %>
 
                                     <form action="/super/showcase-off/<%= data['id'] %>" method="POST">
                                       <input type="hidden" name="_method" value="PUT" />
-                                      <button class="btn btn-success">off</button>
+                                      <button class="btn btn-success">turn off</button>
                                     </form>
 
                                     <% } else { %>
 
                                       <form action="/super/showcase-on/<%= data['id'] %>" method="POST">
                                         <input type="hidden" name="_method" value="PUT" />
-                                        <button class="btn btn-success">on</button>
+                                        <button class="btn btn-danger"> turn on</button>
                                       </form>
 
                                       <% } %>
