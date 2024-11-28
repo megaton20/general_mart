@@ -1,17 +1,81 @@
-<nav class="navbar navbar-dark bg-dark">
-    <div class="container-fluid">
-        <button class="navbar-toggler ml-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNav"
-        aria-controls="offcanvasNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" href="/super"><%- include ('./appLogo') %></a>
+<nav id="navbar" class="navbar navbar-expand-lg navbar-light fixed-top">
+	<div class="container">
+		<!-- Navbar Toggler and Logo -->
+		<div class="navbar-toggler-logo">
+			<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<a class="navbar-brand" href="/super"><%- include ('./appLogo') %></a>
+		</div>
 
-        <span class="text-light ms-auto mr-3" id="currentDate"></span> 
-        <span class="mr-2 d-none d-lg-inline text-gray-600 small float-sm-end">
-            <%= day %>
-        </span>
-     
+<!-- Navbar items for smaller screens (mobile only) -->
+        <div class="d-block d-lg-none">
+            <div class="navbar-icons-home d-flex justify-content-around">
+
+            <a href="/super/all-inventory" class="nav-link user-icon mx-3">
+                <i class="fas fa-boxes icon-size"></i>
+            </a>
+            <a href="/super/all-products" class="nav-link user-icon mx-3">
+                <i class="fas fa-box-open icon-size"></i>
+            </a>
+            <a href="/super/new-orders" class="nav-link user-icon mx-3">
+                <i class="fas fa-cart-arrow-down icon-size"></i>
+            </a>
+            <a href="/super/all-categories" class="nav-link user-icon mx-3">
+                <i class="fas fa-list-ul icon-size"></i>
+            </a>
+            <a href="/super/all-sales" class="nav-link user-icon mx-3">
+                <i class="fas fa-chart-line icon-size"></i>
+            </a>
+
+            </div>
+        </div>
+  
+<!-- Navbar items visible on larger screens -->
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+    <li class="nav-item">
+      <a class="nav-link d-flex align-items-center" href="/super">
+        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link d-flex align-items-center" href="/super/all-inventory">
+        <i class="fas fa-boxes me-2"></i>Inventory
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link d-flex align-items-center" href="/super/all-products">
+        <i class="fas fa-box-open me-2"></i>Shelf Item
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link d-flex align-items-center" href="/super/new-orders">
+        <i class="fas fa-cart-arrow-down me-2"></i>New Orders
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link d-flex align-items-center" href="/super/all-categories">
+        <i class="fas fa-list-ul me-2"></i>Categories
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link d-flex align-items-center" href="/super/all-sales">
+        <i class="fas fa-chart-line me-2"></i>Sales
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link d-flex align-items-center text-danger" href="/logout">
+        <i class="fas fa-sign-out-alt me-2"></i>Log Out
+      </a>
+    </li>
+  </ul>
+</div>
 
 
-    </div>
+	</div>
 </nav>
+
+<br>
+<br>
+<br>

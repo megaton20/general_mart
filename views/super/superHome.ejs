@@ -12,7 +12,8 @@
         
         <div class="  p-2 mb-4">
           <div class="row">
-            <div class="col-xl-2 col-md-6 mb-3">
+            <!-- Total Sales -->
+            <div class="col-xl-2 col-md-6 col-6 mb-3">
               <div class="card border-left-primary h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -21,7 +22,7 @@
                         Total Sales
                       </div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        <%= totalNumberOfSales%>
+                        <%= totalNumberOfSales %>
                       </div>
                     </div>
                     <div class="col-auto">
@@ -31,8 +32,9 @@
                 </div>
               </div>
             </div>
-
-            <div class="col-xl-2 col-md-6 mb-3">
+          
+            <!-- Total Users -->
+            <div class="col-xl-2 col-md-6 col-6 mb-3">
               <div class="card border-left-secondary h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -51,8 +53,9 @@
                 </div>
               </div>
             </div>
-
-            <div class="col-xl-2 col-md-6 mb-3">
+          
+            <!-- Home Sales -->
+            <div class="col-xl-2 col-md-6 col-6 mb-3">
               <div class="card border-left-secondary h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -71,9 +74,9 @@
                 </div>
               </div>
             </div>
-
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-2 col-md-6 mb-3">
+          
+            <!-- Total Earnings -->
+            <div class="col-xl-2 col-md-6 col-6 mb-3">
               <div class="card border-left-success h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -82,7 +85,7 @@
                         Total Earnings
                       </div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        <%= formatedProfit%>
+                        <%= formatedProfit %>
                       </div>
                     </div>
                     <div class="col-auto">
@@ -92,9 +95,9 @@
                 </div>
               </div>
             </div>
-
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-2 col-md-6 mb-3">
+          
+            <!-- Shipping Earnings -->
+            <div class="col-xl-2 col-md-6 col-6 mb-3">
               <div class="card border-left-success h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -103,7 +106,7 @@
                         Shipping Earnings
                       </div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        <%= formatedProfitForShipping%>
+                        <%= formatedProfitForShipping %>
                       </div>
                     </div>
                     <div class="col-auto">
@@ -113,8 +116,9 @@
                 </div>
               </div>
             </div>
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-2 col-md-6 mb-3">
+          
+            <!-- Processing Orders -->
+            <div class="col-xl-2 col-md-6 col-6 mb-3">
               <div class="card border-left-danger h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -123,7 +127,7 @@
                         Processing Orders
                       </div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        <%= pendingOrders%>
+                        <%= pendingOrders %>
                       </div>
                     </div>
                     <div class="col-auto">
@@ -133,14 +137,15 @@
                 </div>
               </div>
             </div>
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-2 col-md-6 mb-3">
+          
+            <!-- On Route -->
+            <div class="col-xl-2 col-md-6 col-6 mb-3">
               <div class="card border-left-warning h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                        on route
+                        On Route
                       </div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
                         <%= shippedData.length %>
@@ -153,35 +158,36 @@
                 </div>
               </div>
             </div>
-
-            <!-- Pending Requests Card Example -->
-            <div class="col-xl-2 col-md-6 mb-3">
+          
+            <!-- Orders Completed -->
+            <div class="col-xl-2 col-md-6 col-6 mb-3">
               <div class="card border-left-success h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                        Orders completed
+                        Orders Completed
                       </div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
                         <%= completedOrders %>
                       </div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-fw fa-truck fa-2x text-gray-300"></i>
+                      <i class="fas fa-truck fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div class="col-xl-2 col-md-6 mb-3">
+          
+            <!-- Canceled Orders -->
+            <div class="col-xl-2 col-md-6 col-6 mb-3">
               <div class="card border-left-danger h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                        Canceled order
+                        Canceled Orders
                       </div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
                         <%= totalCanceledOrder.length %>
@@ -194,15 +200,15 @@
                 </div>
               </div>
             </div>
-
-
-            <div class="col-xl-2 col-md-6 mb-3">
+          
+            <!-- Unresolved Sales -->
+            <div class="col-xl-2 col-md-6 col-6 mb-3">
               <div class="card border-left-danger h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                        unresolved sales
+                        Unresolved Sales
                       </div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
                         <%= unresolvedSales.length %>
@@ -216,36 +222,31 @@
               </div>
             </div>
           </div>
+          
 
         </div>
 
         <div class="row">
 
-          <div class="col-xl-3 col-lg-5">
-            <div class=" card mb-4">
+          <div class="col-xl-3 col-lg-4">
+            <div class=" container-fluid mb-4">
 
-              <div class="card-header">Actions</div>
-              <!-- Card Body -->
-
-              <div class="card-body">
+             
                 <a class="btn btn-outline-secondary mb-1 mr-2" href="/super/all-logistic-company">Logistics Shifts</a>
                 <a class="btn btn-outline-secondary mb-1 mr-2" href="/super/all-external-riders">External Logistics </a>
                 <a class="btn btn-outline-primary mb-1 mr-2" href="/super/all-brands">Brands</a>
                 <a class="btn btn-outline-primary mb-1 mr-2" href="/super/all-ranks">Ranks</a>
                 <a class="btn btn-outline-primary mb-1 mr-2" href="/super/tags">product tags</a>
-                <a class="btn btn-outline-primary mb-1 mr-2" href="/super/new-orders">New Orders</a>
                 <a class="btn btn-outline-primary mb-1 mr-2" href="/super/all-regions">All Regions</a>
                 <a class="btn btn-outline-secondary mb-1 mr-2" href="/super/sales">Resolve Sales</a>
-                <a class="btn btn-outline-secondary mb-1 mr-2" href="super/all-products">Shelf items</a>
                 <a class="btn btn-outline-success mb-1 mr-2" href="/super/create-sales">Shopping</a>
                 <a class="btn btn-outline-success mb-1 mr-2" href="/super/all-supplier">Suppliers</a>
                 <a class="btn btn-outline-primary mb-1 mr-2" href="/super/all-canceled-order">canceled table</a>
 
-              </div>
             </div>
           </div>
 
-          <div class="col-xl-3 col-lg-5">
+          <div class="col-xl-3 col-lg-6">
             <div class=" card mb-4">
 
               <div class="card-header">Top selling products</div>
@@ -253,9 +254,8 @@
 
               <div class="card-body">
 
-                
                 <table class="table  table-responsive">
-                    <thead class="table-dark">
+                    <thead >
                       <tr>
                         <th>#</th>
                         <th>image</th>

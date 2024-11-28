@@ -30,7 +30,7 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                           <thead>
                             <tr>
-                              <th>ID</th>
+
                               <th>Picture</th>
                               <th>Product Name</th>
                               <th>Brand Name</th>
@@ -47,9 +47,7 @@
                           <tbody>
                             <% allInventory.forEach(function(data) { %>
                               <tr>
-                                <td>
-                                  <%= data['id'] %>
-                                </td>
+
                                 <td><img class="img-thumbnail" style="max-width: 40px;"
                                     src="/uploads/<%= data['image'] %>" alt="image"></td>
                                 <td>

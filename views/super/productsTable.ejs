@@ -34,7 +34,7 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                           <thead>
                             <tr>
-                              <th>Id</th>
+
                               <th>Picture</th>
                               <th>Product name</th>
                               <th>Category</th>
@@ -52,10 +52,7 @@
 
                             <% allProducts.forEach(function(data) {%>
                               <tr>
-                                <td>
-                                  <%= data['id'] %>
-                                </a>
-                              </td>
+                            
                               <td>
                                   <a href="/super/inventory/<%= data['inventory_id'] %>">
                                   <img class="img-thumbnail" style="max-width: 40px;"

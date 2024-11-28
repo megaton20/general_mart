@@ -1396,6 +1396,16 @@ h6 {
   margin: 0;
 }
 
+.my-btn-primary{
+  color: var(--contrast-color);
+  background: var(--secondary-color) !important;
+  font-size: 14px;
+  padding: 7px 15px !important;
+  border-radius: 5px;
+  transition: 0.3s;
+  margin: 0 !important;
+}
+
 .my-btn-outline {
   color: var(--heading-color);
   border: 1px solid var(--accent-color);
