@@ -1,0 +1,39 @@
+
+
+<%- include('./partials/navbar') %>
+<%- include ('../partials/messages') %>
+
+	
+<main class="main">
+	<div class="container ">
+	
+	
+			   <a class="back-btn"  href="/user/profile"><i class="bi bi-arrow-left-circle"></i> Back</a>
+	
+			   <br>
+			   <br>
+			   <br>
+			<div class="row justify-content-center mt-auto">
+				<div class="col-lg-6 col-xl-6 col-xxl-4 ">
+	
+							
+								<form action="/user/redeem-code" method="post">
+									<div class="form-group">
+										<input type="phone" class="form-control mt-2 bg-transparent text-dark" placeholder="Enter code" name="code">
+									</div>
+	
+									<div class=" mt-2">
+										<input name="_method" type="submit" value="Redeem code" class="m-0 my-btn " style="width: 100%;"/>
+									  </div>
+								</form>
+				</div>
+			</div>
+	
+	<br>
+	<br>
+	</div>
+	</main>
+
+
+
+	

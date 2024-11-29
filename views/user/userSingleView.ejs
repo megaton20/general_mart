@@ -45,7 +45,31 @@
         <div class="dash-jumbotron-wrap">
             <div class="dashboard-info">
               <div class="info-item">
-                <p class="user-name"><%= userData.First_name %> <%= userData.Last_name %></p>
+                <% if (userData.is_exclusive) { %>
+
+                                    <!-- Checking gender -->
+                      <% if (userData.gender === "male") { %>
+                        <p class="user-name">
+                          <img src="/images/vip-male.png" style="max-width: 20px;" alt="male icon"> 
+                          <%= userData.First_name %> <%= userData.Last_name %>
+                        </p>
+                      <% } else if (userData.gender === "female") { %>
+                        <p class="user-name">
+                          <img src="/images/vip-female.png" style="max-width: 20px;" alt="female icon"> 
+                          <%= userData.First_name %> <%= userData.Last_name %>
+                        </p>
+                      <% } else { %>
+                        <!-- Default case for no gender specified -->
+                        <p class="user-name">
+                          <%= userData.First_name %> <%= userData.Last_name %>
+                        </p>
+                      <% } %>
+
+                  <!-- checking gender endes -->
+                <% } else { %>
+
+                  <p class="user-name"><%= userData.First_name %> <%= userData.Last_name %></p>
+                <% } %>
               </div>
             </div>
 
@@ -98,8 +122,19 @@
                 <i class="fas fa-user"></i> Account info
               </a>
 
-            </div>
+              <div class="contianer">
+                <% if (!userData.is_exclusive) { %>
+                  <a class="profile-nav-item btn" href="/user/exclusive-code-page">
+                    <i class="fas fa-user"></i> Exclusive services
+                  </a>
+                  <% } else { %>
+                    <a class="profile-nav-item btn" href="/user/">
+                      <i class="fas fa-user"></i> Exclusive services
+                    </a>
 
+                <% } %>
+              </div>
+            </div>
 
         
 
@@ -126,12 +161,11 @@
             </div>
           </div>
 
-          <%- include ('../partials/quote') %>
 
          <!-- invite -->
             <div class=" invite-card mt-3">
                 <div class="invite-link">
-                  <input id="link" class="form-control" value="https://<%= referLink %>" readonly />
+                  <input id="link" class="form-control" value="<%= referLink %>" readonly />
                   <br>
                   <span id="copy-text" class="copy-icon" onclick="copyToClipboard()"> <i class="bi bi-clipboard"></i></span>
                 </div>

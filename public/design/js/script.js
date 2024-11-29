@@ -111,18 +111,29 @@ window.addEventListener('scroll', function() {
 
 
 
-  document.querySelectorAll('.message').forEach((message, index) => {
-    // Delay each message based on its index
-    setTimeout(() => {
-        message.classList.add('show'); // Add 'show' class for animation
+// Slide-in, slide-out, and auto-remove logic
+document.querySelectorAll('.message').forEach((message, index) => {
+  // Add slide-in effect
+  setTimeout(() => {
+      message.classList.add('show'); // Add 'show' class for animation
 
-        // Remove the message after a few seconds
-        setTimeout(() => {
-            message.classList.add('remove'); // Add 'remove' class for sliding out
-            // Wait for the animation to finish before hiding the element
-            setTimeout(() => {
-                message.style.display = 'none'; // Completely hide the message after animation
-            }, 500); // Match the duration of the 'remove' animation (500ms)
-        }, 3000); // Display duration for each message 
-    }, index * 1000); // Stagger messages by 1 second
+      // Auto-remove after 3 seconds
+      setTimeout(() => {
+          message.classList.add('remove'); // Slide out
+          setTimeout(() => {
+              message.style.display = 'none'; // Hide the element
+          }, 500); // Match remove animation duration
+      }, 3000);
+  }, index * 1000); // Stagger animations
+
+  // Close button functionality
+  const closeButton = message.querySelector('.close-btn');
+  if (closeButton) {
+      closeButton.addEventListener('click', () => {
+          message.classList.add('remove'); // Slide out immediately
+          setTimeout(() => {
+              message.style.display = 'none'; // Hide element
+          }, 500); // Match remove animation duration
+      });
+  }
 });

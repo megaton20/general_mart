@@ -93,10 +93,13 @@ router.get('/auth/google/callback',
 router.get('/', async (req, res) => {
   let userActive = false;
   let presentCart
+  let exclusiveUser = false
   if (req.user) {
     userActive = true;
 
     const { rows: result } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+    const {rows:userData} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [req.user.id]);
+    exclusiveUser = userData[0].is_exclusive
     presentCart = result
 
   }
@@ -179,6 +182,7 @@ router.get('/', async (req, res) => {
     const recentCustomers = getRecentCustomers()
 
     const { rows: allTags } = await query(`SELECT * FROM tags`);
+    
     // Render the landing page
     res.render('landing', {
       pageTitle: `Welcome to ${appName}`,
@@ -193,7 +197,8 @@ router.get('/', async (req, res) => {
       dailyQuote,showModal:false,
       presentCart,
       recentlyViewed: req.session.recentlyViewed || [],
-      allTags
+      allTags,
+      userData:exclusiveUser
       
     });
 

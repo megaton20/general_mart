@@ -81,4 +81,11 @@ router.get('/user-details/',ensureAuthenticated,isUser,userController.shippingDe
 router.get('/tags/:tagId/products', ensureAuthenticated,isUser,userController.tagItems);
 router.get('/combo/products', ensureAuthenticated,isUser,userController.comboItems);
 
+
+
+router.get('/exclusive-code-page', ensureAuthenticated,isUser,userController.excluiveCodePage);
+router.get('/redeem-code', ensureAuthenticated,isUser,userController.excluiveCodeForm);
+router.post('/redeem-code', ensureAuthenticated,isUser,userController.excluiveCodeSubmit);
+
+
 module.exports = router;

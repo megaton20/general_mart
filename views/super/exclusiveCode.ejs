@@ -1,0 +1,112 @@
+<!-- Sidebar -->
+<%- include ('../partials/topbar') %>
+    <%- include ('../partials/superSidebar') %>
+        <!-- End of Sidebar -->
+        <%- include ('../partials/messages') %>
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-2 text-gray-800">exclusive code Tables </h1>
+
+                <div class="contianer mb-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form action="/super/generate-codes" method="post">
+                                <input type="number" placeholder="numer of codes to generate" name="quantity"
+                                    class="form-control">
+                                <button class="btn-outline-primary btn mt-2" type="submit">Generate new batch</button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                <% if(exclusiveCode.length <=0){ %>
+                    <div class="card-body">
+                        <h1>No exclusive Code Record Found !</h1>
+                    </div>
+                    <% } else{ %>
+
+                        <button id="exportCodesButton" class="btn btn-primary">Export Codes</button>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>sn</th>
+                                        <th>Code</th>
+                                        <th>Is paid</th>
+                                        <th>Printed</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <% exclusiveCode.forEach(function(data, index) {%>
+                                        <tr>
+                                            <td>
+                                                <%= index +1 %>
+                                            </td>
+                                            <td>
+                                                <%=data['code'] %>
+                                            </td>
+                                            <td>
+                                                <%=data['is_paid'] %>
+                                            </td>
+                                            <td>
+                                                <%=data['is_exported'] %>
+                                            </td>
+                                        </tr>
+
+                                        <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } %>
+
+
+
+            </div>
+            <!-- /.container-fluid -->
+
+            <!-- Footer -->
+            <%- include ('../partials/footer') %>
+                <!-- End of Footer -->
+
+
+
+
+                
+
+
+<script>
+  document.getElementById('exportCodesButton').addEventListener('click', async () => {
+    try {
+      const response = await fetch('/super/export-codes', {
+        method: 'GET',
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'generated_codes.csv';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+        // Refresh the page after download
+        window.location.reload();
+      } else {
+        alert('Failed to export codes.');
+      }
+    } catch (error) {
+      console.error('Error downloading codes:', error);
+    }
+  });
+</script>

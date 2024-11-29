@@ -413,5 +413,9 @@ router.post('/products/:productId/combo/toggle', ensureAuthenticated, isSuper, a
 
 
 
+router.get("/all-exclusive-codes", ensureAuthenticated,isSuper, superController.exclusiveCodes);
+router.post("/generate-codes", ensureAuthenticated,isSuper, superController.generateExclusiveCodes);
+router.get("/export-codes", ensureAuthenticated,isSuper, superController.exportCodes);
+
 
 module.exports = router;

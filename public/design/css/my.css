@@ -9,7 +9,7 @@
   --background-color: #d6dada;
   --default-color: #48473d;
   --heading-color: #3e5055;
-  --accent-color: #408d42;
+  --accent-color: #23743d;
   --secondary-color: #ef922f;
 
   /* Contrast Color - This is a color used for text when the background color is one of the heading, accent, or default colors. Its purpose is to ensure proper contrast and readability when placed over these more dominant colors. */
@@ -81,6 +81,22 @@ a {
 .message.remove {
   opacity: 0 !important;
   transform: translateX(100%) !important;
+}
+
+/* Close Button */
+.close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  float: right; /* Align button to the right */
+  margin-left: 10px;
+}
+
+.close-btn:hover {
+  color: #000; /* Darken color on hover */
 }
 
 
@@ -392,8 +408,7 @@ input:checked+.slider:before {
   padding: 10px 15px;
   border-radius: 5px;
   font-size: 1rem;
-  color: var(--contrast-color);
-  background-color: var(--accent-color);
+  color: var(--accent-color) !important;
   text-decoration: none;
   transition: background-color 0.3s ease;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -405,7 +420,8 @@ input:checked+.slider:before {
 
 
 .profile-nav-item:hover {
-  background-color: var(--hover-color);
+  background-color: var(--secondary-color) !important;
+  color: var(--contrast-color) !important;
 }
 
 /* Responsive Sizing */

@@ -71,7 +71,7 @@ exports.profilePage = async (req, res) => {
 
     const referalCode = userData.referral_code || "21xdrd";
 
-    const referLink = `${process.env.LIVE_DIRR || process.env.NGROK_URL ||  `http://localhost:${process.env.PORT}`}/register/?ref=${referalCode}`;
+    const referLink = `https://${process.env.LIVE_DIRR || process.env.NGROK_URL ||  `http://localhost:${process.env.PORT}`}/register/?ref=${referalCode}`;
     const usersQuery = `
     SELECT u.id, u.cashback, u."First_name", u."Last_name", r.has_earned
     FROM "Users" u
@@ -498,6 +498,7 @@ exports.updateUserInfo = async (req, res) => {
 exports.userShop = async (req, res) => {
   const userFirstName = req.user.First_name;
   const userLastName = req.user.Last_name;
+  const userId = req.user.id
   let msg = []
   const limit = 24;
   const page = parseInt(req.query.page) || 1;
@@ -508,7 +509,14 @@ exports.userShop = async (req, res) => {
   const queryParams = ["yes", 0, "not-expired", false, limit, offset];
 
   try {
+
+
     const { rows: showcase } = await query(showcaseQuery, queryParams);
+
+
+    const {rows:userData} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [userId]);
+
+
 
     const moreItemsAvailable = showcase.length === limit;
 
@@ -520,19 +528,11 @@ exports.userShop = async (req, res) => {
 
     const { rows: allCategory } = await query('SELECT * FROM "Category"');
 
-    const {
-      rows: [result],
-    } = await query(
-      'SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',
-      [req.user.id, false]
-    );
+    const {rows: [result]} = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
 
     let totalUnreadNotification = parseInt(result.totalunread, 10);
 
-    const { rows: wishlistItems } = await query(
-      `SELECT "product_id" FROM "wishlists" WHERE "user_id" = $1`,
-      [req.user.id]
-    );
+    const { rows: wishlistItems } = await query(`SELECT "product_id" FROM "wishlists" WHERE "user_id" = $1`,[req.user.id]);
 
     const wishlistProductIDs = wishlistItems.map((item) => item.product_id);
 
@@ -563,7 +563,8 @@ exports.userShop = async (req, res) => {
         totalPages,
       },
       recentlyViewed: req.session.recentlyViewed || [],
-      allTags
+      allTags,
+      userData:userData[0]
     });
   } catch (error) {
     console.error(`Error fetching user shop data: ${error.message}`);
@@ -635,6 +636,10 @@ exports.userShopQuery = async (req, res) => {
 
     const { rows: allTags } = await query(`SELECT * FROM tags`);
 
+    const {rows:userData} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [req.user.id]);
+
+
+
     res.render("./user/userCounterQuery", {
       pageTitle: "At the counter",
       appName: appName,
@@ -649,7 +654,8 @@ exports.userShopQuery = async (req, res) => {
         totalPages,
       },
       recentlyViewed: req.session.recentlyViewed || [],
-      allTags
+      allTags,
+      userData:userData[0]
     });
   } catch (error) {
     console.error(`Server error: ${error.message}`);
@@ -733,6 +739,7 @@ exports.userCategoryQuery = async (req, res) => {
     });
 
     const { rows: allTags } = await query(`SELECT * FROM tags`);
+    const {rows:userData} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [req.user.id]);
 
     res.render("./user/userCategoryQuery", {
       pageTitle: "Products by Category",
@@ -749,7 +756,8 @@ exports.userCategoryQuery = async (req, res) => {
       },
       activeCategory: categoryId,categoryDetails,
       recentlyViewed: req.session.recentlyViewed || [],
-      allTags
+      allTags,
+      userData:userData[0]
     });
   } catch (error) {
     console.error(`Server error: ${error}`);
@@ -764,10 +772,6 @@ exports.userCategoryQuery = async (req, res) => {
 exports.productDetails = async (req, res) => {
   const itemId = req.params.id;
 
-
-
-  
-  
   try {
     const { rows: presentCart } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
       
@@ -808,6 +812,7 @@ exports.productDetails = async (req, res) => {
 
     const { rows: allCategory } = await query('SELECT * FROM "Category"');
     const { rows: allTags } = await query(`SELECT * FROM tags`);
+    const {rows:userData} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [req.user.id]);
 
 
     return res.render("./user/product-details", {
@@ -821,7 +826,8 @@ exports.productDetails = async (req, res) => {
       firstName: req.user.First_name,
       recentlyViewed: req.session.recentlyViewed || [],
       relatedProducts,
-      allTags
+      allTags,
+      userData:userData[0]
     });
   } catch (error) {
     console.error(`Error fetching product details: ${error.message}`);
@@ -904,6 +910,7 @@ exports.searchPost = async (req, res) => {
 
     let totalUnreadNotification = parseInt(result.totalunread, 10);
     const { rows: allCategory } = await query('SELECT * FROM "Category"');
+    const {rows:userData} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [req.user.id]);
     // Render the search results page
     return res.render("./user/userSearchResults", {
       pageTitle: "Search Results",
@@ -919,6 +926,7 @@ exports.searchPost = async (req, res) => {
       year: presentYear,
       allCategory,
       recentlyViewed: req.session.recentlyViewed || [],
+      userData:userData[0]
     });
   } catch (error) {
     console.error(`Error during search: ${error.message}`);
@@ -936,9 +944,7 @@ exports.fetchCart = async (req, res) => {
 
   try {
     // Fetch user data
-    const userResults = await query('SELECT * FROM "Users" WHERE "id" = $1', [
-      userId,
-    ]);
+    const userResults = await query('SELECT * FROM "Users" WHERE "id" = $1', [userId]);
     const userData = userResults.rows[0];
 
     // Fetch cart items
@@ -1600,14 +1606,12 @@ exports.wishlist = async (req, res) => {
       return res.redirect("/user/profile");
     }
 
-    const {
-      rows: [result],
-    } = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+    const {rows: [result]} = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
 
     let totalUnreadNotification = parseInt(result.totalunread, 10);
     const { rows: allCategory } = await query('SELECT * FROM "Category"');
     const { rows: allTags } = await query(`SELECT * FROM tags`);
-
+    const {rows:userData} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [req.user.id]);
 
     res.render("./user/wishlist", {
       pageTitle: "wishlist",
@@ -1617,7 +1621,8 @@ exports.wishlist = async (req, res) => {
       totalUnreadNotification,
       allCategory,
       recentlyViewed: req.session.recentlyViewed || [],
-      allTags
+      allTags,
+      userData:userData[0]
     });
   } catch (err) {
     console.error(err);
@@ -1805,11 +1810,8 @@ exports.tagItems = async (req, res) => {
       };
     });
 
-    const {rows:presentCart} = await query(
-      'SELECT * FROM "Cart" WHERE "user_id" = $1',
-      [req.user.id]
-    );
-
+    const {rows:presentCart} = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+    const {rows:userData} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [req.user.id]);
       
       return res.render("./user/tagView", {
           pageTitle: `Tags- ${tagResults[0].tag_name}`,
@@ -1824,7 +1826,8 @@ exports.tagItems = async (req, res) => {
           products,
           presentCart,
           tag:tagResults[0].tag_name,
-          allTags
+          allTags,
+          userData:userData[0]
       });
   } catch (error) {
       console.error(error);
@@ -1892,11 +1895,8 @@ exports.comboItems = async (req, res) => {
       };
     });
 
-    const {rows:presentCart} = await query(
-      'SELECT * FROM "Cart" WHERE "user_id" = $1',
-      [req.user.id]
-    );
-
+    const {rows:presentCart} = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+    const {rows:userData} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [req.user.id]);
       
       return res.render("./user/comboView", {
           pageTitle: `combo items`,
@@ -1910,11 +1910,114 @@ exports.comboItems = async (req, res) => {
           msg,
           products,
           presentCart,
-          allTags
+          allTags,
+          userData:userData[0]
       });
   } catch (error) {
       console.error(error);
       req.flash('error_msg', 'Error getting tag items');
       return res.redirect('/user');
+  }
+};
+
+
+exports.excluiveCodePage = async (req, res) => {
+  const userFirstName = req.user.First_name;
+  const userLastName = req.user.Last_name;
+
+  try {
+
+    const {rows: [result]} = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+
+    let totalUnreadNotification = parseInt(result.totalunread, 10);
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
+
+    const {rows:presentCart} = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+
+      
+      return res.render("./user/excluiveCode", {
+          pageTitle: `excluive Code`,
+          appName: appName,
+          appEmail,
+          name: `${userFirstName} ${userLastName}`,
+          totalUnreadNotification,
+          allCategory,
+          presentCart,
+      });
+  } catch (error) {
+      console.error(error);
+      req.flash('error_msg', 'Error getting tag items');
+      return res.redirect('/user');
+  }
+};
+
+
+exports.excluiveCodeForm = async (req, res) => {
+  const userFirstName = req.user.First_name;
+  const userLastName = req.user.Last_name;
+
+  try {
+
+    const {rows: [result]} = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+
+    let totalUnreadNotification = parseInt(result.totalunread, 10);
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
+
+    const {rows:presentCart} = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+
+      
+      return res.render("./user/excluiveCodeRedeem", {
+          pageTitle: `excluive Code`,
+          appName: appName,
+          appEmail,
+          name: `${userFirstName} ${userLastName}`,
+          totalUnreadNotification,
+          allCategory,
+          presentCart,
+      });
+  } catch (error) {
+      console.error(error);
+      req.flash('error_msg', 'Error getting tag items');
+      return res.redirect('/user');
+  }
+};
+exports.excluiveCodeSubmit = async (req, res) => {
+  const { code } = req.body;
+  const userId = req.user.id
+
+  if (!code) {
+    req.flash('error_msg', 'provide a code from your card')
+    return res.redirect('back')
+  }
+  try {
+    const result = await query(`SELECT * FROM exclusive_codes WHERE code = $1`,[code]);
+
+    if (result.rows.length === 0) {
+      req.flash('error_msg', 'Invalid code.')
+      return res.redirect('back')
+
+    }
+
+    const codeData = result.rows[0];
+
+    if (codeData.is_redeemed) {
+      req.flash('error_msg', 'Invalid code or This code has already been redeemed.')
+      return res.redirect('back')
+    }
+
+    const expiresAt = new Date();
+    expiresAt.setMonth(expiresAt.getMonth() + 6); // Set expiration to six months
+
+    await query(`UPDATE exclusive_codes SET is_redeemed = TRUE, user_id = $1, expires_at = $2 WHERE code = $3`,[userId, expiresAt, code]);
+    await query(`UPDATE "Users" SET is_exclusive = $1 WHERE id = $2`,[true, userId]);
+
+    req.flash('success_msg', `Code redeemed successfully! expires ${expiresAt} from today`)
+      return res.redirect('/user/profile')
+
+  
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', 'Error redeeming code.')
+    return res.redirect('/')
   }
 };

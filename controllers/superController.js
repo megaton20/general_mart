@@ -4,7 +4,9 @@ const query = promisify(db.query).bind(db);
 const stateData = require("../model/stateAndLGA");
 const fs = require('fs'); // Use fs.promises for file operations
 const path = require('path');
+const { Parser } = require('json2csv');
 const calculateCashback = require('../model/cashback');
+const generateExclusiveCodeFunction = require('../model/generateExclusiveCode');
 
 
 
@@ -4311,3 +4313,117 @@ exports.superStore = async (req, res) => {
 
 
 
+
+
+
+
+exports.exclusiveCodes = async (req, res) => {
+  const nameA = req.user.First_name;
+  const nameB = req.user.Last_name;
+
+  try {
+    // Fetch all brands from the Brands table
+    const {rows:exclusiveCode} = await query(`SELECT * FROM "exclusive_codes"`);
+
+
+    // Render the brandTable view
+    res.render("./super/exclusiveCode", {
+      pageTitle: "Welcome",
+      name: `${nameA} ${nameB}`,
+      month: monthName,
+      day: dayName,
+      date: presentDay,
+      year: presentYear,
+      exclusiveCode
+    });
+  } catch (error) {
+    req.flash("error_msg", `${error.message}`); // Use error.message instead of error.sqlMessage
+    return res.redirect("/super");
+  }
+};
+
+exports.generateExclusiveCodes = async (req, res) => {
+  const { quantity } = req.body;
+
+  if (!quantity) {
+    req.flash('error_msg', "enter quantity to generate")
+    return res.redirect('back')
+  }
+
+  try {
+    // Fetch all existing codes
+    const existingCodes = new Set(
+      (await query(`SELECT code FROM exclusive_codes`)).rows.map(row => row.code)
+      );
+   
+    const codes = [];
+
+    for (let i = 0; i < quantity; i++) {
+      let newCode;
+
+      // Ensure uniqueness
+      do {
+        newCode = generateExclusiveCodeFunction(8);
+      } while (existingCodes.has(newCode));
+
+      existingCodes.add(newCode); // Add to Set to avoid future duplicates
+      codes.push({ code: newCode, is_company_generated: true, is_paid: false });
+    }
+
+    // Insert into database
+    const insertCodesQuery = `INSERT INTO exclusive_codes (code, is_company_generated, is_paid, is_exported) VALUES ($1, $2, $3, $4)`;
+
+await Promise.all(
+  codes.map(code =>
+    query(insertCodesQuery, [code.code, code.is_company_generated, code.is_paid, false])
+  )
+);
+
+    req.flash('success_msg', `${quantity} unique codes generated successfully.`)
+    return res.redirect('back')
+
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', "Error generating codes.")
+    return res.redirect('/super')
+  }
+
+};
+
+exports.exportCodes = async (req, res) => {
+  try {
+    // Fetch unexported codes
+    const result = await query(
+      `SELECT code FROM exclusive_codes WHERE is_company_generated = TRUE AND is_exported = FALSE`
+    );
+
+    if (result.rows.length === 0) {
+      req.flash('error_msg', "No unexported codes available.");
+      return res.redirect('back');
+    }
+
+    const codes = result.rows;
+
+    // Mark codes as exported
+    await query(
+      `UPDATE exclusive_codes SET is_exported = TRUE WHERE code = ANY($1)`,
+      [codes.map(code => code.code)]
+    );
+
+    // Export to CSV
+    const { Parser } = require('json2csv');
+    const parser = new Parser({ fields: ['code'] });
+    const csv = parser.parse(codes);
+
+    // Set headers for file download
+    res.header('Content-Type', 'text/csv');
+    res.attachment('generated_codes.csv');
+
+    // Send CSV file directly
+    return res.send(csv);
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', "Error exporting codes.");
+    return res.redirect('/super');
+  }
+};

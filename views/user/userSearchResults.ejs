@@ -10,28 +10,37 @@
         
         <% if (products.length > 0) { %>
           <div class="row">
-  
             <% products.forEach(item => { %>
-              <div class="col-6 mt-4' col-md-4 col-lg-3">
-                <div class="card mt-4 border-1">
-                  <a href="/user/product-details/<%=item.id%>"> 
-                  <div class="card-body">
-                      <div class="item-image-container">
-                      <img src="/uploads/<%=item.image%>" class="card-img-top rounded-4" alt="<%=item.ProductName%>">
-                    </div>
-                    <div class="item-text  text-dark truncate-container">
-                      <p class="text-truncate"> <%=item.ProductName %></p>
-                    </div>
-                    </div>
-              
-                    </a> 
+              <% if (userData.is_exclusive || !item.is_exclusive) { %> <!-- Skip exclusive items for non-exclusive users -->
+                <div class="col-6 mt-4 col-md-4 col-lg-3">
+                  <div class="card mt-4 border-1">
+                    <a href="/user/product-details/<%= item.id %>">
+                      <div class="card-body">
+                        <div class="item-image-container">
+                          <img src="/uploads/<%= item.image %>" class="card-img-top rounded-4" alt="<%= item.ProductName %>">
+                        </div>
+                        <div class="item-text text-dark truncate-container">
+                          <p class="text-truncate"><%= item.ProductName %></p>
+                        </div>
+                      </div>
+                    </a>
                     <div class="card-footer p-1">
-                      <button style="width:100%" class="my-btn add-to-cart p-1 m-0" data-id="<%=item.id%>"  data-name="<%=item.ProductName %>" data-price="<%=item.UnitPrice %>" data-max="<%=item.total_on_shelf %>" data-image="<%=item.image%>" onclick="handleButtonClick(this)">Buy   ₦<small class="item-price"><%=item.UnitPrice%>.00</small></button>
+                      <button style="width:100%" 
+                              class="my-btn add-to-cart p-1 m-0" 
+                              data-id="<%= item.id %>"  
+                              data-name="<%= item.ProductName %>" 
+                              data-price="<%= item.UnitPrice %>" 
+                              data-max="<%= item.total_on_shelf %>" 
+                              data-image="<%= item.image %>" 
+                              onclick="handleButtonClick(this)">
+                        Buy ₦<small class="item-price"><%= item.UnitPrice %>.00</small>
+                      </button>
                     </div>
                   </div>
-              </div>
-              
-          <% }) %>
+                </div>
+              <% } %>
+            <% }) %>
+            
           </div>
       <% } else { %>
         <div class="no-items text-center">

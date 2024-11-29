@@ -37,6 +37,7 @@
                 <% } else { %>
                   <div class="store-grid">
                   <% products.forEach(data => { %>
+                    <% if (userData.is_exclusive || !data.is_exclusive) { %> 
                     <div class="product-item my-box-shadow" >
                       <div class="discount-badge">
                         <% if (data.percentage < 0) { %>
@@ -73,6 +74,7 @@
                         <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>" onclick="handleButtonClick(this)">Add to cart</button>
                       </div>
                     </div>
+                    <% } %>
                   <% }); %>
                 <% } %>
               </div>
