@@ -93,16 +93,21 @@ router.get('/auth/google/callback',
 router.get('/', async (req, res) => {
   let userActive = false;
   let presentCart
-  let exclusiveUser = false
+  let userRights = {
+    is_exclusive:false
+  }
+
   if (req.user) {
     userActive = true;
 
     const { rows: result } = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
-    const {rows:userData} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [req.user.id]);
-    exclusiveUser = userData[0].is_exclusive
     presentCart = result
 
+    const {rows:userData} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [req.user.id]);
+    userRights = userData[0]
   }
+
+
    // Check if the "blackFridayShown" session variable is set
  const showModal = !req.session.blackFridayShown;
 
@@ -198,7 +203,7 @@ router.get('/', async (req, res) => {
       presentCart,
       recentlyViewed: req.session.recentlyViewed || [],
       allTags,
-      userData:exclusiveUser
+      userData:userRights
       
     });
 

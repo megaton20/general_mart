@@ -36,44 +36,69 @@
                 </div>
                 <% } else { %>
                   <div class="store-grid">
-                  <% products.forEach(data => { %>
-                    <div class="product-item my-box-shadow" >
-                      <div class="discount-badge">
-                        <% if (data.percentage < 0) { %>
-                          <%= Math.abs(data.percentage).toFixed(2) %>% off
-                        <% } else { %>
-                          0%
-                        <% } %>
+                    <% const visibleProducts = products.filter(data => userData.is_exclusive || !data.is_exclusive); %> <!-- Filter visible products -->
+
+                    <% if (visibleProducts.length > 0) { %>
+                      <% visibleProducts.forEach(data => { %>
+                        <div class="product-item my-box-shadow">
+                          <div class="discount-badge">
+                            <% if (data.percentage && data.percentage < 0) { %> <!-- Ensure valid percentage -->
+                              <%= Math.abs(data.percentage).toFixed(2) %>% off
+                            <% } else { %>
+                              0%
+                            <% } %>
+                          </div>
+                    
+                          <% if (data.is_exclusive) { %> <!-- Show VIP badge for exclusive items -->
+                            <img src="/images/vip-batch.png" alt="VIP Item" class="vip-icon">
+                          <% } %>
+                    
+                          <div class="card-image">
+                            <a href="/user/product-details/<%= data.id %>">
+                              <img src="/uploads/<%= data.image %>" class="img-fluid" alt="<%= data.ProductName %>">
+                            </a>
+                          </div>
+                    
+                          <div class="wishlist">
+                            <% if (data.inWishlist) { %> <!-- Show 'Remove from wishlist' if already in wishlist -->
+                              <a href="/user/wishlist/<%= data.id %>/remove" class="wishlist-icon m-1">
+                                <i class="fas fa-heart"></i>
+                              </a>
+                            <% } else { %> <!-- Show 'Add to wishlist' if not in wishlist -->
+                              <a href="/user/wishlist/<%= data.id %>/add" class="wishlist-icon m-1">
+                                <i class="far fa-heart"></i>
+                              </a>
+                            <% } %>
+                          </div>
+                    
+                          <div class="product-details">
+                            <p class="text-truncate"><%= data.ProductName %></p>
+                          </div>
+                    
+                          <div class="item-prices">
+                            <p>₦ <span class="item-price"><%= data.UnitPrice %></span>
+                              <% if (data.old_price) { %> <!-- Show old price if available -->
+                                <span class="old-price text-grey item-price ml-3">₦ <%= data.old_price %></span>
+                              <% } %>
+                            </p>
+                          </div>
+                    
+                          <div class="mt-2 button-container">
+                            <button style="width:100%" class="my-btn add-to-cart m-0 p-1" 
+                              data-id="<%= data.id %>" 
+                              data-name="<%= data.ProductName %>" 
+                              data-price="<%= data.UnitPrice %>" 
+                              data-max="<%= data.total_on_shelf %>" 
+                              data-image="<%= data.image %>" 
+                              onclick="handleButtonClick(this)">Add to cart</button>
+                          </div>
+                        </div>
+                      <% }); %>
+                    <% } else { %>
+                      <div class="no-items-message">
+                        <p>No products are currently available for you to view.</p> <!-- Fallback message for no visible products -->
                       </div>
-                      <div class="card-image">
-                        <a href="/user/product-details/<%= data.id %>">
-                          <img src="/uploads/<%= data.image %>" class="img-fluid" alt="<%= data.ProductName %>">
-                        </a>
-                      </div>
-                      <div class="wishlist">
-                        <% if (data.inWishlist) { %>
-                          <a href="/user/wishlist/<%= data.id %>/remove" class="wishlist-icon m-1">
-                            <i class="fas fa-heart"></i>
-                          </a>
-                        <% } else { %>
-                          <a href="/user/wishlist/<%= data.id %>/add" class="wishlist-icon m-1">
-                            <i class="far fa-heart"></i>
-                          </a>
-                        <% } %>
-                      </div>
-                      <div class="product-details">
-                        <p class="text-truncate"><%= data.ProductName %></p>
-                      </div>
-                      <div class="item-prices">
-                        <p>₦ <span class="item-price"><%= data.UnitPrice %></span>
-                          <span class="old-price text-grey item-price ml-3">₦ <%= data.old_price %></span>
-                        </p>
-                      </div>
-                      <div class="mt-2 button-container">
-                        <button style="width:100%" class="my-btn add-to-cart m-0 p-1" data-id="<%= data.id %>" data-name="<%= data.ProductName %>" data-price="<%= data.UnitPrice %>" data-max="<%= data.total_on_shelf %>" data-image="<%= data.image %>" onclick="handleButtonClick(this)">Add to cart</button>
-                      </div>
-                    </div>
-                  <% }); %>
+                    <% } %>
                 <% } %>
               </div>
           

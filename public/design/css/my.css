@@ -2212,8 +2212,17 @@ a {
 }
 
 
+.vip-icon {
+  position: absolute !important;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+}
+
 
 .landing-item {
+  position: relative;
   border: 1px solid #0000000f;
   width: 160px;
   padding: 10px;

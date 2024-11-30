@@ -37,40 +37,53 @@
                 </div>
                 <% } else { %>
                   <div class="store-grid">
-                    <% products.forEach(data => { %>
-                      <% if (userData.is_exclusive || !data.is_exclusive) { %> <!-- Skip exclusive items for non-exclusive users -->
+                    <% const visibleProducts = products.filter(data => userData.is_exclusive || !data.is_exclusive); %> <!-- Filter visible products -->
+
+                    <% if (visibleProducts.length > 0) { %>
+                      <% visibleProducts.forEach(data => { %>
                         <div class="product-item">
                           <div class="discount-badge">
-                            <% if (data.percentage < 0) { %>
+                            <% if (data.percentage && data.percentage < 0) { %> <!-- Ensure percentage is valid -->
                               <%= Math.abs(data.percentage).toFixed(2) %>% off
                             <% } else { %>
                               0%
                             <% } %>
                           </div>
+                    
+                          <% if (data.is_exclusive) { %> <!-- Show VIP badge if item is exclusive -->
+                            <img src="/images/vip-batch.png" alt="VIP Item" class="vip-icon">
+                          <% } %>
+                    
                           <div class="card-image">
                             <a href="/user/product-details/<%= data.id %>">
                               <img src="/uploads/<%= data.image %>" alt="<%= data.ProductName %>">
                             </a>
                           </div>
+                    
                           <div class="wishlist">
-                            <% if (data.inWishlist) { %>
+                            <% if (data.inWishlist) { %> <!-- Show 'Remove from wishlist' if already in wishlist -->
                               <a href="/user/wishlist/<%= data.id %>/remove" class="wishlist-icon m-1">
                                 <i class="fas fa-heart"></i>
                               </a>
-                            <% } else { %>
+                            <% } else { %> <!-- Show 'Add to wishlist' if not in wishlist -->
                               <a href="/user/wishlist/<%= data.id %>/add" class="wishlist-icon m-1">
                                 <i class="far fa-heart"></i>
                               </a>
                             <% } %>
                           </div>
+                    
                           <div class="product-details">
                             <p class="text-truncate"><%= data.ProductName %></p>
                           </div>
+                    
                           <div class="item-prices">
                             <p>₦ <span class="item-price"><%= data.UnitPrice %></span>
-                              <span class="old-price text-grey item-price ml-3">₦ <%= data.old_price %></span>
+                              <% if (data.old_price) { %> <!-- Show old price if available -->
+                                <span class="old-price text-grey item-price ml-3">₦ <%= data.old_price %></span>
+                              <% } %>
                             </p>
                           </div>
+                    
                           <div class="mt-2 button-container">
                             <button style="width:100%" class="my-btn add-to-cart m-0 p-1" 
                               data-id="<%= data.id %>" 
@@ -81,12 +94,15 @@
                               onclick="handleButtonClick(this)">Add to cart</button>
                           </div>
                         </div>
-                      <% } %>
-                    <% }) %>
+                      <% }); %>
+                    <% } else { %>
+                      <div class="no-items-message">
+                        <p>No products available to view at this time.</p> <!-- Fallback message for no visible products -->
+                      </div>
+                    <% } %>
                     
                 <% } %>
               </div>
-          
               <nav class=" mt-4">
                 <ul class="pagination">
                   <% if (pagination.page > 1) { %>
