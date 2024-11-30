@@ -81,6 +81,9 @@ router.put("/unflag-product/:id", ensureAuthenticated,isSuper, superController.u
 router.put("/showcase-on/:id", ensureAuthenticated,isSuper, superController.addToShowcase);
 router.put("/showcase-off/:id", ensureAuthenticated,isSuper, superController.removeFromShowcase);
 
+// exclusive
+router.put("/exclusive-on/:id", ensureAuthenticated,isSuper, superController.addToExclusivee);
+router.put("/exclusive-off/:id", ensureAuthenticated,isSuper, superController.removeFromExclusive);
 
 
 

@@ -1375,11 +1375,11 @@ exports.createNewBrand = async (req, res) => {
       await query(`INSERT INTO "Brands" ("Name") VALUES ($1)`, [brandName]);
 
       req.flash("success_msg", `"${brandName}" added successfully!`);
-      return res.redirect("/super");
+      return res.redirect("/super/all-brands");
     }
 
     req.flash("error_msg", `"${brandName}" already exists!`);
-    return res.redirect("/super");
+    return res.redirect("/super/all-brands");
 
   } catch (error) {
     req.flash("error_msg", `${error.message}`); // Use error.message instead of error.sqlMessage
@@ -1391,7 +1391,7 @@ exports.updateBrand = async (req, res) => {
   const { brandName } = req.body;
   if (!brandName) {
     req.flash("error_msg", "Enter all fields before submitting");
-    return res.redirect("/super");
+    return res.redirect("/super/all-brands");
   }
 
   try {
@@ -1399,7 +1399,7 @@ exports.updateBrand = async (req, res) => {
     await query(`UPDATE "Brands" SET "Name" = $1 WHERE id = $2`, [brandName, req.params.id]);
 
     req.flash("success_msg", `"${brandName}" updated successfully!`);
-    return res.redirect("/super");
+    return res.redirect("/super/all-brands");
 
   } catch (error) {
     req.flash("error_msg", `${error.message}`); // Use error.message instead of error.sqlMessage
@@ -3470,6 +3470,82 @@ exports.removeFromShowcase = async (req, res) => {
     // Update product to remove from showcase
     await query(`UPDATE "Products" SET "showcase" = $1 WHERE id = $2`, ["no", editID]);
     req.flash("success_msg", "Product removed from showcase successfully!");
+    return res.redirect("back");
+
+  } catch (error) {
+    req.flash("error_msg", `Server error: ${error.message}`);
+    return res.redirect("/super");
+  }
+};
+
+
+// exclusive functions
+exports.addToExclusivee = async (req, res) => {
+  const editID = req.params.id;
+
+  try {
+    // Fetch product details
+    const results = await query(`SELECT * FROM "Products" WHERE id = $1`, [editID]);
+
+    if (results.rows.length === 0) {
+      req.flash("error_msg", "Product not found.");
+      return res.redirect("/super/all-products");
+    }
+
+    const product = results.rows[0];
+
+    // Check if product is expired or has insufficient stock
+    if (product.total_on_shelf <= 0 || product.status === "expired") {
+      req.flash("warning_msg", "Product is either out of stock or expired.");
+      return res.redirect("/super/all-products");
+    }
+
+    // Check if the product is already on showcase
+    if (product.is_exclusive === true) {
+      req.flash("warning_msg", "Product is already on exclusive.");
+      return res.redirect("back");
+    }
+
+    // Check if the product is activated
+    if (product.activate === true) {
+      // Update product to add to showcase
+      await query(`UPDATE "Products" SET "is_exclusive" = $1 WHERE id = $2`, [true, editID]);
+      req.flash("success_msg", "Product is exclusive!");
+      return res.redirect("/super/all-products");
+    } else {
+      req.flash("warning_msg", "Activate the product before adding to showcase.");
+      return res.redirect("/super/all-products");
+    }
+
+  } catch (error) {
+    req.flash("error_msg", `Server error: ${error.message}`);
+    return res.redirect("/super");
+  }
+};
+
+exports.removeFromExclusive = async (req, res) => {
+  const editID = req.params.id;
+
+  try {
+    // Fetch product details
+    const results = await query(`SELECT * FROM "Products" WHERE id = $1`, [editID]);
+
+    if (results.rows.length === 0) {
+      req.flash("error_msg", "Product not found.");
+      return res.redirect("back");
+    }
+
+    const product = results.rows[0];
+
+    // Check if the product is not on showcase
+    if (product.showcase === false) {
+      req.flash("warning_msg", "Product is not exclusive.");
+      return res.redirect("back");
+    }
+
+    // Update product to remove from showcase
+    await query(`UPDATE "Products" SET "is_exclusive" = $1 WHERE id = $2`, [false, editID]);
+    req.flash("success_msg", "Product removed from exclusive successfully!");
     return res.redirect("back");
 
   } catch (error) {

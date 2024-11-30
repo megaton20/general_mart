@@ -88,8 +88,7 @@
                       <a href="/user/product-details/<%= product.id %>" class="home-card">
                         <% if (product.is_exclusive) { %>
                           <img src="/images/vip-batch.png" alt="VIP Item" class="vip-icon">
-                        <% } else { %>
-                          <img src="/images/regular-batch.png" alt="Regular Item" class="regular-icon">
+                        
                         <% } %>
                         <div class="landing-image">
                           <img src="/uploads/<%= product.image %>" alt="<%= product.ProductName %>">
@@ -152,8 +151,7 @@
                                   <a href="/user/product-details/<%= product.id %>" class="home-card">
                                     <% if (product.is_exclusive) { %>
                                       <img src="/images/vip-batch.png" alt="VIP Item" class="vip-icon">
-                                    <% } else { %>
-                                      <img src="/images/regular-batch.png" alt="Regular Item" class="regular-icon">
+                                    
                                     <% } %>
                                     <div class="landing-image">
                                       <img src="/uploads/<%= product.image %>" alt="<%= product.ProductName %>">

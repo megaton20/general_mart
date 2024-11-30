@@ -216,6 +216,34 @@ async function checkReferrals() {
     }
 }
 
+async function cleanUpExpiredCodes (){
+  try {
+    // Get all expired and redeemed codes and their associated user IDs
+    const fetchQuery = `SELECT user_id FROM exclusive_codes WHERE is_redeemed = TRUE AND expires_at < NOW();`;
+    
+    const result = await query(fetchQuery);
+
+    if (result.rows.length > 0) {
+      const userIds = result.rows.map(row => row.user_id);
+
+      // Update users associated with expired codes
+      const updateUsersQuery = `UPDATE "Users" SET is_exclusive = FALSE WHERE id = ANY($1::uuid[]);`;
+      
+      await query(updateUsersQuery, [userIds]);
+      console.log(`${userIds.length} users updated to non-exclusive.`);
+
+      // Delete the expired codes
+      const deleteQuery = `DELETE FROM exclusive_codes WHERE is_redeemed = TRUE AND expires_at < NOW();`;
+      
+      const deleteResult = await query(deleteQuery);
+      console.log(`${deleteResult.rowCount} expired codes deleted.`);
+    } else {
+      console.log("No expired codes found.");
+    }
+  } catch (err) {
+    console.error("Error cleaning up expired codes:", err);
+  }
+};
 
 
 
@@ -234,7 +262,11 @@ cron.schedule('0 0 */2 * *', () => {
 // Schedule the job to run once every 24 hours
 cron.schedule('0 0 * * *', () => {
   clearCartAtTheEndOfTheDay();
+   cleanUpExpiredCodes();
 });
+
+
+
 
 
 // Schedule the job to run every minute

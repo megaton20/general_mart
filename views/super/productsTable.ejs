@@ -43,6 +43,7 @@
                               <th>Activated</th>
                               <th>Actions</th>
                               <th>showcase</th>
+                              <th>Exclusive</th>
                             </tr>
                           </thead>
 
@@ -126,6 +127,27 @@
 
 
                                 </td>
+
+
+                                <td>
+                                <% if ( data.is_exclusive == true ) { %>
+
+                                  <form action="/super/exclusive-off/<%= data['id'] %>" method="POST">
+                                    <input type="hidden" name="_method" value="PUT" />
+                                    <button class="btn btn-danger">turn off</button>
+                                  </form>
+
+                                  <% } else { %>
+
+                                    <form action="/super/exclusive-on/<%= data['id'] %>" method="POST">
+                                      <input type="hidden" name="_method" value="PUT" />
+                                      <button class="btn btn-warning"> turn on</button>
+                                    </form>
+
+                                    <% } %>
+
+
+                              </td>
 
 
                               </tr>

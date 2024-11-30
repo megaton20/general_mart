@@ -33,7 +33,14 @@ a {
   text-decoration: none !important;
 }
 
+.no-items-message{
+  background-color: var(--secondary-color);
+  padding: 10px;
+  margin: 20px 5px;
+  color: #fff;
+  border-radius: 5px;
 
+}
 #message-container {
   position: fixed;
   top: 10px;
