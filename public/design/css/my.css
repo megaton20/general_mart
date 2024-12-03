@@ -33,6 +33,11 @@ a {
   text-decoration: none !important;
 }
 
+
+.secondary-btn{
+  background-color: var(--secondary-color) !important;
+  border: none !important;
+}
 .no-items-message{
   background-color: var(--secondary-color);
   padding: 10px;
@@ -1372,14 +1377,12 @@ h6 {
 --------------------------------------------------------------*/
 
 .footer-details {
-  display: flex;
-  justify-content: space-between;
+  display: inline;
 }
 
 @media (max-width: 480px) {
   .footer-details {
-    display: flex;
-    flex-direction: column;
+    display: inline;
   }
 
 }
