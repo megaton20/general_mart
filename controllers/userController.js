@@ -1919,6 +1919,68 @@ exports.comboItems = async (req, res) => {
       return res.redirect('/user');
   }
 };
+exports.exclusiveItems = async (req, res) => {
+  const userFirstName = req.user.First_name;
+  const userLastName = req.user.Last_name;
+  let msg = [];
+
+  try {
+
+    const {rows: [result]} = await query('SELECT COUNT(*) AS totalunread FROM "notifications" WHERE "user_id" = $1 AND "is_read" = $2',[req.user.id, false]);
+
+    let totalUnreadNotification = parseInt(result.totalunread, 10);
+    const { rows: allCategory } = await query('SELECT * FROM "Category"');
+
+
+
+    const { rows: activeItemsOnShelf } = await query(
+      `SELECT * 
+       FROM "Products"
+       WHERE is_exclusive = $1
+         AND status = 'not-expired'
+         AND activate = $2
+         AND total_on_shelf > 0`,
+      [true, true] 
+    );
+    
+
+
+      const { rows: allTags } = await query(`SELECT * FROM tags`);
+
+    const { rows: wishlistItems } = await query(`SELECT "product_id" FROM "wishlists" WHERE "user_id" = $1`,[req.user.id]);
+
+    const wishlistProductIDs = wishlistItems.map((item) => item.product_id);
+
+    const products = activeItemsOnShelf.map((item) => {
+      return {
+        ...item,
+        inWishlist: wishlistProductIDs.includes(item.id),
+      };
+    });
+
+    const {rows:presentCart} = await query('SELECT * FROM "Cart" WHERE "user_id" = $1',[req.user.id]);
+    const {rows:userData} = await query(`SELECT * FROM "Users" WHERE "id" = $1`, [req.user.id]);
+      
+      return res.render("./user/exclusiveView", {
+          pageTitle: `Exclusive items`,
+          appName: appName,
+          appEmail,
+          name: `${userFirstName} ${userLastName}`,
+          totalUnreadNotification,
+          allCategory,
+          recentlyViewed: req.session.recentlyViewed || [],
+          msg,
+          products,
+          presentCart,
+          allTags,
+          userData:userData[0]
+      });
+  } catch (error) {
+      console.error(error);
+      req.flash('error_msg', 'Error getting Exclusive items');
+      return res.redirect('/user');
+  }
+};
 
 
 exports.excluiveCodePage = async (req, res) => {

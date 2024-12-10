@@ -65,8 +65,16 @@ module.exports = {
   ensureDriverKYC: async (req, res, next) => {
     const userId = req.user.id;
     try {
-      const { rows } = await query(fetchDriverQuery, [userId]);
-      const userData = rows[0];
+      // Fetch user data
+      const { rows: user } = await query(fetchDriverQuery, [userId]);
+  
+      // Check if user exists
+      if (!user || user.length === 0) {
+        req.flash("warning_msg", "User not a yet a driver. Please register to proceed.");
+        return res.redirect('/user'); 
+      }
+  
+      const userData = user[0];
   
       // Check if CAC is provided and complete
       const hasCAC = userData.CAC_number && userData.CAC_image;
@@ -86,10 +94,11 @@ module.exports = {
       return next();
   
     } catch (error) {
-      console.log("middleware error" + " " + error);
+      console.log("middleware error: " + error);
       req.flash('error_msg', `Error: ${error.message}`);
       return res.redirect('/');
     }
   }
+  
 };
 

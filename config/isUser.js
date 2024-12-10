@@ -1,3 +1,8 @@
+const db = require("../model/databaseTable");
+const { promisify } = require("util");
+const query = promisify(db.query).bind(db);
+
+
 module.exports = {
     isUser: function(req, res, next){
   
@@ -23,6 +28,35 @@ module.exports = {
         // return res.redirect('/drivers');
         return next();
       }
+    },
+
+    userIsExclusive: async function(req, res, next){
+  
+        // Fetch user data
+      const {rows: userData} = await query('SELECT * FROM "Users" WHERE "id" = $1', [req.user.id]);
+      const exclusive = userData[0].is_exclusive;
+  
+      if (exclusive === true) {
+        return next();
+      }else {
+        req.flash('warning_msg', `Access denied!... get new code`);
+        return res.redirect('/users/exclusive-code-page');
+      }
+    },
+
+    userIsAlreadyExclusive: async function(req, res, next){
+  
+      // Fetch user data
+      const {rows: userData} = await query('SELECT * FROM "Users" WHERE "id" = $1', [req.user.id]);
+
+    const exclusive = userData[0].is_exclusive;
+
+    if (exclusive === false) {
+      return next();
+    }else {
+      req.flash('warning_msg', `Already Exlusive!... see items`);
+      return res.redirect('/user/exclusive/products');
     }
+  }
       
   }

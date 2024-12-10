@@ -1,7 +1,7 @@
 // routes/userRoute.js
 const express = require('express');
 const router = express.Router();
-const { isUser } = require('../config/isUser');
+const { isUser,userIsExclusive,userIsAlreadyExclusive } = require('../config/isUser');
 const { ensureAuthenticated } = require('../config/auth');
 const { ensureAuthenticatedEmail, ensureAuthenticatedPhone,ensureBasicInformation } = require('../config/userAccessCheck');
 const userController = require('../controllers/userController');
@@ -82,9 +82,10 @@ router.get('/tags/:tagId/products', ensureAuthenticated,isUser,userController.ta
 router.get('/combo/products', ensureAuthenticated,isUser,userController.comboItems);
 
 
+router.get('/exclusive/products', ensureAuthenticated,isUser,userIsExclusive,userController.exclusiveItems);
 
 router.get('/exclusive-code-page', ensureAuthenticated,isUser,userController.excluiveCodePage);
-router.get('/redeem-code', ensureAuthenticated,isUser,userController.excluiveCodeForm);
+router.get('/redeem-code', ensureAuthenticated,isUser,userIsAlreadyExclusive,userController.excluiveCodeForm);
 router.post('/redeem-code', ensureAuthenticated,isUser,userController.excluiveCodeSubmit);
 
 
