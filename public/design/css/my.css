@@ -2219,7 +2219,7 @@ a {
 
 .card-image a img {
   max-width: 100%;
-  object-fit: contain;
+  object-fit: contain;padding: 5px;
 }
 
 
@@ -2254,7 +2254,8 @@ a {
 
 .landing-item img {
   max-width: 100%;
-  object-fit: cover;
+  object-fit:contain;
+  padding: 25px;
 }
 
 .landing-details {
