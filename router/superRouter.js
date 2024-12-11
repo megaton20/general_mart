@@ -72,6 +72,24 @@ router.get("/update-price/:id", ensureAuthenticated,isSuper, superController.get
 router.post("/create-sales/:id", ensureAuthenticated,isSuper, superController.addToShelfForSale);
 router.put("/update-price/:id", ensureAuthenticated,isSuper, superController.updatePrice);
 
+// restock
+
+// router.get("/restock/:id", ensureAuthenticated,isSuper, superController.getAddpriceUpdatePage);
+// router.put("/restock/:id", ensureAuthenticated,isSuper, superController.updatePrice);
+
+// reimage
+// router.get("/image-name/:id/field", ensureAuthenticated,isSuper, superController.getAddpriceUpdatePage);
+// router.put("/image-name/:id", ensureAuthenticated,isSuper, superController.updatePrice);
+
+// respec
+// router.get("/image-name/:id/field", ensureAuthenticated,isSuper, superController.getAddpriceUpdatePage);
+// router.put("/image-name/:id", ensureAuthenticated,isSuper, superController.updatePrice);
+
+// redetail
+// router.get("/image-name/:id/field", ensureAuthenticated,isSuper, superController.getAddpriceUpdatePage);
+// router.put("/image-name/:id", ensureAuthenticated,isSuper, superController.updatePrice);
+
+
 // add to store
 router.put('/product-status/unverified/:id',ensureAuthenticated,isSuper,superController.remove)
 router.put("/resolve/:id", ensureAuthenticated,isSuper, superController.resolveSale);
